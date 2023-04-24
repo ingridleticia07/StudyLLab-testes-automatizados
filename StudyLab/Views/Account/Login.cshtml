@@ -1,0 +1,19 @@
+﻿@model LoginViewModel
+
+<h4>Login</h4>
+<hr />
+<form asp-controller="Account" asp-action="Login" method="post">
+    <div asp-validation-summary="All" class="text-denger"></div>
+    <input type="hidden" asp-form="ReturnUrl" />
+    <div>
+        <label asp-for="UserName">Usuário</label>
+        <input asp-for="UserName" />
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Password">Senha</label>
+        <input asp-for="Password" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <input type="submit" class="btn btn-success" value="Log in" />
+</form>
