@@ -1,48 +1,132 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+﻿* {
+    padding: 0;
+    margin: 0;
+    font-family: "Roboto", sans-serif;
 }
 
-a {
-  color: #0077cc;
+
+
+.navbar {
+    background-color: rgb(255, 255, 255);
+    height: 90px;
+    width: 100%;
+    display: flex;
+    margin: 30px auto;
+    align-items: center;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+.menu {
+    font-size: 21px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 50px;
+    margin-top: 15px;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+.logo a {
+    text-decoration: none;
+    color: #ff8700;
+    font-size: 45px;
+    letter-spacing: 0.9px;
+    margin-left: 50px;
 }
 
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+ul > a {
+    color: #4f4f4f;
+    text-decoration: none;
+    padding: 12px 15px;
+    transition: 0.4s;
+    border-radius: 8px;
 }
 
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
+a:hover.sobre, a:hover.contato, a:hover.home {
+    color: #4f4f4f;
+    background-color: #f1f1f1;
+    border-radius: 8px;
+}
+
+.btn-entrar {
+    color: #ff8700;
+}
+
+.btn-criarconta {
+    color: #ff8700;
+    background-color: rgba(255, 135, 0, 0.3);
+    /* 255, 135, 0 são os valores RGB da cor FF8700 */
+    padding: 15px 25px; /* Define o tamanho do botão */
+    border: none; /* Remove a borda padrão do botão */
+    border-radius: 35px; /* Define um raio para a borda do botão */
+    cursor: pointer; /* Define o cursor do mouse como ponteiro */
+}
+
+.icon {
+    text-decoration: none;
+    display: none;
+}
+
+@media only screen and (max-width: 988px) {
+    .menu {
+        display: none;
+        
+    }
+
+        .menu ul {
+            text-align: left;
+        }
+
+            .menu ul a {
+                padding: 10px 20px;
+                border-bottom: 1px solid #eee;
+            }
+
+    .icon {
+        display: block;
+        font-size: 28px;
+        color: #ff8700;
+        cursor: pointer;
+    }
+
+    .menu.active {
+        display: block;
+    }
 }
 
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
+    font-size: 20px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 750px;
+    background-color: #ff8700;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    height: 100px;
+}
+
+    .footer p {
+        margin-top: 20px;
+    }
+
+@media only screen and (max-width: 1200px) {
+
+    .footer {
+        font-size: 18px;
+        gap: 300px
+    }
+}
+
+@media only screen and (max-width: 988px) {
+    .logo a {
+        text-decoration: none;
+        color: #ff8700;
+        font-size: 35px;
+        letter-spacing: 0.5px;
+        margin-left: 20px;
+    }
+    .footer {
+        gap: 30px;
+        font-size: 14px;
+    }
 }

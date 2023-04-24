@@ -1,2 +1,173 @@
-﻿body {
+﻿.intro {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 80px;
+    width: 50%;
+    max-width: 100%;
+}
+
+    .intro h3 {
+        margin-top: 100px;
+        color: #4f4f4f;
+        font-size: 54px;
+    }
+
+    .intro p {
+        font-size: 18px;
+        color: #4f4f4f;
+    }
+
+.btn-queroconhecer {
+    font-size: 20px;
+    color: #ff8700;
+    text-decoration: none;
+    background-color: white;
+    padding: 15px 25px;
+    border-radius: 35px; /* Define um raio para a borda do botão */
+    cursor: pointer; /* Define o cursor do mouse como ponteiro */
+    width: 200px;
+    border: 3px solid #FF8700;
+}
+
+.container-vantagens {
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25);
+  padding: 20px;
+  background-color: #ff8700;
+  height: 680px;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  margin-top: 150px;
+  margin-bottom: 100px;
+}
+
+.cards-geral {
+  padding: 70px 40px;
+  width: 55%;
+}
+.cards-pt1 {
+  display: flex;
+  gap: 30px;
+}
+
+@media only screen and (max-width: 1188px) {
+  .container-vantagens {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .img-cumputer img {
+    display: none;
+  }
+
+  .cards-geral {
+    padding: 70px 40px;
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 778px) {
+    .container-vantagens {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .img-cumputer img {
+        display: none;
+    }
+
+}
+
+@media only screen and (max-width: 518px) {
+    .card1 p, .card2 p, .card3 p, .card4 p {
+        font-size: 16px;
+        
+    }
+
+
+    .cards-pt1 {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .cards-pt2 {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .container-vantagens {
+        padding: 0;
+        height:100%;
+    }
+
+    .row {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .frase {
+        display: flex;
+        height: 50%;
+        justify-content: center;
+        width: 100%;
+        text-align:center;
+    }
+
+}
+
+.cards-pt2 {
+  gap: 30px;
+  display: flex;
+}
+
+.card1,
+.card2 {
+    margin-top: 20px;
+    height: 250px;
+    width: 290px;
+    padding: 15px 15px;
+    background-color: #fff;
+    border-radius: 25px;
+}
+
+.card3 {
+    margin-top: 20px;
+    height: 250px;
+    width: 290px;
+    padding: 15px 15px;
+    background-color: #fff;
+    border-radius: 25px;
+}
+
+.card4 {
+  margin-top: 20px;
+  height: 250px;
+  width: 290px;
+  padding: 15px 15px;
+  background-color: #fff;
+  border-radius: 25px;
+}
+
+.img-cumputer img {
+  width: 110%;
+}
+
+.row {
+    height: 500px;
+}
+
+.frase {
+    display: flex;
+    align-items:center;
 }
