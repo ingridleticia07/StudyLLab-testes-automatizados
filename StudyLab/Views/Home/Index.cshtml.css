@@ -164,10 +164,15 @@
 }
 
 .row {
-    height: 500px;
+    height: 100%;
+    margin-bottom: 100px;
 }
 
 .frase {
     display: flex;
     align-items:center;
+}
+
+.img-estudantes {
+    height: 700px;
 }
