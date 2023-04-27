@@ -2,6 +2,37 @@
     ViewData["Title"] = "Login";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Página de Login</h1>
-</div>
+@{
+    Layout = "_LayoutLogin";
+}
+
+<section class="page-login">
+    <div class="content">
+        
+            <div class="login-form">
+            <div class="form-login-content">
+                <p class="titulo">Study<strong>Lab</strong></p>
+                <p class="subtitulo"><strong>Entrar na sua conta</strong></p>
+                <div class="form">
+                <div class="form-login-inputs">     
+                    <label>Email institucional</label>
+            <input type="email" name="email" id="email" placeholder="@@ seu email">      
+                    <label>Senha</label>
+            <input type="password" name="password" id="password" placeholder="* sua senha">
+                </div>
+                </div>
+                <button type="submit" id="button-form">Entrar</button>
+                <div class="links-conta">
+                <a href="#">Não tem uma conta? Cadastre-se</a>
+                <a href="#">Esqueceu a senha? Recuperar</a>
+                </div>
+            </div>
+            </div>
+        
+
+        <div class="links-redirecionamento">
+            <a href="">Voltar para a página inicial</a>
+            <a href="#">Termo de serviço e Política de privacidade</a>
+        </div>
+    </div>
+</section>
