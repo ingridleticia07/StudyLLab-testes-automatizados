@@ -1,19 +1,61 @@
 ﻿@model LoginViewModel
 
-<h4>Login</h4>
-<hr />
-<form asp-controller="Account" asp-action="Login" method="post">
-    <div asp-validation-summary="All" class="text-denger"></div>
-    <input type="hidden" asp-form="ReturnUrl" />
-    <div>
-        <label asp-for="Email">E-mail</label>
-        <input asp-for="Email" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+@{
+    ViewData["Title"] = "Login";
+}
+
+@{
+    Layout = "_LayoutLogin";
+}
+
+<style>
+    .form-account-login {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .input-account-login {
+        width: 100%;
+        padding: .5rem;
+        border-radius: .5rem;
+        border: 1px solid #BCBCBC;
+        outline: none;
+    }
+</style>
+
+<section class="page-login">
+    <div class="content">
+
+        <div class="login-form">
+            <div class="form-login-content">
+                <p class="titulo">Study<strong>Lab</strong></p>
+                <p class="subtitulo"><strong>Entrar na sua conta</strong></p>
+                <form asp-controller="Account" asp-action="Login" method="post" class="form-account-login">
+                    <div class="form">
+                        <div class="form-login-inputs">
+                            <label>Email institucional</label>
+                            <input asp-for="Email" type="email" name="email" id="email" placeholder="@@ seu email" class="input-account-login">
+                            <label>Senha</label>
+                            <input asp-for="Password" type="password" name="password" id="password" placeholder="* sua senha" class="input-account-login">
+                            <div asp-validation-summary="All" class="text-denger"></div>
+                        </div>
+                    </div>
+                    <button type="submit" id="button-form">Entrar</button>
+                </form>
+                <div class="links-conta">
+                    <a href="#">Não tem uma conta? Cadastre-se</a>
+                    <a href="#">Esqueceu a senha? Recuperar</a>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="links-redirecionamento">
+            <a href="">Voltar para a página inicial</a>
+            <a href="#">Termo de serviço e Política de privacidade</a>
+        </div>
     </div>
-    <div>
-        <label asp-for="Password">Senha</label>
-        <input asp-for="Password" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-    <input type="submit" class="btn btn-success" value="Log in" />
-</form>
+</section>

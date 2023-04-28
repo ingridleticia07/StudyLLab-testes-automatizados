@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Views\Account\Login.cshtml.css" />
     <None Remove="Views\Shared\_LayoutLogin.cshtml.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Views\Account\Login.cshtml.css" />
   </ItemGroup>
 
   <ItemGroup>
