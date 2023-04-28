@@ -1,4 +1,4 @@
-﻿@model LoginViewModel
+﻿@model RegisterViewModel
 
 <h4>Cadastro</h4>
 <hr />
@@ -6,14 +6,19 @@
     <div asp-validation-summary="All" class="text-denger"></div>
     <input type="hidden" asp-form="ReturnUrl" />
     <div>
-        <label asp-for="UserName">Usuário</label>
-        <input asp-for="UserName" />
-        <span asp-validation-for="UserName" class="text-danger"></span>
+        <label asp-for="Email">E-mail</label>
+        <input asp-for="Email" />
+        <span asp-validation-for="Email" class="text-danger"></span>
     </div>
     <div>
         <label asp-for="Password">Senha</label>
         <input asp-for="Password" />
         <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="ConfirmPassword">Confirmar senha</label>
+        <input asp-for="ConfirmPassword" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
     </div>
     <input type="submit" class="btn btn-success" value="Cadastrar" />
 </form>

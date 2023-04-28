@@ -15,6 +15,33 @@ namespace StudyLab.Controllers
             _signInManager = signInManager;
         }
 
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(LoginViewModel loginViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new IdentityUser { UserName = loginViewModel.Email, Email = loginViewModel.Email };
+                var result = await _userManager.CreateAsync(user, loginViewModel.Password);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                else
+                {
+                    this.ModelState.AddModelError("Registro", "Falha ao registrar o usuário");
+                }
+            }
+
+            return View(loginViewModel);
+        }
+
         public IActionResult Login(string returnUrl = null)
         {
             return View(new LoginViewModel()
@@ -29,7 +56,7 @@ namespace StudyLab.Controllers
             if (!ModelState.IsValid)
                 return View(loginViewModel);
 
-            var user = await _userManager.FindByNameAsync(loginViewModel.UserName);
+            var user = await _userManager.FindByNameAsync(loginViewModel.Email);
 
             if (user != null)
             {
@@ -45,33 +72,6 @@ namespace StudyLab.Controllers
             }
 
             ModelState.AddModelError("", "Falha ao realizar o login!");
-            return View(loginViewModel);
-        }
-
-        public IActionResult Register()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(LoginViewModel loginViewModel)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = new IdentityUser { UserName = loginViewModel.UserName };
-                var result = await _userManager.CreateAsync(user, loginViewModel.Password);
-
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("Login", "Account");
-                }
-                else
-                {
-                    this.ModelState.AddModelError("Registro", "Falha ao registrar o usuário");
-                }
-            }
-
             return View(loginViewModel);
         }
     }
