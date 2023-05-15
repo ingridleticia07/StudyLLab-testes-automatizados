@@ -54,16 +54,17 @@
   gap: 30px;
 }
 
-@media only screen and (max-width: 1188px) {
+@media (max-width: 1188px) {
   .container-vantagens {
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    height: 110%;
   }
 
   .img-cumputer img {
-    display: none;
+    display: block;
   }
 
   .cards-geral {
@@ -81,7 +82,7 @@
         align-items: center;
     }
 
-    .img-cumputer img {
+    .img-computer img {
         display: none;
     }
 
@@ -91,6 +92,17 @@
     .card1 p, .card2 p, .card3 p, .card4 p {
         font-size: 16px;
         
+    }
+
+    .img-estudantes[b-ag85jrd9nb] {
+        width: 300px;
+        height: 240px;
+    }
+
+    .cards-geral {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
 
@@ -122,6 +134,24 @@
         justify-content: center;
         width: 100%;
         text-align:center;
+    }
+
+}
+
+@media only screen and (max-width: 1200px) {
+
+
+    .row {
+        display: flex;
+        gap: 60px;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 0px;
+    }
+
+    h1 {
+        width: 100%;
+        font-size: 24px;
     }
 
 }
