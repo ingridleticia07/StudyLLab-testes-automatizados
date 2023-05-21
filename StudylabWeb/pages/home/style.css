@@ -1,0 +1,342 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+}
+
+
+
+.navbar {
+    background-color: rgb(255, 255, 255);
+    height: 90px;
+    width: 100%;
+    display: flex;
+    margin: 30px auto;
+    align-items: center;
+}
+
+.menu {
+    font-size: 21px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 50px;
+    margin-top: 15px;
+}
+
+.logo a {
+    text-decoration: none;
+    color: #ff8700;
+    font-size: 45px;
+    letter-spacing: 0.9px;
+    margin-left: 50px;
+}
+
+ul > a {
+    color: #4f4f4f;
+    text-decoration: none;
+    padding: 12px 15px;
+    transition: 0.4s;
+    border-radius: 8px;
+}
+
+a:hover.sobre, a:hover.contato, a:hover.home {
+    color: #4f4f4f;
+    background-color: #f1f1f1;
+    border-radius: 8px;
+}
+
+.btn-entrar {
+    color: #ff8700;
+}
+
+.btn-criarconta {
+    color: #ff8700;
+    background-color: rgba(255, 135, 0, 0.3);
+    /* 255, 135, 0 são os valores RGB da cor FF8700 */
+    padding: 15px 25px; /* Define o tamanho do botão */
+    border: none; /* Remove a borda padrão do botão */
+    border-radius: 35px; /* Define um raio para a borda do botão */
+    cursor: pointer; /* Define o cursor do mouse como ponteiro */
+}
+
+.icon {
+    text-decoration: none;
+    display: none;
+}
+
+@media only screen and (max-width: 988px) {
+    .menu {
+        display: none;
+        
+    }
+
+        .menu ul {
+            text-align: left;
+        }
+
+            .menu ul a {
+                padding: 10px 20px;
+                border-bottom: 1px solid #eee;
+            }
+
+    .icon {
+        display: block;
+        font-size: 28px;
+        color: #ff8700;
+        cursor: pointer;
+    }
+
+    .menu.active {
+        display: block;
+    }
+}
+
+.footer {
+    font-size: 20px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 750px;
+    background-color: #ff8700;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    height: 100px;
+}
+
+    .footer p {
+        margin-top: 20px;
+    }
+
+@media only screen and (max-width: 1200px) {
+
+    .footer {
+        font-size: 18px;
+        gap: 300px
+    }
+}
+
+@media only screen and (max-width: 988px) {
+    .logo a {
+        text-decoration: none;
+        color: #ff8700;
+        font-size: 35px;
+        letter-spacing: 0.5px;
+        margin-left: 20px;
+    }
+    .footer {
+        gap: 30px;
+        font-size: 14px;
+    }
+}
+
+
+.intro {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 80px;
+    width: 50%;
+    max-width: 100%;
+}
+
+    .intro h3 {
+        margin-top: 100px;
+        color: #4f4f4f;
+        font-size: 54px;
+    }
+
+    .intro p {
+        font-size: 18px;
+        color: #4f4f4f;
+    }
+
+.btn-queroconhecer {
+    font-size: 20px;
+    color: #ff8700;
+    text-decoration: none;
+    background-color: white;
+    padding: 15px 25px;
+    border-radius: 35px; /* Define um raio para a borda do botão */
+    cursor: pointer; /* Define o cursor do mouse como ponteiro */
+    width: 200px;
+    border: 3px solid #FF8700;
+}
+
+.container-vantagens {
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25);
+  padding: 20px;
+  background-color: #ff8700;
+  height: 680px;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  margin-top: 150px;
+  margin-bottom: 100px;
+}
+
+.cards-geral {
+  padding: 70px 40px;
+  width: 55%;
+}
+.cards-pt1 {
+  display: flex;
+  gap: 30px;
+}
+
+@media (max-width: 1188px) {
+  .container-vantagens {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: 110%;
+  }
+
+  .img-cumputer img {
+    display: block;
+  }
+
+  .cards-geral {
+    padding: 70px 40px;
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 778px) {
+    .container-vantagens {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .img-computer img {
+        display: none;
+    }
+
+}
+
+@media only screen and (max-width: 518px) {
+    .card1 p, .card2 p, .card3 p, .card4 p {
+        font-size: 16px;
+        
+    }
+
+    .img-estudantes[b-ag85jrd9nb] {
+        width: 300px;
+        height: 240px;
+    }
+
+    .cards-geral {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+
+    .cards-pt1 {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .cards-pt2 {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .container-vantagens {
+        padding: 0;
+        height:100%;
+    }
+
+    .row {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .frase {
+        display: flex;
+        height: 50%;
+        justify-content: center;
+        width: 100%;
+        text-align:center;
+    }
+
+}
+
+@media only screen and (max-width: 1200px) {
+
+
+    .row {
+        display: flex;
+        gap: 60px;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 0px;
+    }
+
+    h1 {
+        width: 100%;
+        font-size: 24px;
+    }
+
+}
+
+.cards-pt2 {
+  gap: 30px;
+  display: flex;
+}
+
+.card1,
+.card2 {
+    margin-top: 20px;
+    height: 250px;
+    width: 290px;
+    padding: 15px 15px;
+    background-color: #fff;
+    border-radius: 25px;
+}
+
+.card3 {
+    margin-top: 20px;
+    height: 250px;
+    width: 290px;
+    padding: 15px 15px;
+    background-color: #fff;
+    border-radius: 25px;
+}
+
+.card4 {
+  margin-top: 20px;
+  height: 250px;
+  width: 290px;
+  padding: 15px 15px;
+  background-color: #fff;
+  border-radius: 25px;
+}
+
+.img-cumputer img {
+  width: 110%;
+}
+
+.row {
+    height: 100%;
+    margin-bottom: 100px;
+}
+
+.frase {
+    display: flex;
+    align-items:center;
+}
+
+.img-estudantes {
+    height: 700px;
+}
