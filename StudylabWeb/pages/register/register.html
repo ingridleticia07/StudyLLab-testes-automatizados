@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyLab - Cadastro</title>
+<link rel="stylesheet" href="/pages/register/register.css">
+</head>
+<body>
+<section class="page-register">
+    <div class="content">
+        <h1 class="titulo">Study<strong>Lab</strong></h1>  
+            <div class="register">
+                <div class="text">
+                    <h2>Crie sua conta</h2>
+                <p>
+                    O cadastro deve ser
+                    feito com um e-mail
+                    institucional
+                </p>
+                <p>Já tem uma conta?<a href="/pages/login/login.html">Entre aqui</a></p>
+                </div>
+                <div class="form-register">
+                    <div class="email-container">
+                    <label>Seu e-mail institucional</label>
+                    <span class="icon-email">
+                        <img src="/assets/img/@.svg" alt="">
+                    </span>
+                    <input type="email" name="email" id="email" placeholder="meuemail@alu.ufc.br" class="input-account-register">
+                    </div>
+                    <div class="password-container">
+                    <label>Senha</label>
+                    <span class="icon-email">
+                        <img src="/assets/img/lock.svg" alt="">
+                    </span>
+                    <input type="password" name="password" id="password" placeholder="Crie sua senha" class="input-account-login">
+                    <span class="toggle-password" onclick="togglePasswordVisibility()">
+                        <img src="/assets/img/eye.svg" id="toggle-password" alt="Toggle Password Visibility">
+                    </span>
+                    </div>
+                    <label>Matrícula</label>
+                    <input type="number" name="registration" id="registration" placeholder="Sua matrícula"></input>
+                    <label>Seu curso</label>
+                <select id="curso" name="curso">
+                    <option value="CC">Ciência da Computação</option>
+                    <option value="ES">Engenharia de Software</option>
+                </select>
+                <div class="checkbox">
+                    <input type="checkbox" name="checkbox" id="checkbox"></input>
+                    <label>Eu aceito os <a href="">Termos de serviços e Política e privacidade</a></label>
+                </div>
+
+                <button id="button-submit">Concluir meu cadastro</button>
+                </div>
+            </div>
+        <div class="link-redirecionamento">
+            <a href="/pages/home/home.html">Voltar para a página inicial</a>
+        </div>
+    </div>
+</section>
+<script src="/assets/js/register.js"></script>
+</body>
+</html>

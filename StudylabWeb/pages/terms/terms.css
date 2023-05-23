@@ -1,0 +1,61 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    height: 100vh;
+    background-color: #FB8500;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding-bottom: 5rem;
+}
+
+.terms{
+    width: 70%;
+    max-width: 1100px;
+    background-color: white;
+    border-radius: .5rem;
+    padding: 2.5rem;
+}
+
+.logo{
+    color: white;
+    margin: 2rem 0 2rem 0;
+}
+
+.subtitle{
+   text-align: center;
+   font-size: 2rem;
+   color: #474747;
+   margin-bottom: 2rem;
+   margin-top: 2rem;
+}
+
+ol{
+    margin-top: .5rem;
+}
+
+ol li{
+    margin-bottom: .5rem;
+}
+
+.item{
+    margin: 1rem 0 1rem 0;
+    font-weight: bold;
+}
+
+.link{
+    margin: 2.5rem 0 2.5rem 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.link a{
+    text-decoration: none;
+    color: #FF8700;
+    font-size: 1.5rem;
+}
