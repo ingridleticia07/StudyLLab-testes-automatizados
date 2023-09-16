@@ -8,6 +8,8 @@ using StudyLabAPI.Endpoints;
 using StudyLabAPI.Middlewares.Policies;
 using StudyLabAPI.Middlewares.Swagger;
 using StudyLabAPI.Services.Configuration;
+using StudyLabAPI.Services.Email;
+using StudyLabAPI.Services.Email.Models;
 using StudyLabAPI.Services.Jwt;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -30,7 +32,8 @@ builder.Services.AddSingleton<JwtService>(provider =>
     ILogger? logger = provider.GetService<ILogger>();
     
     JwtParametersOptions? jwtOptions = 
-    builder.Configuration.GetSection(JwtParametersOptions.JWT_PARAMETERS)
+    builder.Configuration
+        .GetSection(JwtParametersOptions.JWT_PARAMETERS)
         .Get<JwtParametersOptions>();
     if(jwtOptions is null)
     {
@@ -39,6 +42,21 @@ builder.Services.AddSingleton<JwtService>(provider =>
     }
     
     return new(jwtOptions.privateKey, jwtOptions.issuer, jwtOptions.audience);
+});
+builder.Services.AddTransient<EmailService>(provider =>
+{
+    ILogger? logger = provider.GetService<ILogger>();
+    EmailOptions? emailOptions = builder.Configuration
+        .GetSection(EmailOptions.SERVER_EMAIL)
+        .Get<EmailOptions>();
+    if(emailOptions is null)
+    {
+        logger?.LogWarning("Email do servidor não especificado");
+        emailOptions = new();
+    }
+    
+    return new(emailOptions.smtpServer, emailOptions.port, 
+        emailOptions.email, emailOptions.password);
 });
 builder.Services.AddAuthorization(options =>
 {
