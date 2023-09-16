@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StudyLabAPI.Models;
+using StudyLabAPI.Services.Email;
+using StudyLabAPI.Services.Email.Models;
 using StudyLabAPI.Services.Jwt;
 using StudyLabAPI.Services.Jwt.Models;
 
@@ -10,16 +12,24 @@ public static class AuthEndpoints
     public static RouteGroupBuilder MapAuthEndpoints(this RouteGroupBuilder builder)
     {
         builder.MapPost("register", 
-            (HttpContext _,
-                [FromBody] RegisterUserRequestModel registerUserRequest) =>
+            async (HttpContext _,
+                [FromBody] RegisterUserRequestModel registerUserRequest,
+                [FromServices] EmailService emailService) =>
             {
+                EmailIntent emailIntent = new()
+                {
+                    toEmail = registerUserRequest.email,
+                    subject = "Bem vindo ao StudyLab",
+                    message = $"Olá {registerUserRequest.username}, seja bem vindo ao StudyLab"
+                };
                 try
                 {
-                    //controller
+                    await emailService.SendEmail(emailIntent);
+                    //Move to controller
                 }
-                catch(Exception)
+                catch(Exception e)
                 {
-                    
+                    return Results.BadRequest();
                 }
                 
                 return Results.Ok($"Cadastrar usuario: {registerUserRequest.username}");
