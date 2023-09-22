@@ -61,10 +61,7 @@ builder.Services.AddTransient<EmailService>(provider =>
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_NAME_POLICY, 
-        policyBuilder =>
-    {
-        policyBuilder.RequireIdentifierAndName();
-    });
+        AuthorizationPolicies.RequireIdentifierAndName);
 });
 builder.Services.AddAuthentication(options =>
 {
