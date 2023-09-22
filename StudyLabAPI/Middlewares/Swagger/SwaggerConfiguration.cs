@@ -11,7 +11,7 @@ public class SwaggerConfiguration : IConfigureOptions<SwaggerGenOptions>
         options.AddSecurityDefinition("Bearer", new()
         {
             In = ParameterLocation.Header,
-            Description = "JWT Authorization header using the Bearer scheme.",
+            Description = "Cabeçalho de autenticação JWT usando Bearer.",
             Name = "Authorization",
             Type = SecuritySchemeType.Http,
             BearerFormat = "JWT",

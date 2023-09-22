@@ -9,7 +9,6 @@ using StudyLabAPI.Middlewares.Policies;
 using StudyLabAPI.Middlewares.Swagger;
 using StudyLabAPI.Services.Configuration;
 using StudyLabAPI.Services.Email;
-using StudyLabAPI.Services.Email.Models;
 using StudyLabAPI.Services.Jwt;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -96,14 +95,16 @@ WebApplication app = builder.Build();
 
 if(app.Environment.IsDevelopment())
 {
+    app.UseStaticFiles();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options => options.InjectStylesheet("/feeling-blue.css"));
 }
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 RouteGroupBuilder authGroup = app.MapGroup("auth")
+    .WithTags("Autenticação")
     .AllowAnonymous();
 authGroup.MapAuthEndpoints();
 
