@@ -4,9 +4,10 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StudyLab - Recuperar senha</title>
+    <title>StudyLab - Informe o código</title>
     <link rel="stylesheet" href="/pages/login/login.css" />
     <link rel="stylesheet" href="recover-password.css">
+    <link rel="stylesheet" href="enter-code.css">
   </head>
   <body>
     <section class="page-login">
@@ -17,17 +18,12 @@
             <p class="subtitulo"><strong>Recuperar senha</strong></p>
             <div class="form">
               <form class="form-login-inputs">
+                <label class="label">Digite o código enviado para o e-mail al******st@alu.ufc.br</label>
                 <div class="email-container">
-                <label>Email cadastrado</label>
-                <span class="item-email" >
-                    <img src="/assets/img/@.svg" alt="@ item">
-                </span>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  placeholder="seu e-mail"
-                />
+                <input type="text" maxlength="1" id="digit1" oninput="moveToNext(this, 'digit2')">
+                <input type="text" maxlength="1" id="digit2" oninput="moveToNext(this, 'digit3')">
+                <input type="text" maxlength="1" id="digit3" oninput="moveToNext(this, 'digit4')">
+                <input type="text" maxlength="1" id="digit4">
             </div>
               </div>
             </form>
@@ -43,6 +39,6 @@
         </div>
       </div>
     </section>
-    <script src="/assets/js/recover-password.js"></script>
+    <script src="/assets/js/enter-code.js"></script>
   </body>
 </html>
