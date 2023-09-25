@@ -10,6 +10,7 @@ namespace StudyLabAPI.Models
 
         public int codigo_usuario { get; set; }
 
+        public string senha_usuario { get; set; }
         public Boolean status_usuario { get; set; }
 
         public int tipo_usuario { get; set; }
