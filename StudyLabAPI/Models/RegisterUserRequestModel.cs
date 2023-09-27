@@ -1,9 +1,12 @@
-﻿namespace StudyLabAPI.Models;
+﻿using StudyLabAPI.Models.Enum;
+
+namespace StudyLabAPI.Models;
 
 public class RegisterUserRequestModel
 {
-    public string username { get; set; }
-    public string email { get; set; }
-    public string password { get; set; }
-    public string confirmPassword { get; set; }
+    public string username { get; set; } = null!;
+    public string email { get; set; } = null!;
+    public string password { get; set; } = null!;
+    public int role { get; set; }
+    public CursoCode codeCurso { get; set; }
 }
