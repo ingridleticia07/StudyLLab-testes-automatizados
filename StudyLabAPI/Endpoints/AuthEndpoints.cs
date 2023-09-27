@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Models;
 using StudyLabAPI.Models;
 using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Email.Models;
@@ -23,10 +22,10 @@ public static class AuthEndpoints
 
     private static async Task<IResult> AuthLoginEndpointHandler(
         HttpContext _,
-        [FromBody] UserLoginModel loginModel,
+        [FromBody] UserLoginRequestModel loginRequestModel,
         [FromServices] JwtService jwtService)
     {
-        JwtPayload payload = new(Guid.NewGuid().ToString(), loginModel.username);
+        JwtPayload payload = new(Guid.NewGuid().ToString(), loginRequestModel.username);
         string token = jwtService.GenerateJwt(payload);
             
         return Results.Ok(token);
