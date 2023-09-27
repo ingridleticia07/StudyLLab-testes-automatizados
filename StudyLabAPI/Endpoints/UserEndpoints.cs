@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
+using StudyLabAPI.Middlewares.Cache;
 using StudyLabAPI.Models;
 using StudyLabAPI.Models.Enum;
 using StudyLabAPI.Summaries;
@@ -9,14 +11,15 @@ public static class UserEndpoints
 {
     public static RouteGroupBuilder MapUserEndpoints(this RouteGroupBuilder builder)
     {
-        builder.MapGet("users/id", UserGetByIdEndpoint)
-            .WithOpenApi(UserSummaries.UserGetByIdSpecification);
+        builder.MapGet("id/{id:int}", UserGetByIdEndpoint)
+            .WithOpenApi(UserSummaries.UserGetByIdSpecification)
+            .CacheOutput(OutputCachePolicy.USER_GET_USER_BY_ID_POLICY);
         
         return builder;
     }
 
     private static IResult UserGetByIdEndpoint(HttpContext context,
-        [FromQuery] int id)
+        [FromRoute] int id)
     {
         try
         {
@@ -30,7 +33,7 @@ public static class UserEndpoints
         return Results.Ok(new UserReadModel
         {
             email = "test@gmail.com",
-            username = "Test",
+            username = 1.ToString(),
             active = true,
             role = 0,
             cursoCode = CursoCode.ES

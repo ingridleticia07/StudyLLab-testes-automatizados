@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using StudyLabAPI.Services.Jwt;
 
-namespace StudyLabAPI.Middlewares.Policies;
+namespace StudyLabAPI.Middlewares.Auth;
 
 public static class AuthorizationPolicies
 {

@@ -5,7 +5,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using StudyLabAPI.Context;
 using StudyLabAPI.Endpoints;
-using StudyLabAPI.Middlewares.Policies;
+using StudyLabAPI.Middlewares.Auth;
+using StudyLabAPI.Middlewares.Cache;
 using StudyLabAPI.Middlewares.Swagger;
 using StudyLabAPI.Services.Configuration;
 using StudyLabAPI.Services.Email;
@@ -87,10 +88,9 @@ builder.Services.AddAuthentication(options =>
         ValidAlgorithms = new []{ SecurityAlgorithms.HmacSha256 },
     };
 });
-
-
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerConfiguration>();
 
+builder.Services.AddOutputCacheWCustomPolicy();
 WebApplication app = builder.Build();
 
 if(app.Environment.IsDevelopment())
@@ -102,11 +102,17 @@ if(app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseOutputCache();
 
 RouteGroupBuilder authGroup = app.MapGroup("auth")
     .WithTags("Autenticação")
     .AllowAnonymous();
 authGroup.MapAuthEndpoints();
+
+RouteGroupBuilder userGroup = app.MapGroup("user")
+    .WithTags("Usuário")
+    .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_NAME_POLICY);
+userGroup.MapUserEndpoints();
 
 app.MapGet("jwt/test",
     (HttpContext context) =>
