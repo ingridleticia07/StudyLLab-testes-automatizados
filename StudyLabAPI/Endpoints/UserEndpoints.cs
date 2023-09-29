@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OutputCaching;
 using StudyLabAPI.Middlewares.Cache;
 using StudyLabAPI.Models;
 using StudyLabAPI.Models.Enum;
@@ -12,8 +11,7 @@ public static class UserEndpoints
     public static RouteGroupBuilder MapUserEndpoints(this RouteGroupBuilder builder)
     {
         builder.MapGet("id/{id:int}", UserGetByIdEndpoint)
-            .WithOpenApi(UserSummaries.UserGetByIdSpecification)
-            .CacheOutput(OutputCachePolicy.USER_GET_USER_BY_ID_POLICY);
+            .WithOpenApi(UserSummaries.UserGetByIdSpecification);
         
         return builder;
     }
