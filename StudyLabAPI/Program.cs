@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using StudyLabAPI.Context;
 using StudyLabAPI.Endpoints;
 using StudyLabAPI.Middlewares.Auth;
@@ -12,8 +13,18 @@ using StudyLabAPI.Services.Configuration;
 using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Jwt;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using ILogger = Serilog.ILogger;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+ILogger serilog = new LoggerConfiguration()
+    .Enrich.WithMachineName()
+    .Enrich.WithEnvironmentName()
+    .WriteTo.Console()
+    .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(serilog);
+builder.Host.UseSerilog(serilog);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -23,7 +34,7 @@ builder.Services.AddDbContext<AppDbContext>((provider, optionsBuilder) =>
     
     string? connectionString = builder.Configuration.GetConnectionString("PostgresDbConnString");
     if(string.IsNullOrEmpty(connectionString))
-        logger?.LogWarning("String de conexão com o banco de dados não especificada");
+        logger?.Warning("String de conexão com o banco de dados não especificada");
     
     optionsBuilder.UseNpgsql(connectionString);
 });
@@ -37,7 +48,7 @@ builder.Services.AddSingleton<JwtService>(provider =>
         .Get<JwtParametersOptions>();
     if(jwtOptions is null)
     {
-        logger?.LogWarning("Parâmetros do JWT não especificados");
+        logger?.Warning("Parâmetros do JWT não especificados");
         jwtOptions = new();
     }
     
@@ -51,7 +62,7 @@ builder.Services.AddTransient<EmailService>(provider =>
         .Get<EmailOptions>();
     if(emailOptions is null)
     {
-        logger?.LogWarning("Email do servidor não especificado");
+        logger?.Warning("Email do servidor não especificado");
         emailOptions = new();
     }
     
@@ -90,8 +101,11 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerConfiguration>();
 
-builder.Services.AddOutputCacheWCustomPolicy();
+builder.Services.AddOutputCacheCustom();
+
 WebApplication app = builder.Build();
+
+app.UseOutputCache();
 
 if(app.Environment.IsDevelopment())
 {
@@ -102,7 +116,6 @@ if(app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseOutputCache();
 
 RouteGroupBuilder authGroup = app.MapGroup("auth")
     .WithTags("Autenticação")
@@ -110,8 +123,8 @@ RouteGroupBuilder authGroup = app.MapGroup("auth")
 authGroup.MapAuthEndpoints();
 
 RouteGroupBuilder userGroup = app.MapGroup("user")
-    .WithTags("Usuário")
-    .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_NAME_POLICY);
+    .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_NAME_POLICY)
+    .WithTags("Usuário");
 userGroup.MapUserEndpoints();
 
 app.MapGet("jwt/test",
