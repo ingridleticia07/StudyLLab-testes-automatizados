@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using StudyLabAPI.Context;
 using StudyLabAPI.Endpoints;
+using StudyLabAPI.Filters;
 using StudyLabAPI.Middlewares.Auth;
 using StudyLabAPI.Middlewares.Cache;
 using StudyLabAPI.Middlewares.Swagger;
@@ -118,11 +119,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 RouteGroupBuilder authGroup = app.MapGroup("auth")
+    .AddEndpointFilter<ApiKeyFilter>()
     .WithTags("Autenticação")
     .AllowAnonymous();
 authGroup.MapAuthEndpoints();
 
 RouteGroupBuilder userGroup = app.MapGroup("user")
+    .AddEndpointFilter<ApiKeyFilter>()
     .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_NAME_POLICY)
     .WithTags("Usuário");
 userGroup.MapUserEndpoints();
