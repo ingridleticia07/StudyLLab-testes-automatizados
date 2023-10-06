@@ -25,7 +25,9 @@ public static class AuthEndpoints
         [FromBody] UserLoginRequestModel loginRequestModel,
         [FromServices] JwtService jwtService)
     {
-        JwtPayload payload = new(Guid.NewGuid().ToString(), loginRequestModel.username);
+        const UserRole dumyRole = UserRole.User;
+        JwtPayload payload = new("1", dumyRole);
+        
         string token = jwtService.GenerateJwt(payload);
             
         return Results.Ok(token);
@@ -45,7 +47,7 @@ public static class AuthEndpoints
         try
         {
             await emailService.SendEmail(emailIntent);
-            //Move to controller
+            //TODO: Move to controller
         }
         catch(Exception)
         {

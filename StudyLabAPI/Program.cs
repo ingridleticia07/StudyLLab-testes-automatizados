@@ -74,8 +74,12 @@ builder.Services.AddTransient<EmailService>(provider =>
 });
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_NAME_POLICY, 
-        AuthorizationPolicies.RequireIdentifierAndName);
+    options.AddPolicy(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE,
+        AuthorizationPolicies.RequireIdentifierAndUserRole);
+    options.AddPolicy(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_ADMIN_ROLE,
+        AuthorizationPolicies.RequireIdentifierAndAdminRole);
+    options.AddPolicy(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_DEV_ROLE,
+        AuthorizationPolicies.RequireIdentifierAndDevRole);
 });
 builder.Services.AddAuthentication(options =>
 {
@@ -134,15 +138,5 @@ RouteGroupBuilder userGroup = app.MapGroup("user")
     .AddEndpointFilter<ApiKeyFilter>()
     .WithTags("Usuário");
 userGroup.MapUserEndpoints();
-
-app.MapGet("jwt/test",
-    (HttpContext context) =>
-    {
-        string userId = context.User.Claims.First(claim => claim.Type == JwtClaims.IDENTIFIER).Value;
-        string email = context.User.Claims.First(claim => claim.Type == JwtClaims.NAME).Value;
-        
-        return Results.Ok($"{email} ({userId})");
-    })
-    .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_NAME_POLICY);
 
 app.Run();
