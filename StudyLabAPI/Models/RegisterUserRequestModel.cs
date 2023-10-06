@@ -1,6 +1,4 @@
-﻿using StudyLabAPI.Models.Enum;
-
-namespace StudyLabAPI.Models;
+﻿namespace StudyLabAPI.Models;
 
 public class RegisterUserRequestModel
 {
@@ -8,5 +6,5 @@ public class RegisterUserRequestModel
     public string email { get; set; } = null!;
     public string password { get; set; } = null!;
     public int role { get; set; }
-    public CursoCode codeCurso { get; set; }
+    public int codeCurso { get; set; }
 }
