@@ -17,6 +17,14 @@ public class SwaggerConfiguration : IConfigureOptions<SwaggerGenOptions>
             BearerFormat = "JWT",
             Scheme = "Bearer"
         });
+        options.AddSecurityDefinition("ApiKey", new()
+        {
+            In = ParameterLocation.Header,
+            Description = "Cabeçalho de autenticação usando ApiKey.",
+            Name = "x-api-key",
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = "ApiKeyScheme"
+        });
         
         options.AddSecurityRequirement(new()
         {
@@ -27,6 +35,20 @@ public class SwaggerConfiguration : IConfigureOptions<SwaggerGenOptions>
                     {
                         Type = ReferenceType.SecurityScheme,
                         Id = "Bearer"
+                    }
+                },
+                Array.Empty<string>()
+            }
+        });
+        options.AddSecurityRequirement(new()
+        {
+            {
+                new()
+                {
+                    Reference = new()
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "ApiKey"
                     }
                 },
                 Array.Empty<string>()

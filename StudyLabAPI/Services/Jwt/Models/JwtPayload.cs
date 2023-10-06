@@ -2,15 +2,15 @@
 
 namespace StudyLabAPI.Services.Jwt.Models;
 
-public record JwtPayload(string userId, string username)
+public record JwtPayload(string userId, UserRole role)
 {
     public ClaimsIdentity CreateClaimsIdentity()
     {
         ClaimsIdentity claims = new();
         claims.AddClaims(new Claim[]
         {
-            new(JwtClaims.IDENTIFIER, userId),
-            new(JwtClaims.NAME, username)
+            new(ClaimTypes.Name, userId),
+            new(ClaimTypes.Role, role.ToString())
         });
         
         return claims;

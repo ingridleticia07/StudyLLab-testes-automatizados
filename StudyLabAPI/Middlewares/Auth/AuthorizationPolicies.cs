@@ -1,14 +1,28 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using StudyLabAPI.Services.Jwt;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using StudyLabAPI.Services.Jwt.Models;
 
 namespace StudyLabAPI.Middlewares.Auth;
 
 public static class AuthorizationPolicies
 {
-    public const string REQUIRE_IDENTIFIER_AND_NAME_POLICY = "RequireIdentifierAndName";
-    public static void RequireIdentifierAndName(AuthorizationPolicyBuilder builder)
+    public const string REQUIRE_IDENTIFIER_AND_USER_ROLE = "RequireIdentifierAndUserRole";
+    public const string REQUIRE_IDENTIFIER_AND_ADMIN_ROLE = "RequireIdentifierAndAdminRole";
+    public const string REQUIRE_IDENTIFIER_AND_DEV_ROLE = "RequireIdentifierAndDevRole";
+    
+    public static void RequireIdentifierAndUserRole(AuthorizationPolicyBuilder builder)
     {
-        builder.RequireClaim(JwtClaims.IDENTIFIER);
-        builder.RequireClaim(JwtClaims.NAME);
+        builder.RequireClaim(ClaimTypes.Name);
+        builder.RequireRole(UserRole.User.ToString());
+    }
+    public static void RequireIdentifierAndAdminRole(AuthorizationPolicyBuilder builder)
+    {
+        builder.RequireClaim(ClaimTypes.Name);
+        builder.RequireRole(UserRole.Admin.ToString());
+    }
+    public static void RequireIdentifierAndDevRole(AuthorizationPolicyBuilder builder)
+    {
+        builder.RequireClaim(ClaimTypes.Name);
+        builder.RequireRole(UserRole.Dev.ToString());
     }
 }

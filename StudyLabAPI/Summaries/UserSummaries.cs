@@ -4,8 +4,8 @@ namespace StudyLabAPI.Summaries;
 
 public static class UserSummaries
 {
-    public static OpenApiOperation UserGetByIdSpecification(OpenApiOperation oas) => new(oas)
+    public static OpenApiOperation UserProfileInfoSpecification(OpenApiOperation oas) => new(oas)
     {
-        Summary = "Retorna um usuário buscando pelo ID"
+        Summary = "Retorna as informações do usuario autenticado"
     };
 }

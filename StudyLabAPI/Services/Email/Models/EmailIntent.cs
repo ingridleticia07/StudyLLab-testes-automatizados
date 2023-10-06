@@ -1,5 +1,3 @@
-using System.Net.Mail;
-
 namespace StudyLabAPI.Services.Email.Models;
 
 public class EmailIntent
