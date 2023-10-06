@@ -24,11 +24,6 @@
 
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
-    </ItemGroup>
-
-
-    <ItemGroup>
       <None Include="wwwroot\feeling-blue.css" />
     </ItemGroup>
 

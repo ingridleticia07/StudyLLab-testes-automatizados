@@ -5,11 +5,13 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using StudyLabAPI.Context;
+using StudyLabAPI.Controllers;
 using StudyLabAPI.Endpoints;
 using StudyLabAPI.Filters;
 using StudyLabAPI.Middlewares.Auth;
 using StudyLabAPI.Middlewares.Cache;
 using StudyLabAPI.Middlewares.Swagger;
+using StudyLabAPI.Repositories;
 using StudyLabAPI.Services.Configuration;
 using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Jwt;
@@ -102,6 +104,10 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerConfiguration>();
 
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+
+builder.Services.AddScoped<IUsuarioController, UsuarioController>();
+
 builder.Services.AddOutputCacheCustom();
 
 WebApplication app = builder.Build();
@@ -126,7 +132,6 @@ authGroup.MapAuthEndpoints();
 
 RouteGroupBuilder userGroup = app.MapGroup("user")
     .AddEndpointFilter<ApiKeyFilter>()
-    .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_NAME_POLICY)
     .WithTags("Usuário");
 userGroup.MapUserEndpoints();
 
