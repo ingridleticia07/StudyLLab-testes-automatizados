@@ -48,7 +48,7 @@ public class UsuarioModel
 
     [Column("data_cadastro_usuario")]
     [Required]
-    public string dataCadastroUsuario { get; set; }
+    public DateOnly dataCadastroUsuario { get; set; }
 
     [Column("imagem")]
     [MaxLength(45)]
