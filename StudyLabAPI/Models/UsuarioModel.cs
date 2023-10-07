@@ -6,19 +6,52 @@ namespace StudyLabAPI.Models;
 [Table("usuario")]
 public class UsuarioModel
 {
+    
     [Key]
-    public int id_usuario { get; set; }
-    public string email_usuario { get; set; }
+    [Column("id_usuario")]
+    public int idUsuario { get; set; }
 
-    public int codigo_usuario { get; set; }
+    [Column("email_usuario")]
+    [MaxLength(60)]
+    [Required]
+    public string emailUsuario { get; set; }
 
-    public string senha_usuario { get; set; }
-    public bool status_usuario { get; set; }
+    [Column("codigo_usuario")]
+    [MaxLength(1)]
+    [Required]
+    public int codigoUsuario { get; set; }
 
-    public int tipo_usuario { get; set; }
+    [Column("senha_usuario")]
+    [MaxLength(60)]
+    [Required]
+    public string senhaUsuario { get; set; }
 
-    [ForeignKey("fk_curso")] 
+    [Column("status_usuario")]
+    [MaxLength(1)]
+    [Required]
+    public bool statusUsuario { get; set; }
+
+    [Column("tipo_usuario")]
+    [MaxLength(1)]
+    [Required]
+    public int tipoUsuario { get; set; }
+
+    [ForeignKey("fk_curso")]
+    [Required]
+
     public CursoModel curso { get; set; }
 
-    public string? nome_usuario { get; set; }
+    [Column("nome_usuario")]
+    [MaxLength(45)]
+    [Required]
+    public string nomeUsuario { get; set; }
+
+    [Column("data_cadastro_usuario")]
+    [Required]
+    public string dataCadastroUsuario { get; set; }
+
+    [Column("imagem")]
+    [MaxLength(45)]
+    [Required]
+    public string imagemUsuario { get; set; }
 }

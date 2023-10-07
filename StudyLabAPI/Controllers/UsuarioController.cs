@@ -19,10 +19,10 @@ public class UsuarioController : IUsuarioController
         
         return new()
         {
-            username = user.nome_usuario,
-            email = user.email_usuario,
-            active = user.status_usuario,
-            role = user.tipo_usuario,
+            username = user.nomeUsuario,
+            email = user.emailUsuario,
+            active = user.statusUsuario,
+            role = user.tipoUsuario,
             curso = new(user.curso.nome_curso)
         };
     }
