@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StudyLabAPI.Controllers;
+using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.Enums;
 using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Email.Models;
 using StudyLabAPI.Services.Jwt;
@@ -36,8 +39,11 @@ public static class AuthEndpoints
     private static async Task<IResult> AuthRegisterEndpointHandler(
         HttpContext _,
         [FromBody] RegisterUserRequestModel registerUserRequest,
-        [FromServices] EmailService emailService)
+        [FromServices] EmailService emailService,
+        [FromServices] JwtService jwtService,
+        [FromServices] IAuthController controller)
     {
+        string jwtNewUser;
         EmailIntent emailIntent = new()
         {
             toEmail = registerUserRequest.email,
@@ -46,14 +52,21 @@ public static class AuthEndpoints
         };
         try
         {
+            UserReadModel newUserId = await controller.RegisterNewUser(registerUserRequest);
+            JwtPayload payload = new(newUserId.id.ToString(), newUserId.role);
+        
+            jwtNewUser = jwtService.GenerateJwt(payload);
             await emailService.SendEmail(emailIntent);
-            //TODO: Move to controller
+        }
+        catch(CursoNotFound ex)
+        {
+            return Results.NotFound(ex.Message);
         }
         catch(Exception)
         {
             return Results.BadRequest();
         }
                 
-        return Results.Ok($"Cadastrar usuario: {registerUserRequest.username}");
+        return Results.Ok(jwtNewUser);
     }
 }

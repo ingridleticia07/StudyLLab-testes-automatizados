@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using StudyLabAPI.Services.Jwt.Models;
+using StudyLabAPI.Models.Enums;
 
 namespace StudyLabAPI.Middlewares.Auth;
 
