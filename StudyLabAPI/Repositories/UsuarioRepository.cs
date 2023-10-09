@@ -21,4 +21,10 @@ public class UsuarioRepository : IUsuarioRepository
         await dbContext.Entry(userModel).Reference(m => m.curso).LoadAsync();
         return userModel;
     }
+    
+    public async Task CreateUser(UsuarioModel usuarioModel) =>
+        await dbContext.usuarios.AddAsync(usuarioModel);
+    
+    public async Task Flush() => 
+        await dbContext.SaveChangesAsync();
 }
