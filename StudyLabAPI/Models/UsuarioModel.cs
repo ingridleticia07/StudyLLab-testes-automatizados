@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using StudyLabAPI.Models.Enums;
 
 namespace StudyLabAPI.Models;
 
@@ -34,7 +35,7 @@ public class UsuarioModel
     [Column("tipo_usuario")]
     [MaxLength(1)]
     [Required]
-    public int tipoUsuario { get; set; }
+    public UserRole tipoUsuario { get; set; }
 
     [ForeignKey("fk_curso")]
     [Required]
