@@ -109,8 +109,10 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerConfiguration>();
 
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<ICursoRepository, CursoRepository>();
 
 builder.Services.AddScoped<IUsuarioController, UsuarioController>();
+builder.Services.AddScoped<IAuthController, AuthController>();
 
 builder.Services.AddOutputCacheCustom();
 

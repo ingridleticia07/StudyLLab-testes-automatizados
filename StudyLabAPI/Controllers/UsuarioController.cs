@@ -19,6 +19,7 @@ public class UsuarioController : IUsuarioController
         
         return new()
         {
+            id = user.idUsuario,
             username = user.nomeUsuario,
             email = user.emailUsuario,
             active = user.statusUsuario,

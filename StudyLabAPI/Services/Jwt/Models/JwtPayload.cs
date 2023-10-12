@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using StudyLabAPI.Models.Enums;
 
 namespace StudyLabAPI.Services.Jwt.Models;
 

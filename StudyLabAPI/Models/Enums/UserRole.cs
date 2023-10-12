@@ -1,4 +1,4 @@
-namespace StudyLabAPI.Services.Jwt.Models;
+namespace StudyLabAPI.Models.Enums;
 
 public enum UserRole
 {
