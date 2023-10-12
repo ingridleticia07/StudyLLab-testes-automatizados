@@ -23,7 +23,7 @@ public class UsuarioController : IUsuarioController
             email = user.emailUsuario,
             active = user.statusUsuario,
             role = user.tipoUsuario,
-            curso = new(user.curso.nome_curso)
+            curso = new(user.curso.nomeCurso)
         };
     }
 }

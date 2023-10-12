@@ -5,8 +5,14 @@ namespace StudyLabAPI.Models;
 
 [Table("curso")]
 public class CursoModel
-{
-    [Key] public int id_curso { get; set; }
-    public string nome_curso { get; set; }
+{   
+    [Key]
+    [Column("id_curso")]
+    public int idCurso { get; set; }
+
+    [Column("nome_curso")]
+    [Required]
+    [MaxLength(45)]
+    public string nomeCurso { get; set; }
 
 }

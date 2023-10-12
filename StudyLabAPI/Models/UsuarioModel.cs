@@ -17,7 +17,6 @@ public class UsuarioModel
     public string emailUsuario { get; set; }
 
     [Column("codigo_usuario")]
-    [MaxLength(1)]
     [Required]
     public int codigoUsuario { get; set; }
 
@@ -27,12 +26,10 @@ public class UsuarioModel
     public string senhaUsuario { get; set; }
 
     [Column("status_usuario")]
-    [MaxLength(1)]
     [Required]
     public bool statusUsuario { get; set; }
 
     [Column("tipo_usuario")]
-    [MaxLength(1)]
     [Required]
     public int tipoUsuario { get; set; }
 
@@ -50,6 +47,5 @@ public class UsuarioModel
 
     [Column("imagem")]
     [MaxLength(45)]
-    [Required]
     public string imagemUsuario { get; set; }
 }
