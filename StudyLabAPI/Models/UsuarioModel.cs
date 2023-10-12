@@ -37,8 +37,6 @@ public class UsuarioModel
     public int tipoUsuario { get; set; }
 
     [ForeignKey("fk_curso")]
-    [Required]
-
     public CursoModel curso { get; set; }
 
     [Column("nome_usuario")]
