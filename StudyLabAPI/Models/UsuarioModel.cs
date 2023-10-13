@@ -48,5 +48,5 @@ public class UsuarioModel
 
     [Column("imagem")]
     [MaxLength(45)]
-    public string imagemUsuario { get; set; }
+    public string? imagemUsuario { get; set; }
 }
