@@ -4,6 +4,6 @@ namespace StudyLabAPI.Controllers;
 
 public interface IAuthController
 {
-    public Task<UserReadModel> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel);
-    public Task<UserReadModel> LoginUser(UserLoginRequestModel userLoginRequestModel);
+    public Task<(UserReadModel, string)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel);
+    public Task<(UserReadModel, string)> LoginUser(UserLoginRequestModel userLoginRequestModel);
 }

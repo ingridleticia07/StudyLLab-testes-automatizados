@@ -1,6 +1,9 @@
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models;
 using StudyLabAPI.Repositories;
+using StudyLabAPI.Services.Email;
+using StudyLabAPI.Services.Email.Models;
+using StudyLabAPI.Services.Jwt;
 using ILogger = Serilog.ILogger;
 
 namespace StudyLabAPI.Controllers;
@@ -9,17 +12,21 @@ public class AuthController : IAuthController
 {
     private IUsuarioRepository usuarioRepository { get; }
     private ICursoRepository cursoRepository { get; }
+    private JwtService jwtService { get; }
+    private EmailService emailService { get; }
     private ILogger logger { get; }
 
     public AuthController(IUsuarioRepository usuarioRepository, ICursoRepository cursoRepository, 
-        ILogger logger)
+        JwtService jwtService, EmailService emailService, ILogger logger)
     {
         this.usuarioRepository = usuarioRepository;
         this.cursoRepository = cursoRepository;
+        this.jwtService = jwtService;
+        this.emailService = emailService;
         this.logger = logger;
     }
     
-    public async Task<UserReadModel> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel)
+    public async Task<(UserReadModel, string)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel)
     {
         //TODO: Validation
         
@@ -40,6 +47,8 @@ public class AuthController : IAuthController
             emailUsuario = registerUserRequestModel.email,
             senhaUsuario = registerUserRequestModel.password,
             tipoUsuario = registerUserRequestModel.role,
+            codigoUsuario = registerUserRequestModel.codigoUsuario,
+            imagemUsuario = registerUserRequestModel.imagem,
             curso = relatedCurso,
             statusUsuario = true,
             dataCadastroUsuario = new(registerDate.Year, registerDate.Month, registerDate.Day),
@@ -47,7 +56,7 @@ public class AuthController : IAuthController
         await usuarioRepository.CreateUser(usuarioModel);
         await usuarioRepository.Flush();
         
-        return new()
+        UserReadModel userReadModel = new()
         {
             id = usuarioModel.idUsuario,
             username = usuarioModel.nomeUsuario,
@@ -56,9 +65,16 @@ public class AuthController : IAuthController
             active = usuarioModel.statusUsuario,
             curso = new(relatedCurso.nomeCurso)
         };
+        string jwtUser = jwtService.GenerateJwt(new(userReadModel.id.ToString(), userReadModel.role));
+        bool emailSended = await SendRegisterEmail(userReadModel.email, userReadModel.username);
+        if(!emailSended)
+            logger.Warning("Não foi possível enviar o email de boas vindas para o usuário Email[{UserEmail}]",
+                userReadModel.email);
+        
+        return (userReadModel, jwtUser);
     }
     
-    public async Task<UserReadModel> LoginUser(UserLoginRequestModel userLoginRequestModel)
+    public async Task<(UserReadModel, string)> LoginUser(UserLoginRequestModel userLoginRequestModel)
     {
         //TODO: Validation
         
@@ -78,7 +94,7 @@ public class AuthController : IAuthController
             throw exception;
         }
         
-        return new()
+        UserReadModel userReadModel = new()
         {
             id = usuarioModel.idUsuario,
             username = usuarioModel.nomeUsuario,
@@ -87,5 +103,25 @@ public class AuthController : IAuthController
             active = usuarioModel.statusUsuario,
             curso = new(usuarioModel.curso.nomeCurso)
         };
+        string jwtUser = jwtService.GenerateJwt(new(userReadModel.id.ToString(), userReadModel.role));
+        
+        return (userReadModel, jwtUser);
+    }
+    
+    private async Task<bool> SendRegisterEmail(string toEmail, string username)
+    {
+        EmailIntent emailIntent = new()
+        {
+            toEmail = toEmail,
+            subject = "Bem vindo ao StudyLab",
+            message = $"Olá {username}, seja bem vindo ao StudyLab"
+        };
+        
+        try
+        {
+            await emailService.SendEmail(emailIntent);
+        }
+        catch(Exception) { return false; }
+        return true;
     }
 }

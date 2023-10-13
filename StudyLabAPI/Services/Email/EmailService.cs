@@ -29,8 +29,6 @@ public class EmailService : IDisposable
             Body = intent.message,
         };;
         await smtpClient.SendMailAsync(internalMailScope);
-        
-        
     }
 
     public void Dispose()
