@@ -2,7 +2,6 @@
 using StudyLabAPI.Controllers;
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models;
-using StudyLabAPI.Models.Enums;
 using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Email.Models;
 using StudyLabAPI.Services.Jwt;
@@ -26,14 +25,25 @@ public static class AuthEndpoints
     private static async Task<IResult> AuthLoginEndpointHandler(
         HttpContext _,
         [FromBody] UserLoginRequestModel loginRequestModel,
-        [FromServices] JwtService jwtService)
+        [FromServices] JwtService jwtService,
+        [FromServices] IAuthController controller)
     {
-        const UserRole dumyRole = UserRole.User;
-        JwtPayload payload = new("1", dumyRole);
+        string jwtUser;
+        try
+        {
+            UserReadModel userReadModel = await controller.LoginUser(loginRequestModel);
+            jwtUser = jwtService.GenerateJwt(new(userReadModel.id.ToString(), userReadModel.role));
+        }
+        catch (UsuarioNotFoundException e)
+        {
+            return Results.NotFound(e.Message);
+        }
+        catch (InvalidLoginPasswordException)
+        {
+            return Results.Unauthorized();
+        }
         
-        string token = jwtService.GenerateJwt(payload);
-            
-        return Results.Ok(token);
+        return Results.Ok(jwtUser);
     }
 
     private static async Task<IResult> AuthRegisterEndpointHandler(

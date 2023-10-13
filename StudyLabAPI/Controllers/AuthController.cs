@@ -54,7 +54,38 @@ public class AuthController : IAuthController
             email = usuarioModel.emailUsuario,
             role = usuarioModel.tipoUsuario,
             active = usuarioModel.statusUsuario,
-            curso = new(relatedCurso.nome_curso)
+            curso = new(relatedCurso.nomeCurso)
+        };
+    }
+    
+    public async Task<UserReadModel> LoginUser(UserLoginRequestModel userLoginRequestModel)
+    {
+        //TODO: Validation
+        
+        UsuarioModel? usuarioModel = await usuarioRepository
+            .GetUsuarioByEmail(userLoginRequestModel.email);
+        
+        if(usuarioModel is null)
+        {
+            UsuarioNotFoundException exception = new(userLoginRequestModel.email);
+            logger.Error(exception, "Usuário não encontrado");
+            throw exception;
+        }
+        if(usuarioModel.senhaUsuario != userLoginRequestModel.password)
+        {
+            InvalidLoginPasswordException exception = new(userLoginRequestModel.email);
+            logger.Error(exception, "Senha inválida");
+            throw exception;
+        }
+        
+        return new()
+        {
+            id = usuarioModel.idUsuario,
+            username = usuarioModel.nomeUsuario,
+            email = usuarioModel.emailUsuario,
+            role = usuarioModel.tipoUsuario,
+            active = usuarioModel.statusUsuario,
+            curso = new(usuarioModel.curso.nomeCurso)
         };
     }
 }
