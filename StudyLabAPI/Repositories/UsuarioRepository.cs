@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using StudyLabAPI.Context;
 using StudyLabAPI.Models;
 
@@ -21,7 +22,17 @@ public class UsuarioRepository : IUsuarioRepository
         await dbContext.Entry(userModel).Reference(m => m.curso).LoadAsync();
         return userModel;
     }
-    
+
+    public async Task<UsuarioModel?> GetUsuarioByEmail(string email)
+    {
+        UsuarioModel? userModel = await dbContext.usuarios
+            .FirstOrDefaultAsync(u => u.emailUsuario == email);
+        if(userModel is null) return null;
+        
+        await dbContext.Entry(userModel).Reference(m => m.curso).LoadAsync();
+        return userModel;
+    }
+
     public async Task CreateUser(UsuarioModel usuarioModel) =>
         await dbContext.usuarios.AddAsync(usuarioModel);
     
