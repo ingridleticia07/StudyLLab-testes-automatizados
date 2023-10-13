@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StudyLab - Informe o código</title>
+    <link rel="stylesheet" href="/pages/login/login.css" />
+    <link rel="stylesheet" href="recover-password.css">
+    <link rel="stylesheet" href="enter-code.css">
+  </head>
+  <body>
+    <section class="page-login">
+      <div class="content">
+        <div class="login-form">
+          <div class="form-login-content">
+            <p class="titulo">Study<strong>Lab</strong></p>
+            <p class="subtitulo"><strong>Recuperar senha</strong></p>
+            <div class="form">
+              <form class="form-login-inputs">
+                <label class="label">Digite o código enviado para o e-mail al******st@alu.ufc.br</label>
+                <div class="email-container">
+                <input type="text" maxlength="1" id="digit1" oninput="moveToNext(this, 'digit2')">
+                <input type="text" maxlength="1" id="digit2" oninput="moveToNext(this, 'digit3')">
+                <input type="text" maxlength="1" id="digit3" oninput="moveToNext(this, 'digit4')">
+                <input type="text" maxlength="1" id="digit4">
+            </div>
+              </div>
+            </form>
+            <button id="button-submit">Continuar</button>
+            <div class="links-conta">
+              <a href="/pages/register/register.html">Não tem uma conta? Cadastre-se</a>
+            </div>
+          </div>
+        </div>
+        <div class="links-redirecionamento">
+          <a href="/pages/home/home.html">Voltar para a página inicial</a>
+          <a href="/pages/terms/terms.html">Termo de serviço e Política de privacidade</a>
+        </div>
+      </div>
+    </section>
+    <script src="/assets/js/enter-code.js"></script>
+  </body>
+</html>
