@@ -1,4 +1,4 @@
-﻿namespace StudyLabAPI.Services.Configuration;
+﻿namespace StudyLabAPI.Models.Options;
 
 public class JwtParametersOptions
 {

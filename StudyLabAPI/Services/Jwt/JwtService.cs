@@ -1,31 +1,29 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using StudyLabAPI.Models.Options;
 using JwtPayload = StudyLabAPI.Services.Jwt.Models.JwtPayload;
 
 namespace StudyLabAPI.Services.Jwt;
 
 public class JwtService
 {
-    private string privateKey { get; set; }
-    private string issuer { get; set; }
-    private string audience { get; set; }
+    private readonly JwtParametersOptions options;
 
     private SigningCredentials credentials
     {
         get
         {
-            byte[] privateKeyByte = Encoding.ASCII.GetBytes(privateKey);
+            byte[] privateKeyByte = Encoding.ASCII.GetBytes(options.privateKey);
             
             return new(new SymmetricSecurityKey(privateKeyByte), SecurityAlgorithms.HmacSha256);
         }
     }
 
-    public JwtService(string privateKey, string issuer, string audience)
+    public JwtService(IOptions<JwtParametersOptions> options)
     {
-        this.privateKey = privateKey;
-        this.issuer = issuer;
-        this.audience = audience;
+        this.options = options.Value;
     }
     
     public string GenerateJwt(JwtPayload payload)
@@ -35,10 +33,10 @@ public class JwtService
         SecurityToken securityToken = tokenHandler.CreateToken(new()
         {
             SigningCredentials = credentials,
-            Issuer = issuer,
+            Issuer = options.issuer,
             IssuedAt = DateTime.Now,
             Expires = DateTime.Now.AddHours(5),
-            Audience = audience,
+            Audience = options.audience,
             Subject = payload.CreateClaimsIdentity()
         });
         

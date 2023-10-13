@@ -1,4 +1,4 @@
-namespace StudyLabAPI.Filters;
+namespace StudyLabAPI.Middlewares.Filters;
 
 public static class ApiFiltersConsts
 {

@@ -1,13 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.Options;
 
 namespace StudyLabAPI.Context;
 
 public class AppDbContext : DbContext
 {
+    private readonly ConnectionStringsOptions options;
+    
     public DbSet<UsuarioModel> usuarios { get; set; } = null!;
     public DbSet<CursoModel> cursos { get; set; } = null!;
     
-    public AppDbContext(DbContextOptions options) : base(options)
-    { }
+    public AppDbContext(IOptions<ConnectionStringsOptions> options)
+    {
+        this.options = options.Value;
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
+        optionsBuilder.UseNpgsql(options.PostgresDbConnString);
 }

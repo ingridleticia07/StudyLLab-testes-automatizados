@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Primitives;
 
-namespace StudyLabAPI.Filters;
+namespace StudyLabAPI.Middlewares.Filters;
 
 public class ApiKeyFilter : IEndpointFilter
 {

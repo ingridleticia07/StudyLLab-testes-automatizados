@@ -1,5 +1,7 @@
 using System.Net;
 using System.Net.Mail;
+using Microsoft.Extensions.Options;
+using StudyLabAPI.Models.Options;
 using StudyLabAPI.Services.Email.Models;
 using MailMessage = System.Net.Mail.MailMessage;
 
@@ -8,17 +10,20 @@ namespace StudyLabAPI.Services.Email;
 public class EmailService : IDisposable
 {
     private SmtpClient smtpClient { get; }
+    // ReSharper disable once UnusedAutoPropertyAccessor.Local
+    private readonly EmailOptions options;
     private string serverEmail { get; }
 
-    public EmailService(string smtpServer, int port, string email, string password)
+    public EmailService(IOptions<EmailOptions> emailOptions)
     {
-        smtpClient = new(smtpServer, port)
+        options = emailOptions.Value;
+        smtpClient = new(options.smtpServer, options.port)
         {
-            Credentials = new NetworkCredential(email, password),
+            Credentials = new NetworkCredential(options.email, options.password),
             EnableSsl = true,
             UseDefaultCredentials = false
         };
-        serverEmail = email;
+        serverEmail = options.email;
     }
     
     public async Task SendEmail(EmailIntent intent)
@@ -27,7 +32,7 @@ public class EmailService : IDisposable
         {
             Subject = intent.subject,
             Body = intent.message,
-        };;
+        };
         await smtpClient.SendMailAsync(internalMailScope);
     }
 
