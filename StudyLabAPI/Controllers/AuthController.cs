@@ -83,7 +83,7 @@ public class AuthController : IAuthController
         
         if(usuarioModel is null)
         {
-            UsuarioNotFoundException exception = new(userLoginRequestModel.email);
+            UsuarioNotFoundException exception = new(nameof(userLoginRequestModel.email), userLoginRequestModel.email);
             logger.Error(exception, "Usuário não encontrado");
             throw exception;
         }

@@ -4,5 +4,5 @@ namespace StudyLabAPI.Controllers;
 
 public interface IUsuarioController
 {
-    public Task<UserReadModel?> GetUserInfoById(int id);
+    public Task<UserReadModel> GetUserInfoById(int id);
 }

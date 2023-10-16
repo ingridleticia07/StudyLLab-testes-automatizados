@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using StudyLabAPI.Controllers;
+using StudyLabAPI.Exceptions;
 using StudyLabAPI.Middlewares.Auth;
 using StudyLabAPI.Models;
 using StudyLabAPI.Summaries;
@@ -17,23 +18,6 @@ public static class UserEndpoints
         
         return builder;
     }
-
-    private static async Task<IResult> UserGetByIdEndpoint(HttpContext context,
-        [FromRoute] int id,
-        [FromServices] IUsuarioController controller)
-    {
-        UserReadModel? userReadModel;
-        try
-        {
-            userReadModel = await controller.GetUserInfoById(id);
-        }
-        catch(Exception)
-        {
-            return Results.BadRequest(); 
-        }
-        
-        return userReadModel is null ? Results.NotFound() : Results.Ok(userReadModel);
-    }
     
     private static async Task<IResult> GetUserProfileInfo(HttpContext context,
         [FromServices] IUsuarioController controller)
@@ -45,11 +29,15 @@ public static class UserEndpoints
         {
             result = await controller.GetUserInfoById(userId);
         }
-        catch(Exception)
+        catch(UsuarioNotFoundException e)
         {
-            return Results.BadRequest();
+            return Results.NotFound(e.Message);
+        }
+        catch(Exception e)
+        {
+            return Results.BadRequest(e.Message);
         }
         
-        return result is not null ? Results.Ok(result) : Results.NotFound();
+        return Results.Ok(result);
     }
 }
