@@ -6,7 +6,7 @@ using StudyLabAPI.Models.Options;
 
 namespace StudyLabAPI.Middlewares.Auth;
 
-public class AuthenticationJwtBearerConfiguration : IConfigureOptions<JwtBearerOptions>
+public class AuthenticationJwtBearerConfiguration : IConfigureNamedOptions<JwtBearerOptions>
 {
     private readonly JwtParametersOptions jwtOptions;
 
@@ -15,7 +15,7 @@ public class AuthenticationJwtBearerConfiguration : IConfigureOptions<JwtBearerO
         this.jwtOptions = jwtOptions.Value;
     }
     
-    public void Configure(JwtBearerOptions options)
+    public void Configure(string? name, JwtBearerOptions options)
     {
         byte[] privateKeyByte = Encoding.ASCII.GetBytes(jwtOptions.privateKey);
     
@@ -28,7 +28,10 @@ public class AuthenticationJwtBearerConfiguration : IConfigureOptions<JwtBearerO
             ValidIssuer = jwtOptions.issuer,
             ValidAudience = jwtOptions.audience,
             IssuerSigningKey = new SymmetricSecurityKey(privateKeyByte),
-            ValidAlgorithms = new []{ SecurityAlgorithms.HmacSha256 },
+            ValidAlgorithms = new []{ SecurityAlgorithms.HmacSha256 }
         };
     }
+    
+    public void Configure(JwtBearerOptions options) =>
+        Configure(JwtBearerDefaults.AuthenticationScheme, options);
 }

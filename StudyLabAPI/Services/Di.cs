@@ -49,7 +49,7 @@ public static class Di
         return services;
     }
     
-    public static IServiceCollection AddServices(this IServiceCollection services)
+    public static IServiceCollection AddLocalServices(this IServiceCollection services)
     {
         services.AddSingleton<JwtService>();
         services.AddTransient<EmailService>();
@@ -75,7 +75,6 @@ public static class Di
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer();
-        
         return services;
     }
     

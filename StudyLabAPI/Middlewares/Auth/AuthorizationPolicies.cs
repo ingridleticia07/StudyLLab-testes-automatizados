@@ -13,7 +13,7 @@ public static class AuthorizationPolicies
     public static void RequireIdentifierAndUserRole(AuthorizationPolicyBuilder builder)
     {
         builder.RequireClaim(ClaimTypes.Name);
-        builder.RequireRole(UserRole.User.ToString());
+        builder.RequireRole(UserRole.User.ToString(), UserRole.Admin.ToString());
     }
     public static void RequireIdentifierAndAdminRole(AuthorizationPolicyBuilder builder)
     {

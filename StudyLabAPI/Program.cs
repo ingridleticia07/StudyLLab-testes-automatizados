@@ -21,12 +21,11 @@ builder.Services.AddServicesConfiguration(builder.Configuration);
 builder.Services.ConfigureServices();
 
 builder.Services.AddStorageServices();
-builder.Services.AddServices();
-builder.Services.AddAuth();
-
+builder.Services.AddLocalServices();
 builder.Services.AddApiControllers();
 builder.Services.AddApiRepositories();
 
+builder.Services.AddAuth();
 builder.Services.AddOutputCacheCustom();
 
 WebApplication app = builder.Build();
