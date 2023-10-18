@@ -82,7 +82,7 @@ public static class Di
     {
         services.AddScoped<IUsuarioRepository, UsuarioRepository>();
         services.AddScoped<ICursoRepository, CursoRepository>();
-        
+        services.AddScoped<IDisciplinaRepository, DisciplinaRepository>();
         return services;
     }
     
@@ -90,7 +90,7 @@ public static class Di
     {
         services.AddScoped<IUsuarioController, UsuarioController>();
         services.AddScoped<IAuthController, AuthController>();
-        
+        services.AddScoped<IDisciplinaController, DisciplinaController>();
         return services;
     }
 }

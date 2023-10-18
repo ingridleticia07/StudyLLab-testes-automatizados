@@ -9,7 +9,9 @@ namespace StudyLabAPI.Models
         [Key]
         [Column("id_disciplina")]
         public int idDisciplina { get; set; }
+
         [Column("nome_disciplina")]
+        [Required]
         [MaxLength(45)]
         public string nomeDisciplina { get; set; }
 
@@ -17,15 +19,17 @@ namespace StudyLabAPI.Models
         [Required]
         [MaxLength(45)]
         public string professorDisciplina { get; set; }
-        [ForeignKey("id_curso")] public int fk_curso { get; set; }
 
-        public CursoModel idCurso { get; set; }
+        [ForeignKey("fk_curso")]
+
+        public CursoModel Curso { get; set; }
 
         [Column("quantidade_aluno")]
-        public int quantidadeDluno { get; set; }
+        public int ?quantidadeAluno { get; set; }
 
         [Column("codigo_disciplina")]
-        public string codigoDisciplina { get; set; }
+        [MaxLength(10)]
+        public string ?codigoDisciplina { get; set; }
 
     }
 }

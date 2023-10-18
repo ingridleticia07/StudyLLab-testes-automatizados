@@ -53,4 +53,9 @@ RouteGroupBuilder userGroup = app.MapGroup("user")
     .WithTags("Usuário");
 userGroup.MapUserEndpoints();
 
+RouteGroupBuilder disciplinaGroup = app.MapGroup("disciplina")
+    .AddEndpointFilter<ApiKeyFilter>()
+    .WithTags("Disciplina");
+disciplinaGroup.MapDisciplinaEndpoints();
+
 app.Run();
