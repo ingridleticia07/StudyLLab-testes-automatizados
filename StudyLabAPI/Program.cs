@@ -17,16 +17,16 @@ builder.Logging.AddSerilog(serilog);
 builder.Host.UseSerilog(serilog);
 
 builder.Services.AddApiMetadata();
-builder.Services.AddServicesConfiguration(builder.Configuration);
-builder.Services.ConfigureServices();
+builder.Services.AddServicesConfiguration(builder.Configuration)
+    .ConfigureServices();
 
-builder.Services.AddStorageServices();
-builder.Services.AddLocalServices();
-builder.Services.AddApiControllers();
-builder.Services.AddApiRepositories();
+builder.Services.AddStorageServices()
+    .AddLocalServices()
+    .AddApiControllers()
+    .AddApiRepositories();
 
-builder.Services.AddAuth();
-builder.Services.AddOutputCacheCustom();
+builder.Services.AddAuth()
+    .AddOutputCacheCustom();
 
 WebApplication app = builder.Build();
 
@@ -36,7 +36,7 @@ if(app.Environment.IsDevelopment())
 {
     app.UseStaticFiles();
     app.UseSwagger();
-    app.UseSwaggerUI(options => options.InjectStylesheet("/feeling-blue.css"));
+    app.UseSwaggerUI();
 }
 
 app.UseAuthentication();
