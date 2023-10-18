@@ -21,8 +21,7 @@ namespace StudyLabAPI.Models
         public string professorDisciplina { get; set; }
 
         [ForeignKey("fk_curso")]
-
-        public CursoModel Curso { get; set; }
+        public CursoModel curso { get; set; }
 
         [Column("quantidade_aluno")]
         public int ?quantidadeAluno { get; set; }

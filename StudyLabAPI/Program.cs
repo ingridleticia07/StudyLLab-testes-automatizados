@@ -50,12 +50,14 @@ authGroup.MapAuthEndpoints();
 
 RouteGroupBuilder userGroup = app.MapGroup("user")
     .AddEndpointFilter<ApiKeyFilter>()
-    .WithTags("Usuário");
+    .WithTags("Usuário")
+    .AllowAnonymous();
 userGroup.MapUserEndpoints();
 
 RouteGroupBuilder disciplinaGroup = app.MapGroup("disciplina")
     .AddEndpointFilter<ApiKeyFilter>()
-    .WithTags("Disciplina");
+    .WithTags("Disciplina")
+    .AllowAnonymous();
 disciplinaGroup.MapDisciplinaEndpoints();
 
 app.Run();

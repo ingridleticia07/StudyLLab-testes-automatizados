@@ -1,4 +1,6 @@
-﻿namespace StudyLabAPI.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace StudyLabAPI.Models
 {
     public class DisciplinaReadModel
     {
@@ -7,5 +9,9 @@
         public string nomeDisciplina { get; set; }
 
         public string professorDisciplina { get; set; }
+
+        public required CursoReadModel curso { get; init; }
+
+        public string codigoDisciplina { get; set; }
     }
 }

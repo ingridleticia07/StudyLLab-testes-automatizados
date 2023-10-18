@@ -13,8 +13,13 @@ namespace StudyLabAPI.Repositories
 
         public async Task<DisciplinaModel?> GetDisciplinaById(int id) =>
             await dbContext.disciplinas.FindAsync(id);
-        public async Task<List<DisciplinaModel>> GetAllDisciplina() =>
-            await dbContext.disciplinas.ToListAsync();
+        public async Task<List<DisciplinaModel>> GetAllDisciplina()
+        {
+            List<DisciplinaModel> disciplinaModel = await dbContext.disciplinas
+            .Include(d => d.curso)
+            .ToListAsync();
+            return disciplinaModel;
+        }
 
     }
 }

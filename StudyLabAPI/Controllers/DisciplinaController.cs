@@ -27,7 +27,9 @@ namespace StudyLabAPI.Controllers
             {
                 idDisciplina = disciplinasListadas.idDisciplina,
                 nomeDisciplina = disciplinasListadas.nomeDisciplina,
-                professorDisciplina = disciplinasListadas.professorDisciplina
+                professorDisciplina = disciplinasListadas.professorDisciplina,
+                curso = (disciplinasListadas.curso != null) ? new (disciplinasListadas.curso.nomeCurso) : null
+
             };
         }
         public async Task<List<DisciplinaReadModel>> GetAllDisciplina()
@@ -35,13 +37,15 @@ namespace StudyLabAPI.Controllers
             // Implement your logic to get all DisciplinaModel objects
             // You can use your repository to fetch the data
             List<DisciplinaModel> disciplinasListadas = await disciplinaRepository.GetAllDisciplina();
-
             // You should map DisciplinaModel to DisciplinaReadModel and return the list
             List<DisciplinaReadModel> result = disciplinasListadas.Select(disciplina => new DisciplinaReadModel
             {
                 idDisciplina = disciplina.idDisciplina,
                 nomeDisciplina = disciplina.nomeDisciplina,
-                professorDisciplina = disciplina.professorDisciplina
+                professorDisciplina = disciplina.professorDisciplina,
+                curso = (disciplina.curso != null) ? new (disciplina.curso.nomeCurso) : null,
+                codigoDisciplina = disciplina.codigoDisciplina
+
             }).ToList();
 
             return result;
