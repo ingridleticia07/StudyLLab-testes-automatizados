@@ -1,0 +1,16 @@
+﻿namespace StudyLabAPI.Models
+{
+    public class RegisterDisciplinaRequestModel
+    {
+        public string idDisciplina { get; set; }
+        public string nomeDisciplina { get; set; }
+
+        public string professorDisciplina { get; set; }
+
+        public int curso { get; set; }
+
+        public int? quantidadeAluno { get; set; }
+
+        public string? codigoDisciplina { get; set; }
+    }
+}

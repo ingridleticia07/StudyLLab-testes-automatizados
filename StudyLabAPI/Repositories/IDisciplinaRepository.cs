@@ -6,6 +6,10 @@ namespace StudyLabAPI.Repositories
     public interface IDisciplinaRepository
     {
         public Task<DisciplinaModel?> GetDisciplinaById(int id);
-        public Task<List<DisciplinaModel?>> GetAllDisciplina();
+        public Task<List<DisciplinaModel?>> GetAllDisciplinas();
+
+        public Task CreateDisciplina(DisciplinaModel disciplinaModel);
+
+        public Task Flush();
     }
 }

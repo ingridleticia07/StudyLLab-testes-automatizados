@@ -11,10 +11,14 @@ namespace StudyLabAPI.Controllers
         private IDisciplinaRepository disciplinaRepository { get; }
         private ILogger logger { get; }
 
-        public DisciplinaController(IDisciplinaRepository disciplinaRepository, ILogger logger)
+        private ICursoRepository cursoRepository { get; }
+
+        public DisciplinaController(IDisciplinaRepository disciplinaRepository, ICursoRepository cursoRepository,
+            ILogger logger)
         {
             this.disciplinaRepository = disciplinaRepository;
             this.logger = logger;
+            this.cursoRepository = cursoRepository;
         }
         public async Task<DisciplinaReadModel> GetDisciplinaById(int id)
         {
@@ -32,11 +36,11 @@ namespace StudyLabAPI.Controllers
 
             };
         }
-        public async Task<List<DisciplinaReadModel>> GetAllDisciplina()
+        public async Task<List<DisciplinaReadModel>> GetAllDisciplinas()
         {
             // Implement your logic to get all DisciplinaModel objects
             // You can use your repository to fetch the data
-            List<DisciplinaModel> disciplinasListadas = await disciplinaRepository.GetAllDisciplina();
+            List<DisciplinaModel> disciplinasListadas = await disciplinaRepository.GetAllDisciplinas();
             // You should map DisciplinaModel to DisciplinaReadModel and return the list
             List<DisciplinaReadModel> result = disciplinasListadas.Select(disciplina => new DisciplinaReadModel
             {
@@ -50,7 +54,32 @@ namespace StudyLabAPI.Controllers
 
             return result;
         }
+        public async Task<(DisciplinaReadModel, string)> CreateDisciplina(RegisterDisciplinaRequestModel disciplinaModel)
+        {
+            int cursoId = 1;
 
+            CursoModel? relatedCurso = await cursoRepository.GetCursoById(cursoId);
+
+            DisciplinaModel novaDisciplina = new()
+            {
+                nomeDisciplina = disciplinaModel.nomeDisciplina,
+                professorDisciplina = disciplinaModel.professorDisciplina,
+                curso = relatedCurso,
+                quantidadeAluno = disciplinaModel.quantidadeAluno,
+                codigoDisciplina = disciplinaModel.codigoDisciplina
+            };
+            await disciplinaRepository.CreateDisciplina(novaDisciplina);
+
+            await disciplinaRepository.Flush();
+            DisciplinaReadModel novaDisciplina2 = new()
+            {
+                nomeDisciplina = disciplinaModel.nomeDisciplina,
+                professorDisciplina = disciplinaModel.professorDisciplina,
+                codigoDisciplina = disciplinaModel.codigoDisciplina
+            };
+
+            return (novaDisciplina2,"okokok");
+        }
 
     }
 }

@@ -10,7 +10,7 @@ namespace StudyLabAPI.Models
 
         public string professorDisciplina { get; set; }
 
-        public required CursoReadModel curso { get; init; }
+        public CursoReadModel curso { get; init; }
 
         public string codigoDisciplina { get; set; }
     }
