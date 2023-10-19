@@ -54,7 +54,7 @@ namespace StudyLabAPI.Controllers
         public async Task<(DisciplinaReadModel, string)> CreateDisciplina(RegisterDisciplinaRequestModel disciplinaModel)
         {
             //passar id 
-            int cursoId = int.Parse(disciplinaModel.idDisciplina);
+            int cursoId = disciplinaModel.curso;
 
             CursoModel? relatedCurso = await cursoRepository.GetCursoById(cursoId);
 
