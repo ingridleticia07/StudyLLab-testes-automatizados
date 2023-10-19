@@ -4,6 +4,9 @@ using StudyLabAPI.Models;
 
 namespace StudyLabAPI.Repositories;
 
+/// <summary>
+/// Implementação genéricas do repositório <see cref="IUsuarioRepository"/>.
+/// </summary>
 public class UsuarioRepository : IUsuarioRepository
 {
     private AppDbContext dbContext { get; }

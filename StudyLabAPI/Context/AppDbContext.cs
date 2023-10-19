@@ -7,7 +7,7 @@ namespace StudyLabAPI.Context;
 
 public class AppDbContext : DbContext
 {
-    private readonly ConnectionStringsOptions options;
+    private readonly ConnectionStringsOptions _options;
     
     public DbSet<UsuarioModel> usuarios { get; set; } = null!;
     public DbSet<CursoModel> cursos { get; set; } = null!;
@@ -15,9 +15,9 @@ public class AppDbContext : DbContext
     public DbSet<DisciplinaModel> disciplinas { get; set; } = null!;
     public AppDbContext(IOptions<ConnectionStringsOptions> options)
     {
-        this.options = options.Value;
+        _options = options.Value;
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
-        optionsBuilder.UseNpgsql(options.PostgresDbConnString);
+        optionsBuilder.UseNpgsql(_options.PostgresDbConnString);
 }

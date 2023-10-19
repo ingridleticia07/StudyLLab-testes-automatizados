@@ -1,5 +1,4 @@
-﻿using StudyLabAPI.Context;
-using StudyLabAPI.Models;
+﻿using StudyLabAPI.Models;
 
 namespace StudyLabAPI.Repositories
 {

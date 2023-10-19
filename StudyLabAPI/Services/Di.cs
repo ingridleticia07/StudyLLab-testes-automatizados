@@ -16,6 +16,12 @@ namespace StudyLabAPI.Services;
 
 public static class Di
 {
+    /// <summary>
+    /// Adiciona as configurações de serviços a partir do arquivo de
+    /// configuração correspondente ao ambiente de execução.
+    /// </summary>
+    /// <param name="configuration">Gerenciador de configuração do <see cref="WebApplicationBuilder"/></param>
+    /// <returns><see cref="IServiceCollection"/> para que outras chamadas possam ser encadeadas.</returns>
     public static IServiceCollection AddServicesConfiguration(this IServiceCollection services, 
         IConfiguration configuration)
     {
@@ -27,6 +33,11 @@ public static class Di
         
         return services;
     }
+    /// <summary>
+    /// Adiciona classes de configurações criadas a partir de <see cref="IConfigureOptions{TOptions}"/>
+    /// ao container de DI.
+    /// </summary>
+    /// <returns><see cref="IServiceCollection"/> para que outras chamadas possam ser encadeadas.</returns>
     public static IServiceCollection ConfigureServices(this IServiceCollection services)
     {
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerConfiguration>();
@@ -34,21 +45,30 @@ public static class Di
         
         return services;
     }
-    
+    /// <summary>
+    /// Adiciona metadados para geração de código.
+    /// </summary>
+    /// <returns><see cref="IServiceCollection"/> para que outras chamadas possam ser encadeadas.</returns>
     public static IServiceCollection AddApiMetadata(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         return services;
     }
-    
+    /// <summary>
+    /// Adiciona serviços de armazenamento de dados ao container de DI.
+    /// </summary>
+    /// <returns><see cref="IServiceCollection"/> para que outras chamadas possam ser encadeadas.</returns>
     public static IServiceCollection AddStorageServices(this IServiceCollection services)
     {
         services.AddDbContext<AppDbContext>();
         
         return services;
     }
-    
+    /// <summary>
+    /// Adiciona serviços criados localmente (na solução) ao container de DI.
+    /// </summary>
+    /// <returns><see cref="IServiceCollection"/> para que outras chamadas possam ser encadeadas.</returns>
     public static IServiceCollection AddLocalServices(this IServiceCollection services)
     {
         services.AddSingleton<JwtService>();
@@ -56,7 +76,10 @@ public static class Di
         
         return services;
     }
-    
+    /// <summary>
+    /// Adiciona e configura autenticação e autorização.
+    /// </summary>
+    /// <returns><see cref="IServiceCollection"/> para que outras chamadas possam ser encadeadas.</returns>
     public static IServiceCollection AddAuth(this IServiceCollection services)
     {
         services.AddAuthorization(options =>
@@ -77,7 +100,10 @@ public static class Di
         }).AddJwtBearer();
         return services;
     }
-    
+    /// <summary>
+    /// Adiciona repositórios de acesso a dados ao container de DI.
+    /// </summary>
+    /// <returns><see cref="IServiceCollection"/> para que outras chamadas possam ser encadeadas.</returns>
     public static IServiceCollection AddApiRepositories(this IServiceCollection services)
     {
         services.AddScoped<IUsuarioRepository, UsuarioRepository>();
@@ -85,7 +111,10 @@ public static class Di
         services.AddScoped<IDisciplinaRepository, DisciplinaRepository>();
         return services;
     }
-    
+    /// <summary>
+    /// Adiciona controladores dos endpoints da API ao container de DI.
+    /// </summary>
+    /// <returns><see cref="IServiceCollection"/> para que outras chamadas possam ser encadeadas.</returns>
     public static IServiceCollection AddApiControllers(this IServiceCollection services)
     {
         services.AddScoped<IUsuarioController, UsuarioController>();

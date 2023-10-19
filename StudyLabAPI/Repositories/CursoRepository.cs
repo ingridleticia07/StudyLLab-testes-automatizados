@@ -3,6 +3,9 @@ using StudyLabAPI.Models;
 
 namespace StudyLabAPI.Repositories;
 
+/// <summary>
+/// Implementação genérica do repositório <see cref="ICursoRepository"/>.
+/// </summary>
 public class CursoRepository : ICursoRepository
 {
     private AppDbContext dbContext { get; }

@@ -6,8 +6,17 @@ namespace StudyLabAPI.Middlewares.Auth;
 
 public static class AuthorizationPolicies
 {
+    /// <summary>
+    /// Requer que a requisição esteja autenticada e que o usuário tenha o papel de <see cref="UserRole.User"/> ou <see cref="UserRole.Admin"/>.
+    /// </summary>
     public const string REQUIRE_IDENTIFIER_AND_USER_ROLE = "RequireIdentifierAndUserRole";
+    /// <summary>
+    /// Requer que a requisição esteja autenticada e que o usuário tenha o papel de <see cref="UserRole.Admin"/>.
+    /// </summary>
     public const string REQUIRE_IDENTIFIER_AND_ADMIN_ROLE = "RequireIdentifierAndAdminRole";
+    /// <summary>
+    /// Requer que a requisição esteja autenticada e que o usuário tenha o papel de <see cref="UserRole.Dev"/>.
+    /// </summary>
     public const string REQUIRE_IDENTIFIER_AND_DEV_ROLE = "RequireIdentifierAndDevRole";
     
     public static void RequireIdentifierAndUserRole(AuthorizationPolicyBuilder builder)

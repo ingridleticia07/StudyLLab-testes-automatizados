@@ -5,6 +5,9 @@ using ILogger = Serilog.ILogger;
 
 namespace StudyLabAPI.Controllers;
 
+/// <summary>
+/// Implementação genérica de <see cref="IUsuarioController"/>.
+/// </summary>
 public class UsuarioController : IUsuarioController
 {
     private IUsuarioRepository userRepository { get; }
