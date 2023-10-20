@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using StudyLabAPI.Context;
 using StudyLabAPI.Controllers;
+using StudyLabAPI.Mapper;
 using StudyLabAPI.Middlewares.Auth;
 using StudyLabAPI.Middlewares.Swagger;
 using StudyLabAPI.Models.Options;
@@ -73,6 +74,16 @@ public static class Di
     {
         services.AddSingleton<JwtService>();
         services.AddTransient<EmailService>();
+        
+        return services;
+    }
+    /// <summary>
+    /// Adiciona mapeadores de objetos ao container de DI.
+    /// </summary>
+    /// <returns><see cref="IServiceCollection"/> para que outras chamadas possam ser encadeadas.</returns>
+    public static IServiceCollection AddMappers(this IServiceCollection services)
+    {
+        services.AddTransient<UsuarioModelMapper>();
         
         return services;
     }

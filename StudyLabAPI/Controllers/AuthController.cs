@@ -1,4 +1,5 @@
 using StudyLabAPI.Exceptions;
+using StudyLabAPI.Mapper;
 using StudyLabAPI.Models;
 using StudyLabAPI.Repositories;
 using StudyLabAPI.Services.Email;
@@ -15,15 +16,18 @@ public class AuthController : IAuthController
 {
     private IUsuarioRepository usuarioRepository { get; }
     private ICursoRepository cursoRepository { get; }
+    private UsuarioModelMapper usuarioModelMapper { get; }
     private JwtService jwtService { get; }
     private EmailService emailService { get; }
     private ILogger logger { get; }
 
     public AuthController(IUsuarioRepository usuarioRepository, ICursoRepository cursoRepository, 
-        JwtService jwtService, EmailService emailService, ILogger logger)
+        UsuarioModelMapper usuarioModelMapper, JwtService jwtService, EmailService emailService, 
+        ILogger logger)
     {
         this.usuarioRepository = usuarioRepository;
         this.cursoRepository = cursoRepository;
+        this.usuarioModelMapper = usuarioModelMapper;
         this.jwtService = jwtService;
         this.emailService = emailService;
         this.logger = logger;
@@ -32,6 +36,8 @@ public class AuthController : IAuthController
     public async Task<(UserReadModel, string)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel)
     {
         //TODO: Validation
+        
+        //TODO: Check if user already exists
         
         int cursoId = registerUserRequestModel.codeCurso;
         CursoModel? relatedCurso = await cursoRepository
@@ -44,18 +50,11 @@ public class AuthController : IAuthController
         }
         
         DateTime registerDate = DateTime.Now.Date;
-        UsuarioModel usuarioModel = new()
-        {
-            nomeUsuario = registerUserRequestModel.username,
-            emailUsuario = registerUserRequestModel.email,
-            senhaUsuario = registerUserRequestModel.password,
-            tipoUsuario = registerUserRequestModel.role,
-            codigoUsuario = registerUserRequestModel.codigoUsuario,
-            imagemUsuario = registerUserRequestModel.imagem,
-            curso = relatedCurso,
-            statusUsuario = true,
-            dataCadastroUsuario = new(registerDate.Year, registerDate.Month, registerDate.Day),
-        };
+        UsuarioModel usuarioModel = usuarioModelMapper
+            .RegisterUserRequestModelToUsuarioModel(registerUserRequestModel);
+        usuarioModel.curso = relatedCurso;
+        usuarioModel.statusUsuario = true;
+        usuarioModel.dataCadastroUsuario = new(registerDate.Year, registerDate.Month, registerDate.Day);
         await usuarioRepository.CreateUser(usuarioModel);
         await usuarioRepository.Flush();
         
@@ -97,15 +96,7 @@ public class AuthController : IAuthController
             throw exception;
         }
         
-        UserReadModel userReadModel = new()
-        {
-            id = usuarioModel.idUsuario,
-            username = usuarioModel.nomeUsuario,
-            email = usuarioModel.emailUsuario,
-            role = usuarioModel.tipoUsuario,
-            active = usuarioModel.statusUsuario,
-            curso = new(usuarioModel.curso.nomeCurso)
-        };
+        UserReadModel userReadModel = usuarioModelMapper.UsuarioModelToUserReadModel(usuarioModel);
         string jwtUser = jwtService.GenerateJwt(new(userReadModel.id.ToString(), userReadModel.role));
         
         return (userReadModel, jwtUser);
