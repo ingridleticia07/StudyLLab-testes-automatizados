@@ -6,7 +6,8 @@ namespace StudyLabAPI.Controllers
     {
         public Task<DisciplinaReadModel> GetDisciplinaById(int id);
         public Task<List<DisciplinaReadModel>> GetAllDisciplinas();
-        public Task<(DisciplinaReadModel, string)> CreateDisciplina(RegisterDisciplinaRequestModel disciplinaModel);
+        public Task<DisciplinaReadModel> CreateDisciplina(RegisterDisciplinaRequestModel disciplinaModel);
 
+        public Task DeleteDisciplina(DisciplinaModel idDisciplina);
     }
 }

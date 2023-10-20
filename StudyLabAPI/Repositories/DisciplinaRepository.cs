@@ -22,6 +22,15 @@ namespace StudyLabAPI.Repositories
         }
         public async Task CreateDisciplina(DisciplinaModel disciplinaModel) =>
             await dbContext.disciplinas.AddAsync(disciplinaModel);
+        public async Task DeleteDisciplina(int idDisciplina)
+        {
+            var disciplinaModel = await dbContext.disciplinas.FindAsync(idDisciplina);
+
+            if (disciplinaModel != null)
+            {
+                dbContext.disciplinas.Remove(disciplinaModel);
+            }
+        }
 
         public async Task Flush() =>
             await dbContext.SaveChangesAsync();

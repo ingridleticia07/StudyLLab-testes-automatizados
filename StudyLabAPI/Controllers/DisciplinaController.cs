@@ -51,7 +51,7 @@ namespace StudyLabAPI.Controllers
 
             return result;
         }
-        public async Task<(DisciplinaReadModel, string)> CreateDisciplina(RegisterDisciplinaRequestModel disciplinaModel)
+        public async Task<DisciplinaReadModel> CreateDisciplina(RegisterDisciplinaRequestModel disciplinaModel)
         {
             //passar id 
             int cursoId = disciplinaModel.curso;
@@ -76,8 +76,14 @@ namespace StudyLabAPI.Controllers
                 codigoDisciplina = disciplinaModel.codigoDisciplina
             };
 
-            return (novaDisciplinaRetorno, "Nova disciplina");
+            return (novaDisciplinaRetorno);
         }
-
+        public async Task DeleteDisciplina(DisciplinaModel disciplina)
+        {
+            //verificar se disciplina existe, por meio do buscar disciplina
+            //para em caso de exstir, excluir a mesma
+            await disciplinaRepository.DeleteDisciplina(disciplina.idDisciplina);
+            await disciplinaRepository.Flush();
+        }
     }
 }

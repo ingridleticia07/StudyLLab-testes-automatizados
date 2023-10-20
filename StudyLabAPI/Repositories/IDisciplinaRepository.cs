@@ -9,6 +9,7 @@ namespace StudyLabAPI.Repositories
 
         public Task CreateDisciplina(DisciplinaModel disciplinaModel);
 
+        public Task DeleteDisciplina(int idDisciplina);
         public Task Flush();
     }
 }

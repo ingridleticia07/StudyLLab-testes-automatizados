@@ -14,6 +14,8 @@ public static class DisciplinaEndpoints
             .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
         builder.MapPost("cadastrarDisciplinas", CadastrarDisciplinas)
             .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
+        builder.MapPost("excluirDisciplina", DeleteDisciplina)
+            .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
 
         return builder;
     }
@@ -56,5 +58,25 @@ public static class DisciplinaEndpoints
         }
 
         return Results.Ok(novaDisciplina);
+    }
+    private static async Task<IResult> DeleteDisciplina(HttpContext context,
+        [FromBody] DisciplinaModel disciplinaModel,
+        [FromServices] IDisciplinaController controller)
+    {
+
+        try
+        {
+            await controller.DeleteDisciplina(disciplinaModel);
+        }
+        catch (UsuarioNotFoundException e)
+        {
+            return Results.NotFound(e.Message);
+        }
+        catch (Exception e)
+        {
+            return Results.BadRequest(e.Message);
+        }
+
+        return Results.Ok(disciplinaModel);
     }
 }
