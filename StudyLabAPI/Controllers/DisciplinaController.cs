@@ -67,16 +67,16 @@ namespace StudyLabAPI.Controllers
                 codigoDisciplina = disciplinaModel.codigoDisciplina
             };
             await disciplinaRepository.CreateDisciplina(novaDisciplina);
-
             await disciplinaRepository.Flush();
-            DisciplinaReadModel novaDisciplina2 = new()
+
+            DisciplinaReadModel novaDisciplinaRetorno = new()
             {
                 nomeDisciplina = disciplinaModel.nomeDisciplina,
                 professorDisciplina = disciplinaModel.professorDisciplina,
                 codigoDisciplina = disciplinaModel.codigoDisciplina
             };
 
-            return (novaDisciplina2,"okokok");
+            return (novaDisciplinaRetorno, "Nova disciplina");
         }
 
     }
