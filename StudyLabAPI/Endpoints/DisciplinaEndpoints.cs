@@ -12,7 +12,9 @@ public static class DisciplinaEndpoints
     {
         builder.MapGet("listarDisciplinas", GetDisciplinas)
             .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
-        builder.MapPost("cadastrarDisciplinas", CadastrarDisciplinas)
+        builder.MapPost("cadastrarDisciplina", CreateDisciplina)
+            .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
+        builder.MapPost("editarDisciplina", UpdateDisciplina)
             .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
         builder.MapPost("excluirDisciplina", DeleteDisciplina)
             .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
@@ -39,23 +41,60 @@ public static class DisciplinaEndpoints
 
         return Results.Ok(result);
     }
-    private static async Task<IResult> CadastrarDisciplinas(HttpContext context,
+    private static async Task<IResult> CreateDisciplina(HttpContext context,
         [FromBody] RegisterDisciplinaRequestModel novaDisciplina,
         [FromServices] IDisciplinaController controller)
     {
+        var checkIfObjectExists = await controller.VerifyDisciplinaCreated(novaDisciplina);
 
-        try
+        if(checkIfObjectExists == false)
         {
-            await controller.CreateDisciplina(novaDisciplina);
+            try
+            {
+                await controller.CreateDisciplina(novaDisciplina);
+            }
+            catch (UsuarioNotFoundException e)
+            {
+                return Results.NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
         }
-        catch (UsuarioNotFoundException e)
+        else
         {
-            return Results.NotFound(e.Message);
+            return Results.Ok("Disciplina existente");
         }
-        catch (Exception e)
+
+        return Results.Ok(novaDisciplina);
+    }
+
+    private static async Task<IResult> UpdateDisciplina(HttpContext context,
+        [FromBody] RegisterDisciplinaRequestModel novaDisciplina,
+        [FromServices] IDisciplinaController controller)
+    {
+        var checkIfObjectStillExists = await controller.VerifyDisciplinaCreatedWithId(novaDisciplina);
+
+        if(checkIfObjectStillExists == false)
         {
-            return Results.BadRequest(e.Message);
+            try
+            {
+                await controller.UpdateDisciplina(novaDisciplina);
+            }
+            catch (UsuarioNotFoundException e)
+            {
+                return Results.NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
         }
+        else{
+            return Results.Ok("Disciplina existente");
+        }
+        
 
         return Results.Ok(novaDisciplina);
     }

@@ -13,6 +13,25 @@ namespace StudyLabAPI.Repositories
 
         public async Task<DisciplinaModel?> GetDisciplinaById(int id) =>
             await dbContext.disciplinas.FindAsync(id);
+        public async Task<bool> VerifyDisciplinaCreated(DisciplinaModel disciplina)
+        {
+            var existingDisciplina = await dbContext.disciplinas
+                .Where(d => d.nomeDisciplina == disciplina.nomeDisciplina || 
+                    d.codigoDisciplina == disciplina.codigoDisciplina)
+                .FirstOrDefaultAsync();
+
+            return existingDisciplina != null;
+        }
+
+        public async Task<bool> VerifyDisciplinaCreatedWithId(DisciplinaModel disciplina)
+        {
+            var existingDisciplina = await dbContext.disciplinas
+                .Where(d => (d.nomeDisciplina == disciplina.nomeDisciplina ||
+                    d.codigoDisciplina == disciplina.codigoDisciplina) && d.idDisciplina != disciplina.idDisciplina)
+                .FirstOrDefaultAsync();
+
+            return existingDisciplina != null;
+        }
         public async Task<List<DisciplinaModel>> GetAllDisciplinas()
         {
             List<DisciplinaModel> disciplinaModel = await dbContext.disciplinas
@@ -22,6 +41,22 @@ namespace StudyLabAPI.Repositories
         }
         public async Task CreateDisciplina(DisciplinaModel disciplinaModel) =>
             await dbContext.disciplinas.AddAsync(disciplinaModel);
+
+        public async Task UpdateDisciplina(DisciplinaModel disciplinaModel)
+        {
+            DisciplinaModel disciplinForUpdate = await dbContext.disciplinas.FindAsync(disciplinaModel.idDisciplina);
+
+            if (disciplinForUpdate == null)
+            {
+                return;
+            }
+            disciplinForUpdate.nomeDisciplina = disciplinaModel.nomeDisciplina;
+            disciplinForUpdate.professorDisciplina = disciplinaModel.professorDisciplina;
+            disciplinForUpdate.curso = disciplinaModel.curso;
+            disciplinForUpdate.quantidadeAluno = disciplinaModel.quantidadeAluno;
+            disciplinForUpdate.codigoDisciplina = disciplinaModel.codigoDisciplina;
+        }
+
         public async Task DeleteDisciplina(int idDisciplina)
         {
             var disciplinaModel = await dbContext.disciplinas.FindAsync(idDisciplina);

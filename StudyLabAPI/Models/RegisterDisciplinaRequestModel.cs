@@ -2,7 +2,7 @@
 {
     public class RegisterDisciplinaRequestModel
     {
-        public string idDisciplina { get; set; }
+        public int idDisciplina { get; set; }
         public string nomeDisciplina { get; set; }
 
         public string professorDisciplina { get; set; }

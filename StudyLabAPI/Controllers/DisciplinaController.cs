@@ -44,6 +44,7 @@ namespace StudyLabAPI.Controllers
                 idDisciplina = disciplina.idDisciplina,
                 nomeDisciplina = disciplina.nomeDisciplina,
                 professorDisciplina = disciplina.professorDisciplina,
+                quantidadeAluno = disciplina.quantidadeAluno,
                 curso = (disciplina.curso != null) ? new (disciplina.curso.nomeCurso) : null,
                 codigoDisciplina = disciplina.codigoDisciplina
 
@@ -51,6 +52,43 @@ namespace StudyLabAPI.Controllers
 
             return result;
         }
+
+        public async Task<bool> VerifyDisciplinaCreated(RegisterDisciplinaRequestModel disciplinaModel)
+        {
+            int cursoId = disciplinaModel.curso;
+
+            CursoModel? relatedCurso = await cursoRepository.GetCursoById(cursoId);
+
+            DisciplinaModel novaDisciplina = new()
+            {
+                nomeDisciplina = disciplinaModel.nomeDisciplina,
+                professorDisciplina = disciplinaModel.professorDisciplina,
+                curso = relatedCurso,
+                quantidadeAluno = disciplinaModel.quantidadeAluno,
+                codigoDisciplina = disciplinaModel.codigoDisciplina
+            };
+            bool returnCheckDisciplinaExists = await disciplinaRepository.VerifyDisciplinaCreated(novaDisciplina);
+            return returnCheckDisciplinaExists;
+        }
+        public async Task<bool> VerifyDisciplinaCreatedWithId(RegisterDisciplinaRequestModel disciplinaModel)
+        {
+            int cursoId = disciplinaModel.curso;
+
+            CursoModel? relatedCurso = await cursoRepository.GetCursoById(cursoId);
+
+            DisciplinaModel novaDisciplina = new()
+            {
+                idDisciplina = disciplinaModel.idDisciplina,
+                nomeDisciplina = disciplinaModel.nomeDisciplina,
+                professorDisciplina = disciplinaModel.professorDisciplina,
+                curso = relatedCurso,
+                quantidadeAluno = disciplinaModel.quantidadeAluno,
+                codigoDisciplina = disciplinaModel.codigoDisciplina
+            };
+            bool returnCheckDisciplinaExists = await disciplinaRepository.VerifyDisciplinaCreatedWithId(novaDisciplina);
+            return returnCheckDisciplinaExists;
+        }
+
         public async Task<DisciplinaReadModel> CreateDisciplina(RegisterDisciplinaRequestModel disciplinaModel)
         {
             //passar id 
@@ -78,6 +116,35 @@ namespace StudyLabAPI.Controllers
 
             return (novaDisciplinaRetorno);
         }
+
+        public async Task<DisciplinaReadModel> UpdateDisciplina(RegisterDisciplinaRequestModel disciplinaModel)
+        {
+            int cursoId = disciplinaModel.curso;
+
+            CursoModel? relatedCurso = await cursoRepository.GetCursoById(cursoId);
+
+            DisciplinaModel DisciplinaUpdateObj = new()
+            {
+                idDisciplina = disciplinaModel.idDisciplina,
+                nomeDisciplina = disciplinaModel.nomeDisciplina,
+                professorDisciplina = disciplinaModel.professorDisciplina,
+                curso = relatedCurso,
+                quantidadeAluno = disciplinaModel.quantidadeAluno,
+                codigoDisciplina = disciplinaModel.codigoDisciplina
+            };
+            await disciplinaRepository.UpdateDisciplina(DisciplinaUpdateObj);
+            await disciplinaRepository.Flush();
+
+            DisciplinaReadModel DisciplinaReturnUpdateObj = new()
+            {
+                nomeDisciplina = disciplinaModel.nomeDisciplina,
+                professorDisciplina = disciplinaModel.professorDisciplina,
+                codigoDisciplina = disciplinaModel.codigoDisciplina
+            };
+
+            return (DisciplinaReturnUpdateObj);
+        }
+
         public async Task DeleteDisciplina(DisciplinaModel disciplina)
         {
             //verificar se disciplina existe, por meio do buscar disciplina

@@ -12,6 +12,7 @@ namespace StudyLabAPI.Models
 
         public CursoReadModel curso { get; init; }
 
+        public int ?quantidadeAluno { get; set; }
         public string codigoDisciplina { get; set; }
     }
 }
