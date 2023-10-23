@@ -76,7 +76,11 @@ public static class AuthEndpoints
         {
             return Results.Unauthorized();
         }
+        catch(Exception e)
+        {
+            return Results.BadRequest(e.Message);
+        }
         
-        return Results.Ok(jwtUser);
+        return Results.Content(jwtUser);
     }
 }

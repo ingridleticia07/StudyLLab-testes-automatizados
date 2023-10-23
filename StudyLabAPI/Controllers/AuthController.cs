@@ -1,3 +1,5 @@
+using FluentValidation;
+using FluentValidation.Results;
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Mapper;
 using StudyLabAPI.Models;
@@ -6,6 +8,7 @@ using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Email.Models;
 using StudyLabAPI.Services.Jwt;
 using ILogger = Serilog.ILogger;
+using ValidationException = StudyLabAPI.Exceptions.ValidationException;
 
 namespace StudyLabAPI.Controllers;
 
@@ -19,10 +22,14 @@ public class AuthController : IAuthController
     private UsuarioModelMapper usuarioModelMapper { get; }
     private JwtService jwtService { get; }
     private EmailService emailService { get; }
+    private IValidator<RegisterUserRequestModel> registerUserRequestModelValidator { get; }
+    private IValidator<UserLoginRequestModel> userLoginRequestModelValidator { get; }
     private ILogger logger { get; }
 
     public AuthController(IUsuarioRepository usuarioRepository, ICursoRepository cursoRepository, 
         UsuarioModelMapper usuarioModelMapper, JwtService jwtService, EmailService emailService, 
+        IValidator<RegisterUserRequestModel> registerUserRequestModelValidator, 
+        IValidator<UserLoginRequestModel> userLoginRequestModelValidator, 
         ILogger logger)
     {
         this.usuarioRepository = usuarioRepository;
@@ -30,14 +37,36 @@ public class AuthController : IAuthController
         this.usuarioModelMapper = usuarioModelMapper;
         this.jwtService = jwtService;
         this.emailService = emailService;
+        this.registerUserRequestModelValidator = registerUserRequestModelValidator;
+        this.userLoginRequestModelValidator = userLoginRequestModelValidator;
         this.logger = logger;
     }
     
     public async Task<(UserReadModel, string)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel)
     {
-        //TODO: Validation
+        ValidationResult validationResult = await registerUserRequestModelValidator
+            .ValidateAsync(registerUserRequestModel);
+        if(!validationResult.IsValid)
+        {
+            ValidationException exception = new(validationResult.Errors
+                .Select(e => e.ErrorMessage));
+            logger.Error(exception, "Validation issues");
+            throw exception;
+        }
         
-        //TODO: Check if user already exists
+        bool invalidExists = await usuarioRepository
+            .CheckUserByCodigoAndEmail(registerUserRequestModel.codigoUsuario,
+                registerUserRequestModel.email);
+        if(invalidExists)
+        {
+            ExistsUserException exception = new(new List<string> 
+            { 
+                nameof(registerUserRequestModel.codigoUsuario), 
+                nameof(registerUserRequestModel.email) 
+            });
+            logger.Error(exception, "The user with those informations already exist");
+            throw exception;
+        }
         
         int cursoId = registerUserRequestModel.codeCurso;
         CursoModel? relatedCurso = await cursoRepository
@@ -78,7 +107,15 @@ public class AuthController : IAuthController
     
     public async Task<(UserReadModel, string)> LoginUser(UserLoginRequestModel userLoginRequestModel)
     {
-        //TODO: Validation
+        ValidationResult validationResult = await userLoginRequestModelValidator
+            .ValidateAsync(userLoginRequestModel);
+        if(!validationResult.IsValid)
+        {
+            ValidationException exception = new(validationResult.Errors
+                .Select(e => e.ErrorMessage));
+            logger.Error(exception, "Validation issues");
+            throw exception;
+        }
         
         UsuarioModel? usuarioModel = await usuarioRepository
             .GetUsuarioByEmail(userLoginRequestModel.email);
