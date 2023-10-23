@@ -22,6 +22,14 @@ public interface IUsuarioRepository
     /// ela retorna o resultado da busca ou <c>null</c></returns>
     public Task<UsuarioModel?> GetUsuarioByEmail(string email);
     /// <summary>
+    /// Verifica se há um usuario com o <paramref name="codigoUsuario"/> ou <paramref name="email"/>
+    /// já cadastrado no banco.
+    /// </summary>
+    /// <param name="codigoUsuario">Codigo do usuario para verficiação.</param>
+    /// <param name="email">Email para verificação.</param>
+    /// <returns><c>true</c> se já houver cadastro no banco, caso contrário <c>false</c></returns>
+    public Task<bool> CheckUserByCodigoAndEmail(int codigoUsuario, string email);
+    /// <summary>
     /// Adiciona o usuario ao banco de dados.
     /// </summary>
     /// <param name="usuarioModel">Entidade que será adicionada ao banco.</param>

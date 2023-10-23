@@ -35,6 +35,14 @@ public class UsuarioRepository : IUsuarioRepository
         await dbContext.Entry(userModel).Reference(m => m.curso).LoadAsync();
         return userModel;
     }
+    
+    public async Task<bool> CheckUserByCodigoAndEmail(int codigoUsuario, string email)
+    {
+        bool exists = await dbContext.usuarios
+            .AnyAsync(u => u.codigoUsuario == codigoUsuario || 
+                           u.emailUsuario == email);
+        return exists;
+    }
 
     public async Task CreateUser(UsuarioModel usuarioModel) =>
         await dbContext.usuarios.AddAsync(usuarioModel);
