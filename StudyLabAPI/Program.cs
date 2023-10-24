@@ -23,6 +23,7 @@ builder.Services.AddServicesConfiguration(builder.Configuration)
 builder.Services.AddStorageServices()
     .AddLocalServices()
     .AddMappers()
+    .AddValidators()
     .AddApiControllers()
     .AddApiRepositories();
 

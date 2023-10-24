@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using StudyLabAPI.Context;
@@ -5,10 +6,12 @@ using StudyLabAPI.Controllers;
 using StudyLabAPI.Mapper;
 using StudyLabAPI.Middlewares.Auth;
 using StudyLabAPI.Middlewares.Swagger;
+using StudyLabAPI.Models;
 using StudyLabAPI.Models.Options;
 using StudyLabAPI.Repositories;
 using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Jwt;
+using StudyLabAPI.Validators;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 // ReSharper disable UnusedMethodReturnValue.Global
@@ -84,6 +87,17 @@ public static class Di
     public static IServiceCollection AddMappers(this IServiceCollection services)
     {
         services.AddTransient<UsuarioModelMapper>();
+        
+        return services;
+    }
+    /// <summary>
+    /// Adiciona validadores de modelos ao container de DI
+    /// </summary>
+    /// <returns><see cref="IServiceCollection"/> para que outras chamadas possam ser encadeadas.</returns>
+    public static IServiceCollection AddValidators(this IServiceCollection services)
+    {
+        services.AddScoped<IValidator<RegisterUserRequestModel>, RegisterUserRequestModelValidator>();
+        services.AddScoped<IValidator<UserLoginRequestModel>, UserLoginRequestModelValidator>();
         
         return services;
     }
