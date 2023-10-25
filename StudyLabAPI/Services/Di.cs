@@ -87,6 +87,8 @@ public static class Di
     public static IServiceCollection AddMappers(this IServiceCollection services)
     {
         services.AddTransient<UsuarioModelMapper>();
+        services.AddTransient<RegisterUserRequestModelMapper>();
+        services.AddTransient<CodigoUsuarioModelMapper>();
         
         return services;
     }
@@ -98,6 +100,7 @@ public static class Di
     {
         services.AddScoped<IValidator<RegisterUserRequestModel>, RegisterUserRequestModelValidator>();
         services.AddScoped<IValidator<UserLoginRequestModel>, UserLoginRequestModelValidator>();
+        services.AddScoped<IValidator<ConfirmUserEmailRequestModel>, ConfirmUserEmailRequestModelValidator>();
         
         return services;
     }
@@ -134,6 +137,7 @@ public static class Di
         services.AddScoped<IUsuarioRepository, UsuarioRepository>();
         services.AddScoped<ICursoRepository, CursoRepository>();
         services.AddScoped<IDisciplinaRepository, DisciplinaRepository>();
+        services.AddScoped<ICodigoUsuarioRepository, CodigoUsuarioRepository>();
         return services;
     }
     /// <summary>
