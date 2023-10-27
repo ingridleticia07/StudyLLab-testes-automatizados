@@ -7,6 +7,7 @@ using StudyLabAPI.Models.Enums;
 using StudyLabAPI.Repositories;
 using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Email.Models;
+using StudyLabAPI.Services.Hash;
 using StudyLabAPI.Services.Jwt;
 using ILogger = Serilog.ILogger;
 using ValidationException = StudyLabAPI.Exceptions.ValidationException;
@@ -26,6 +27,7 @@ public class AuthController : IAuthController
     private CodigoUsuarioModelMapper codigoUsuarioModelMapper { get; }
     private JwtService jwtService { get; }
     private EmailService emailService { get; }
+    private ArgonHashService hashService { get; }
     private IValidator<RegisterUserRequestModel> registerUserRequestModelValidator { get; }
     private IValidator<UserLoginRequestModel> userLoginRequestModelValidator { get; }
     private IValidator<ConfirmUserEmailRequestModel> confirmUserEmailRequestModelValidator { get; }
@@ -34,9 +36,9 @@ public class AuthController : IAuthController
     public AuthController(IUsuarioRepository usuarioRepository, ICursoRepository cursoRepository,
         ICodigoUsuarioRepository codigoUsuarioRepository, UsuarioModelMapper usuarioModelMapper,
         RegisterUserRequestModelMapper registerUserRequestModelMapper, CodigoUsuarioModelMapper codigoUsuarioModelMapper,
-        JwtService jwtService, EmailService emailService, IValidator<RegisterUserRequestModel> registerUserRequestModelValidator, 
-        IValidator<UserLoginRequestModel> userLoginRequestModelValidator, IValidator<ConfirmUserEmailRequestModel> confirmUserEmailRequestModelValidator,
-        ILogger logger)
+        JwtService jwtService, EmailService emailService, ArgonHashService hashService, 
+        IValidator<RegisterUserRequestModel> registerUserRequestModelValidator, IValidator<UserLoginRequestModel> userLoginRequestModelValidator, 
+        IValidator<ConfirmUserEmailRequestModel> confirmUserEmailRequestModelValidator, ILogger logger)
     {
         this.usuarioRepository = usuarioRepository;
         this.cursoRepository = cursoRepository;
@@ -45,6 +47,7 @@ public class AuthController : IAuthController
         this.registerUserRequestModelMapper = registerUserRequestModelMapper;
         this.jwtService = jwtService;
         this.emailService = emailService;
+        this.hashService = hashService;
         this.registerUserRequestModelValidator = registerUserRequestModelValidator;
         this.userLoginRequestModelValidator = userLoginRequestModelValidator;
         this.confirmUserEmailRequestModelValidator = confirmUserEmailRequestModelValidator;
@@ -136,11 +139,14 @@ public class AuthController : IAuthController
         }
         
         DateTime registerDate = DateTime.Now.Date;
+        string rawUserPassword = registerUserRequestModel.password;
         UsuarioModel usuarioModel = registerUserRequestModelMapper
             .RegisterUserRequestModelToUsuarioModel(registerUserRequestModel);
         usuarioModel.curso = relatedCurso;
         usuarioModel.statusUsuario = false;
         usuarioModel.dataCadastroUsuario = new(registerDate.Year, registerDate.Month, registerDate.Day);
+        usuarioModel.senhaUsuario = hashService.Hash(rawUserPassword);
+        
         await usuarioRepository.CreateUser(usuarioModel);
         
         await SendConfirmationEmail(usuarioModel);
@@ -173,7 +179,9 @@ public class AuthController : IAuthController
             logger.Error(exception, "Usuário não encontrado");
             throw exception;
         }
-        if(usuarioModel.senhaUsuario != userLoginRequestModel.password)
+        
+        string hashRequestUserPassword = hashService.Hash(userLoginRequestModel.password);
+        if(usuarioModel.senhaUsuario != hashRequestUserPassword)
         {
             InvalidLoginPasswordException exception = new(userLoginRequestModel.email);
             logger.Error(exception, "Senha inválida");
