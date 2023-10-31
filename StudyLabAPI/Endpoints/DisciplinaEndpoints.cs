@@ -3,14 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 using StudyLabAPI.Controllers;
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models;
-
+using StudyLabAPI.Middlewares.Auth;
 
 namespace StudyLabAPI.Endpoints;
 public static class DisciplinaEndpoints
 {
     public static RouteGroupBuilder MapDisciplinaEndpoints(this RouteGroupBuilder builder)
     {
-        builder.MapGet("listarDisciplinas", GetDisciplinas)
+        builder.MapGet("listarDisciplinas", GetDisciplinas).
+            RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE)
             .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
         builder.MapPost("cadastrarDisciplina", CreateDisciplina)
             .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
