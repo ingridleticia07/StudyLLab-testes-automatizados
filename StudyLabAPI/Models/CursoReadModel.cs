@@ -1,3 +1,3 @@
 namespace StudyLabAPI.Models;
 
-public record CursoReadModel(string nomeCurso);
+public record CursoReadModel(string nome);

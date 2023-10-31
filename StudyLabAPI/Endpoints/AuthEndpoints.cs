@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using StudyLabAPI.Controllers;
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Middlewares.Auth;
@@ -19,10 +20,58 @@ public static class AuthEndpoints
             .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
         builder.MapPost("login", AuthLoginEndpointHandler)
             .WithOpenApi(AuthSummaries.AuthLoginSpecification);
+        builder.MapPut("confirmEmail", AuthConfirmEmailHandler)
+            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE);
+        builder.MapPost("resendConfirmationEmail", AuthResendConfirmationEmail)
+            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE);
         
         return builder;
     }
-    
+
+    private static async Task<IResult> AuthConfirmEmailHandler(
+        HttpContext context,
+        [FromBody] ConfirmUserEmailRequestModel confirmUserEmailRequestModel,
+        [FromServices] IAuthController controller)
+    {
+        int userId = int.Parse(context.User.Claims
+            .First(c => c.Type == ClaimTypes.Name).Value);
+        
+        CodigoUsuarioReadModel codigoUsuarioReadModel;
+        try
+        {
+            codigoUsuarioReadModel = await controller.ConfirmUserEmail(confirmUserEmailRequestModel, userId);
+        }
+        catch (Exception e) when (e is UsuarioNotFoundException or ConfirmationCodeNotFoundException)
+        {
+            return Results.NotFound(e.Message);
+        }
+        catch(Exception e)
+        {
+            return Results.BadRequest(e.Message);
+        }
+
+        return Results.Ok(codigoUsuarioReadModel);
+    }
+    private static async Task<IResult> AuthResendConfirmationEmail(
+        HttpContext context,
+        [FromServices] IAuthController controller)
+    {
+        int userId = int.Parse(context.User.Claims.First(c => c.Type == ClaimTypes.Name).Value);
+        
+        bool sended;
+        try
+        {
+            sended = await controller.SendConfirmationEmail(userId);
+        }
+        catch (Exception e)
+        {
+            return Results.BadRequest(e.Message);
+        }
+        
+        return sended ? Results.Ok() : 
+            Results.Problem("Não foi possível enviar o email de confirmação.",
+            statusCode: StatusCodes.Status503ServiceUnavailable);
+    }
     /// <summary>
     /// Trata requisição de <c>/auth/register</c>
     /// </summary>
@@ -49,7 +98,7 @@ public static class AuthEndpoints
             return Results.BadRequest(e.Message);
         }
                 
-        return Results.Content(jwtNewUser);
+        return Results.Content(jwtNewUser, statusCode: StatusCodes.Status201Created);
     }
     /// <summary>
     /// Trata requisição de <c>/auth/login</c>

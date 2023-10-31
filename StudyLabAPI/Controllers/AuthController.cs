@@ -3,9 +3,11 @@ using FluentValidation.Results;
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Mapper;
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.Enums;
 using StudyLabAPI.Repositories;
 using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Email.Models;
+using StudyLabAPI.Services.Hash;
 using StudyLabAPI.Services.Jwt;
 using ILogger = Serilog.ILogger;
 using ValidationException = StudyLabAPI.Exceptions.ValidationException;
@@ -19,27 +21,85 @@ public class AuthController : IAuthController
 {
     private IUsuarioRepository usuarioRepository { get; }
     private ICursoRepository cursoRepository { get; }
+    private ICodigoUsuarioRepository codigoUsuarioRepository { get; }
     private UsuarioModelMapper usuarioModelMapper { get; }
+    private RegisterUserRequestModelMapper registerUserRequestModelMapper { get; }
+    private CodigoUsuarioModelMapper codigoUsuarioModelMapper { get; }
     private JwtService jwtService { get; }
     private EmailService emailService { get; }
+    private ArgonHashService hashService { get; }
     private IValidator<RegisterUserRequestModel> registerUserRequestModelValidator { get; }
     private IValidator<UserLoginRequestModel> userLoginRequestModelValidator { get; }
+    private IValidator<ConfirmUserEmailRequestModel> confirmUserEmailRequestModelValidator { get; }
     private ILogger logger { get; }
 
-    public AuthController(IUsuarioRepository usuarioRepository, ICursoRepository cursoRepository, 
-        UsuarioModelMapper usuarioModelMapper, JwtService jwtService, EmailService emailService, 
-        IValidator<RegisterUserRequestModel> registerUserRequestModelValidator, 
-        IValidator<UserLoginRequestModel> userLoginRequestModelValidator, 
-        ILogger logger)
+    public AuthController(IUsuarioRepository usuarioRepository, ICursoRepository cursoRepository,
+        ICodigoUsuarioRepository codigoUsuarioRepository, UsuarioModelMapper usuarioModelMapper,
+        RegisterUserRequestModelMapper registerUserRequestModelMapper, CodigoUsuarioModelMapper codigoUsuarioModelMapper,
+        JwtService jwtService, EmailService emailService, ArgonHashService hashService, 
+        IValidator<RegisterUserRequestModel> registerUserRequestModelValidator, IValidator<UserLoginRequestModel> userLoginRequestModelValidator, 
+        IValidator<ConfirmUserEmailRequestModel> confirmUserEmailRequestModelValidator, ILogger logger)
     {
         this.usuarioRepository = usuarioRepository;
         this.cursoRepository = cursoRepository;
+        this.codigoUsuarioRepository = codigoUsuarioRepository;
         this.usuarioModelMapper = usuarioModelMapper;
+        this.registerUserRequestModelMapper = registerUserRequestModelMapper;
         this.jwtService = jwtService;
         this.emailService = emailService;
+        this.hashService = hashService;
         this.registerUserRequestModelValidator = registerUserRequestModelValidator;
         this.userLoginRequestModelValidator = userLoginRequestModelValidator;
+        this.confirmUserEmailRequestModelValidator = confirmUserEmailRequestModelValidator;
+        this.codigoUsuarioModelMapper = codigoUsuarioModelMapper;
         this.logger = logger;
+    }
+    
+    public async Task<CodigoUsuarioReadModel> ConfirmUserEmail(ConfirmUserEmailRequestModel confirmUserEmailRequestModel,
+        int userId)
+    {
+        ValidationResult validationResult = await confirmUserEmailRequestModelValidator
+            .ValidateAsync(confirmUserEmailRequestModel);
+        if(!validationResult.IsValid)
+        {
+            ValidationException exception = new(validationResult.Errors
+                .Select(e => e.ErrorMessage));
+            logger.Error(exception, "Validation issues");
+            throw exception;
+        }
+        
+        UsuarioModel? usuarioModel = await usuarioRepository.GetUsuarioById(userId);
+        if(usuarioModel is null)
+        {
+            UsuarioNotFoundException exception = new(nameof(userId), userId.ToString());
+            logger.Error(exception, "Usuário não encontrado");
+            throw exception;
+        }
+        
+        CodigoUsuarioModel? confirmedUserCode = await codigoUsuarioRepository
+            .GetUserCode(usuarioModel, UserCodeKind.EmailConfirmation);
+        if(confirmedUserCode is null)
+        {
+            ConfirmationCodeNotFoundException exception = new(userId);
+            logger.Error(exception, "Código de confirmação de email não encontrado");
+            throw exception;
+        }
+        bool isEqual = confirmedUserCode.codigo == confirmUserEmailRequestModel.confirmationCode;
+        if(!isEqual)
+        {
+            UserCodeNotMatchException exception = new(confirmUserEmailRequestModel.confirmationCode,
+                UserCodeKind.EmailConfirmation);
+            logger.Error(exception, "Código de confirmação de email não corresponde ao código válido");
+            throw exception;
+        }
+        
+        codigoUsuarioRepository.UseCode(usuarioModel, confirmedUserCode);
+        usuarioModel.statusUsuario = true;
+        await codigoUsuarioRepository.Flush();
+        CodigoUsuarioReadModel codigoUsuarioReadModel = codigoUsuarioModelMapper
+            .CodigoUsuarioToCodigoUsuarioReadModel(confirmedUserCode);
+        
+        return codigoUsuarioReadModel;
     }
     
     public async Task<(UserReadModel, string)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel)
@@ -74,33 +134,26 @@ public class AuthController : IAuthController
         if(relatedCurso is null)
         {
             CursoNotFound exception = new(cursoId);
-            logger.Error(exception, "Curso não encontrado");
+            logger.Error(exception, "Curso not found");
             throw exception;
         }
         
         DateTime registerDate = DateTime.Now.Date;
-        UsuarioModel usuarioModel = usuarioModelMapper
+        string rawUserPassword = registerUserRequestModel.password;
+        UsuarioModel usuarioModel = registerUserRequestModelMapper
             .RegisterUserRequestModelToUsuarioModel(registerUserRequestModel);
         usuarioModel.curso = relatedCurso;
-        usuarioModel.statusUsuario = true;
+        usuarioModel.statusUsuario = false;
         usuarioModel.dataCadastroUsuario = new(registerDate.Year, registerDate.Month, registerDate.Day);
+        usuarioModel.senhaUsuario = hashService.Hash(rawUserPassword);
+        
         await usuarioRepository.CreateUser(usuarioModel);
+        
+        await SendConfirmationEmail(usuarioModel);
         await usuarioRepository.Flush();
         
-        UserReadModel userReadModel = new()
-        {
-            id = usuarioModel.idUsuario,
-            username = usuarioModel.nomeUsuario,
-            email = usuarioModel.emailUsuario,
-            role = usuarioModel.tipoUsuario,
-            active = usuarioModel.statusUsuario,
-            curso = new(relatedCurso.nomeCurso)
-        };
+        UserReadModel userReadModel = usuarioModelMapper.UsuarioModelToUserReadModel(usuarioModel);
         string jwtUser = jwtService.GenerateJwt(new(userReadModel.id.ToString(), userReadModel.role));
-        bool emailSended = await SendRegisterEmail(userReadModel.email, userReadModel.username);
-        if(!emailSended)
-            logger.Warning("Não foi possível enviar o email de boas vindas para o usuário Email[{UserEmail}]",
-                userReadModel.email);
         
         return (userReadModel, jwtUser);
     }
@@ -126,7 +179,9 @@ public class AuthController : IAuthController
             logger.Error(exception, "Usuário não encontrado");
             throw exception;
         }
-        if(usuarioModel.senhaUsuario != userLoginRequestModel.password)
+        
+        string hashRequestUserPassword = hashService.Hash(userLoginRequestModel.password);
+        if(usuarioModel.senhaUsuario != hashRequestUserPassword)
         {
             InvalidLoginPasswordException exception = new(userLoginRequestModel.email);
             logger.Error(exception, "Senha inválida");
@@ -138,14 +193,49 @@ public class AuthController : IAuthController
         
         return (userReadModel, jwtUser);
     }
+    public async Task<bool> SendConfirmationEmail(int userId)
+    {
+        UsuarioModel? usuarioModel = await usuarioRepository.GetUsuarioById(userId);
+        if(usuarioModel is null)
+        {
+            UsuarioNotFoundException exception = new(nameof(userId), userId.ToString());
+            logger.Error(exception, "Usuário não encontrado");
+            throw exception;
+        }
+        if(usuarioModel.statusUsuario)
+        {
+            logger.Warning("Este usuário já está com Email[{UserEmail}] confirmado",
+                usuarioModel.emailUsuario);
+        }
+        
+        bool emailSended = await SendConfirmationEmail(usuarioModel);
+        await codigoUsuarioRepository.Flush();
+        return emailSended;
+    }
     
-    private async Task<bool> SendRegisterEmail(string toEmail, string username)
+    private async Task<bool> SendConfirmationEmail(UsuarioModel usuarioModel)
+    {
+        CodigoUsuarioModel confirmCode = await codigoUsuarioRepository
+            .GenerateAndEnsureCode(usuarioModel, UserCodeKind.EmailConfirmation);
+        bool emailSended = await SendRegisterEmail(usuarioModel, confirmCode);
+        
+        if(!emailSended)
+        {
+            logger.Warning("Não foi possível enviar o email de boas vindas para o usuário Email[{UserEmail}]",
+                usuarioModel.emailUsuario);
+        }
+        return emailSended;
+    }
+    private async Task<bool> SendRegisterEmail(UsuarioModel usuario, CodigoUsuarioModel confirmCode)
     {
         EmailIntent emailIntent = new()
         {
-            toEmail = toEmail,
+            toEmail = usuario.emailUsuario,
             subject = "Bem vindo ao StudyLab",
-            message = $"Olá {username}, seja bem vindo ao StudyLab"
+            message = $"""
+                        Olá {usuario.nomeUsuario}, seja bem vindo ao StudyLab.
+                        Aqui está seu codigo de confirmação de email: {confirmCode.codigo}
+                       """
         };
         
         try

@@ -10,6 +10,7 @@ using StudyLabAPI.Models;
 using StudyLabAPI.Models.Options;
 using StudyLabAPI.Repositories;
 using StudyLabAPI.Services.Email;
+using StudyLabAPI.Services.Hash;
 using StudyLabAPI.Services.Jwt;
 using StudyLabAPI.Validators;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -34,6 +35,8 @@ public static class Di
         services.Configure<EmailOptions>(configuration.GetSection(EmailOptions.SERVER_EMAIL));
         services.Configure<ConnectionStringsOptions>(configuration
             .GetSection(ConnectionStringsOptions.CONNECTION_STRING));
+        services.Configure<Argon2HashParametersOptions>(
+            configuration.GetSection(Argon2HashParametersOptions.HASH_PARAMETERS));
         
         return services;
     }
@@ -77,6 +80,7 @@ public static class Di
     {
         services.AddSingleton<JwtService>();
         services.AddTransient<EmailService>();
+        services.AddSingleton<ArgonHashService>();
         
         return services;
     }
@@ -87,6 +91,8 @@ public static class Di
     public static IServiceCollection AddMappers(this IServiceCollection services)
     {
         services.AddTransient<UsuarioModelMapper>();
+        services.AddTransient<RegisterUserRequestModelMapper>();
+        services.AddTransient<CodigoUsuarioModelMapper>();
         
         return services;
     }
@@ -98,6 +104,7 @@ public static class Di
     {
         services.AddScoped<IValidator<RegisterUserRequestModel>, RegisterUserRequestModelValidator>();
         services.AddScoped<IValidator<UserLoginRequestModel>, UserLoginRequestModelValidator>();
+        services.AddScoped<IValidator<ConfirmUserEmailRequestModel>, ConfirmUserEmailRequestModelValidator>();
         
         return services;
     }
@@ -134,6 +141,7 @@ public static class Di
         services.AddScoped<IUsuarioRepository, UsuarioRepository>();
         services.AddScoped<ICursoRepository, CursoRepository>();
         services.AddScoped<IDisciplinaRepository, DisciplinaRepository>();
+        services.AddScoped<ICodigoUsuarioRepository, CodigoUsuarioRepository>();
         return services;
     }
     /// <summary>
