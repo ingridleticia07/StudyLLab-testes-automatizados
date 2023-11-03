@@ -93,6 +93,7 @@ public static class Di
         services.AddTransient<UsuarioModelMapper>();
         services.AddTransient<RegisterUserRequestModelMapper>();
         services.AddTransient<CodigoUsuarioModelMapper>();
+        services.AddTransient<ResetUserPasswordRequestModelMapper>();
         
         return services;
     }
@@ -105,6 +106,7 @@ public static class Di
         services.AddScoped<IValidator<RegisterUserRequestModel>, RegisterUserRequestModelValidator>();
         services.AddScoped<IValidator<UserLoginRequestModel>, UserLoginRequestModelValidator>();
         services.AddScoped<IValidator<ConfirmUserEmailRequestModel>, ConfirmUserEmailRequestModelValidator>();
+        services.AddScoped<IValidator<ResetUserPasswordRequestModel>, ResetUserPasswordRequestModelValidator>();
         
         return services;
     }
