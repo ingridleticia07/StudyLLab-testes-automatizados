@@ -21,17 +21,22 @@ public static class AuthEndpoints
         builder.MapPost("login", AuthLoginEndpointHandler)
             .WithOpenApi(AuthSummaries.AuthLoginSpecification);
         builder.MapPut("confirmEmail", AuthConfirmEmailHandler)
-            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE);
+            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE)
+            .WithOpenApi(AuthSummaries.AuthConfirmEmailSpecification);
         builder.MapPost("resendConfirmationEmail", AuthResendConfirmationEmail)
-            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE);
+            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE)
+            .WithOpenApi(AuthSummaries.AuthResendConfirmationEmailSpecification);
         builder.MapPut("resetPassword", AuthResetPasswordHandler)
-            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE);
+            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE)
+            .WithOpenApi(AuthSummaries.AuthResetPasswordSpecification);
         builder.MapPost("requestResetPassword", AuthRequestResetPasswordHandler)
-            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE);
+            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE)
+            .WithOpenApi(AuthSummaries.AuthRequesResetPasswordSpecification);
         
         return builder;
     }
-
+    
+    [ProducesResponseType(typeof(ResetUserPasswordReadModel), 200)]
     private static async Task<IResult> AuthResetPasswordHandler(
         HttpContext context,
         [FromBody] ResetUserPasswordRequestModel resetUserPasswordRequestModel,
@@ -57,7 +62,7 @@ public static class AuthEndpoints
         
         return Results.Ok(resetUserPasswordReadModel);
     }
-
+    
     private static async Task<IResult> AuthRequestResetPasswordHandler(
         HttpContext context,
         [FromServices] IAuthController controller)
@@ -79,7 +84,8 @@ public static class AuthEndpoints
             Results.Problem("Não foi possível enviar o email de recuperação de senha.",
                 statusCode: StatusCodes.Status503ServiceUnavailable);
     }
-
+    
+    [ProducesResponseType(typeof(CodigoUsuarioReadModel), 200)]
     private static async Task<IResult> AuthConfirmEmailHandler(
         HttpContext context,
         [FromBody] ConfirmUserEmailRequestModel confirmUserEmailRequestModel,
