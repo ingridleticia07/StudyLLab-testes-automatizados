@@ -25,20 +25,23 @@ public class AuthController : IAuthController
     private UsuarioModelMapper usuarioModelMapper { get; }
     private RegisterUserRequestModelMapper registerUserRequestModelMapper { get; }
     private CodigoUsuarioModelMapper codigoUsuarioModelMapper { get; }
+    private ResetUserPasswordRequestModelMapper resetUserPasswordRequestModelMapper { get; }
     private JwtService jwtService { get; }
     private EmailService emailService { get; }
     private ArgonHashService hashService { get; }
     private IValidator<RegisterUserRequestModel> registerUserRequestModelValidator { get; }
     private IValidator<UserLoginRequestModel> userLoginRequestModelValidator { get; }
     private IValidator<ConfirmUserEmailRequestModel> confirmUserEmailRequestModelValidator { get; }
+    private IValidator<ResetUserPasswordRequestModel> resetUserPasswordRequestModelValidator { get; }
     private ILogger logger { get; }
 
     public AuthController(IUsuarioRepository usuarioRepository, ICursoRepository cursoRepository,
         ICodigoUsuarioRepository codigoUsuarioRepository, UsuarioModelMapper usuarioModelMapper,
         RegisterUserRequestModelMapper registerUserRequestModelMapper, CodigoUsuarioModelMapper codigoUsuarioModelMapper,
-        JwtService jwtService, EmailService emailService, ArgonHashService hashService, 
+        ResetUserPasswordRequestModelMapper resetUserPasswordRequestModelMapper, JwtService jwtService, EmailService emailService, ArgonHashService hashService, 
         IValidator<RegisterUserRequestModel> registerUserRequestModelValidator, IValidator<UserLoginRequestModel> userLoginRequestModelValidator, 
-        IValidator<ConfirmUserEmailRequestModel> confirmUserEmailRequestModelValidator, ILogger logger)
+        IValidator<ResetUserPasswordRequestModel> resetUserPasswordRequestModelValidator, IValidator<ConfirmUserEmailRequestModel> confirmUserEmailRequestModelValidator, 
+        ILogger logger)
     {
         this.usuarioRepository = usuarioRepository;
         this.cursoRepository = cursoRepository;
@@ -51,55 +54,10 @@ public class AuthController : IAuthController
         this.registerUserRequestModelValidator = registerUserRequestModelValidator;
         this.userLoginRequestModelValidator = userLoginRequestModelValidator;
         this.confirmUserEmailRequestModelValidator = confirmUserEmailRequestModelValidator;
+        this.resetUserPasswordRequestModelValidator = resetUserPasswordRequestModelValidator;
         this.codigoUsuarioModelMapper = codigoUsuarioModelMapper;
         this.logger = logger;
-    }
-    
-    public async Task<CodigoUsuarioReadModel> ConfirmUserEmail(ConfirmUserEmailRequestModel confirmUserEmailRequestModel,
-        int userId)
-    {
-        ValidationResult validationResult = await confirmUserEmailRequestModelValidator
-            .ValidateAsync(confirmUserEmailRequestModel);
-        if(!validationResult.IsValid)
-        {
-            ValidationException exception = new(validationResult.Errors
-                .Select(e => e.ErrorMessage));
-            logger.Error(exception, "Validation issues");
-            throw exception;
-        }
-        
-        UsuarioModel? usuarioModel = await usuarioRepository.GetUsuarioById(userId);
-        if(usuarioModel is null)
-        {
-            UsuarioNotFoundException exception = new(nameof(userId), userId.ToString());
-            logger.Error(exception, "Usuário não encontrado");
-            throw exception;
-        }
-        
-        CodigoUsuarioModel? confirmedUserCode = await codigoUsuarioRepository
-            .GetUserCode(usuarioModel, UserCodeKind.EmailConfirmation);
-        if(confirmedUserCode is null)
-        {
-            ConfirmationCodeNotFoundException exception = new(userId);
-            logger.Error(exception, "Código de confirmação de email não encontrado");
-            throw exception;
-        }
-        bool isEqual = confirmedUserCode.codigo == confirmUserEmailRequestModel.confirmationCode;
-        if(!isEqual)
-        {
-            UserCodeNotMatchException exception = new(confirmUserEmailRequestModel.confirmationCode,
-                UserCodeKind.EmailConfirmation);
-            logger.Error(exception, "Código de confirmação de email não corresponde ao código válido");
-            throw exception;
-        }
-        
-        codigoUsuarioRepository.UseCode(usuarioModel, confirmedUserCode);
-        usuarioModel.statusUsuario = true;
-        await codigoUsuarioRepository.Flush();
-        CodigoUsuarioReadModel codigoUsuarioReadModel = codigoUsuarioModelMapper
-            .CodigoUsuarioToCodigoUsuarioReadModel(confirmedUserCode);
-        
-        return codigoUsuarioReadModel;
+        this.resetUserPasswordRequestModelMapper = resetUserPasswordRequestModelMapper;
     }
     
     public async Task<(UserReadModel, string)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel)
@@ -149,7 +107,7 @@ public class AuthController : IAuthController
         
         await usuarioRepository.CreateUser(usuarioModel);
         
-        await SendConfirmationEmail(usuarioModel);
+        await GenerateAndSendConfirmationEmail(usuarioModel);
         await usuarioRepository.Flush();
         
         UserReadModel userReadModel = usuarioModelMapper.UsuarioModelToUserReadModel(usuarioModel);
@@ -193,7 +151,113 @@ public class AuthController : IAuthController
         
         return (userReadModel, jwtUser);
     }
-    public async Task<bool> SendConfirmationEmail(int userId)
+    
+    public async Task<CodigoUsuarioReadModel> ConfirmUserEmail(ConfirmUserEmailRequestModel confirmUserEmailRequestModel,
+        int userId)
+    {
+        ValidationResult validationResult = await confirmUserEmailRequestModelValidator
+            .ValidateAsync(confirmUserEmailRequestModel);
+        if(!validationResult.IsValid)
+        {
+            ValidationException exception = new(validationResult.Errors
+                .Select(e => e.ErrorMessage));
+            logger.Error(exception, "Validation issues");
+            throw exception;
+        }
+        
+        UsuarioModel? usuarioModel = await usuarioRepository.GetUsuarioById(userId);
+        if(usuarioModel is null)
+        {
+            UsuarioNotFoundException exception = new(nameof(userId), userId.ToString());
+            logger.Error(exception, "Usuário não encontrado");
+            throw exception;
+        }
+        
+        CodigoUsuarioModel? confirmedUserCode = await codigoUsuarioRepository
+            .GetUserCode(usuarioModel, UserCodeKind.EmailConfirmation);
+        if(confirmedUserCode is null)
+        {
+            ConfirmationCodeNotFoundException exception = new(userId);
+            logger.Error(exception, "Código de confirmação de email não encontrado");
+            throw exception;
+        }
+        bool isEqual = confirmedUserCode.codigo == confirmUserEmailRequestModel.confirmationCode;
+        if(!isEqual)
+        {
+            UserCodeNotMatchException exception = new(confirmUserEmailRequestModel.confirmationCode,
+                UserCodeKind.EmailConfirmation);
+            logger.Error(exception, "Código de confirmação de email não corresponde ao código válido");
+            throw exception;
+        }
+        
+        codigoUsuarioRepository.UseCode(usuarioModel, confirmedUserCode);
+        usuarioModel.statusUsuario = true;
+        await codigoUsuarioRepository.Flush();
+        CodigoUsuarioReadModel codigoUsuarioReadModel = codigoUsuarioModelMapper
+            .CodigoUsuarioToCodigoUsuarioReadModel(confirmedUserCode);
+        
+        return codigoUsuarioReadModel;
+    }
+    
+    public async Task<ResetUserPasswordReadModel> ResetUserPassword(ResetUserPasswordRequestModel resetUserPasswordRequestModel,
+        int userId)
+    {
+        ValidationResult validationResult = await resetUserPasswordRequestModelValidator
+            .ValidateAsync(resetUserPasswordRequestModel);
+        if(!validationResult.IsValid)
+        {
+            ValidationException exception = new(validationResult.Errors
+                .Select(e => e.ErrorMessage));
+            logger.Error(exception, "Validation issues");
+            throw exception;
+        }
+        
+        UsuarioModel? usuarioModel = await usuarioRepository
+            .GetUsuarioById(userId);
+        if(usuarioModel is null)
+        {
+            UsuarioNotFoundException exception = new(nameof(userId), userId.ToString());
+            logger.Error(exception, "Usuário não encontrado");
+            throw exception;
+        }
+        
+        CodigoUsuarioModel? resetCode = await codigoUsuarioRepository
+            .GetUserCode(usuarioModel, UserCodeKind.PasswordReset);
+        if(resetCode is null)
+        {
+            ResetPasswordCodeNotFoundException exception = new(userId);
+            logger.Error(exception, "Código de recuperação de senha não encontrado");
+            throw exception;
+        }
+        
+        bool isCodeEqual = resetCode.codigo == resetUserPasswordRequestModel.resetCode;
+        if(!isCodeEqual)
+        {
+            UserCodeNotMatchException exception = new(resetUserPasswordRequestModel.resetCode,
+                UserCodeKind.PasswordReset);
+            logger.Error(exception, "Código de recuperação de senha não corresponde ao código válido");
+            throw exception;
+        }
+        string currentPasswordHash = hashService.Hash(resetUserPasswordRequestModel.currentPassword);
+        bool currentPassword = currentPasswordHash == usuarioModel.senhaUsuario;
+        if(!currentPassword)
+        {
+            CurrentPasswordNotMatchException exception = new(resetUserPasswordRequestModel.currentPassword);
+            logger.Error(exception, "Senha atual não corresponde à senha do usuário");
+            throw exception;
+        }
+        
+        codigoUsuarioRepository.UseCode(usuarioModel, resetCode);
+        string newPassword = hashService.Hash(resetUserPasswordRequestModel.newPassword);
+        usuarioModel.senhaUsuario = newPassword;
+        await codigoUsuarioRepository.Flush();
+        
+        ResetUserPasswordReadModel resetUserPasswordReadModel = resetUserPasswordRequestModelMapper
+            .ResetUserPasswordRequestModelToResetUserPasswordReadModel(resetUserPasswordRequestModel);
+        return resetUserPasswordReadModel;
+    }
+    
+    public async Task<bool> RequestConfirmationCode(int userId)
     {
         UsuarioModel? usuarioModel = await usuarioRepository.GetUsuarioById(userId);
         if(usuarioModel is null)
@@ -208,12 +272,42 @@ public class AuthController : IAuthController
                 usuarioModel.emailUsuario);
         }
         
-        bool emailSended = await SendConfirmationEmail(usuarioModel);
+        bool emailSended = await GenerateAndSendConfirmationEmail(usuarioModel);
         await codigoUsuarioRepository.Flush();
         return emailSended;
     }
     
-    private async Task<bool> SendConfirmationEmail(UsuarioModel usuarioModel)
+    public async Task<bool> RequestPasswordResetCode(int userId)
+    {
+        UsuarioModel? usuarioModel = await usuarioRepository.GetUsuarioById(userId);
+        if(usuarioModel is null)
+        {
+            UsuarioNotFoundException exception = new(nameof(userId), userId.ToString());
+            logger.Error(exception, "Usuário não encontrado");
+            throw exception;
+        }
+        
+        bool emailSended = await GenerateAndSendResetUserPassword(usuarioModel);
+        await codigoUsuarioRepository.Flush();
+        return emailSended;
+    }
+    
+    private async Task<bool> GenerateAndSendResetUserPassword(UsuarioModel usuarioModel)
+    {
+        CodigoUsuarioModel resetCode = await codigoUsuarioRepository
+            .GenerateAndEnsureCode(usuarioModel, UserCodeKind.PasswordReset);
+        bool emailSended = await SendResetPasswordEmail(usuarioModel, resetCode);
+        
+        if(!emailSended)
+        {
+            logger.Warning("Não foi possível enviar o email de recuperação de senha para o usuário Email[{UserEmail}]",
+                usuarioModel.emailUsuario);
+        }
+        
+        return emailSended;
+    }
+    
+    private async Task<bool> GenerateAndSendConfirmationEmail(UsuarioModel usuarioModel)
     {
         CodigoUsuarioModel confirmCode = await codigoUsuarioRepository
             .GenerateAndEnsureCode(usuarioModel, UserCodeKind.EmailConfirmation);
@@ -243,6 +337,28 @@ public class AuthController : IAuthController
             await emailService.SendEmail(emailIntent);
         }
         catch(Exception) { return false; }
+        return true;
+    }
+    
+    private async Task<bool> SendResetPasswordEmail(UsuarioModel usuario, CodigoUsuarioModel resetCode)
+    {
+        EmailIntent emailIntent = new()
+        {
+            toEmail = usuario.emailUsuario,
+            subject = "Redefinição de senha",
+            message = $"""
+                        Olá {usuario.nomeUsuario}, você solicitou uma redefinição de senha.
+                        Aqui está seu codigo de redefinição de senha: {resetCode.codigo}.
+                        
+                        Se você não solicitou uma redefinição de senha, ignore este email.
+                       """
+        };
+
+        try
+        { 
+            await emailService.SendEmail(emailIntent);
+        }
+        catch (Exception) { return false; }
         return true;
     }
 }

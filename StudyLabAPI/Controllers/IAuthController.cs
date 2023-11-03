@@ -16,8 +16,6 @@ namespace StudyLabAPI.Controllers;
 /// </remarks>
 public interface IAuthController
 {
-    public Task<CodigoUsuarioReadModel> ConfirmUserEmail(ConfirmUserEmailRequestModel confirmUserEmailRequestModel,
-        int userId);
     /// <summary>
     /// Cadastra um novo usuario no sistema.
     /// Os campos recebidos em <paramref name="registerUserRequestModel"/> são validados de acordo com //TODO: Validation.
@@ -40,5 +38,10 @@ public interface IAuthController
     /// <returns>Representa uma tarefa assíncrona, ela retorna uma tupla com as informações referentes ao usuário
     /// e um JWT válido</returns>
     public Task<(UserReadModel, string)> LoginUser(UserLoginRequestModel userLoginRequestModel);
-    public Task<bool> SendConfirmationEmail(int userId);
+    public Task<CodigoUsuarioReadModel> ConfirmUserEmail(ConfirmUserEmailRequestModel confirmUserEmailRequestModel,
+        int userId);
+    public Task<ResetUserPasswordReadModel> ResetUserPassword(ResetUserPasswordRequestModel resetUserPasswordRequestModel,
+        int userId);
+    public Task<bool> RequestPasswordResetCode(int userId);
+    public Task<bool> RequestConfirmationCode(int userId);
 }

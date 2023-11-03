@@ -24,8 +24,60 @@ public static class AuthEndpoints
             .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE);
         builder.MapPost("resendConfirmationEmail", AuthResendConfirmationEmail)
             .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE);
+        builder.MapPut("resetPassword", AuthResetPasswordHandler)
+            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE);
+        builder.MapPost("requestResetPassword", AuthRequestResetPasswordHandler)
+            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE);
         
         return builder;
+    }
+
+    private static async Task<IResult> AuthResetPasswordHandler(
+        HttpContext context,
+        [FromBody] ResetUserPasswordRequestModel resetUserPasswordRequestModel,
+        [FromServices] IAuthController controller)
+    {
+        int userId = int.Parse(context.User.Claims
+            .First(c => c.Type == ClaimTypes.Name).Value);
+        
+        ResetUserPasswordReadModel resetUserPasswordReadModel;
+        try
+        {
+            resetUserPasswordReadModel = await controller
+                .ResetUserPassword(resetUserPasswordRequestModel, userId);
+        }
+        catch (Exception e) when (e is UsuarioNotFoundException or ResetPasswordCodeNotFoundException)
+        {
+            return Results.NotFound(e.Message);
+        }
+        catch(Exception e)
+        {
+            return Results.BadRequest(e.Message);
+        }
+        
+        return Results.Ok(resetUserPasswordReadModel);
+    }
+
+    private static async Task<IResult> AuthRequestResetPasswordHandler(
+        HttpContext context,
+        [FromServices] IAuthController controller)
+    {
+        int userId = int.Parse(context.User.Claims
+            .First(c => c.Type == ClaimTypes.Name).Value);
+        
+        bool sended;
+        try
+        {
+            sended = await controller.RequestPasswordResetCode(userId);
+        }
+        catch(Exception e)
+        {
+            return Results.BadRequest(e.Message);
+        }
+        
+        return sended ? Results.Ok() : 
+            Results.Problem("Não foi possível enviar o email de recuperação de senha.",
+                statusCode: StatusCodes.Status503ServiceUnavailable);
     }
 
     private static async Task<IResult> AuthConfirmEmailHandler(
@@ -61,7 +113,7 @@ public static class AuthEndpoints
         bool sended;
         try
         {
-            sended = await controller.SendConfirmationEmail(userId);
+            sended = await controller.RequestConfirmationCode(userId);
         }
         catch (Exception e)
         {
