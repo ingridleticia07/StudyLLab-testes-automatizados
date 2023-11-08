@@ -21,6 +21,8 @@ public class UsuarioController : IUsuarioController
     
     public async Task<UserReadModel> GetUserInfoById(int id)
     {
+        logger.Information("Recuperando informações do usuário ID[{ID}]",
+            id);
         UsuarioModel? user = await userRepository.GetUsuarioById(id);
         if (user is null)
         {
