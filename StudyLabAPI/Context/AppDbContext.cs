@@ -13,7 +13,8 @@ public class AppDbContext : DbContext
     public DbSet<CursoModel> cursos { get; set; } = null!;
     public DbSet<CodigoUsuarioModel> codigoUsuario { get; set; } = null!;
     public DbSet<DisciplinaModel> disciplinas { get; set; } = null!;
-    
+
+    public DbSet<TopicoDiscussaoModel> discussao { get; set; } = null!;
     public AppDbContext(IOptions<ConnectionStringsOptions> options)
     {
         _options = options.Value;

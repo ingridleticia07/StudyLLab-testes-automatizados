@@ -60,4 +60,9 @@ RouteGroupBuilder disciplinaGroup = app.MapGroup("disciplina")
     .WithTags("Disciplina");
 disciplinaGroup.MapDisciplinaEndpoints();
 
+RouteGroupBuilder forumGroup = app.MapGroup("forum")
+    .AddEndpointFilter<ApiKeyFilter>()
+    .WithTags("Forum");
+forumGroup.MapForumEndpoints();
+
 app.Run();
