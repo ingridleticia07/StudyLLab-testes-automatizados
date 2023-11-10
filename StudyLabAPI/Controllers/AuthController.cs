@@ -26,9 +26,9 @@ public class AuthController : IAuthController
     private RegisterUserRequestModelMapper registerUserRequestModelMapper { get; }
     private CodigoUsuarioModelMapper codigoUsuarioModelMapper { get; }
     private ResetUserPasswordRequestModelMapper resetUserPasswordRequestModelMapper { get; }
-    private JwtService jwtService { get; }
-    private EmailService emailService { get; }
-    private ArgonHashService hashService { get; }
+    private IJwtService jwtService { get; }
+    private IEmailService emailService { get; }
+    private IHashService hashService { get; }
     private IValidator<RegisterUserRequestModel> registerUserRequestModelValidator { get; }
     private IValidator<UserLoginRequestModel> userLoginRequestModelValidator { get; }
     private IValidator<ConfirmUserEmailRequestModel> confirmUserEmailRequestModelValidator { get; }
@@ -38,7 +38,7 @@ public class AuthController : IAuthController
     public AuthController(IUsuarioRepository usuarioRepository, ICursoRepository cursoRepository,
         ICodigoUsuarioRepository codigoUsuarioRepository, UsuarioModelMapper usuarioModelMapper,
         RegisterUserRequestModelMapper registerUserRequestModelMapper, CodigoUsuarioModelMapper codigoUsuarioModelMapper,
-        ResetUserPasswordRequestModelMapper resetUserPasswordRequestModelMapper, JwtService jwtService, EmailService emailService, ArgonHashService hashService, 
+        ResetUserPasswordRequestModelMapper resetUserPasswordRequestModelMapper, IJwtService jwtService, IEmailService emailService, IHashService hashService, 
         IValidator<RegisterUserRequestModel> registerUserRequestModelValidator, IValidator<UserLoginRequestModel> userLoginRequestModelValidator, 
         IValidator<ResetUserPasswordRequestModel> resetUserPasswordRequestModelValidator, IValidator<ConfirmUserEmailRequestModel> confirmUserEmailRequestModelValidator, 
         ILogger logger)

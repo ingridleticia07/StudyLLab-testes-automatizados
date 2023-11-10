@@ -7,7 +7,7 @@ using MailMessage = System.Net.Mail.MailMessage;
 
 namespace StudyLabAPI.Services.Email;
 
-public class EmailService : IDisposable
+public class EmailService : IDisposable, IEmailService
 {
     private SmtpClient smtpClient { get; }
     // ReSharper disable once UnusedAutoPropertyAccessor.Local

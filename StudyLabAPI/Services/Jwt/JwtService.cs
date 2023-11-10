@@ -7,7 +7,7 @@ using JwtPayload = StudyLabAPI.Services.Jwt.Models.JwtPayload;
 
 namespace StudyLabAPI.Services.Jwt;
 
-public class JwtService
+public class JwtService : IJwtService
 {
     private readonly JwtParametersOptions options;
 

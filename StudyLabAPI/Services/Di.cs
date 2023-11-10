@@ -78,9 +78,9 @@ public static class Di
     /// <returns><see cref="IServiceCollection"/> para que outras chamadas possam ser encadeadas.</returns>
     public static IServiceCollection AddLocalServices(this IServiceCollection services)
     {
-        services.AddSingleton<JwtService>();
-        services.AddTransient<EmailService>();
-        services.AddSingleton<ArgonHashService>();
+        services.AddSingleton<IJwtService, JwtService>();
+        services.AddTransient<IEmailService, EmailService>();
+        services.AddSingleton<IHashService, ArgonHashService>();
         
         return services;
     }

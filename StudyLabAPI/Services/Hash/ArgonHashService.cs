@@ -5,7 +5,7 @@ using StudyLabAPI.Models.Options;
 
 namespace StudyLabAPI.Services.Hash;
 
-public class ArgonHashService
+public class ArgonHashService : IHashService
 {
     private readonly Argon2HashParametersOptions _options;
 
