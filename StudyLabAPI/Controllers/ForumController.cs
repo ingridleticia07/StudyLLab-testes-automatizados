@@ -10,14 +10,14 @@ namespace StudyLabAPI.Controllers
         private ITopicoDiscussaoRepository topicoDiscussaoRepository { get; }
         private ILogger logger { get; }
 
-        private ICursoRepository cursoRepository { get; }
+        private IDisciplinaRepository DisciplinaRepository { get; }
 
-        public ForumController(ITopicoDiscussaoRepository topicoDiscussaoRepository, ICursoRepository cursoRepository,
+        public ForumController(ITopicoDiscussaoRepository topicoDiscussaoRepository, IDisciplinaRepository DisciplinaRepository,
             ILogger logger)
         {
             this.topicoDiscussaoRepository = topicoDiscussaoRepository;
             this.logger = logger;
-            this.cursoRepository = cursoRepository;
+            this.DisciplinaRepository = DisciplinaRepository;
         }
         public async Task<List<TopicoDiscussaoModel>> GetAllTopicosDiscussao()
         {
@@ -27,6 +27,25 @@ namespace StudyLabAPI.Controllers
             // You should map DisciplinaModel to DisciplinaReadModel and return the list
 
             return topicosDiscussaoListado;
+        }
+        public async Task<TopicoDiscussaoModel> CreateTopicoDiscussao(RegisteredTopicoDiscussaoRequestModel topicoDiscussao)
+        {
+            //passar id 
+            int disciplinaId = topicoDiscussao.disciplina;
+
+            DisciplinaModel? relatedDisciplina = await DisciplinaRepository.GetDisciplinaById(disciplinaId);
+
+            TopicoDiscussaoModel NovotopicoDiscussao = new()
+            {
+                nomeTopico = topicoDiscussao.nomeTopico,
+                dataTopico = topicoDiscussao.dataTopico,
+                disciplina = relatedDisciplina
+            };
+            await topicoDiscussaoRepository.CreateTopicoDiscussao(NovotopicoDiscussao);
+
+            await topicoDiscussaoRepository.Flush();
+
+            return (NovotopicoDiscussao);
         }
     }
 }

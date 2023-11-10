@@ -19,5 +19,11 @@ namespace StudyLabAPI.Repositories
             .ToListAsync();
             return disciplinaModel;
         }
+
+        public async Task CreateTopicoDiscussao(TopicoDiscussaoModel topicoDiscussao) =>
+            await dbContext.discussao.AddAsync(topicoDiscussao);
+        public async Task Flush() =>
+            await dbContext.SaveChangesAsync();
+
     }
 }

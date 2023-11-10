@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using StudyLabAPI.Summaries;
+using Microsoft.AspNetCore.Mvc;
 using StudyLabAPI.Controllers;
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models;
-using StudyLabAPI.Summaries;
 
 namespace StudyLabAPI.Endpoints
 {
@@ -11,6 +11,8 @@ namespace StudyLabAPI.Endpoints
         public static RouteGroupBuilder MapForumEndpoints(this RouteGroupBuilder builder)
         {
             builder.MapGet("listarTopicosDiscussao", GetAllTopicosDiscussao);
+
+            builder.MapPost("criarTopicoDiscussao", CreateTopicoDiscussao);
             //add withSummaries ao terminar
 
             return builder;
@@ -34,6 +36,26 @@ namespace StudyLabAPI.Endpoints
             }
 
             return Results.Ok(result);
+        }
+
+        private static async Task<IResult> CreateTopicoDiscussao(HttpContext context,
+            [FromBody] RegisteredTopicoDiscussaoRequestModel novoTopico,
+            [FromServices] IForumController controller)
+        {
+            try
+            {
+                await controller.CreateTopicoDiscussao(novoTopico);
+            }
+            catch (UsuarioNotFoundException e)
+            {
+                return Results.NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+
+            return Results.Ok(novoTopico);
         }
     }
 }

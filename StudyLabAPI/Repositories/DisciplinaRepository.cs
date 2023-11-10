@@ -13,6 +13,7 @@ namespace StudyLabAPI.Repositories
 
         public async Task<DisciplinaModel?> GetDisciplinaById(int id) =>
             await dbContext.disciplinas.FindAsync(id);
+
         public async Task<bool> VerifyDisciplinaCreated(DisciplinaModel disciplina)
         {
             var existingDisciplina = await dbContext.disciplinas

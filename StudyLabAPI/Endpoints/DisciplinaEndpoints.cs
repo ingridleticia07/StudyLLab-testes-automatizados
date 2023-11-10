@@ -12,6 +12,8 @@ public static class DisciplinaEndpoints
     {
         builder.MapGet("listarDisciplinas", GetDisciplinas)
             .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
+        builder.MapGet("listarDisciplina/{IdDisciplina}", GetDisciplina)
+            .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
         builder.MapPost("cadastrarDisciplina", CreateDisciplina)
             .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
         builder.MapPost("editarDisciplina", UpdateDisciplina)
@@ -29,6 +31,26 @@ public static class DisciplinaEndpoints
         try
         {
             result = await controller.GetAllDisciplinas();
+        }
+        catch (UsuarioNotFoundException e)
+        {
+            return Results.NotFound(e.Message);
+        }
+        catch (Exception e)
+        {
+            return Results.BadRequest(e.Message);
+        }
+
+        return Results.Ok(result);
+    }
+    private static async Task<IResult> GetDisciplina(HttpContext context,
+            [FromRoute(Name = "IdDisciplina")] int Iddisciplina,
+            [FromServices] IDisciplinaController controller)
+    {
+        DisciplinaReadModel? result;
+        try
+        {
+            result = await controller.GetDisciplinaById(Iddisciplina);
         }
         catch (UsuarioNotFoundException e)
         {

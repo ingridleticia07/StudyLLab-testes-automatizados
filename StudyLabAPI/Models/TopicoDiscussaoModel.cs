@@ -16,7 +16,6 @@ namespace StudyLabAPI.Models
         [Column("data_topico")]
         public DateOnly dataTopico { get; set; }
 
-
         [ForeignKey("fk_disciplina")]
         public DisciplinaModel disciplina { get; set; }
 
