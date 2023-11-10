@@ -47,5 +47,24 @@ namespace StudyLabAPI.Controllers
 
             return (NovotopicoDiscussao);
         }
+
+        public async Task<TopicoDiscussaoModel> UpdateTopicoDiscussao(RegisteredTopicoDiscussaoRequestModel topicoDiscussaoModel)
+        {
+            int disciplinaId = topicoDiscussaoModel.disciplina;
+
+            DisciplinaModel? relatedDisciplina = await DisciplinaRepository.GetDisciplinaById(disciplinaId);
+
+            TopicoDiscussaoModel NovotopicoDiscussao = new()
+            {
+                idTopico = topicoDiscussaoModel.idTopico,
+                nomeTopico = topicoDiscussaoModel.nomeTopico,
+                dataTopico = topicoDiscussaoModel.dataTopico,
+                disciplina = relatedDisciplina
+            };
+            await topicoDiscussaoRepository.UpdateTopicoDiscussao(NovotopicoDiscussao);
+            await topicoDiscussaoRepository.Flush();
+
+            return (NovotopicoDiscussao);
+        }
     }
 }

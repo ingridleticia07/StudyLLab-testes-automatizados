@@ -6,5 +6,7 @@ namespace StudyLabAPI.Controllers
         public Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussao();
 
         public Task<TopicoDiscussaoModel> CreateTopicoDiscussao(RegisteredTopicoDiscussaoRequestModel topicoDiscussao);
+
+        public Task<TopicoDiscussaoModel> UpdateTopicoDiscussao(RegisteredTopicoDiscussaoRequestModel topicoDiscussaoModel);
         }
 }

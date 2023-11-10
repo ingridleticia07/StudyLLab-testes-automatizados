@@ -22,6 +22,20 @@ namespace StudyLabAPI.Repositories
 
         public async Task CreateTopicoDiscussao(TopicoDiscussaoModel topicoDiscussao) =>
             await dbContext.discussao.AddAsync(topicoDiscussao);
+
+        public async Task UpdateTopicoDiscussao(TopicoDiscussaoModel topicoDiscussaoModel)
+        {
+            TopicoDiscussaoModel topicoDiscussaoForUpdate = await dbContext.discussao.FindAsync(topicoDiscussaoModel.idTopico);
+
+            if (topicoDiscussaoForUpdate == null)
+            {
+                return;
+            }
+            topicoDiscussaoForUpdate.disciplina = topicoDiscussaoModel.disciplina;
+            topicoDiscussaoForUpdate.dataTopico = topicoDiscussaoModel.dataTopico;
+            topicoDiscussaoForUpdate.nomeTopico = topicoDiscussaoModel.nomeTopico;
+        }
+
         public async Task Flush() =>
             await dbContext.SaveChangesAsync();
 
