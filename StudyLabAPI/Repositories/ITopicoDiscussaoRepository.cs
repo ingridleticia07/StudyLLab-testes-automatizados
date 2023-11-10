@@ -8,6 +8,7 @@ namespace StudyLabAPI.Repositories
 
         public Task CreateTopicoDiscussao(TopicoDiscussaoModel topicoDiscussao);
 
+        public Task UpdateTopicoDiscussao(TopicoDiscussaoModel topicoDiscussao);
         public Task Flush();
     }
 }
