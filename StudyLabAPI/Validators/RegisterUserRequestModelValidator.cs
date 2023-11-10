@@ -22,8 +22,6 @@ public class RegisterUserRequestModelValidator : AbstractValidator<RegisterUserR
             .NotNull()
             .NotEmpty();
         RuleFor(m => m.role)
-            .NotNull()
-            .NotEmpty()
             .IsInEnum();
         RuleFor(m => m.codeCurso)
             .NotNull()
