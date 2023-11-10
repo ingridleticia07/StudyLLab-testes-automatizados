@@ -28,6 +28,29 @@
 
     <ItemGroup>
       <None Include="wwwroot\feeling-blue.css" />
+      <None Remove="StudyLabAPI.Test\**" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <Compile Remove="StudyLabAPI.Test\**" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <EmbeddedResource Remove="StudyLabAPI.Test\**" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <Content Remove="StudyLabAPI.Test\**" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="StudyLabAPI.Test\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="StudyLabAPI.Test\obj\project.packagespec.json" />
+      <_ContentIncludedByDefault Remove="StudyLabAPI.Test\obj\StudyLabAPI.Test.csproj.nuget.dgspec.json" />
     </ItemGroup>
 
 </Project>

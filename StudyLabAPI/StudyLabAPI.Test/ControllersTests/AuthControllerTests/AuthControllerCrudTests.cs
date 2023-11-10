@@ -174,4 +174,43 @@ public class AuthControllerCrudTests
         Assert.Equal(newPasswordHash, usuarioModel.senhaUsuario);
         
     }
+    
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task RequestConfirmationCodeTest(bool statusUsuario)
+    {
+        CodigoUsuarioModel codigoUsuarioModel = fakeData.fakeEmailConfirmationCodigoUsuarioModel;
+        UsuarioModel usuarioModel = fakeData.fakeUsuarioModel;
+        usuarioModel.statusUsuario = statusUsuario;
+        
+        usuarioRepositoryMock.Setup(x =>
+            x.GetUsuarioById(fakeData.FakeUserId))
+            .ReturnsAsync(usuarioModel);
+        codigoUsuarioRepositoryMock.Setup(x =>
+            x.GenerateAndEnsureCode(usuarioModel, UserCodeKind.EmailConfirmation))
+            .ReturnsAsync(codigoUsuarioModel);
+        
+        bool success = await authController.RequestConfirmationCode(fakeData.FakeUserId);
+        
+        Assert.True(success);
+    }
+    
+    [Fact]
+    public async Task RequestPasswordResetCodeTest()
+    {
+        UsuarioModel usuarioModel = fakeData.fakeUsuarioModel;
+        CodigoUsuarioModel codigoUsuarioModel = fakeData.fakeResetUserPasswordCodigoUsuarioModel;
+        
+        usuarioRepositoryMock.Setup(x =>
+                x.GetUsuarioById(fakeData.FakeUserId))
+            .ReturnsAsync(usuarioModel);
+        codigoUsuarioRepositoryMock.Setup(x =>
+                x.GenerateAndEnsureCode(usuarioModel, UserCodeKind.PasswordReset))
+            .ReturnsAsync(codigoUsuarioModel);
+        
+        bool success = await authController.RequestPasswordResetCode(fakeData.FakeUserId);
+        
+        Assert.True(success);
+    }
 }
