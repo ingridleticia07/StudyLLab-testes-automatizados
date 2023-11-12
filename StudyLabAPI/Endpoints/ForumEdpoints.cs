@@ -1,9 +1,7 @@
-﻿using StudyLabAPI.Summaries;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StudyLabAPI.Controllers;
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models;
-using StudyLabAPI.Repositories;
 
 namespace StudyLabAPI.Endpoints
 {
