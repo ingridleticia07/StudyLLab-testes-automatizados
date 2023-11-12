@@ -26,8 +26,6 @@ namespace StudyLabAPI.Repositories
             }
         }
 
-        public async Task Flush() =>
-           await dbContext.SaveChangesAsync();
 
         public async Task<List<RespostaForumModel?>> GetAllRespostasForum()
         {
@@ -42,22 +40,22 @@ namespace StudyLabAPI.Repositories
 
         public async Task UpdateRespostaForum(RespostaForumModel respostaForum)
         {
-            var respostaForumModel = await dbContext.respostaForum.FindAsync(respostaForum.idResposta);
-            if (respostaForumModel != null)
+            RespostaForumModel respostaForumForUpdate = await dbContext.respostaForum.FindAsync(respostaForum.idResposta);
+            if (respostaForumForUpdate == null)
             {
                 return;
             }
-            respostaForumModel.resposta = respostaForum.resposta;
-            respostaForumModel.dataResposta = respostaForum.dataResposta;
-            respostaForumModel.usuario = respostaForum.usuario;
-            respostaForumModel.topicoDiscussao = respostaForum.topicoDiscussao;
+            respostaForumForUpdate.resposta = respostaForum.resposta;
+            respostaForumForUpdate.dataResposta = respostaForum.dataResposta;
+            respostaForumForUpdate.usuario = respostaForum.usuario;
+            respostaForumForUpdate.topicoDiscussao = respostaForum.topicoDiscussao;
+
         }
 
         public async Task<bool> VerifyRespostaForumExists(RespostaForumModel respostaForum)
         {
             var existingRespostaForum = await dbContext.respostaForum
-                .Where(value => (value.resposta == respostaForum.resposta) && 
-                (value.idResposta != respostaForum.idResposta))
+                .Where(value => value.resposta == respostaForum.resposta)
                 .FirstOrDefaultAsync();
 
             return existingRespostaForum != null;
@@ -65,10 +63,12 @@ namespace StudyLabAPI.Repositories
 
         public async Task<bool> VerifyRespostaForumExistsWithId(RespostaForumModel respostaForum)
         {
-            var existingRespostaForum = dbContext.respostaForum.Where(value => (value.resposta == respostaForum.resposta)
-            && (value.idResposta != respostaForum.idResposta));
+            var existingRespostaForum = await dbContext.respostaForum.Where(value => (value.resposta == respostaForum.resposta)
+            && (value.idResposta != respostaForum.idResposta)).FirstOrDefaultAsync();
 
             return existingRespostaForum != null;
         }
+        public async Task Flush() =>
+           await dbContext.SaveChangesAsync();
     }
 }

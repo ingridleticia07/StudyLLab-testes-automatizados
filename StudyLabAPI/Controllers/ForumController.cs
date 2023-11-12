@@ -134,8 +134,8 @@ namespace StudyLabAPI.Controllers
                 resposta = respostaForum.resposta,
                 dataResposta = respostaForum.dataResposta
             };
-            bool returnCheckrespostaForumExists = await respostaforumRepository.VerifyRespostaForumExistsWithId(respostaForumModel);
-            return returnCheckrespostaForumExists;
+            bool returnCheckrespostaForumExistsWithId = await respostaforumRepository.VerifyRespostaForumExistsWithId(respostaForumModel);
+            return returnCheckrespostaForumExistsWithId;
         }
 
         public async Task<RegisteredRespostaForumModel> CreateRespostaForum(RegisteredRespostaForumModel respostaForum)
@@ -178,6 +178,7 @@ namespace StudyLabAPI.Controllers
 
             RespostaForumModel NewRespostaForum = new()
             {
+                idResposta = respostaForum.idResposta,
                 resposta = respostaForum.resposta,
                 dataResposta = respostaForum.dataResposta,
                 topicoDiscussao = relatedTopicoDiscussao,
@@ -185,6 +186,7 @@ namespace StudyLabAPI.Controllers
             };
             await respostaforumRepository.UpdateRespostaForum(NewRespostaForum);
             await respostaforumRepository.Flush();
+
             return (NewRespostaForum);
         }
 
