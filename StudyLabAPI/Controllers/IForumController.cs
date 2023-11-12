@@ -21,9 +21,9 @@ namespace StudyLabAPI.Controllers
 
         public Task<bool> VerifyRespostaForumExistsWithId(RegisteredRespostaForumModel respostaForum);
 
-        public Task CreateRespostaForum(RegisteredRespostaForumModel respostaForum);
+        public Task<RegisteredRespostaForumModel> CreateRespostaForum(RegisteredRespostaForumModel respostaForum);
 
-        public Task UpdateRespostaForum(RespostaForumModel respostaForum);
+        public Task<RespostaForumModel> UpdateRespostaForum(RespostaForumModel respostaForum);
 
         public Task DeleteRespostaForum(int idRespostaForum);
     }

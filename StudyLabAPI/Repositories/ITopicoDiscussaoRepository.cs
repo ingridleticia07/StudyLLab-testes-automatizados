@@ -6,7 +6,7 @@ namespace StudyLabAPI.Repositories
     {
         public Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussao();
 
-
+        public Task<TopicoDiscussaoModel?> GetTopicosDiscussaoById(int id);
 
         public Task<bool> VerifyTopicoDiscussaoExists(TopicoDiscussaoModel topicoDiscussao);
 

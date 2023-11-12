@@ -10,16 +10,20 @@ namespace StudyLabAPI.Controllers
         private ITopicoDiscussaoRepository topicoDiscussaoRepository { get; }
 
         private IRespostaForumRepository respostaforumRepository { get; }
+
+        private IUsuarioRepository usuarioRepository { get; }
         private ILogger logger { get; }
 
         private IDisciplinaRepository DisciplinaRepository { get; }
 
-        public ForumController(ITopicoDiscussaoRepository topicoDiscussaoRepository, IDisciplinaRepository DisciplinaRepository,
+        public ForumController(ITopicoDiscussaoRepository topicoDiscussaoRepository, 
+            IDisciplinaRepository DisciplinaRepository, IUsuarioRepository usuarioRepository,
             ILogger logger)
         {
             this.topicoDiscussaoRepository = topicoDiscussaoRepository;
-            this.logger = logger;
             this.DisciplinaRepository = DisciplinaRepository;
+            this.usuarioRepository = usuarioRepository;
+            this.logger = logger;
         }
         public async Task<List<TopicoDiscussaoModel>> GetAllTopicosDiscussao()
         {
@@ -130,26 +134,33 @@ namespace StudyLabAPI.Controllers
             return returnCheckrespostaForumExists;
         }
 
-        public Task CreateRespostaForum(RegisteredRespostaForumModel respostaForum)
+        public async Task<RegisteredRespostaForumModel> CreateRespostaForum(RegisteredRespostaForumModel respostaForum)
         {
             int topicoDiscussaoId = respostaForum.topicoDiscussao;
 
-            RespostaForumModel? relatedTopicoDiscussao = await topicoDiscussaoRepository.Get(disciplinaId);
+            int UsuarioId = respostaForum.usuario;
 
-            TopicoDiscussaoModel NovotopicoDiscussao = new()
+            TopicoDiscussaoModel? relatedTopicoDiscussao = 
+                await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoId);
+
+            UsuarioModel? relatedUsuario =
+                await usuarioRepository.GetUsuarioById(UsuarioId);
+
+            RespostaForumModel NovoRespostaForum = new()
             {
-                nomeTopico = topicoDiscussao.nomeTopico,
-                dataTopico = topicoDiscussao.dataTopico,
-                disciplina = relatedDisciplina
+                resposta = respostaForum.resposta,
+                dataResposta = respostaForum.dataResposta,
+                topicoDiscussao = relatedTopicoDiscussao,
+                usuario = relatedUsuario
             };
-            await topicoDiscussaoRepository.CreateTopicoDiscussao(NovotopicoDiscussao);
+            await respostaforumRepository.CreateRespostaForum(NovoRespostaForum);
 
-            await topicoDiscussaoRepository.Flush();
+            await respostaforumRepository.Flush();
 
-            return (NovotopicoDiscussao);
+            return (respostaForum);
         }
 
-        public Task UpdateRespostaForum(RespostaForumModel respostaForum)
+        public Task<RespostaForumModel> UpdateRespostaForum(RespostaForumModel respostaForum)
         {
             throw new NotImplementedException();
         }

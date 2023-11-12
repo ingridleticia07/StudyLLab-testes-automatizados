@@ -19,6 +19,9 @@ namespace StudyLabAPI.Repositories
             return disciplinaModel;
         }
 
+        public async Task<TopicoDiscussaoModel?> GetTopicosDiscussaoById(int id) =>
+            await dbContext.discussao.FindAsync(id);
+
         public async Task<bool> VerifyTopicoDiscussaoExists(TopicoDiscussaoModel topicoDiscussao)
         {
             var existingTopicoDiscussao = await dbContext.discussao
