@@ -16,6 +16,8 @@ namespace StudyLabAPI.Endpoints
             builder.MapPost("criarTopicoDiscussao", CreateTopicoDiscussao);
 
             builder.MapPost("editarTopicoDiscussao", UpdateTopicoDiscussao);
+
+            builder.MapPost("deletarTopicoDiscussao", DeleteTopicoDiscussao);
             //add withSummaries ao terminar
 
             return builder;
@@ -45,19 +47,27 @@ namespace StudyLabAPI.Endpoints
             [FromBody] RegisteredTopicoDiscussaoRequestModel novoTopico,
             [FromServices] IForumController controller)
         {
-            try
-            {
-                await controller.CreateTopicoDiscussao(novoTopico);
-            }
-            catch (UsuarioNotFoundException e)
-            {
-                return Results.NotFound(e.Message);
-            }
-            catch (Exception e)
-            {
-                return Results.BadRequest(e.Message);
-            }
+            var checkIfTopicoDiscussaoExists = await controller.VerifyTopicoDiscussaoExists(novoTopico);
 
+            if(checkIfTopicoDiscussaoExists == false)
+            {
+                try
+                {
+                    await controller.CreateTopicoDiscussao(novoTopico);
+                }
+                catch (UsuarioNotFoundException e)
+                {
+                    return Results.NotFound(e.Message);
+                }
+                catch (Exception e)
+                {
+                    return Results.BadRequest(e.Message);
+                }
+            }
+            else
+            {
+                return Results.Ok("Tópico discussão existente");
+            }
             return Results.Ok(novoTopico);
         }
 
@@ -65,10 +75,39 @@ namespace StudyLabAPI.Endpoints
         [FromBody] RegisteredTopicoDiscussaoRequestModel topicoDiscussaoUpdate,
         [FromServices] IForumController controller)
         {
+            var checkIfTopicoDiscussaoExists = await controller.VerifyTopicoDiscussaoExistsWithId(topicoDiscussaoUpdate);
+
+            if (checkIfTopicoDiscussaoExists == false)
+            {
+                try
+                {
+                    await controller.UpdateTopicoDiscussao(topicoDiscussaoUpdate);
+                }
+                catch (UsuarioNotFoundException e)
+                {
+                    return Results.NotFound(e.Message);
+                }
+                catch (Exception e)
+                {
+                    return Results.BadRequest(e.Message);
+                }
+            }
+            else
+            {
+                return Results.Ok("Tópico discussão existente");
+            }
+
+
+            return Results.Ok(topicoDiscussaoUpdate);
+        }
+        private static async Task<IResult> DeleteTopicoDiscussao(HttpContext context,
+        [FromBody] TopicoDiscussaoModel topicoDiscussaoModel,
+        [FromServices] IForumController controller)
+        {
 
             try
             {
-                await controller.UpdateTopicoDiscussao(topicoDiscussaoUpdate);
+                await controller.DeleteTopicoDiscussao(topicoDiscussaoModel);
             }
             catch (UsuarioNotFoundException e)
             {
@@ -79,8 +118,7 @@ namespace StudyLabAPI.Endpoints
                 return Results.BadRequest(e.Message);
             }
 
-
-            return Results.Ok(topicoDiscussaoUpdate);
+            return Results.Ok(topicoDiscussaoModel);
         }
     }
 }

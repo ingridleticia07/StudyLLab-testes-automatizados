@@ -20,6 +20,35 @@ namespace StudyLabAPI.Repositories
             return disciplinaModel;
         }
 
+        public async Task<bool> VerifyTopicoDiscussaoExists(TopicoDiscussaoModel topicoDiscussao)
+        {
+            var existingTopicoDiscussao = await dbContext.discussao
+                .Where(QueryValue => QueryValue.nomeTopico == topicoDiscussao.nomeTopico)
+                .FirstOrDefaultAsync();
+
+            return existingTopicoDiscussao != null;
+        }
+
+        public async Task<bool> VerifyTopicoDiscussaoExistsWithId(TopicoDiscussaoModel topicoDiscussao)
+        {
+            var existingTopicoDiscussao = await dbContext.discussao
+                .Where(QueryValue => (QueryValue.nomeTopico == topicoDiscussao.nomeTopico) && 
+                QueryValue.idTopico!=topicoDiscussao.idTopico)
+                .FirstOrDefaultAsync();
+
+            return existingTopicoDiscussao != null;
+        }
+
+        public async Task<bool> VerifyDisciplinaCreatedWithId(DisciplinaModel disciplina)
+        {
+            var existingDisciplina = await dbContext.disciplinas
+                .Where(d => (d.nomeDisciplina == disciplina.nomeDisciplina ||
+                    d.codigoDisciplina == disciplina.codigoDisciplina) && d.idDisciplina != disciplina.idDisciplina)
+                .FirstOrDefaultAsync();
+
+            return existingDisciplina != null;
+        }
+
         public async Task CreateTopicoDiscussao(TopicoDiscussaoModel topicoDiscussao) =>
             await dbContext.discussao.AddAsync(topicoDiscussao);
 
@@ -34,6 +63,16 @@ namespace StudyLabAPI.Repositories
             topicoDiscussaoForUpdate.disciplina = topicoDiscussaoModel.disciplina;
             topicoDiscussaoForUpdate.dataTopico = topicoDiscussaoModel.dataTopico;
             topicoDiscussaoForUpdate.nomeTopico = topicoDiscussaoModel.nomeTopico;
+        }
+
+        public async Task DeleteTopicoDiscussao(int idTopicoDiscussao)
+        {
+            var topicoDiscussaoModel = await dbContext.discussao.FindAsync(idTopicoDiscussao);
+
+            if (topicoDiscussaoModel != null)
+            {
+                dbContext.discussao.Remove(topicoDiscussaoModel);
+            }
         }
 
         public async Task Flush() =>

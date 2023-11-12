@@ -28,6 +28,31 @@ namespace StudyLabAPI.Controllers
 
             return topicosDiscussaoListado;
         }
+
+
+        public async Task<bool> VerifyTopicoDiscussaoExists(RegisteredTopicoDiscussaoRequestModel topicoDiscussao)
+        {
+            TopicoDiscussaoModel topicoDiscussaoModel = new()
+            {
+                idTopico = topicoDiscussao.idTopico,
+                nomeTopico = topicoDiscussao.nomeTopico,
+                dataTopico = topicoDiscussao.dataTopico
+            };
+            bool returnCheckTopicoDiscussaoExists = await topicoDiscussaoRepository.VerifyTopicoDiscussaoExists(topicoDiscussaoModel);
+            return returnCheckTopicoDiscussaoExists;
+        }
+
+        public async Task<bool> VerifyTopicoDiscussaoExistsWithId(RegisteredTopicoDiscussaoRequestModel topicoDiscussao)
+        {
+            TopicoDiscussaoModel topicoDiscussaoModel = new()
+            {
+                idTopico = topicoDiscussao.idTopico,
+                nomeTopico = topicoDiscussao.nomeTopico,
+                dataTopico = topicoDiscussao.dataTopico
+            };
+            bool returnCheckTopicoDiscussaoExists = await topicoDiscussaoRepository.VerifyTopicoDiscussaoExistsWithId(topicoDiscussaoModel);
+            return returnCheckTopicoDiscussaoExists;
+        }
         public async Task<TopicoDiscussaoModel> CreateTopicoDiscussao(RegisteredTopicoDiscussaoRequestModel topicoDiscussao)
         {
             //passar id 
@@ -65,6 +90,14 @@ namespace StudyLabAPI.Controllers
             await topicoDiscussaoRepository.Flush();
 
             return (NovotopicoDiscussao);
+        }
+
+        public async Task DeleteTopicoDiscussao(TopicoDiscussaoModel topicoDiscussao)
+        {
+            //verificar se disciplina existe, por meio do buscar disciplina
+            //para em caso de exstir, excluir a mesma
+            await topicoDiscussaoRepository.DeleteTopicoDiscussao(topicoDiscussao.idTopico);
+            await topicoDiscussaoRepository.Flush();
         }
     }
 }
