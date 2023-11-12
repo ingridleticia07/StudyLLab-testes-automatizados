@@ -8,6 +8,8 @@ namespace StudyLabAPI.Controllers
     public class ForumController : IForumController
     {
         private ITopicoDiscussaoRepository topicoDiscussaoRepository { get; }
+
+        private IRespostaForumRepository respostaforumRepository { get; }
         private ILogger logger { get; }
 
         private IDisciplinaRepository DisciplinaRepository { get; }
@@ -83,8 +85,7 @@ namespace StudyLabAPI.Controllers
             {
                 idTopico = topicoDiscussaoModel.idTopico,
                 nomeTopico = topicoDiscussaoModel.nomeTopico,
-                dataTopico = topicoDiscussaoModel.dataTopico,
-                disciplina = relatedDisciplina
+                dataTopico = topicoDiscussaoModel.dataTopico
             };
             await topicoDiscussaoRepository.UpdateTopicoDiscussao(NovotopicoDiscussao);
             await topicoDiscussaoRepository.Flush();
@@ -98,6 +99,64 @@ namespace StudyLabAPI.Controllers
             //para em caso de exstir, excluir a mesma
             await topicoDiscussaoRepository.DeleteTopicoDiscussao(topicoDiscussao.idTopico);
             await topicoDiscussaoRepository.Flush();
+        }
+
+        public Task<List<RespostaForumModel?>> GetAllRespostasForum()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> VerifyRespostaForumExists(RegisteredRespostaForumModel respostaForum)
+        {
+            RespostaForumModel respostaForumModel = new()
+            {
+                idResposta = respostaForum.idResposta,
+                resposta = respostaForum.resposta,
+                dataResposta = respostaForum.dataResposta
+            };
+            bool returnCheckrespostaForumExists = await respostaforumRepository.VerifyRespostaForumExists(respostaForumModel);
+            return returnCheckrespostaForumExists;
+        }
+
+        public async Task<bool> VerifyRespostaForumExistsWithId(RegisteredRespostaForumModel respostaForum)
+        {
+            RespostaForumModel respostaForumModel = new()
+            {
+                idResposta = respostaForum.idResposta,
+                resposta = respostaForum.resposta,
+                dataResposta = respostaForum.dataResposta
+            };
+            bool returnCheckrespostaForumExists = await respostaforumRepository.VerifyRespostaForumExistsWithId(respostaForumModel);
+            return returnCheckrespostaForumExists;
+        }
+
+        public Task CreateRespostaForum(RegisteredRespostaForumModel respostaForum)
+        {
+            int topicoDiscussaoId = respostaForum.topicoDiscussao;
+
+            RespostaForumModel? relatedTopicoDiscussao = await topicoDiscussaoRepository.Get(disciplinaId);
+
+            TopicoDiscussaoModel NovotopicoDiscussao = new()
+            {
+                nomeTopico = topicoDiscussao.nomeTopico,
+                dataTopico = topicoDiscussao.dataTopico,
+                disciplina = relatedDisciplina
+            };
+            await topicoDiscussaoRepository.CreateTopicoDiscussao(NovotopicoDiscussao);
+
+            await topicoDiscussaoRepository.Flush();
+
+            return (NovotopicoDiscussao);
+        }
+
+        public Task UpdateRespostaForum(RespostaForumModel respostaForum)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteRespostaForum(int idRespostaForum)
+        {
+            throw new NotImplementedException();
         }
     }
 }

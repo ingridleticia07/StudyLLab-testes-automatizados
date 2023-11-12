@@ -14,5 +14,17 @@ namespace StudyLabAPI.Controllers
         public Task<bool> VerifyTopicoDiscussaoExistsWithId(RegisteredTopicoDiscussaoRequestModel topicoDiscussao);
 
         public Task DeleteTopicoDiscussao(TopicoDiscussaoModel idTopicoDiscussao);
+
+        public Task<List<RespostaForumModel?>> GetAllRespostasForum();
+
+        public Task<bool> VerifyRespostaForumExists(RegisteredRespostaForumModel respostaForum);
+
+        public Task<bool> VerifyRespostaForumExistsWithId(RegisteredRespostaForumModel respostaForum);
+
+        public Task CreateRespostaForum(RegisteredRespostaForumModel respostaForum);
+
+        public Task UpdateRespostaForum(RespostaForumModel respostaForum);
+
+        public Task DeleteRespostaForum(int idRespostaForum);
     }
 }

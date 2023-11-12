@@ -4,7 +4,7 @@ using StudyLabAPI.Models;
 
 namespace StudyLabAPI.Repositories
 {
-    public class RespostaForumRepository : IRespotaForumRepository
+    public class RespostaForumRepository : IRespostaForumRepository
     {
         private AppDbContext dbContext { get; }
         public RespostaForumRepository(AppDbContext dbContext)
@@ -35,6 +35,9 @@ namespace StudyLabAPI.Repositories
 
             return respostaForumLista;
         }
+
+        public async Task<RespostaForumModel?> GetRespostaForumById(int id) =>
+            await dbContext.respostaForum.FindAsync(id);
 
         public async Task UpdateRespostaForum(RespostaForumModel respostaForum)
         {

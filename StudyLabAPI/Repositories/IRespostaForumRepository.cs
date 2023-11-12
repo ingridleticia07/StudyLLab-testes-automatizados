@@ -2,9 +2,11 @@
 
 namespace StudyLabAPI.Repositories
 {
-    public interface IRespotaForumRepository
+    public interface IRespostaForumRepository
     {
         public Task<List<RespostaForumModel?>> GetAllRespostasForum();
+
+        public Task<RespostaForumModel?> GetRespostaForumById(int id);
 
         public Task<bool> VerifyRespostaForumExists(RespostaForumModel respostaForum);
 
