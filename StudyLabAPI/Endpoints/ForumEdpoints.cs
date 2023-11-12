@@ -13,16 +13,17 @@ namespace StudyLabAPI.Endpoints
 
             builder.MapPost("criarTopicoDiscussao", CreateTopicoDiscussao);
 
-            builder.MapPost("editarTopicoDiscussao", UpdateTopicoDiscussao);
+            builder.MapPut("editarTopicoDiscussao", UpdateTopicoDiscussao);
 
-            builder.MapPost("deletarTopicoDiscussao", DeleteTopicoDiscussao);
+            builder.MapDelete("deletarTopicoDiscussao", DeleteTopicoDiscussao);
 
             builder.MapGet("ListarRespostasForum", GetAllRespostasForum);
 
             builder.MapPost("cadastrarRespostaForum", CreateRespostaForum);
 
+            builder.MapPut("AtualizarRespostaForum", UpdateRespostaForum);
 
-            builder.MapPost("AtualizarRespostaForum", UpdateRespostaForum);
+            builder.MapDelete("DeletarRespostaForum", DeleteRespostaForum);
             //add withSummaries ao terminar
 
             return builder;
@@ -202,6 +203,26 @@ namespace StudyLabAPI.Endpoints
 
 
             return Results.Ok(newRespostaForum);
+        }
+
+        private static async Task<IResult> DeleteRespostaForum(HttpContext context,
+        [FromBody] RespostaForumModel respostaForumModel,
+        [FromServices] IForumController controller)
+        {
+            try
+            {
+                await controller.DeleteRespostaForum(respostaForumModel);
+            }
+            catch (UsuarioNotFoundException e)
+            {
+                return Results.NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+
+            return Results.Ok(respostaForumModel);
         }
     }
 }

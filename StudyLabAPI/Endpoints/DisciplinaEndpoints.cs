@@ -16,9 +16,9 @@ public static class DisciplinaEndpoints
             .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
         builder.MapPost("cadastrarDisciplina", CreateDisciplina)
             .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
-        builder.MapPost("editarDisciplina", UpdateDisciplina)
+        builder.MapPut("editarDisciplina", UpdateDisciplina)
             .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
-        builder.MapPost("excluirDisciplina", DeleteDisciplina)
+        builder.MapDelete("excluirDisciplina", DeleteDisciplina)
             .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
 
         return builder;
