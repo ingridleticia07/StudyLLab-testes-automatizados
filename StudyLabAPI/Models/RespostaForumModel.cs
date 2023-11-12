@@ -1,6 +1,4 @@
-﻿
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StudyLabAPI.Models
@@ -12,20 +10,17 @@ namespace StudyLabAPI.Models
         [Column("id_resposta")]
         public int idResposta { get; set; }
 
-        [Column("respota")]
+        [Column("resposta")]
         public string resposta { get; set; }
-
 
         [Column("data_resposta")]
 
         public DateOnly dataResposta { get; set; }
 
         [ForeignKey("fk_topico")]
-
         public TopicoDiscussaoModel topicoDiscussao { get; set; }
 
         [ForeignKey("fk_usuario")]
-
         public UsuarioModel usuario { get; set; }
     }
 }

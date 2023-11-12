@@ -16,6 +16,10 @@ namespace StudyLabAPI.Endpoints
             builder.MapPost("editarTopicoDiscussao", UpdateTopicoDiscussao);
 
             builder.MapPost("deletarTopicoDiscussao", DeleteTopicoDiscussao);
+
+            builder.MapGet("ListarRespostasForum", GetAllRespostasForum);
+
+            builder.MapPost("cadastrarRespostaForum", CreateRespostaForum);
             //add withSummaries ao terminar
 
             return builder;
@@ -117,6 +121,55 @@ namespace StudyLabAPI.Endpoints
             }
 
             return Results.Ok(topicoDiscussaoModel);
+        }
+
+        private static async Task<IResult> GetAllRespostasForum(HttpContext context,
+        [FromServices] IForumController controller)
+        {
+
+            List<RespostaForumModel>? result;
+            try
+            {
+                result = await controller.GetAllRespostasForum();
+            }
+            catch (UsuarioNotFoundException e)
+            {
+                return Results.NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+
+            return Results.Ok(result);
+        }
+
+        private static async Task<IResult> CreateRespostaForum(HttpContext context,
+            [FromBody] RegisteredRespostaForumModel newRespostaForum,
+            [FromServices] IForumController controller)
+        {
+            var checkIfRespostaForum = await controller.VerifyRespostaForumExists(newRespostaForum);
+
+            if (checkIfRespostaForum == false)
+            {
+                try
+                {
+                    await controller.CreateRespostaForum(newRespostaForum);
+                }
+                catch (UsuarioNotFoundException e)
+                {
+                    return Results.NotFound(e.Message);
+                }
+                catch (Exception e)
+                {
+                    return Results.BadRequest(e.Message);
+                }
+            }
+            else
+            {
+                return Results.Ok("Resposta forum existente");
+            }
+            return Results.Ok(newRespostaForum);
         }
     }
 }

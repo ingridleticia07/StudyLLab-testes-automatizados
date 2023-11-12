@@ -31,7 +31,8 @@ namespace StudyLabAPI.Repositories
 
         public async Task<List<RespostaForumModel?>> GetAllRespostasForum()
         {
-            List<RespostaForumModel> respostaForumLista = await dbContext.respostaForum.ToListAsync();
+            List<RespostaForumModel> respostaForumLista = await dbContext.respostaForum.
+                Include(values => values.topicoDiscussao).Include(values => values.usuario).ToListAsync();
 
             return respostaForumLista;
         }
@@ -56,7 +57,7 @@ namespace StudyLabAPI.Repositories
         {
             var existingRespostaForum = await dbContext.respostaForum
                 .Where(value => (value.resposta == respostaForum.resposta) && 
-                value.idResposta != respostaForum.idResposta)
+                (value.idResposta != respostaForum.idResposta))
                 .FirstOrDefaultAsync();
 
             return existingRespostaForum != null;

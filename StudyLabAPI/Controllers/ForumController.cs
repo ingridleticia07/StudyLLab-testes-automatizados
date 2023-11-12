@@ -9,20 +9,21 @@ namespace StudyLabAPI.Controllers
     {
         private ITopicoDiscussaoRepository topicoDiscussaoRepository { get; }
 
-        private IRespostaForumRepository respostaforumRepository { get; }
-
         private IUsuarioRepository usuarioRepository { get; }
         private ILogger logger { get; }
 
         private IDisciplinaRepository DisciplinaRepository { get; }
 
+        private IRespostaForumRepository respostaforumRepository { get; }
+
         public ForumController(ITopicoDiscussaoRepository topicoDiscussaoRepository, 
             IDisciplinaRepository DisciplinaRepository, IUsuarioRepository usuarioRepository,
-            ILogger logger)
+            IRespostaForumRepository respostaForumRepository, ILogger logger)
         {
             this.topicoDiscussaoRepository = topicoDiscussaoRepository;
             this.DisciplinaRepository = DisciplinaRepository;
             this.usuarioRepository = usuarioRepository;
+            this.respostaforumRepository = respostaForumRepository;
             this.logger = logger;
         }
         public async Task<List<TopicoDiscussaoModel>> GetAllTopicosDiscussao()
@@ -105,9 +106,12 @@ namespace StudyLabAPI.Controllers
             await topicoDiscussaoRepository.Flush();
         }
 
-        public Task<List<RespostaForumModel?>> GetAllRespostasForum()
+        public async Task<List<RespostaForumModel?>> GetAllRespostasForum()
         {
-            throw new NotImplementedException();
+            List<RespostaForumModel> RespostaForumListado = await respostaforumRepository.GetAllRespostasForum();
+            // You should map DisciplinaModel to DisciplinaReadModel and return the list
+
+            return RespostaForumListado;
         }
 
         public async Task<bool> VerifyRespostaForumExists(RegisteredRespostaForumModel respostaForum)

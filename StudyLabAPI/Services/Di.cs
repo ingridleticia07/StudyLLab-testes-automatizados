@@ -145,6 +145,7 @@ public static class Di
         services.AddScoped<IDisciplinaRepository, DisciplinaRepository>();
         services.AddScoped<ICodigoUsuarioRepository, CodigoUsuarioRepository>();
         services.AddScoped<ITopicoDiscussaoRepository,TopicoDiscussaoRepository>();
+        services.AddScoped<IRespostaForumRepository, RespostaForumRepository>();
         return services;
     }
     /// <summary>
