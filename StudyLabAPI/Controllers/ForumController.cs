@@ -164,14 +164,34 @@ namespace StudyLabAPI.Controllers
             return (respostaForum);
         }
 
-        public Task<RespostaForumModel> UpdateRespostaForum(RespostaForumModel respostaForum)
+        public async Task<RespostaForumModel> UpdateRespostaForum(RegisteredRespostaForumModel respostaForum)
         {
-            throw new NotImplementedException();
+            int topicoDiscussaoId = respostaForum.topicoDiscussao;
+
+            int UsuarioId = respostaForum.usuario;
+
+            TopicoDiscussaoModel? relatedTopicoDiscussao =
+                await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoId);
+
+            UsuarioModel? relatedUsuario =
+                await usuarioRepository.GetUsuarioById(UsuarioId);
+
+            RespostaForumModel NewRespostaForum = new()
+            {
+                resposta = respostaForum.resposta,
+                dataResposta = respostaForum.dataResposta,
+                topicoDiscussao = relatedTopicoDiscussao,
+                usuario = relatedUsuario
+            };
+            await respostaforumRepository.UpdateRespostaForum(NewRespostaForum);
+            await respostaforumRepository.Flush();
+            return (NewRespostaForum);
         }
 
-        public Task DeleteRespostaForum(int idRespostaForum)
+        public async Task DeleteRespostaForum(RespostaForumModel respostaForum)
         {
-            throw new NotImplementedException();
+            await respostaforumRepository.DeleteRespostaForum(respostaForum.idResposta);
+            await respostaforumRepository.Flush();
         }
     }
 }

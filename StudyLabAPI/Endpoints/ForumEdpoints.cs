@@ -20,6 +20,9 @@ namespace StudyLabAPI.Endpoints
             builder.MapGet("ListarRespostasForum", GetAllRespostasForum);
 
             builder.MapPost("cadastrarRespostaForum", CreateRespostaForum);
+
+
+            builder.MapPost("AtualizarRespostaForum", UpdateRespostaForum);
             //add withSummaries ao terminar
 
             return builder;
@@ -169,6 +172,35 @@ namespace StudyLabAPI.Endpoints
             {
                 return Results.Ok("Resposta forum existente");
             }
+            return Results.Ok(newRespostaForum);
+        }
+        private static async Task<IResult> UpdateRespostaForum(HttpContext context,
+        [FromBody] RegisteredRespostaForumModel newRespostaForum,
+        [FromServices] IForumController controller)
+        {
+            var checkIfRespostaForumExists = await controller.VerifyRespostaForumExistsWithId(newRespostaForum);
+
+            if (checkIfRespostaForumExists == false)
+            {
+                try
+                {
+                    await controller.UpdateRespostaForum(newRespostaForum);
+                }
+                catch (UsuarioNotFoundException e)
+                {
+                    return Results.NotFound(e.Message);
+                }
+                catch (Exception e)
+                {
+                    return Results.BadRequest(e.Message);
+                }
+            }
+            else
+            {
+                return Results.Ok("Resposta Forum existente");
+            }
+
+
             return Results.Ok(newRespostaForum);
         }
     }
