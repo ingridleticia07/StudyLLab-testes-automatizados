@@ -1,24 +1,23 @@
 using StudyLabAPI.Models;
 using StudyLabAPI.Models.Enums;
-using StudyLabAPI.Services.Email.Models;
 
 namespace StudyLabAPI.Test.ControllersTests.AuthControllerTests;
 
 public class AuthControllerFakeData
 {
-    public readonly string FakeJwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjAiLCJyb2xlIjoiVXNlciIsIm5iZiI6MTY5ODI1Mjg1OSwiZXhwIjoxNjk4MjcwODU5LCJpYXQiOjE2OTgyNTI4NTksImlzcyI6IlN0dWR5TGFiQVBJIiwiYXVkIjoiU3R1ZHlMYWJXZWIifQ.qGgy10EM6-fpVAsDd38pw9knoSxrYnktlyflh0Ux3hQ";
-    public readonly string FakeHashOutput = "hash";
-    public readonly int FakeUserId = 0;
-    public readonly string ResetPasswordConfirmationEmailCode = "1234";
-    public readonly string UserPassword = "Test123";
-    
+    public const string FAKE_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjAiLCJyb2xlIjoiVXNlciIsIm5iZiI6MTY5ODI1Mjg1OSwiZXhwIjoxNjk4MjcwODU5LCJpYXQiOjE2OTgyNTI4NTksImlzcyI6IlN0dWR5TGFiQVBJIiwiYXVkIjoiU3R1ZHlMYWJXZWIifQ.qGgy10EM6-fpVAsDd38pw9knoSxrYnktlyflh0Ux3hQ";
+    public const string FAKE_HASH_OUTPUT = "hash";
+    public const int FAKE_USER_ID = 0;
+    private const string RESET_PASSWORD_CONFIRMATION_EMAIL_CODE = "1234";
+    private const string USER_PASSWORD = "Test123";
+
     public UsuarioModel fakeUsuarioModel =>
         new()
         {
-            idUsuario = FakeUserId,
+            idUsuario = FAKE_USER_ID,
             emailUsuario = "test@test.com",
             codigoUsuario = 1234,
-            senhaUsuario = FakeHashOutput,
+            senhaUsuario = FAKE_HASH_OUTPUT,
             statusUsuario = false,
             tipoUsuario = UserRole.User,
             curso = fakeCursoModel,
@@ -31,7 +30,7 @@ public class AuthControllerFakeData
         {
             username = "Test",
             email = "test@test.com",
-            password = UserPassword,
+            password = USER_PASSWORD,
             codigoUsuario = 1234,
             role = UserRole.User,
             codeCurso = 1,
@@ -40,20 +39,20 @@ public class AuthControllerFakeData
     public ConfirmUserEmailRequestModel fakeConfirmUserEmailRequestModel => 
         new()
         {
-            confirmationCode = ResetPasswordConfirmationEmailCode
+            confirmationCode = RESET_PASSWORD_CONFIRMATION_EMAIL_CODE
         };
     public UserLoginRequestModel fakeLoginRequestModel =>
         new()
         {
             email = "test@test.com",
-            password = UserPassword
+            password = USER_PASSWORD
         };
     public ResetUserPasswordRequestModel fakeResetUserPasswordRequestModel =>
         new()
         {
-            currentPassword = UserPassword,
+            currentPassword = USER_PASSWORD,
             newPassword = "NewTest",
-            resetCode = ResetPasswordConfirmationEmailCode
+            resetCode = RESET_PASSWORD_CONFIRMATION_EMAIL_CODE
         };
     public CursoModel fakeCursoModel =>
         new()
@@ -65,7 +64,7 @@ public class AuthControllerFakeData
         new()
         {
             id = 0,
-            codigo = ResetPasswordConfirmationEmailCode,
+            codigo = RESET_PASSWORD_CONFIRMATION_EMAIL_CODE,
             tipo = UserCodeKind.EmailConfirmation,
             usuarioModel = fakeUsuarioModel
         };
@@ -73,7 +72,7 @@ public class AuthControllerFakeData
         new()
         {
             id = 0,
-            codigo = ResetPasswordConfirmationEmailCode,
+            codigo = RESET_PASSWORD_CONFIRMATION_EMAIL_CODE,
             tipo = UserCodeKind.PasswordReset,
             usuarioModel = fakeUsuarioModel
         };
