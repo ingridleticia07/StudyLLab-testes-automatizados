@@ -1,4 +1,6 @@
 ﻿using StudyLabAPI.Models;
+using System.Threading.Tasks;
+
 namespace StudyLabAPI.Controllers
 {
     public interface IForumController
@@ -26,5 +28,7 @@ namespace StudyLabAPI.Controllers
         public Task<RespostaForumModel> UpdateRespostaForum(RegisteredRespostaForumModel respostaForum);
 
         public Task DeleteRespostaForum(RespostaForumModel respostaForum);
+
+        public Task<ForumModel> CreateForum(ResgisteredForumModel respostaForum);
     }
 }

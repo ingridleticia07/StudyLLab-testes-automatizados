@@ -16,14 +16,17 @@ namespace StudyLabAPI.Controllers
 
         private IRespostaForumRepository respostaforumRepository { get; }
 
+        private IForumRepository forumRepository { get; }
+
         public ForumController(ITopicoDiscussaoRepository topicoDiscussaoRepository, 
             IDisciplinaRepository DisciplinaRepository, IUsuarioRepository usuarioRepository,
-            IRespostaForumRepository respostaForumRepository, ILogger logger)
+            IRespostaForumRepository respostaForumRepository,IForumRepository forumRepository, ILogger logger)
         {
             this.topicoDiscussaoRepository = topicoDiscussaoRepository;
             this.DisciplinaRepository = DisciplinaRepository;
             this.usuarioRepository = usuarioRepository;
             this.respostaforumRepository = respostaForumRepository;
+            this.forumRepository = forumRepository;
             this.logger = logger;
         }
         public async Task<List<TopicoDiscussaoModel>> GetAllTopicosDiscussao()
@@ -194,6 +197,34 @@ namespace StudyLabAPI.Controllers
         {
             await respostaforumRepository.DeleteRespostaForum(respostaForum.idResposta);
             await respostaforumRepository.Flush();
+        }
+
+        public async Task<ForumModel> CreateForum(ResgisteredForumModel forum)
+        {
+            //passar id 
+            int respostaForumId = forum.respostaForum;
+
+            int topicoDiscussaoId = forum.topicoDiscussao;
+
+            int usuarioId = forum.usuario;
+            
+            RespostaForumModel? relatedRespostaForum = await respostaforumRepository.GetRespostaForumById(respostaForumId);
+
+            TopicoDiscussaoModel? relatedTopicoDiscussao = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoId);
+
+            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId);
+
+            ForumModel NovoForum = new()
+            {
+                respostaForum = relatedRespostaForum,
+                topicoDiscussao = relatedTopicoDiscussao,
+                usuario = relatedUsuario
+            };
+            await forumRepository.CreateForum(NovoForum);
+
+            await forumRepository.Flush();
+
+            return (NovoForum);
         }
     }
 }

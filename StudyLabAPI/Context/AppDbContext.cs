@@ -18,6 +18,8 @@ public class AppDbContext : DbContext
 
     public DbSet<RespostaForumModel> respostaForum { get; set; } = null;
 
+    public DbSet<ForumModel> forum { get; set; } = null;
+
     public AppDbContext(IOptions<ConnectionStringsOptions> options)
     {
         _options = options.Value;
