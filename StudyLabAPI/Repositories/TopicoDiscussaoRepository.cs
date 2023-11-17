@@ -24,6 +24,7 @@ namespace StudyLabAPI.Repositories
 
         public async Task<bool> VerifyTopicoDiscussaoExists(TopicoDiscussaoModel topicoDiscussao)
         {
+            //TODO: Provalvemente seja melhor usa AnyAsync
             var existingTopicoDiscussao = await dbContext.discussao
                 .Where(QueryValue => QueryValue.nomeTopico == topicoDiscussao.nomeTopico)
                 .FirstOrDefaultAsync();
@@ -31,6 +32,7 @@ namespace StudyLabAPI.Repositories
             return existingTopicoDiscussao != null;
         }
 
+        //TODO: Mesma coisa do GetTopicosDiscussaoById
         public async Task<bool> VerifyTopicoDiscussaoExistsWithId(TopicoDiscussaoModel topicoDiscussao)
         {
             var existingTopicoDiscussao = await dbContext.discussao
