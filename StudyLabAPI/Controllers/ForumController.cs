@@ -226,5 +226,35 @@ namespace StudyLabAPI.Controllers
 
             return (NovoForum);
         }
+
+        public async Task<ForumModel> UpdateForum(ResgisteredForumModel forum)
+        {
+            int respostaForumId = forum.respostaForum;
+
+            int topicoDiscussaoId = forum.topicoDiscussao;
+
+            int usuarioId = forum.usuario;
+
+            RespostaForumModel? relatedRespostaForum = await respostaforumRepository.GetRespostaForumById(respostaForumId);
+
+            TopicoDiscussaoModel? relatedTopicoDiscussao = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoId);
+
+            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId);
+
+            ForumModel forumForUpdate = new()
+            {
+                idForum = forum.idForum,
+                respostaForum = relatedRespostaForum,
+                topicoDiscussao = relatedTopicoDiscussao,
+                usuario = relatedUsuario
+            };
+
+
+            await forumRepository.UpdateForum(forumForUpdate);
+
+            await forumRepository.Flush();
+
+            return (forumForUpdate);
+        }
     }
 }
