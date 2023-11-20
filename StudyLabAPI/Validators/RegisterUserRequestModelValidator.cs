@@ -1,5 +1,6 @@
 using FluentValidation;
 using StudyLabAPI.Models;
+using StudyLabAPI.Validators.CustomValidators;
 
 namespace StudyLabAPI.Validators;
 
@@ -12,7 +13,8 @@ public class RegisterUserRequestModelValidator : AbstractValidator<RegisterUserR
             .NotEmpty()
             .MaximumLength(45);
         RuleFor(m => m.email)
-            .EmailAddress();
+            .NotNull()
+            .MatchEmail();
         RuleFor(m => m.password)
             .NotNull()
             .NotEmpty()
@@ -20,12 +22,12 @@ public class RegisterUserRequestModelValidator : AbstractValidator<RegisterUserR
             .MaximumLength(60);
         RuleFor(m => m.codigoUsuario)
             .NotNull()
-            .NotEmpty();
+            .GreaterThanOrEqualTo(0);
         RuleFor(m => m.role)
             .IsInEnum();
         RuleFor(m => m.codeCurso)
             .NotNull()
-            .NotEmpty();
+            .GreaterThanOrEqualTo(0);
         RuleFor(m => m.imagem)
             .NotNull()
             .NotEmpty()
