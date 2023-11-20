@@ -27,7 +27,7 @@ namespace StudyLabAPI.Repositories
             //TODO: Provalvemente seja melhor usa AnyAsync
             var existingTopicoDiscussao = await dbContext.discussao
                 .Where(QueryValue => QueryValue.nomeTopico == topicoDiscussao.nomeTopico)
-                .FirstOrDefaultAsync();
+                .AnyAsync();
 
             return existingTopicoDiscussao != null;
         }
@@ -38,7 +38,7 @@ namespace StudyLabAPI.Repositories
             var existingTopicoDiscussao = await dbContext.discussao
                 .Where(QueryValue => (QueryValue.nomeTopico == topicoDiscussao.nomeTopico) && 
                 QueryValue.idTopico!=topicoDiscussao.idTopico)
-                .FirstOrDefaultAsync();
+                .AnyAsync();
 
             return existingTopicoDiscussao != null;
         }

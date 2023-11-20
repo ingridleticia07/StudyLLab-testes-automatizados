@@ -20,7 +20,7 @@ namespace StudyLabAPI.Repositories
             var existingDisciplina = await dbContext.disciplinas
                 .Where(d => d.nomeDisciplina == disciplina.nomeDisciplina || 
                     d.codigoDisciplina == disciplina.codigoDisciplina)
-                .FirstOrDefaultAsync();
+                .AnyAsync();
 
             return existingDisciplina != null;
         }
@@ -32,7 +32,7 @@ namespace StudyLabAPI.Repositories
             var existingDisciplina = await dbContext.disciplinas
                 .Where(d => (d.nomeDisciplina == disciplina.nomeDisciplina ||
                     d.codigoDisciplina == disciplina.codigoDisciplina) && d.idDisciplina != disciplina.idDisciplina)
-                .FirstOrDefaultAsync();
+                .AnyAsync();
 
             return existingDisciplina != null;
         }

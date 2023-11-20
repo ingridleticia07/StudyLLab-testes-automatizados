@@ -26,7 +26,6 @@ namespace StudyLabAPI.Repositories
             }
         }
 
-
         public async Task<List<RespostaForumModel?>> GetAllRespostasForum()
         {
             List<RespostaForumModel> respostaForumLista = await dbContext.respostaForum.
@@ -57,7 +56,7 @@ namespace StudyLabAPI.Repositories
             //TODO: Provalvemente seja melhor usa AnyAsync
             var existingRespostaForum = await dbContext.respostaForum
                 .Where(value => value.resposta == respostaForum.resposta)
-                .FirstOrDefaultAsync();
+                .AnyAsync();
 
             return existingRespostaForum != null;
         }
@@ -65,7 +64,7 @@ namespace StudyLabAPI.Repositories
         public async Task<bool> VerifyRespostaForumExistsWithId(RespostaForumModel respostaForum)
         {
             var existingRespostaForum = await dbContext.respostaForum.Where(value => (value.resposta == respostaForum.resposta)
-            && (value.idResposta != respostaForum.idResposta)).FirstOrDefaultAsync();
+            && (value.idResposta != respostaForum.idResposta)).AnyAsync();
 
             return existingRespostaForum != null;
         }
