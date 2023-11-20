@@ -28,6 +28,14 @@ namespace StudyLabAPI.Repositories
             forumForUpdate.usuario = forumModel.usuario;
         }
 
+        public async Task<List<ForumModel>> GetAllForums()
+        {
+            List<ForumModel> forumModel = await dbContext.forum
+            .Include(value => value.respostaForum).Include(value => value.topicoDiscussao)
+            .Include(value => value.topicoDiscussao).Include(value => value.usuario).Include(value => value.respostaForum.topicoDiscussao.disciplina)
+            .ToListAsync();
+            return forumModel;
+        }
         public async Task Flush() =>
           await dbContext.SaveChangesAsync();
     }

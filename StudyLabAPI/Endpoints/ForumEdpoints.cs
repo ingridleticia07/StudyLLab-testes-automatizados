@@ -28,6 +28,8 @@ namespace StudyLabAPI.Endpoints
             builder.MapPost("CadastrarForum", CreateForum);
 
             builder.MapPut("AtualizarForum", UpdateForum);
+
+            builder.MapGet("ListarForums", GetForums);
             //add withSummaries ao terminar
 
             return builder;
@@ -266,6 +268,27 @@ namespace StudyLabAPI.Endpoints
             }
 
             return Results.Ok(forumForUpdate);
+        }
+
+        private static async Task<IResult> GetForums(HttpContext context,
+        [FromServices] IForumController controller)
+        {
+
+            List<ForumModel>? result;
+            try
+            {
+                result = await controller.GetAllForums();
+            }
+            catch (UsuarioNotFoundException e)
+            {
+                return Results.NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+
+            return Results.Ok(result);
         }
     }
 }

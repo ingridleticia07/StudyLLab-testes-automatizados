@@ -256,5 +256,13 @@ namespace StudyLabAPI.Controllers
 
             return (forumForUpdate);
         }
+
+        public async Task<List<ForumModel>> GetAllForums()
+        {
+            List<ForumModel> forumModelLista = await forumRepository.GetAllForums();
+            // You should map DisciplinaModel to DisciplinaReadModel and return the list
+
+            return forumModelLista;
+        }
     }
 }
