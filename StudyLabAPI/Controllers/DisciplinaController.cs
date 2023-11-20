@@ -1,4 +1,5 @@
-﻿using StudyLabAPI.Models;
+﻿using StudyLabAPI.Exceptions;
+using StudyLabAPI.Models;
 using StudyLabAPI.Repositories;
 using ILogger = Serilog.ILogger;
 namespace StudyLabAPI.Controllers

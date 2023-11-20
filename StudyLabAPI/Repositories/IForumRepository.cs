@@ -8,8 +8,6 @@ namespace StudyLabAPI.Repositories
 
         public Task UpdateForum(ForumModel ForumUpdate);
 
-        public Task<List<ForumModel?>> GetAllForums();
-
         public Task Flush();
     }
 }

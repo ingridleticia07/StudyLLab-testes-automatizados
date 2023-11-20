@@ -52,7 +52,7 @@ public class AuthControllerValidationTest
                 email = "",
                 username = "test",
                 password = "test",
-                codeCurso = 1,
+                codeCurso = 0,
                 role = UserRole.User,
                 codigoUsuario = 123,
             },
@@ -61,7 +61,7 @@ public class AuthControllerValidationTest
                 email = "test",
                 username = "test",
                 password = "test",
-                codeCurso = 1,
+                codeCurso = 0,
                 role = UserRole.User,
                 codigoUsuario = 123,
             },
@@ -70,7 +70,7 @@ public class AuthControllerValidationTest
                 email = "test@",
                 username = "test",
                 password = "test",
-                codeCurso = 1,
+                codeCurso = 0,
                 role = UserRole.User,
                 codigoUsuario = 123,
             },
@@ -79,7 +79,7 @@ public class AuthControllerValidationTest
                 email = "test@test",
                 username = "test",
                 password = "test",
-                codeCurso = 1,
+                codeCurso = 0,
                 role = UserRole.User,
                 codigoUsuario = 123,
             },
@@ -88,7 +88,7 @@ public class AuthControllerValidationTest
                 email = "test@.com",
                 username = "test",
                 password = "test",
-                codeCurso = 1,
+                codeCurso = 0,
                 role = UserRole.User,
                 codigoUsuario = 123,
             },
@@ -97,7 +97,7 @@ public class AuthControllerValidationTest
                 email = "test@test.com",
                 username = "",
                 password = "test",
-                codeCurso = 1,
+                codeCurso = 0,
                 role = UserRole.User,
                 codigoUsuario = 123,
             },
@@ -106,7 +106,7 @@ public class AuthControllerValidationTest
                 email = "test@test.com",
                 username = new('a', 46),
                 password = "test",
-                codeCurso = 1,
+                codeCurso = 0,
                 role = UserRole.User,
                 codigoUsuario = 123,
             },
@@ -115,7 +115,7 @@ public class AuthControllerValidationTest
                 email = "test@test.com",
                 username = "test",
                 password = "",
-                codeCurso = 1,
+                codeCurso = 0,
                 role = UserRole.User,
                 codigoUsuario = 123,
             },
@@ -124,39 +124,54 @@ public class AuthControllerValidationTest
                 email = "test@test.com",
                 username = "test",
                 password = new('a', 61),
-                codeCurso = 1,
+                codeCurso = 0,
                 role = UserRole.User,
                 codigoUsuario = 123,
             },
             new RegisterUserRequestModel
             {
+                email = "test@test.com",
                 username = "test",
                 password = "test",
-                codeCurso = 1,
+                codeCurso = 0,
                 role = UserRole.User,
-                codigoUsuario = 0
+                codigoUsuario = -1,
+            },
+            new RegisterUserRequestModel
+            {
+                username = "test",
+                password = "test",
+                codeCurso = 0,
+                role = UserRole.User,
+                codigoUsuario = 123
             },
             new RegisterUserRequestModel
             {
                 password = "test",
-                codeCurso = 1,
+                codeCurso = 0,
                 role = UserRole.User,
-                codigoUsuario = 0
+                codigoUsuario = 123
             },
             new RegisterUserRequestModel
             {
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 0
+                codigoUsuario = 123
+            },
+            new RegisterUserRequestModel
+            {
+                codeCurso = 1,
+                role = UserRole.User,
+                codigoUsuario = 123
             },
             new RegisterUserRequestModel
             {
                 role = UserRole.User,
-                codigoUsuario = 0
+                codigoUsuario = 123
             },
             new RegisterUserRequestModel
             {
-                codigoUsuario = 0
+                codigoUsuario = 123
             },
             new RegisterUserRequestModel(),
         };
@@ -172,7 +187,7 @@ public class AuthControllerValidationTest
                 password = "test",
                 codeCurso = 0,
                 role = UserRole.User,
-                codigoUsuario = 1233,
+                codigoUsuario = 1233
             }
         };
     }

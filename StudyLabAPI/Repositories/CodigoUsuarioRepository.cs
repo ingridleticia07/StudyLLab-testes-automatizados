@@ -25,8 +25,7 @@ public class CodigoUsuarioRepository : ICodigoUsuarioRepository
         await dbContext.codigoUsuario
             .FirstOrDefaultAsync(c => c.usuarioModel == usuarioModel && c.tipo == codeKind);
     
-    public CodigoUsuarioModel UseCode(UsuarioModel usuarioModel,
-        CodigoUsuarioModel codigoUsuarioModel) =>
+    public CodigoUsuarioModel UseCode(CodigoUsuarioModel codigoUsuarioModel) =>
         dbContext.codigoUsuario.Remove(codigoUsuarioModel).Entity;
     
     public async Task<CodigoUsuarioModel> GenerateAndEnsureCode(UsuarioModel usuarioModel, 

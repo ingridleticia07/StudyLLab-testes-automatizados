@@ -217,7 +217,7 @@ public class AuthController : IAuthController
             throw exception;
         }
         
-        codigoUsuarioRepository.UseCode(usuarioModel, confirmedUserCode);
+        codigoUsuarioRepository.UseCode(confirmedUserCode);
         usuarioModel.statusUsuario = true;
         await codigoUsuarioRepository.Flush();
         CodigoUsuarioReadModel codigoUsuarioReadModel = codigoUsuarioModelMapper
@@ -285,7 +285,7 @@ public class AuthController : IAuthController
             throw exception;
         }
         
-        codigoUsuarioRepository.UseCode(usuarioModel, resetCode);
+        codigoUsuarioRepository.UseCode(resetCode);
         string newPassword = hashService.Hash(resetUserPasswordRequestModel.newPassword);
         usuarioModel.senhaUsuario = newPassword;
         await codigoUsuarioRepository.Flush();

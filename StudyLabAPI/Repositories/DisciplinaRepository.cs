@@ -16,6 +16,7 @@ namespace StudyLabAPI.Repositories
 
         public async Task<bool> VerifyDisciplinaCreated(DisciplinaModel disciplina)
         {
+            //TODO: Provavelmente usar AnyAsync seja melhor
             var existingDisciplina = await dbContext.disciplinas
                 .Where(d => d.nomeDisciplina == disciplina.nomeDisciplina || 
                     d.codigoDisciplina == disciplina.codigoDisciplina)
@@ -23,9 +24,11 @@ namespace StudyLabAPI.Repositories
 
             return existingDisciplina != null;
         }
-
+        
+        //TODO: Mesma coisa do GetDisciplinaById?
         public async Task<bool> VerifyDisciplinaCreatedWithId(DisciplinaModel disciplina)
         {
+            //TODO: Provavelmente usar AnyAsync seja melhor
             var existingDisciplina = await dbContext.disciplinas
                 .Where(d => (d.nomeDisciplina == disciplina.nomeDisciplina ||
                     d.codigoDisciplina == disciplina.codigoDisciplina) && d.idDisciplina != disciplina.idDisciplina)
@@ -45,7 +48,7 @@ namespace StudyLabAPI.Repositories
 
         public async Task UpdateDisciplina(DisciplinaModel disciplinaModel)
         {
-            DisciplinaModel disciplinForUpdate = await dbContext.disciplinas.FindAsync(disciplinaModel.idDisciplina);
+            DisciplinaModel? disciplinForUpdate = await dbContext.disciplinas.FindAsync(disciplinaModel.idDisciplina);
 
             if (disciplinForUpdate == null)
             {
