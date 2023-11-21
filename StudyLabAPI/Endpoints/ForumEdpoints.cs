@@ -30,6 +30,8 @@ namespace StudyLabAPI.Endpoints
             builder.MapPut("AtualizarForum", UpdateForum);
 
             builder.MapGet("ListarForums", GetForums);
+
+            builder.MapDelete("ApagarForum", DeleteForum);
             //add withSummaries ao terminar
 
             return builder;
@@ -158,7 +160,7 @@ namespace StudyLabAPI.Endpoints
             [FromBody] RegisteredRespostaForumModel newRespostaForum,
             [FromServices] IForumController controller)
         {
-            var checkIfRespostaForum = await controller.VerifyRespostaForumExists(newRespostaForum);
+            bool checkIfRespostaForum = await controller.VerifyRespostaForumExists(newRespostaForum);
 
             if (checkIfRespostaForum == false)
             {
@@ -289,6 +291,26 @@ namespace StudyLabAPI.Endpoints
             }
 
             return Results.Ok(result);
+        }
+
+        private static async Task<IResult> DeleteForum(HttpContext context,
+        [FromBody] ForumModel forumModel,
+        [FromServices] IForumController controller)
+        {
+            try
+            {
+                await controller.DeleteForum(forumModel);
+            }
+            catch (UsuarioNotFoundException e)
+            {
+                return Results.NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+
+            return Results.Ok(forumModel);
         }
     }
 }

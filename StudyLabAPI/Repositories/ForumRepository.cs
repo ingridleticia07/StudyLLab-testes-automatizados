@@ -36,6 +36,17 @@ namespace StudyLabAPI.Repositories
             .ToListAsync();
             return forumModel;
         }
+
+        public async Task DeleteForum(int idForum)
+        {
+            ForumModel forumModel = await dbContext.forum.FindAsync(idForum);
+            if (forumModel != null)
+            {
+                dbContext.forum.Remove(forumModel);
+            }
+        }
+
+
         public async Task Flush() =>
           await dbContext.SaveChangesAsync();
     }

@@ -54,19 +54,20 @@ namespace StudyLabAPI.Repositories
         public async Task<bool> VerifyRespostaForumExists(RespostaForumModel respostaForum)
         {
             //TODO: Provalvemente seja melhor usa AnyAsync
-            var existingRespostaForum = await dbContext.respostaForum
+            bool existingRespostaForum = await dbContext.respostaForum
                 .Where(value => value.resposta == respostaForum.resposta)
                 .AnyAsync();
 
-            return existingRespostaForum != null;
+            return existingRespostaForum;
         }
         //TODO: Mesma coisa do GetRespostaForumById?
         public async Task<bool> VerifyRespostaForumExistsWithId(RespostaForumModel respostaForum)
         {
-            var existingRespostaForum = await dbContext.respostaForum.Where(value => (value.resposta == respostaForum.resposta)
+            bool existingRespostaForum = await dbContext.respostaForum.Where(value => 
+            (value.resposta == respostaForum.resposta && value.topicoDiscussao == respostaForum.topicoDiscussao)
             && (value.idResposta != respostaForum.idResposta)).AnyAsync();
 
-            return existingRespostaForum != null;
+            return existingRespostaForum;       
         }
         public async Task Flush() =>
            await dbContext.SaveChangesAsync();

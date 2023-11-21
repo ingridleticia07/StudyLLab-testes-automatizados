@@ -34,5 +34,7 @@ namespace StudyLabAPI.Controllers
         public Task<ForumModel> UpdateForum(ResgisteredForumModel updateForum);
 
         public Task<List<ForumModel?>> GetAllForums();
+
+        public Task DeleteForum(ForumModel forum);
     }
 }

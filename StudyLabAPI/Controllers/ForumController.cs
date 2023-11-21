@@ -131,11 +131,16 @@ namespace StudyLabAPI.Controllers
 
         public async Task<bool> VerifyRespostaForumExistsWithId(RegisteredRespostaForumModel respostaForum)
         {
+            int topicoId = respostaForum.topicoDiscussao;
+
+            TopicoDiscussaoModel? relatedTopico = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoId);
+
             RespostaForumModel respostaForumModel = new()
             {
                 idResposta = respostaForum.idResposta,
                 resposta = respostaForum.resposta,
-                dataResposta = respostaForum.dataResposta
+                dataResposta = respostaForum.dataResposta,
+                topicoDiscussao = relatedTopico
             };
             bool returnCheckrespostaForumExistsWithId = await respostaforumRepository.VerifyRespostaForumExistsWithId(respostaForumModel);
             return returnCheckrespostaForumExistsWithId;
@@ -263,6 +268,15 @@ namespace StudyLabAPI.Controllers
             // You should map DisciplinaModel to DisciplinaReadModel and return the list
 
             return forumModelLista;
+        }
+
+        public async Task DeleteForum(ForumModel forum)
+        {
+            //verificar se disciplina existe, por meio do buscar disciplina
+            //para em caso de exstir, excluir a mesma
+            await forumRepository.DeleteForum(forum.idForum);
+            await forumRepository.Flush();
+
         }
     }
 }

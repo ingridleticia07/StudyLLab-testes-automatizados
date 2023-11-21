@@ -17,24 +17,24 @@ namespace StudyLabAPI.Repositories
         public async Task<bool> VerifyDisciplinaCreated(DisciplinaModel disciplina)
         {
             //TODO: Provavelmente usar AnyAsync seja melhor
-            var existingDisciplina = await dbContext.disciplinas
+            bool existingDisciplina = await dbContext.disciplinas
                 .Where(d => d.nomeDisciplina == disciplina.nomeDisciplina || 
                     d.codigoDisciplina == disciplina.codigoDisciplina)
                 .AnyAsync();
 
-            return existingDisciplina != null;
+            return existingDisciplina;
         }
         
         //TODO: Mesma coisa do GetDisciplinaById?
         public async Task<bool> VerifyDisciplinaCreatedWithId(DisciplinaModel disciplina)
         {
             //TODO: Provavelmente usar AnyAsync seja melhor
-            var existingDisciplina = await dbContext.disciplinas
+            bool existingDisciplina = await dbContext.disciplinas
                 .Where(d => (d.nomeDisciplina == disciplina.nomeDisciplina ||
                     d.codigoDisciplina == disciplina.codigoDisciplina) && d.idDisciplina != disciplina.idDisciplina)
                 .AnyAsync();
 
-            return existingDisciplina != null;
+            return existingDisciplina;
         }
         public async Task<List<DisciplinaModel>> GetAllDisciplinas()
         {
