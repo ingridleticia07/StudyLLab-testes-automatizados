@@ -237,6 +237,9 @@ namespace StudyLabAPI.Endpoints
             [FromBody] ResgisteredForumModel novoForum,
             [FromServices] IForumController controller)
         {
+            var checkIfForumExists = await controller.VerifyForumCreated(novoForum);
+            if(checkIfForumExists == false)
+            {
                 try
                 {
                     await controller.CreateForum(novoForum);
@@ -249,29 +252,41 @@ namespace StudyLabAPI.Endpoints
                 {
                     return Results.BadRequest(e.Message);
                 }
-            return Results.Ok(novoForum);
+                return Results.Ok(novoForum);
+            }
+            else
+            {
+                return Results.Ok("Esse forum já existe!");
+            }
         }
 
         private static async Task<IResult> UpdateForum(HttpContext context,
         [FromBody] ResgisteredForumModel forumForUpdate,
         [FromServices] IForumController controller)
         {
-            try
+            var checkIfForumExists = await controller.VerifyForumCreatedWithId(forumForUpdate);
+            if (checkIfForumExists == false)
             {
-                await controller.UpdateForum(forumForUpdate);
-            }
-            catch (UsuarioNotFoundException e)
-            {
-                return Results.NotFound(e.Message);
-            }
-            catch (Exception e)
-            {
-                return Results.BadRequest(e.Message);
-            }
+                try
+                {
+                    await controller.UpdateForum(forumForUpdate);
+                }
+                catch (UsuarioNotFoundException e)
+                {
+                    return Results.NotFound(e.Message);
+                }
+                catch (Exception e)
+                {
+                    return Results.BadRequest(e.Message);
+                }
 
-            return Results.Ok(forumForUpdate);
+                return Results.Ok(forumForUpdate);
+            }
+            else
+            {
+                return Results.Ok("Esse forum já existe!");
+            }
         }
-
         private static async Task<IResult> GetForums(HttpContext context,
         [FromServices] IForumController controller)
         {

@@ -278,5 +278,55 @@ namespace StudyLabAPI.Controllers
             await forumRepository.Flush();
 
         }
+
+        public async Task<bool> VerifyForumCreated(ResgisteredForumModel forum)
+        {
+            int forumId = forum.respostaForum;
+
+            int topicoId = forum.topicoDiscussao;
+
+            int usuarioId = forum.respostaForum;
+
+            TopicoDiscussaoModel? relatedTopico = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoId);
+
+            RespostaForumModel? relatedRespostaForum = await respostaforumRepository.GetRespostaForumById(forumId);
+
+            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId);
+
+            ForumModel respostaForumModel = new()
+            {
+                respostaForum = relatedRespostaForum,
+                topicoDiscussao = relatedTopico,
+                usuario = relatedUsuario
+            };
+            bool returnCheckForumExists = await forumRepository.VerifyForumCreated(respostaForumModel);
+            return returnCheckForumExists;
+        }
+
+        public async Task<bool> VerifyForumCreatedWithId(ResgisteredForumModel forum)
+        {
+            int forumId = forum.respostaForum;
+
+            int topicoId = forum.topicoDiscussao;
+
+            int usuarioId = forum.respostaForum;
+
+            TopicoDiscussaoModel? relatedTopico = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoId);
+
+            RespostaForumModel? relatedRespostaForum = await respostaforumRepository.GetRespostaForumById(forumId);
+
+            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId);
+
+            ForumModel respostaForumModel = new()
+            {
+                idForum = forum.idForum,
+                respostaForum = relatedRespostaForum,
+                topicoDiscussao = relatedTopico,
+                usuario = relatedUsuario
+            };
+            bool returnCheckForumExists = await forumRepository.VerifyForumCreatedWithId(respostaForumModel);
+            return returnCheckForumExists;
+        }
+
     }
 }

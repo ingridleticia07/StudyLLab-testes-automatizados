@@ -37,6 +37,28 @@ namespace StudyLabAPI.Repositories
             return forumModel;
         }
 
+        public async Task<bool> VerifyForumCreated(ForumModel forum)
+        {
+            //TODO: Provavelmente usar AnyAsync seja melhor
+            bool existingForum = await dbContext.forum
+                .Where(value => (value.respostaForum == forum.respostaForum &&
+                    value.topicoDiscussao == forum.topicoDiscussao))
+                .AnyAsync();
+
+            return existingForum;
+        }
+
+        public async Task<bool> VerifyForumCreatedWithId(ForumModel forum)
+        {
+            //TODO: Provavelmente usar AnyAsync seja melhor
+            bool existingForum = await dbContext.forum
+                .Where(value => (value.respostaForum == forum.respostaForum &&
+                    value.topicoDiscussao == forum.topicoDiscussao) && value.idForum == forum.idForum)
+                .AnyAsync();
+
+            return existingForum;
+        }
+
         public async Task DeleteForum(int idForum)
         {
             ForumModel forumModel = await dbContext.forum.FindAsync(idForum);

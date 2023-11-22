@@ -10,6 +10,9 @@ namespace StudyLabAPI.Repositories
 
         public Task<List<ForumModel?>> GetAllForums();
 
+        public Task<bool> VerifyForumCreated(ForumModel Forum);
+
+        public Task<bool> VerifyForumCreatedWithId(ForumModel Forum);
         public Task DeleteForum(int idForum);
         public Task Flush();
     }

@@ -36,5 +36,9 @@ namespace StudyLabAPI.Controllers
         public Task<List<ForumModel?>> GetAllForums();
 
         public Task DeleteForum(ForumModel forum);
+
+        public Task<bool> VerifyForumCreated(ResgisteredForumModel forum);
+ 
+        public Task<bool> VerifyForumCreatedWithId(ResgisteredForumModel forum);
     }
 }
