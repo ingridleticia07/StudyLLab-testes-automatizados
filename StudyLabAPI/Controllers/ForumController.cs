@@ -328,5 +328,21 @@ namespace StudyLabAPI.Controllers
             return returnCheckForumExists;
         }
 
+        public async Task<List<ForumModel?>> GetForumByTopico(ResgisteredForumModel forumModel)
+        {
+            int topicoId = forumModel.topicoDiscussao;
+
+            TopicoDiscussaoModel? relatedTopico = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoId);
+
+            ForumModel forum = new()
+            {
+                topicoDiscussao = relatedTopico
+            };
+
+            List<ForumModel> forumLista = await forumRepository.GetForumByTopico(forum);
+
+            return forumLista;
+        }
+
     }
 }

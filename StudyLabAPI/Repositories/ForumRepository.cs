@@ -58,7 +58,14 @@ namespace StudyLabAPI.Repositories
 
             return existingForum;
         }
-
+        public async Task<List<ForumModel?>> GetForumByTopico(ForumModel forumModel)
+        {
+            List<ForumModel> forumByTopico = await dbContext.forum
+            .Where(value => value.respostaForum.topicoDiscussao == forumModel.topicoDiscussao).Include(value => value.respostaForum).Include(value => value.topicoDiscussao)
+            .Include(value => value.topicoDiscussao).Include(value => value.usuario).Include(value => value.respostaForum.topicoDiscussao.disciplina)
+            .ToListAsync();
+            return forumByTopico;
+        }
         public async Task DeleteForum(int idForum)
         {
             ForumModel forumModel = await dbContext.forum.FindAsync(idForum);
@@ -71,5 +78,6 @@ namespace StudyLabAPI.Repositories
 
         public async Task Flush() =>
           await dbContext.SaveChangesAsync();
+
     }
 }

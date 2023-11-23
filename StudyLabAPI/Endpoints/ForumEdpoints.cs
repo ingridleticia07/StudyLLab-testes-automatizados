@@ -32,6 +32,8 @@ namespace StudyLabAPI.Endpoints
             builder.MapGet("ListarForums", GetForums);
 
             builder.MapDelete("ApagarForum", DeleteForum);
+
+            builder.MapGet("ListarForumsPeloTopico", GetForumByTopico);
             //add withSummaries ao terminar
 
             return builder;
@@ -326,6 +328,28 @@ namespace StudyLabAPI.Endpoints
             }
 
             return Results.Ok(forumModel);
+        }
+
+        private static async Task<IResult> GetForumByTopico(HttpContext context,
+        [FromBody] ResgisteredForumModel forumByTopico,
+        [FromServices] IForumController controller)
+        {
+
+            List<ForumModel>? result;
+            try
+            {
+                result = await controller.GetForumByTopico(forumByTopico);
+            }
+            catch (UsuarioNotFoundException e)
+            {
+                return Results.NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+
+            return Results.Ok(result);
         }
     }
 }
