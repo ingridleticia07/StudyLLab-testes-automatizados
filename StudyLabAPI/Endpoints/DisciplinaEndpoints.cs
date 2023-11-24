@@ -92,7 +92,8 @@ public static class DisciplinaEndpoints
         }
         else
         {
-            return Results.Content("Disciplina existente", statusCode: StatusCodes.Status409Conflict);
+            return Results.Content("Disciplina existente", 
+                statusCode: StatusCodes.Status409Conflict);
         }
 
         return Results.Ok(novaDisciplina);
@@ -121,7 +122,8 @@ public static class DisciplinaEndpoints
             }
         }
         else{
-            return Results.Content("Disciplina existente", statusCode: StatusCodes.Status409Conflict);
+            return Results.Content("Disciplina existente", 
+                statusCode: StatusCodes.Status409Conflict);
         }
         
 

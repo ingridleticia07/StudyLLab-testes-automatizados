@@ -2,6 +2,7 @@
 using StudyLabAPI.Controllers;
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models;
+using StudyLabAPI.Summaries;
 
 namespace StudyLabAPI.Endpoints
 {
@@ -9,35 +10,37 @@ namespace StudyLabAPI.Endpoints
     {
         public static RouteGroupBuilder MapForumEndpoints(this RouteGroupBuilder builder)
         {
-            builder.MapGet("listarTopicosDiscussao", GetAllTopicosDiscussao);
-
-            builder.MapPost("criarTopicoDiscussao", CreateTopicoDiscussao);
-
-            builder.MapPut("editarTopicoDiscussao", UpdateTopicoDiscussao);
-
-            builder.MapDelete("deletarTopicoDiscussao", DeleteTopicoDiscussao);
-
-            builder.MapGet("ListarRespostasForum", GetAllRespostasForum);
-
-            builder.MapPost("cadastrarRespostaForum", CreateRespostaForum);
-
-            builder.MapPut("AtualizarRespostaForum", UpdateRespostaForum);
-
-            builder.MapDelete("DeletarRespostaForum", DeleteRespostaForum);
-
-            builder.MapPost("CadastrarForum", CreateForum);
-
-            builder.MapPut("AtualizarForum", UpdateForum);
-
-            builder.MapGet("ListarForums", GetForums);
-
-            builder.MapDelete("ApagarForum", DeleteForum);
-
-            builder.MapGet("ListarForumsPeloTopico", GetForumByTopico);
-            //add withSummaries ao terminar
+            builder.MapGet("listarTopicosDiscussao", GetAllTopicosDiscussao)
+                .WithOpenApi(ForumSummaries.ForumGetAllTopicosDiscussao);
+            builder.MapPost("criarTopicoDiscussao", CreateTopicoDiscussao)
+                .WithOpenApi(ForumSummaries.ForumCreateTopicoDiscussao);
+            builder.MapPut("editarTopicoDiscussao", UpdateTopicoDiscussao)
+                .WithOpenApi(ForumSummaries.ForumUpdateTopicoDiscussao);
+            builder.MapDelete("deletarTopicoDiscussao", DeleteTopicoDiscussao)
+                .WithOpenApi(ForumSummaries.ForumDeleteTopicoDiscussao);
+            builder.MapGet("ListarRespostasForum", GetAllRespostasForum)
+                .WithOpenApi(ForumSummaries.ForumGetAllRespostaForum);
+            builder.MapPost("cadastrarRespostaForum", CreateRespostaForum)
+                .WithOpenApi(ForumSummaries.ForumCreateRespostaForum);
+            builder.MapPut("AtualizarRespostaForum", UpdateRespostaForum)
+                .WithOpenApi(ForumSummaries.ForumUpdateRespostaForum);
+            builder.MapDelete("DeletarRespostaForum", DeleteRespostaForum)
+                .WithOpenApi(ForumSummaries.ForumDeleteRespostaForum);
+            builder.MapPost("CadastrarForum", CreateForum)
+                .WithOpenApi(ForumSummaries.ForumCreateForum);
+            builder.MapPut("AtualizarForum", UpdateForum)
+                .WithOpenApi(ForumSummaries.ForumUpdateForum);
+            builder.MapGet("ListarForums", GetForums)
+                .WithOpenApi(ForumSummaries.ForumGetForums);
+            builder.MapDelete("ApagarForum", DeleteForum)
+                .WithOpenApi(ForumSummaries.ForumDeleteForum);
+            builder.MapGet("ListarForumsPeloTopico", GetForumByTopico)
+                .WithOpenApi(ForumSummaries.ForumGetForumByTopico);
 
             return builder;
         }
+        
+        [ProducesResponseType(typeof(List<TopicoDiscussaoModel>), 200)]
         private static async Task<IResult> GetAllTopicosDiscussao(HttpContext context,
         [FromServices] IForumController controller)
         {
@@ -58,7 +61,8 @@ namespace StudyLabAPI.Endpoints
 
             return Results.Ok(result);
         }
-
+        
+        [ProducesResponseType(typeof(RegisteredTopicoDiscussaoRequestModel), 200)]
         private static async Task<IResult> CreateTopicoDiscussao(HttpContext context,
             [FromBody] RegisteredTopicoDiscussaoRequestModel novoTopico,
             [FromServices] IForumController controller)
@@ -82,11 +86,13 @@ namespace StudyLabAPI.Endpoints
             }
             else
             {
-                return Results.Ok("Tópico discussão existente");
+                return Results.Content("Tópico discussão existente", 
+                    statusCode: StatusCodes.Status409Conflict);
             }
             return Results.Ok(novoTopico);
         }
-
+        
+        [ProducesResponseType(typeof(RegisteredTopicoDiscussaoRequestModel), 200)]
         private static async Task<IResult> UpdateTopicoDiscussao(HttpContext context,
         [FromBody] RegisteredTopicoDiscussaoRequestModel topicoDiscussaoUpdate,
         [FromServices] IForumController controller)
@@ -110,12 +116,15 @@ namespace StudyLabAPI.Endpoints
             }
             else
             {
-                return Results.Ok("Tópico discussão existente");
+                return Results.Content("Tópico discussão existente", 
+                    statusCode: StatusCodes.Status409Conflict);
             }
 
 
             return Results.Ok(topicoDiscussaoUpdate);
         }
+        
+        [ProducesResponseType(typeof(TopicoDiscussaoModel), 200)]
         private static async Task<IResult> DeleteTopicoDiscussao(HttpContext context,
         [FromBody] TopicoDiscussaoModel topicoDiscussaoModel,
         [FromServices] IForumController controller)
@@ -136,11 +145,11 @@ namespace StudyLabAPI.Endpoints
 
             return Results.Ok(topicoDiscussaoModel);
         }
-
+        
+        [ProducesResponseType(typeof(List<RespostaForumModel>), 200)]
         private static async Task<IResult> GetAllRespostasForum(HttpContext context,
         [FromServices] IForumController controller)
         {
-
             List<RespostaForumModel>? result;
             try
             {
@@ -157,7 +166,8 @@ namespace StudyLabAPI.Endpoints
 
             return Results.Ok(result);
         }
-
+        
+        [ProducesResponseType(typeof(RegisteredRespostaForumModel), 200)]
         private static async Task<IResult> CreateRespostaForum(HttpContext context,
             [FromBody] RegisteredRespostaForumModel newRespostaForum,
             [FromServices] IForumController controller)
@@ -181,10 +191,13 @@ namespace StudyLabAPI.Endpoints
             }
             else
             {
-                return Results.Ok("Resposta forum existente");
+                return Results.Content("Reposta do fórum já existe", 
+                    statusCode: StatusCodes.Status409Conflict);
             }
             return Results.Ok(newRespostaForum);
         }
+        
+        [ProducesResponseType(typeof(RegisteredRespostaForumModel), 200)]
         private static async Task<IResult> UpdateRespostaForum(HttpContext context,
         [FromBody] RegisteredRespostaForumModel newRespostaForum,
         [FromServices] IForumController controller)
@@ -214,7 +227,8 @@ namespace StudyLabAPI.Endpoints
 
             return Results.Ok(newRespostaForum);
         }
-
+        
+        [ProducesResponseType(typeof(RespostaForumModel), 200)]
         private static async Task<IResult> DeleteRespostaForum(HttpContext context,
         [FromBody] RespostaForumModel respostaForumModel,
         [FromServices] IForumController controller)
@@ -234,7 +248,8 @@ namespace StudyLabAPI.Endpoints
 
             return Results.Ok(respostaForumModel);
         }
-
+        
+        [ProducesResponseType(typeof(ResgisteredForumModel), 200)]
         private static async Task<IResult> CreateForum(HttpContext context,
             [FromBody] ResgisteredForumModel novoForum,
             [FromServices] IForumController controller)
@@ -261,7 +276,8 @@ namespace StudyLabAPI.Endpoints
                 return Results.Ok("Esse forum já existe!");
             }
         }
-
+        
+        [ProducesResponseType(typeof(ResgisteredForumModel), 200)]
         private static async Task<IResult> UpdateForum(HttpContext context,
         [FromBody] ResgisteredForumModel forumForUpdate,
         [FromServices] IForumController controller)
@@ -289,6 +305,8 @@ namespace StudyLabAPI.Endpoints
                 return Results.Ok("Esse forum já existe!");
             }
         }
+        
+        [ProducesResponseType(typeof(List<ForumModel>), 200)]
         private static async Task<IResult> GetForums(HttpContext context,
         [FromServices] IForumController controller)
         {
@@ -309,7 +327,8 @@ namespace StudyLabAPI.Endpoints
 
             return Results.Ok(result);
         }
-
+        
+        [ProducesResponseType(typeof(ForumModel), 200)]
         private static async Task<IResult> DeleteForum(HttpContext context,
         [FromBody] ForumModel forumModel,
         [FromServices] IForumController controller)
@@ -329,7 +348,8 @@ namespace StudyLabAPI.Endpoints
 
             return Results.Ok(forumModel);
         }
-
+        
+        [ProducesResponseType(typeof(List<ForumModel>), 200)]
         private static async Task<IResult> GetForumByTopico(HttpContext context,
         [FromBody] ResgisteredForumModel forumByTopico,
         [FromServices] IForumController controller)
