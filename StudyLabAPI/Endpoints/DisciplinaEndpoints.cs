@@ -11,18 +11,20 @@ public static class DisciplinaEndpoints
     public static RouteGroupBuilder MapDisciplinaEndpoints(this RouteGroupBuilder builder)
     {
         builder.MapGet("listarDisciplinas", GetDisciplinas)
-            .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
-        builder.MapGet("listarDisciplina/{IdDisciplina}", GetDisciplina)
-            .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
+            .WithOpenApi(DisciplinaSummaries.DisciplinaGetDisciplinas);
+        builder.MapGet("listarDisciplina/{idDisciplina:int}", GetDisciplina)
+            .WithOpenApi(DisciplinaSummaries.DisciplinaGetDisciplina);
         builder.MapPost("cadastrarDisciplina", CreateDisciplina)
-            .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
+            .WithOpenApi(DisciplinaSummaries.DisciplinaCreateDisciplina);
         builder.MapPut("editarDisciplina", UpdateDisciplina)
-            .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
+            .WithOpenApi(DisciplinaSummaries.DisciplinaUpdateDisciplina);
         builder.MapDelete("excluirDisciplina", DeleteDisciplina)
-            .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
+            .WithOpenApi(DisciplinaSummaries.DisciplinaDeleteDisciplina);
 
         return builder;
     }
+    
+    [ProducesResponseType(typeof(List<DisciplinaReadModel>), 200)]
     private static async Task<IResult> GetDisciplinas(HttpContext context,
         [FromServices] IDisciplinaController controller)
     {
@@ -43,14 +45,16 @@ public static class DisciplinaEndpoints
 
         return Results.Ok(result);
     }
+    
+    [ProducesResponseType(typeof(DisciplinaReadModel), 200)]
     private static async Task<IResult> GetDisciplina(HttpContext context,
-            [FromRoute(Name = "IdDisciplina")] int Iddisciplina,
+            [FromRoute(Name = "IdDisciplina")] int idDisciplina,
             [FromServices] IDisciplinaController controller)
     {
         DisciplinaReadModel? result;
         try
         {
-            result = await controller.GetDisciplinaById(Iddisciplina);
+            result = await controller.GetDisciplinaById(idDisciplina);
         }
         catch (UsuarioNotFoundException e)
         {
@@ -63,6 +67,8 @@ public static class DisciplinaEndpoints
 
         return Results.Ok(result);
     }
+    
+    [ProducesResponseType(typeof(RegisterDisciplinaRequestModel), 200)]
     private static async Task<IResult> CreateDisciplina(HttpContext context,
         [FromBody] RegisterDisciplinaRequestModel novaDisciplina,
         [FromServices] IDisciplinaController controller)
@@ -86,12 +92,13 @@ public static class DisciplinaEndpoints
         }
         else
         {
-            return Results.Ok("Disciplina existente");
+            return Results.Content("Disciplina existente", statusCode: StatusCodes.Status409Conflict);
         }
 
         return Results.Ok(novaDisciplina);
     }
-
+    
+    [ProducesResponseType(typeof(RegisterDisciplinaRequestModel), 200)]
     private static async Task<IResult> UpdateDisciplina(HttpContext context,
         [FromBody] RegisterDisciplinaRequestModel novaDisciplina,
         [FromServices] IDisciplinaController controller)
@@ -114,17 +121,18 @@ public static class DisciplinaEndpoints
             }
         }
         else{
-            return Results.Ok("Disciplina existente");
+            return Results.Content("Disciplina existente", statusCode: StatusCodes.Status409Conflict);
         }
         
 
         return Results.Ok(novaDisciplina);
     }
+    
+    [ProducesResponseType(typeof(DisciplinaModel), 200)]
     private static async Task<IResult> DeleteDisciplina(HttpContext context,
-        [FromBody] DisciplinaModel disciplinaModel,
+        [FromBody] DisciplinaModel disciplinaModel, //TODO: Precissa do modelo inteiro para deletar?
         [FromServices] IDisciplinaController controller)
     {
-
         try
         {
             await controller.DeleteDisciplina(disciplinaModel);

@@ -1,5 +1,6 @@
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using StudyLabAPI.Models;
 
 namespace StudyLabAPI.Summaries;
 
@@ -74,7 +75,7 @@ public static class AuthSummaries
                            Reference = new()
                            {
                                Type = ReferenceType.Schema,
-                               Id = "CodigoUsuarioReadModel"
+                               Id = nameof(CodigoUsuarioReadModel)
                            }
                        }
                    }}
@@ -127,7 +128,7 @@ public static class AuthSummaries
                             Reference = new()
                             {
                                 Type = ReferenceType.Schema,
-                                Id = "ResetUserPasswordReadModel"
+                                Id = nameof(ResetUserPasswordReadModel)
                             }
                         }
                     }}
