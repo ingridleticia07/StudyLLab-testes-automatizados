@@ -7,5 +7,4 @@ public class Argon2HashParametersOptions
     public int DegreeOfParallelism { get; set; }
     public int MemorySize { get; set; }
     public int Iterations { get; set; }
-    public string Salt { get; set; } = string.Empty;
 }

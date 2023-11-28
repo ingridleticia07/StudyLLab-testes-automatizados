@@ -32,9 +32,6 @@ public static class Di
     {
         services.Configure<JwtParametersOptions>(
             configuration.GetSection(JwtParametersOptions.JWT_PARAMETERS));
-        services.Configure<EmailOptions>(configuration.GetSection(EmailOptions.SERVER_EMAIL));
-        services.Configure<ConnectionStringsOptions>(configuration
-            .GetSection(ConnectionStringsOptions.CONNECTION_STRING));
         services.Configure<Argon2HashParametersOptions>(
             configuration.GetSection(Argon2HashParametersOptions.HASH_PARAMETERS));
         

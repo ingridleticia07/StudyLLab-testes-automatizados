@@ -1,34 +1,45 @@
 using System.Net;
 using System.Net.Mail;
 using Microsoft.Extensions.Options;
+using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models.Options;
 using StudyLabAPI.Services.Email.Models;
+using StudyLabAPI.Utils;
 using MailMessage = System.Net.Mail.MailMessage;
+// ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
 
 namespace StudyLabAPI.Services.Email;
 
 public class EmailService : IDisposable, IEmailService
 {
     private SmtpClient smtpClient { get; }
-    // ReSharper disable once UnusedAutoPropertyAccessor.Local
-    private readonly EmailOptions options;
-    private string serverEmail { get; }
+    private readonly string _smtpServer;
+    private readonly int _smtpPort;
+    private readonly string _smtpEmail;
+    private readonly string _smtpPassword;
 
-    public EmailService(IOptions<EmailOptions> emailOptions)
+    public EmailService()
     {
-        options = emailOptions.Value;
-        smtpClient = new(options.smtpServer, options.port)
+        _smtpServer = EnvVars.GetSmtpServer() ?? 
+                     throw new EnvironmentVariableIsNullOrEmptyException(nameof(EnvVars.SMTP_SERVER));
+        _smtpPort = int.Parse(EnvVars.GetSmtpPort() ?? 
+                         throw new EnvironmentVariableIsNullOrEmptyException(nameof(EnvVars.SMTP_PORT)));
+        _smtpEmail = EnvVars.GetSmtpEmail() ??
+                    throw new EnvironmentVariableIsNullOrEmptyException(nameof(EnvVars.SMTP_EMAIL));
+        _smtpPassword = EnvVars.GetSmtpPassword() ??
+                       throw new EnvironmentVariableIsNullOrEmptyException(nameof(EnvVars.SMTP_PASSWORD));
+        
+        smtpClient = new(_smtpServer, _smtpPort)
         {
-            Credentials = new NetworkCredential(options.email, options.password),
+            Credentials = new NetworkCredential(_smtpEmail, _smtpPassword),
             EnableSsl = true,
             UseDefaultCredentials = false
         };
-        serverEmail = options.email;
     }
     
     public async Task SendEmail(EmailIntent intent)
     {
-        MailMessage internalMailScope = new(from: serverEmail, to: intent.toEmail)
+        MailMessage internalMailScope = new(from: _smtpEmail, to: intent.toEmail)
         {
             Subject = intent.subject,
             Body = intent.message,

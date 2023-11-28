@@ -1,17 +1,23 @@
 using System.Text;
 using Konscious.Security.Cryptography;
 using Microsoft.Extensions.Options;
+using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models.Options;
+using StudyLabAPI.Utils;
 
 namespace StudyLabAPI.Services.Hash;
 
 public class ArgonHashService : IHashService
 {
     private readonly Argon2HashParametersOptions _options;
+    private readonly string _salt;
 
     public ArgonHashService(IOptions<Argon2HashParametersOptions> options)
     {
         _options = options.Value;
+        _salt = EnvVars.GetPasswordSalt() ?? 
+                throw new EnvironmentVariableIsNullOrEmptyException(
+                    nameof(EnvVars.PASSWORD_SALT));
     }
     
     public string Hash(string password)
@@ -26,7 +32,7 @@ public class ArgonHashService : IHashService
     private Argon2d CreateArgon2Hasher(string password)
     {
         byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
-        byte[] saltBytes = Encoding.UTF8.GetBytes(_options.Salt);
+        byte[] saltBytes = Encoding.UTF8.GetBytes(_salt);
         
         Argon2d argon2 = new(passwordBytes);
         argon2.DegreeOfParallelism = _options.DegreeOfParallelism;
