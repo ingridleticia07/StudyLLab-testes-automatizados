@@ -41,6 +41,6 @@ namespace StudyLabAPI.Controllers
  
         public Task<bool> VerifyForumCreatedWithId(ResgisteredForumModel forum);
 
-        public Task<List<ForumModel?>> GetForumByTopico(ResgisteredForumModel forumModel);
+        public Task<List<ForumModel?>> GetForumByTopico(RegisteredTopicoDiscussaoRequestModel topico);
     }
 }
