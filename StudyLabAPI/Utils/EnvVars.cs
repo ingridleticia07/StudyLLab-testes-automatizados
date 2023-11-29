@@ -3,6 +3,7 @@ namespace StudyLabAPI.Utils;
 internal static class EnvVars
 {
     //TODO: Move the API Key too
+    public const string API_KEY = "API_KEY";
     public const string POSTGRES_CONNECTION_STRING = "POSTGRES_CONNECTION_STRING";
     public const string JWT_KEY = "JWT_KEY";
     public const string SMTP_SERVER = "SMTP_SERVER";
@@ -11,6 +12,8 @@ internal static class EnvVars
     public const string SMTP_PASSWORD = "SMTP_PASSWORD";
     public const string PASSWORD_SALT = "PASSWORD_SALT";
     
+    public static string? GetApiKey() =>
+        Environment.GetEnvironmentVariable(API_KEY);
     public static string? GetPostgresConnectionString() =>
         Environment.GetEnvironmentVariable(POSTGRES_CONNECTION_STRING);
     public static string? GetJwtKey() =>

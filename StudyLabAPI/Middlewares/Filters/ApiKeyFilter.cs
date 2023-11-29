@@ -1,18 +1,22 @@
 using Microsoft.Extensions.Primitives;
+using StudyLabAPI.Exceptions;
+using StudyLabAPI.Utils;
 
 namespace StudyLabAPI.Middlewares.Filters;
 
 public class ApiKeyFilter : IEndpointFilter
 {
-    private const string API_KEY = "e24dd2210803b4737a9bd9e3163a4ca807b63201c3bc32b68fb122ca52efff36";
+    private readonly string? apiKey = EnvVars.GetApiKey();
     
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
+        if(apiKey is null)
+            throw new EnvironmentVariableIsNullOrEmptyException(nameof(apiKey));
         bool hasApiKey = context.HttpContext.Request.Headers
             .TryGetValue(ApiFiltersConsts.API_KEY_REQUEST_HEADER, out StringValues keys);
         
         string? headerApiKey = hasApiKey ? keys.FirstOrDefault() : null;
-        if(!hasApiKey || !API_KEY.Equals(headerApiKey))
+        if(!hasApiKey || !apiKey.Equals(headerApiKey))
             return Results.Unauthorized();
 
         return await next(context);
