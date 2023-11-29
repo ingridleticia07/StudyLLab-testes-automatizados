@@ -15,10 +15,6 @@ namespace StudyLabAPI.Models
 
         public RespostaForumModel respostaForum { get;set; }
 
-        [ForeignKey("fk_topico")]
-
-        public TopicoDiscussaoModel topicoDiscussao { get;set; }
-
         [ForeignKey("fk_usuario")]
 
         public UsuarioModel usuario { get; set; }

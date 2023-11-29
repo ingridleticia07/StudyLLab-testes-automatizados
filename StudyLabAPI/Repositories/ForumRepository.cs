@@ -24,15 +24,14 @@ namespace StudyLabAPI.Repositories
                 return;
             }
             forumForUpdate.respostaForum = forumModel.respostaForum;
-            forumForUpdate.topicoDiscussao = forumModel.topicoDiscussao;
             forumForUpdate.usuario = forumModel.usuario;
         }
 
         public async Task<List<ForumModel>> GetAllForums()
         {
             List<ForumModel> forumModel = await dbContext.forum
-            .Include(value => value.respostaForum).Include(value => value.topicoDiscussao)
-            .Include(value => value.topicoDiscussao).Include(value => value.usuario).Include(value => value.respostaForum.topicoDiscussao.disciplina)
+            .Include(value => value.respostaForum)
+            .Include(value => value.respostaForum.topicoDiscussao).Include(value => value.usuario).Include(value => value.respostaForum.topicoDiscussao.disciplina)
             .ToListAsync();
             return forumModel;
         }
@@ -41,8 +40,7 @@ namespace StudyLabAPI.Repositories
         {
             //TODO: Provavelmente usar AnyAsync seja melhor
             bool existingForum = await dbContext.forum
-                .Where(value => (value.respostaForum == forum.respostaForum &&
-                    value.topicoDiscussao == forum.topicoDiscussao))
+                .Where(value => (value.respostaForum == forum.respostaForum))
                 .AnyAsync();
 
             return existingForum;
@@ -52,17 +50,16 @@ namespace StudyLabAPI.Repositories
         {
             //TODO: Provavelmente usar AnyAsync seja melhor
             bool existingForum = await dbContext.forum
-                .Where(value => (value.respostaForum == forum.respostaForum &&
-                    value.topicoDiscussao == forum.topicoDiscussao) && value.idForum == forum.idForum)
+                .Where(value => (value.respostaForum == forum.respostaForum) && value.idForum == forum.idForum)
                 .AnyAsync();
 
             return existingForum;
         }
-        public async Task<List<ForumModel?>> GetForumByTopico(ForumModel forumModel)
+        public async Task<List<ForumModel?>> GetForumByTopico(TopicoDiscussaoModel topico)
         {
             List<ForumModel> forumByTopico = await dbContext.forum
-            .Where(value => value.respostaForum.topicoDiscussao == forumModel.topicoDiscussao).Include(value => value.respostaForum).Include(value => value.topicoDiscussao)
-            .Include(value => value.topicoDiscussao).Include(value => value.usuario).Include(value => value.respostaForum.topicoDiscussao.disciplina)
+            .Where(value => value.respostaForum.topicoDiscussao == topico).Include(value => value.respostaForum).Include(value => value.respostaForum.topicoDiscussao)
+            .Include(value => value.usuario).Include(value => value.respostaForum.topicoDiscussao.disciplina)
             .ToListAsync();
             return forumByTopico;
         }

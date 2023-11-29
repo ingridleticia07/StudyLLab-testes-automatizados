@@ -10,7 +10,7 @@ namespace StudyLabAPI.Repositories
 
         public Task<List<ForumModel?>> GetAllForums();
 
-        public Task<List<ForumModel?>> GetForumByTopico(ForumModel forum);
+        public Task<List<ForumModel?>> GetForumByTopico(TopicoDiscussaoModel topico);
 
         public Task<bool> VerifyForumCreated(ForumModel Forum);
 

@@ -351,14 +351,14 @@ namespace StudyLabAPI.Endpoints
         
         [ProducesResponseType(typeof(List<ForumModel>), 200)]
         private static async Task<IResult> GetForumByTopico(HttpContext context,
-        [FromBody] ResgisteredForumModel forumByTopico,
+        [FromBody] RegisteredTopicoDiscussaoRequestModel topico,
         [FromServices] IForumController controller)
         {
 
             List<ForumModel>? result;
             try
             {
-                result = await controller.GetForumByTopico(forumByTopico);
+                result = await controller.GetForumByTopico(topico);
             }
             catch (UsuarioNotFoundException e)
             {

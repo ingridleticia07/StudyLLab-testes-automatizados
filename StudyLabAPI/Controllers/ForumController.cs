@@ -222,7 +222,6 @@ namespace StudyLabAPI.Controllers
             ForumModel NovoForum = new()
             {
                 respostaForum = relatedRespostaForum,
-                topicoDiscussao = relatedTopicoDiscussao,
                 usuario = relatedUsuario
             };
             await forumRepository.CreateForum(NovoForum);
@@ -242,15 +241,12 @@ namespace StudyLabAPI.Controllers
 
             RespostaForumModel? relatedRespostaForum = await respostaforumRepository.GetRespostaForumById(respostaForumId);
 
-            TopicoDiscussaoModel? relatedTopicoDiscussao = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoId);
-
             UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId);
 
             ForumModel forumForUpdate = new()
             {
                 idForum = forum.idForum,
                 respostaForum = relatedRespostaForum,
-                topicoDiscussao = relatedTopicoDiscussao,
                 usuario = relatedUsuario
             };
 
@@ -287,8 +283,6 @@ namespace StudyLabAPI.Controllers
 
             int usuarioId = forum.respostaForum;
 
-            TopicoDiscussaoModel? relatedTopico = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoId);
-
             RespostaForumModel? relatedRespostaForum = await respostaforumRepository.GetRespostaForumById(forumId);
 
             UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId);
@@ -296,7 +290,6 @@ namespace StudyLabAPI.Controllers
             ForumModel respostaForumModel = new()
             {
                 respostaForum = relatedRespostaForum,
-                topicoDiscussao = relatedTopico,
                 usuario = relatedUsuario
             };
             bool returnCheckForumExists = await forumRepository.VerifyForumCreated(respostaForumModel);
@@ -311,8 +304,6 @@ namespace StudyLabAPI.Controllers
 
             int usuarioId = forum.respostaForum;
 
-            TopicoDiscussaoModel? relatedTopico = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoId);
-
             RespostaForumModel? relatedRespostaForum = await respostaforumRepository.GetRespostaForumById(forumId);
 
             UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId);
@@ -321,25 +312,17 @@ namespace StudyLabAPI.Controllers
             {
                 idForum = forum.idForum,
                 respostaForum = relatedRespostaForum,
-                topicoDiscussao = relatedTopico,
                 usuario = relatedUsuario
             };
             bool returnCheckForumExists = await forumRepository.VerifyForumCreatedWithId(respostaForumModel);
             return returnCheckForumExists;
         }
 
-        public async Task<List<ForumModel?>> GetForumByTopico(ResgisteredForumModel forumModel)
+        public async Task<List<ForumModel?>> GetForumByTopico(RegisteredTopicoDiscussaoRequestModel topico)
         {
-            int topicoId = forumModel.topicoDiscussao;
+            TopicoDiscussaoModel? relatedTopico = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topico.idTopico);
 
-            TopicoDiscussaoModel? relatedTopico = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoId);
-
-            ForumModel forum = new()
-            {
-                topicoDiscussao = relatedTopico
-            };
-
-            List<ForumModel> forumLista = await forumRepository.GetForumByTopico(forum);
+            List<ForumModel> forumLista = await forumRepository.GetForumByTopico(relatedTopico);
 
             return forumLista;
         }
