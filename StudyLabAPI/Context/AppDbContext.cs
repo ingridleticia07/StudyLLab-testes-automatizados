@@ -24,6 +24,8 @@ public class AppDbContext : DbContext
 
     public DbSet<ForumModel> forum { get; set; } = null!;
 
+    public DbSet<DocumentoModel> documento { get; set; } = null!;
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
         optionsBuilder.UseNpgsql(_connectionString);
 }
