@@ -144,6 +144,7 @@ public static class Di
         services.AddScoped<ITopicoDiscussaoRepository,TopicoDiscussaoRepository>();
         services.AddScoped<IRespostaForumRepository, RespostaForumRepository>();
         services.AddScoped<IForumRepository, ForumRepository>();
+        services.AddScoped<IDocumentoRepository, DocumentoRepository>();
         return services;
     }
     /// <summary>
@@ -156,6 +157,7 @@ public static class Di
         services.AddScoped<IAuthController, AuthController>();
         services.AddScoped<IDisciplinaController, DisciplinaController>();
         services.AddScoped<IForumController, ForumController>();
+        services.AddScoped<IDocumentoController, DocumentoController>();
         return services;
     }
 }

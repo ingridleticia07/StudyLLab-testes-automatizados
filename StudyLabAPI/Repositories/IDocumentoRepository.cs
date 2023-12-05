@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using StudyLabAPI.Models;
+﻿using StudyLabAPI.Models;
 
 namespace StudyLabAPI.Repositories
 {

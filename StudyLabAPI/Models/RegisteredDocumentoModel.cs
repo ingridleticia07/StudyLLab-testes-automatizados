@@ -12,6 +12,6 @@ namespace StudyLabAPI.Models
 
         public int tipoMaterial { get; set; }
 
-        public int topico { get; set; }
+        public int Idtopico { get; set; }
     }
 }
