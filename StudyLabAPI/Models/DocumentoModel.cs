@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using StudyLabAPI.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StudyLabAPI.Models
@@ -18,7 +19,7 @@ namespace StudyLabAPI.Models
         public string diretorioMaterial { get; set; }
 
         [Column("tipo_material")]
-        public int tipoMaterial { get; set; }
+        public tipoMaterialEnum tipoMaterial { get; set; }
 
         [ForeignKey("fk_topico")]
 

@@ -65,4 +65,9 @@ RouteGroupBuilder forumGroup = app.MapGroup("forum")
     .WithTags("Forum");
 forumGroup.MapForumEndpoints();
 
+RouteGroupBuilder materialGroup = app.MapGroup("material")
+    .AddEndpointFilter<ApiKeyFilter>()
+    .WithTags("Material");
+materialGroup.MapMaterialEndpoints();
+
 app.Run();

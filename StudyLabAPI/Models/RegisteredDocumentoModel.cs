@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StudyLabAPI.Models.Enums;
 
 namespace StudyLabAPI.Models
 {
@@ -10,7 +11,7 @@ namespace StudyLabAPI.Models
 
         public string diretorioMaterial { get; set; }
 
-        public int tipoMaterial { get; set; }
+        public tipoMaterialEnum TipoMaterial { get; set; }
 
         public int Idtopico { get; set; }
     }

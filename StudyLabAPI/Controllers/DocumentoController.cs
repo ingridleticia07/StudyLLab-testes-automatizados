@@ -45,7 +45,7 @@ namespace StudyLabAPI.Controllers
             {
                 dataCadastro = DateOnly.FromDateTime(DateTime.Now),
                 diretorioMaterial = documento.diretorioMaterial,
-                tipoMaterial = documento.tipoMaterial,
+                tipoMaterial = documento.TipoMaterial,
                 topico = relatedToico,
             };
             await documentoRepository.CreateDocumento(novoDocumento);
@@ -92,7 +92,7 @@ namespace StudyLabAPI.Controllers
                 idDocumento = documentoUpdate.idDocumento,
                 dataCadastro = DateOnly.FromDateTime(DateTime.Now),
                 diretorioMaterial = documentoUpdate.diretorioMaterial,
-                tipoMaterial = documentoUpdate.tipoMaterial,
+                tipoMaterial = documentoUpdate.TipoMaterial,
                 topico = relatedTopico,
             };
             await documentoRepository.UpdateDocumento(documentoUpdateObj);
