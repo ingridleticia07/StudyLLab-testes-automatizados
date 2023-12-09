@@ -39,14 +39,14 @@ namespace StudyLabAPI.Controllers
         {
             int topicoId = documento.Idtopico;
 
-            TopicoDiscussaoModel? relatedToico = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoId);
+            TopicoDiscussaoModel? relatedTopico = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoId);
 
             DocumentoModel novoDocumento = new()
             {
                 dataCadastro = DateOnly.FromDateTime(DateTime.Now),
                 diretorioMaterial = documento.diretorioMaterial,
                 tipoMaterial = documento.TipoMaterial,
-                topico = relatedToico,
+                topico = relatedTopico,
             };
             await documentoRepository.CreateDocumento(novoDocumento);
 
