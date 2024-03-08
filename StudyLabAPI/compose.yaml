@@ -1,0 +1,36 @@
+volumes:
+  db_data:
+
+networks:
+  api_net:
+    driver: bridge
+
+services:
+  api:
+    container_name: study_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 7125:80
+    env_file:
+      - .env
+    depends_on:
+      - study_db
+    networks:
+      - api_net
+
+  study_db:
+    container_name: study_db
+    image: postgres
+    environment:
+      POSTGRES_DB: study
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - 5432:5432
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./schemaSql/ddl.sql:/docker-entrypoint-initdb.d/ddl.sql:ro
+    networks:
+      - api_net
