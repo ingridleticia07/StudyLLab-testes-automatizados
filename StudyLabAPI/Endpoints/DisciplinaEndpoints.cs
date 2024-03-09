@@ -1,9 +1,7 @@
 ﻿using StudyLabAPI.Summaries;
 using Microsoft.AspNetCore.Mvc;
 using StudyLabAPI.Controllers;
-using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models;
-using StudyLabAPI.Models.Enums;
 
 namespace StudyLabAPI.Endpoints;
 public static class DisciplinaEndpoints
@@ -34,10 +32,6 @@ public static class DisciplinaEndpoints
         {
             result = await controller.GetAllDisciplinas();
         }
-        catch (UsuarioNotFoundException e)
-        {
-            return Results.NotFound(e.Message);
-        }
         catch (Exception e)
         {
             return Results.BadRequest(e.Message);
@@ -61,10 +55,6 @@ public static class DisciplinaEndpoints
             else
                 return Results.Content("Disciplina inexistente",
                 statusCode: StatusCodes.Status409Conflict);
-        }
-        catch (UsuarioNotFoundException e)
-        {
-            return Results.NotFound(e.Message);
         }
         catch (Exception e)
         {
@@ -129,18 +119,18 @@ public static class DisciplinaEndpoints
     
     [ProducesResponseType(typeof(DisciplinaModel), 200)]
     private static async Task<IResult> DeleteDisciplina(HttpContext context,
-        [FromBody] DisciplinaModel disciplinaModel, //TODO: Precissa do modelo inteiro para deletar?
+        [FromBody] int disciplinaIdentifier, //TODO: Precissa do modelo inteiro para deletar?
         [FromServices] IDisciplinaController controller)
     {
         try
         {
-            await controller.DeleteDisciplina(disciplinaModel);
+            await controller.DeleteDisciplina(disciplinaIdentifier);
         }
         catch (Exception e)
         {
             return Results.BadRequest(e.Message);
         }
 
-        return Results.Ok(disciplinaModel);
+        return Results.Ok(disciplinaIdentifier);
     }
 }

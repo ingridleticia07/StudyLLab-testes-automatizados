@@ -1,4 +1,5 @@
-﻿using StudyLabAPI.Exceptions;
+﻿using Microsoft.AspNetCore.Mvc;
+using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models;
 using StudyLabAPI.Models.Enums;
 using StudyLabAPI.Repositories;
@@ -128,12 +129,17 @@ namespace StudyLabAPI.Controllers
             return (DisciplinaReturnUpdateObj);
         }
 
-        public async Task DeleteDisciplina(DisciplinaModel disciplina)
+        public async Task DeleteDisciplina(int disciplinaIdentifier)
         {
-            //verificar se disciplina existe, por meio do buscar disciplina
             //para em caso de exstir, excluir a mesma
-            await disciplinaRepository.DeleteDisciplina(disciplina.idDisciplina);
-            await disciplinaRepository.Flush();
+
+            bool disciplinaExists = await disciplinaRepository.VerifyDisciplinaCreatedWithId(disciplinaIdentifier);
+
+            if (disciplinaExists == true)
+            {
+                await disciplinaRepository.DeleteDisciplina(disciplinaIdentifier);
+                await disciplinaRepository.Flush();
+            }
         }
     }
 }

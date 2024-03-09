@@ -63,5 +63,5 @@ public interface IDisciplinaController
     /// </summary>
     /// <param name="idDisciplina">Modelo da disciplina com ID da entidade que será excluida</param>
     /// <returns>Representa uma tarefa assíncrona</returns>
-    public Task DeleteDisciplina(DisciplinaModel idDisciplina);
+    public Task DeleteDisciplina(int disciplinaIdentifier);
 }
