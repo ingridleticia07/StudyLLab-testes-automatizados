@@ -96,9 +96,9 @@ public static class DisciplinaEndpoints
         [FromBody] RegisterDisciplinaRequestModel novaDisciplina,
         [FromServices] IDisciplinaController controller)
     {
-        bool checkIfObjectStillExists = await controller.VerifyDisciplinaCreatedWithId(novaDisciplina.idDisciplina);
+        bool checkIfDisciplinaExists = await controller.VerifyDisciplinaCreated(novaDisciplina);
 
-        if(checkIfObjectStillExists == false)
+        if (checkIfDisciplinaExists == false)
         {
             try
             {
