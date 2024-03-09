@@ -42,7 +42,7 @@ public interface IDisciplinaController
     /// Deve conter o ID</param>
     /// <returns>Representa uma tarefa assíncrona,
     /// ela retorna <c>true</c> se existir, caso contrário, <c>false</c></returns>
-    public Task<bool> VerifyDisciplinaCreatedWithId(RegisterDisciplinaRequestModel disciplina);
+    public Task<bool> VerifyDisciplinaCreatedWithId(int disciplinaId);
     /// <summary>
     /// Trata da requisição de criação de uma nova disciplina.
     /// </summary>

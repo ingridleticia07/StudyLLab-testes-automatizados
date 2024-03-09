@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using StudyLabAPI.Controllers;
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models;
-
+using StudyLabAPI.Models.Enums;
 
 namespace StudyLabAPI.Endpoints;
 public static class DisciplinaEndpoints
@@ -54,7 +54,13 @@ public static class DisciplinaEndpoints
         DisciplinaReadModel? result;
         try
         {
-            result = await controller.GetDisciplinaById(idDisciplina);
+            bool disciplinaExists = await controller.VerifyDisciplinaCreatedWithId(idDisciplina);
+
+            if(disciplinaExists == true)
+                result = await controller.GetDisciplinaById(idDisciplina);
+            else
+                return Results.Content("Disciplina inexistente",
+                statusCode: StatusCodes.Status409Conflict);
         }
         catch (UsuarioNotFoundException e)
         {
@@ -81,10 +87,6 @@ public static class DisciplinaEndpoints
             {
                 await controller.CreateDisciplina(novaDisciplina);
             }
-            catch (UsuarioNotFoundException e)
-            {
-                return Results.NotFound(e.Message);
-            }
             catch (Exception e)
             {
                 return Results.BadRequest(e.Message);
@@ -104,17 +106,13 @@ public static class DisciplinaEndpoints
         [FromBody] RegisterDisciplinaRequestModel novaDisciplina,
         [FromServices] IDisciplinaController controller)
     {
-        var checkIfObjectStillExists = await controller.VerifyDisciplinaCreatedWithId(novaDisciplina);
+        bool checkIfObjectStillExists = await controller.VerifyDisciplinaCreatedWithId(novaDisciplina.idDisciplina);
 
         if(checkIfObjectStillExists == false)
         {
             try
             {
                 await controller.UpdateDisciplina(novaDisciplina);
-            }
-            catch (UsuarioNotFoundException e)
-            {
-                return Results.NotFound(e.Message);
             }
             catch (Exception e)
             {
@@ -125,7 +123,6 @@ public static class DisciplinaEndpoints
             return Results.Content("Disciplina existente", 
                 statusCode: StatusCodes.Status409Conflict);
         }
-        
 
         return Results.Ok(novaDisciplina);
     }
@@ -138,10 +135,6 @@ public static class DisciplinaEndpoints
         try
         {
             await controller.DeleteDisciplina(disciplinaModel);
-        }
-        catch (UsuarioNotFoundException e)
-        {
-            return Results.NotFound(e.Message);
         }
         catch (Exception e)
         {

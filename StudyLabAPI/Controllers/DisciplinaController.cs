@@ -1,5 +1,6 @@
 ﻿using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.Enums;
 using StudyLabAPI.Repositories;
 using ILogger = Serilog.ILogger;
 namespace StudyLabAPI.Controllers
@@ -21,25 +22,19 @@ namespace StudyLabAPI.Controllers
         public async Task<DisciplinaReadModel> GetDisciplinaById(int id)
         {
             DisciplinaModel? disciplinasListadas = await disciplinaRepository.GetDisciplinaById(id);
-            if (disciplinasListadas is null)
-            {
-                return (DisciplinaReadModel)Results.Ok("oo");
-            }
-            return new()
+
+            return new() 
             {
                 idDisciplina = disciplinasListadas.idDisciplina,
                 nomeDisciplina = disciplinasListadas.nomeDisciplina,
                 professorDisciplina = disciplinasListadas.professorDisciplina,
                 curso = (disciplinasListadas.curso != null) ? new (disciplinasListadas.curso.nomeCurso) : null
-
             };
         }
         public async Task<List<DisciplinaReadModel>> GetAllDisciplinas()
         {
-            // Implement your logic to get all DisciplinaModel objects
-            // You can use your repository to fetch the data
             List<DisciplinaModel> disciplinasListadas = await disciplinaRepository.GetAllDisciplinas();
-            // You should map DisciplinaModel to DisciplinaReadModel and return the list
+
             List<DisciplinaReadModel> result = disciplinasListadas.Select(disciplina => new DisciplinaReadModel
             {
                 idDisciplina = disciplina.idDisciplina,
@@ -71,22 +66,9 @@ namespace StudyLabAPI.Controllers
             bool returnCheckDisciplinaExists = await disciplinaRepository.VerifyDisciplinaCreated(novaDisciplina);
             return returnCheckDisciplinaExists;
         }
-        public async Task<bool> VerifyDisciplinaCreatedWithId(RegisterDisciplinaRequestModel disciplinaModel)
+        public async Task<bool> VerifyDisciplinaCreatedWithId(int disciplinaId)
         {
-            int cursoId = disciplinaModel.curso;
-
-            CursoModel? relatedCurso = await cursoRepository.GetCursoById(cursoId);
-
-            DisciplinaModel novaDisciplina = new()
-            {
-                idDisciplina = disciplinaModel.idDisciplina,
-                nomeDisciplina = disciplinaModel.nomeDisciplina,
-                professorDisciplina = disciplinaModel.professorDisciplina,
-                curso = relatedCurso,
-                quantidadeAluno = disciplinaModel.quantidadeAluno,
-                codigoDisciplina = disciplinaModel.codigoDisciplina
-            };
-            bool returnCheckDisciplinaExists = await disciplinaRepository.VerifyDisciplinaCreatedWithId(novaDisciplina);
+            bool returnCheckDisciplinaExists = await disciplinaRepository.VerifyDisciplinaCreatedWithId(disciplinaId);
             return returnCheckDisciplinaExists;
         }
 

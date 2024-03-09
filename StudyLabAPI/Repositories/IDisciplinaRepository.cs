@@ -29,7 +29,7 @@ public interface IDisciplinaRepository
     /// <returns>Representa uma tarefa asincrona do banco,
     /// ela retorna <c>true</c> se a disciplina existir no banco,
     /// caso contrário, retorna <c>false</c></returns>
-    public Task<bool> VerifyDisciplinaCreatedWithId(DisciplinaModel disciplina);
+    public Task<bool> VerifyDisciplinaCreatedWithId(int disciplinaId);
     /// <summary>
     /// Recupera todas as disciplinas no banco.
     /// </summary>

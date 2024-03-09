@@ -24,11 +24,10 @@ namespace StudyLabAPI.Repositories
         }
         
         //TODO: Mesma coisa do GetDisciplinaById?
-        public async Task<bool> VerifyDisciplinaCreatedWithId(DisciplinaModel disciplina)
+        public async Task<bool> VerifyDisciplinaCreatedWithId(int disciplinaIdentifier)
         {
             bool existingDisciplina = await dbContext.disciplinas
-                .AnyAsync(d => d.nomeDisciplina == disciplina.nomeDisciplina || d.codigoDisciplina == disciplina.codigoDisciplina 
-                    && d.idDisciplina != disciplina.idDisciplina);
+                .AnyAsync(d => d.idDisciplina == disciplinaIdentifier);
 
             return existingDisciplina;
         }
