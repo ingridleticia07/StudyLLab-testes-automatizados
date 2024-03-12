@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using StudyLabAPI.Exceptions;
-using StudyLabAPI.Models;
-using StudyLabAPI.Models.Enums;
+﻿using StudyLabAPI.Models;
 using StudyLabAPI.Repositories;
 using ILogger = Serilog.ILogger;
 namespace StudyLabAPI.Controllers
@@ -24,12 +21,16 @@ namespace StudyLabAPI.Controllers
         {
             DisciplinaModel? disciplinasListadas = await disciplinaRepository.GetDisciplinaById(id);
 
+            CursoModel? relatedCurso = await cursoRepository.GetCursoById(disciplinasListadas.curso.idCurso);
+
             return new() 
             {
                 idDisciplina = disciplinasListadas.idDisciplina,
                 nomeDisciplina = disciplinasListadas.nomeDisciplina,
                 professorDisciplina = disciplinasListadas.professorDisciplina,
-                curso = (disciplinasListadas.curso != null) ? new (disciplinasListadas.curso.nomeCurso) : null
+                quantidadeAluno = disciplinasListadas.quantidadeAluno,
+                codigoDisciplina = disciplinasListadas.codigoDisciplina,
+                curso = relatedCurso
             };
         }
         public async Task<List<DisciplinaReadModel>> GetAllDisciplinas()
@@ -42,7 +43,7 @@ namespace StudyLabAPI.Controllers
                 nomeDisciplina = disciplina.nomeDisciplina,
                 professorDisciplina = disciplina.professorDisciplina,
                 quantidadeAluno = disciplina.quantidadeAluno,
-                curso = (disciplina.curso != null) ? new (disciplina.curso.nomeCurso) : null,
+                curso = (disciplina.curso != null) ? (disciplina.curso) : null,
                 codigoDisciplina = disciplina.codigoDisciplina
 
             }).ToList();

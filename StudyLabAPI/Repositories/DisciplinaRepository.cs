@@ -11,8 +11,19 @@ namespace StudyLabAPI.Repositories
             this.dbContext = dbContext;
         }
 
-        public async Task<DisciplinaModel?> GetDisciplinaById(int id) =>
-            await dbContext.disciplinas.FindAsync(id);
+        public async Task<DisciplinaModel?> GetDisciplinaById(int id)
+        {
+            var disciplina = await dbContext.disciplinas.FindAsync(id);
+
+            if (disciplina != null)
+            {
+                await dbContext.Entry(disciplina)
+                    .Reference(d => d.curso)
+                    .LoadAsync();
+            }
+
+            return disciplina;
+        }
 
         public async Task<bool> VerifyDisciplinaCreated(DisciplinaModel disciplina)
         {

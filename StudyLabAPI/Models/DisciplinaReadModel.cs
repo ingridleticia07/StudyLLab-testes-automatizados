@@ -8,7 +8,7 @@
 
         public string professorDisciplina { get; set; }
 
-        public CursoReadModel curso { get; init; }
+        public CursoModel curso { get; init; }
 
         public int ?quantidadeAluno { get; set; }
         public string codigoDisciplina { get; set; }
