@@ -7,6 +7,7 @@ using StudyLabAPI.Models.Enums;
 using StudyLabAPI.Repositories;
 using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Email.Models;
+using StudyLabAPI.Services.Email.Models.Template;
 using StudyLabAPI.Services.Hash;
 using StudyLabAPI.Services.Jwt;
 using ILogger = Serilog.ILogger;
@@ -379,16 +380,17 @@ public class AuthController : IAuthController
         }
         return emailSended;
     }
-    private async Task<bool> SendRegisterEmail(UsuarioModel usuario, CodigoUsuarioModel confirmCode)
+    async private Task<bool> SendRegisterEmail(UsuarioModel usuario, CodigoUsuarioModel confirmCode)
     {
         EmailIntent emailIntent = new()
         {
             toEmail = usuario.emailUsuario,
             subject = "Bem vindo ao StudyLab",
-            message = $"""
-                        Olá {usuario.nomeUsuario}, seja bem vindo ao StudyLab.
-                        Aqui está seu codigo de confirmação de email: {confirmCode.codigo}
-                       """
+            template = new VerificationCodeEmailTemplate
+            {
+                username = usuario.nomeUsuario,
+                verificationCode = confirmCode.codigo
+            }
         };
         
         try
@@ -399,18 +401,17 @@ public class AuthController : IAuthController
         return true;
     }
     
-    private async Task<bool> SendResetPasswordEmail(UsuarioModel usuario, CodigoUsuarioModel resetCode)
+    async private Task<bool> SendResetPasswordEmail(UsuarioModel usuario, CodigoUsuarioModel resetCode)
     {
         EmailIntent emailIntent = new()
         {
             toEmail = usuario.emailUsuario,
             subject = "Redefinição de senha",
-            message = $"""
-                        Olá {usuario.nomeUsuario}, você solicitou uma redefinição de senha.
-                        Aqui está seu codigo de redefinição de senha: {resetCode.codigo}.
-                        
-                        Se você não solicitou uma redefinição de senha, ignore este email.
-                       """
+            template = new ResetPasswordEmailTemplate
+            {
+                username = usuario.nomeUsuario,
+                resetPasswordCode = resetCode.codigo
+            }
         };
 
         try
