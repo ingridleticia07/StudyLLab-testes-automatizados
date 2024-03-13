@@ -1,8 +1,6 @@
 using System.Net;
 using System.Net.Mail;
-using Microsoft.Extensions.Options;
 using StudyLabAPI.Exceptions;
-using StudyLabAPI.Models.Options;
 using StudyLabAPI.Services.Email.Models;
 using StudyLabAPI.Utils;
 using MailMessage = System.Net.Mail.MailMessage;
@@ -33,16 +31,18 @@ public class EmailService : IDisposable, IEmailService
         {
             Credentials = new NetworkCredential(_smtpEmail, _smtpPassword),
             EnableSsl = true,
-            UseDefaultCredentials = false
+            UseDefaultCredentials = false,
         };
     }
     
     public async Task SendEmail(EmailIntent intent)
     {
+        string emailBody = intent.template.FormatWithParams();
         MailMessage internalMailScope = new(from: _smtpEmail, to: intent.toEmail)
         {
             Subject = intent.subject,
-            Body = intent.message,
+            Body = emailBody,
+            IsBodyHtml = true,
         };
         await smtpClient.SendMailAsync(internalMailScope);
     }
