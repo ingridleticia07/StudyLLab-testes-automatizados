@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudyLabAPI", "StudyLabAPI.csproj", "{9D8F1DB4-0FE7-47A7-AB03-FE93BEE18486}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudyLabAPI.Test", "StudyLabAPI.Test\StudyLabAPI.Test.csproj", "{441BC545-D098-4954-9668-CA8B154BD805}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9D8F1DB4-0FE7-47A7-AB03-FE93BEE18486}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D8F1DB4-0FE7-47A7-AB03-FE93BEE18486}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D8F1DB4-0FE7-47A7-AB03-FE93BEE18486}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D8F1DB4-0FE7-47A7-AB03-FE93BEE18486}.Release|Any CPU.Build.0 = Release|Any CPU
+		{441BC545-D098-4954-9668-CA8B154BD805}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{441BC545-D098-4954-9668-CA8B154BD805}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{441BC545-D098-4954-9668-CA8B154BD805}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{441BC545-D098-4954-9668-CA8B154BD805}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

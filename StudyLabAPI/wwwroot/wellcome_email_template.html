@@ -1,0 +1,84 @@
+<!--:root {
+    --font-study-color: #FF8700;
+  }-->
+
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <title>Template email</title>
+  </head>
+  <body style="font-family: Poppins, sans-serif; font-weight: 400; font-style: normal; background-color: #FF8700">
+    <center style="width: 100%;
+    table-layout: fixed;
+    background-color: #FF8700;">
+      <table style="background-color: #ffffff;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 600px;
+      padding: 10px;
+      border-spacing: 0;">
+        <tr>
+          <td>
+            <table style="border-spacing: 0; width: 100%;">
+              <tr>
+                <td>
+                  <div style="font-family: Urbanist, sans-serif;
+                  font-optical-sizing: auto;
+                  font-weight: 400;
+                  font-style: normal; color: #FF8700;
+                  font: urbanist-regular;
+                  font-size: 32px;">
+                    <span id="study-logo">Study</span><span style="font-family: Urbanist, sans-serif;
+                    font-optical-sizing: auto;
+                    font-weight: 700;
+                    font-style: normal;">Lab</span>
+                  </div>
+                </td>
+              </tr>
+            </table>
+            <table>
+              <tr>
+                <td style="font-size: large; font-weight: bold;">
+                  Bem-vindo(a) {{ username }} 🎉, sua jornada começa aqui.
+                </td>
+                <tr>
+                  <td>
+                    <small>Verifique seu email para confirmar sua conta e começar a aprender.</small>
+                  </td>
+                </tr>
+              </tr>
+            </table>
+            <table style="border-spacing: 0; width: 100%;">
+              <tr style="text-align: center;">
+                <td>
+                  <h3>Código de verificação</h3>
+                </td>
+              </tr>
+            </table>
+            <table style="border-spacing: 0; width: 100%;">
+              <tr style="text-align: center;">
+                <td>
+                  <h2>{{ code }}</h2>
+                </td>
+              </tr>
+            </table>
+            <table style="padding-top: 25px">
+              <tr class="text-center">
+                <td>
+                  <small>
+                    Todos os direitos reservados © LearningLab 2024
+                  </small>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </center>
+  </body>
+</html>
