@@ -40,7 +40,7 @@ public class JwtService : IJwtService
             SigningCredentials = credentials,
             Issuer = _options.issuer,
             IssuedAt = DateTime.Now,
-            Expires = DateTime.Now.AddHours(5),
+            Expires = DateTime.Now.AddDays(1),
             Audience = _options.audience,
             Subject = payload.CreateClaimsIdentity()
         });
