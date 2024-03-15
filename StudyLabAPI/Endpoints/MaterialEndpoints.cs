@@ -23,10 +23,6 @@ namespace StudyLabAPI.Endpoints
             {
                 await controller.CreateDocumento(novoDocumento);
             }
-            catch (UsuarioNotFoundException e)
-            {
-                return Results.NotFound(e.Message);
-            }
             catch (Exception e)
             {
                 return Results.BadRequest(e.Message);

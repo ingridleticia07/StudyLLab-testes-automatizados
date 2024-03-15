@@ -50,10 +50,6 @@ namespace StudyLabAPI.Endpoints
             {
                 result = await controller.GetAllTopicosDiscussao();
             }
-            catch (UsuarioNotFoundException e)
-            {
-                return Results.NotFound(e.Message);
-            }
             catch (Exception e)
             {
                 return Results.BadRequest(e.Message);
@@ -74,10 +70,6 @@ namespace StudyLabAPI.Endpoints
                 try
                 {
                     await controller.CreateTopicoDiscussao(novoTopico);
-                }
-                catch (UsuarioNotFoundException e)
-                {
-                    return Results.NotFound(e.Message);
                 }
                 catch (Exception e)
                 {
@@ -105,10 +97,6 @@ namespace StudyLabAPI.Endpoints
                 {
                     await controller.UpdateTopicoDiscussao(topicoDiscussaoUpdate);
                 }
-                catch (UsuarioNotFoundException e)
-                {
-                    return Results.NotFound(e.Message);
-                }
                 catch (Exception e)
                 {
                     return Results.BadRequest(e.Message);
@@ -134,10 +122,6 @@ namespace StudyLabAPI.Endpoints
             {
                 await controller.DeleteTopicoDiscussao(topicoDiscussaoModel);
             }
-            catch (UsuarioNotFoundException e)
-            {
-                return Results.NotFound(e.Message);
-            }
             catch (Exception e)
             {
                 return Results.BadRequest(e.Message);
@@ -154,10 +138,6 @@ namespace StudyLabAPI.Endpoints
             try
             {
                 result = await controller.GetAllRespostasForum();
-            }
-            catch (UsuarioNotFoundException e)
-            {
-                return Results.NotFound(e.Message);
             }
             catch (Exception e)
             {
@@ -179,10 +159,6 @@ namespace StudyLabAPI.Endpoints
                 try
                 {
                     await controller.CreateRespostaForum(newRespostaForum);
-                }
-                catch (UsuarioNotFoundException e)
-                {
-                    return Results.NotFound(e.Message);
                 }
                 catch (Exception e)
                 {
@@ -210,10 +186,6 @@ namespace StudyLabAPI.Endpoints
                 {
                     await controller.UpdateRespostaForum(newRespostaForum);
                 }
-                catch (UsuarioNotFoundException e)
-                {
-                    return Results.NotFound(e.Message);
-                }
                 catch (Exception e)
                 {
                     return Results.BadRequest(e.Message);
@@ -237,10 +209,6 @@ namespace StudyLabAPI.Endpoints
             {
                 await controller.DeleteRespostaForum(respostaForumModel);
             }
-            catch (UsuarioNotFoundException e)
-            {
-                return Results.NotFound(e.Message);
-            }
             catch (Exception e)
             {
                 return Results.BadRequest(e.Message);
@@ -260,10 +228,6 @@ namespace StudyLabAPI.Endpoints
                 try
                 {
                     await controller.CreateForum(novoForum);
-                }
-                catch (UsuarioNotFoundException e)
-                {
-                    return Results.NotFound(e.Message);
                 }
                 catch (Exception e)
                 {
@@ -289,10 +253,6 @@ namespace StudyLabAPI.Endpoints
                 {
                     await controller.UpdateForum(forumForUpdate);
                 }
-                catch (UsuarioNotFoundException e)
-                {
-                    return Results.NotFound(e.Message);
-                }
                 catch (Exception e)
                 {
                     return Results.BadRequest(e.Message);
@@ -316,10 +276,6 @@ namespace StudyLabAPI.Endpoints
             {
                 result = await controller.GetAllForums();
             }
-            catch (UsuarioNotFoundException e)
-            {
-                return Results.NotFound(e.Message);
-            }
             catch (Exception e)
             {
                 return Results.BadRequest(e.Message);
@@ -336,10 +292,6 @@ namespace StudyLabAPI.Endpoints
             try
             {
                 await controller.DeleteForum(forumModel);
-            }
-            catch (UsuarioNotFoundException e)
-            {
-                return Results.NotFound(e.Message);
             }
             catch (Exception e)
             {
@@ -359,10 +311,6 @@ namespace StudyLabAPI.Endpoints
             try
             {
                 result = await controller.GetForumByTopico(topico);
-            }
-            catch (UsuarioNotFoundException e)
-            {
-                return Results.NotFound(e.Message);
             }
             catch (Exception e)
             {
