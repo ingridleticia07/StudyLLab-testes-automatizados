@@ -27,10 +27,10 @@ public class VerificationCodeEmailTemplate : IEmailTemplate
                                     <head>
                                       <meta charset="UTF-8" />
                                       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                                      <title>Template email</title>
                                       <link rel="preconnect" href="https://fonts.googleapis.com">
                                       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                                       <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+                                      <title>Template email</title>
                                     </head>
                                     <body style="font-family: Poppins, sans-serif; font-weight: 400; font-style: normal; background-color: #FF8700">
                                       <center style="width: 100%;
@@ -64,7 +64,7 @@ public class VerificationCodeEmailTemplate : IEmailTemplate
                                               <table>
                                                 <tr>
                                                   <td style="font-size: large; font-weight: bold;">
-                                                    Bem-vindo(a) 🎊 {{ username }}, sua jornada começa aqui.
+                                                    Bem-vindo(a) {{ username }} 🎉, sua jornada começa aqui.
                                                   </td>
                                                   <tr>
                                                     <td>
@@ -76,7 +76,7 @@ public class VerificationCodeEmailTemplate : IEmailTemplate
                                               <table style="border-spacing: 0; width: 100%;">
                                                 <tr style="text-align: center;">
                                                   <td>
-                                                    <h3>Codigo de verificação</h3>
+                                                    <h3>Código de verificação</h3>
                                                   </td>
                                                 </tr>
                                               </table>
@@ -88,7 +88,7 @@ public class VerificationCodeEmailTemplate : IEmailTemplate
                                                 </tr>
                                               </table>
                                               <table style="padding-top: 25px">
-                                                <tr>
+                                                <tr class="text-center">
                                                   <td>
                                                     <small>
                                                       Todos os direitos reservados © LearningLab 2024

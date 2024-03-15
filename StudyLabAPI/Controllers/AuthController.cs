@@ -375,7 +375,7 @@ public class AuthController : IAuthController
         EmailIntent emailIntent = new()
         {
             toEmail = usuario.emailUsuario,
-            subject = "Bem vindo ao StudyLab",
+            subject = "Bem-vindo(a) ao StudyLab",
             template = new VerificationCodeEmailTemplate
             {
                 username = usuario.nomeUsuario,
