@@ -182,7 +182,16 @@ public class AuthControllerValidationTest
         {
             new RegisterUserRequestModel
             {
-                email = "test@test.com",
+                email = "test@alu.ufc.br",
+                username = "test",
+                password = "test",
+                codeCurso = 0,
+                role = UserRole.User,
+                codigoUsuario = 1233
+            },
+            new RegisterUserRequestModel
+            {
+                email = "test@ufc.br",
                 username = "test",
                 password = "test",
                 codeCurso = 0,
@@ -282,21 +291,8 @@ public class AuthControllerValidationTest
         {
             new ResetUserPasswordRequestModel
             {
-                currentPassword = "",
-                newPassword = "test",
-                resetCode = "1234"
-            },
-            new ResetUserPasswordRequestModel
-            {
-                currentPassword = "test",
                 newPassword = "",
                 resetCode = "1234"
-            },
-            new ResetUserPasswordRequestModel
-            {
-                currentPassword = "test",
-                newPassword = "test",
-                resetCode = ""
             },
             new ResetUserPasswordRequestModel
             {

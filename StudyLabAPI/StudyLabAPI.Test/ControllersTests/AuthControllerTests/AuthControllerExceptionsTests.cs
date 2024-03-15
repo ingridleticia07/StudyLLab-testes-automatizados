@@ -11,6 +11,7 @@ using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Hash;
 using StudyLabAPI.Services.Jwt;
 using StudyLabAPI.Validators;
+using ValidationException = StudyLabAPI.Exceptions.ValidationException;
 
 namespace StudyLabAPI.Test.ControllersTests.AuthControllerTests;
 
@@ -60,6 +61,14 @@ public class AuthControllerExceptionsTests
         
         fakeData = new();
     }
+
+    [Fact]
+    public async Task RegisterNewUserValidationExceptionTest()
+    {
+        RegisterUserRequestModel requestModel = fakeData.fakeInvalidRegisterUserRequestModel;
+        
+        await Assert.ThrowsAsync<ValidationException>(() => authController.RegisterNewUser(requestModel));
+    }
     
     /// <summary>
     /// Deve jogar a exceção <see cref="ExistsUserException"/> quando já existe um usuário com o mesmo email e código de usuário
@@ -89,6 +98,14 @@ public class AuthControllerExceptionsTests
             .ReturnsAsync(() => null);
         
         await Assert.ThrowsAsync<CursoNotFound>(() => authController.RegisterNewUser(requestModel));
+    }
+    
+    [Fact]
+    public async Task LoginUserValidationExceptionTest()
+    {
+        UserLoginRequestModel requestModel = fakeData.fakeInvalidLoginRequestModel;
+        
+        await Assert.ThrowsAsync<ValidationException>(() => authController.LoginUser(requestModel));
     }
     
     [Fact]
@@ -132,6 +149,15 @@ public class AuthControllerExceptionsTests
         await Assert.ThrowsAsync<UsuarioNotFoundException>(() => authController
             .ConfirmUserEmail(requestModel, AuthControllerFakeData.FAKE_USER_ID));
     }
+
+    [Fact]
+    public async Task ConfirmEmailUserValidationExceptionTest()
+    {
+        ConfirmUserEmailRequestModel requestModel = fakeData.fakeInvalidConfirmUserEmailRequestModel;
+        
+        await Assert.ThrowsAsync<ValidationException>(() => authController
+            .ConfirmUserEmail(requestModel, AuthControllerFakeData.FAKE_USER_ID));
+    }
     
     [Fact]
     public async Task ConfirmEmailUserNotFoundCodigoUsuarioTest()
@@ -169,6 +195,24 @@ public class AuthControllerExceptionsTests
         await Assert.ThrowsAsync<UserCodeNotMatchException>(() => authController
             .ConfirmUserEmail(requestModel, AuthControllerFakeData.FAKE_USER_ID));
     }
+
+    [Fact]
+    public async Task ResetUserPasswordUserValidationExceptionTest()
+    {
+        ResetUserPasswordRequestModel requestModel = fakeData.fakeInvalidResetUserPasswordRequestModel;
+        
+        await Assert.ThrowsAsync<ValidationException>(() => authController
+            .ResetUserPassword(requestModel, AuthControllerFakeData.FAKE_USER_ID));
+    }
+    
+    [Fact]
+    public async Task ResetUserPasswordValidationExceptionTest()
+    {
+        ResetUserPasswordRequestModel requestModel = fakeData. fakeInvalidResetUserPasswordRequestModel;
+        
+        await Assert.ThrowsAsync<ValidationException>(() => authController
+            .ResetUserPassword(requestModel, AuthControllerFakeData.FAKE_USER_ID));
+    }
     
     [Fact]
     public async Task ResetUserPasswordUserNotFoundTest()
@@ -201,7 +245,7 @@ public class AuthControllerExceptionsTests
     }
     
     [Fact]
-    public async Task RestUsePasswordNotMatchCodigoUsuarioTest()
+    public async Task ResetUsePasswordNotMatchCodigoUsuarioTest()
     {
         const string invalidConfirmationCode = "5678";
         ResetUserPasswordRequestModel requestModel = fakeData.fakeResetUserPasswordRequestModel;
@@ -218,28 +262,6 @@ public class AuthControllerExceptionsTests
         
         await Assert.ThrowsAsync<UserCodeNotMatchException>(() => authController
             .ResetUserPassword(requestModel, AuthControllerFakeData.FAKE_USER_ID));
-    }
-    
-    [Fact]
-    public async Task ResetUserPasswordNotMatchTest()
-    {
-        const string invalidPasswordHash = "invalidHash";
-        ResetUserPasswordRequestModel requestModel = fakeData.fakeResetUserPasswordRequestModel;
-        UsuarioModel usuarioModel = fakeData.fakeUsuarioModel;
-        CodigoUsuarioModel codigoUsuarioModel = fakeData.fakeEmailConfirmationCodigoUsuarioModel;
-        
-        usuarioRepositoryMock.Setup(x =>
-                x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID))
-            .ReturnsAsync(usuarioModel);
-        codigoUsuarioRepositoryMock.Setup(x =>
-                x.GetUserCode(usuarioModel, UserCodeKind.PasswordReset))
-            .ReturnsAsync(codigoUsuarioModel);
-        hashServiceMock.Setup(x =>
-            x.Hash(requestModel.currentPassword))
-            .Returns(invalidPasswordHash);
-        
-        await Assert.ThrowsAsync<CurrentPasswordNotMatchException>(() => 
-            authController.ResetUserPassword(requestModel, AuthControllerFakeData.FAKE_USER_ID));
     }
     
     [Fact]

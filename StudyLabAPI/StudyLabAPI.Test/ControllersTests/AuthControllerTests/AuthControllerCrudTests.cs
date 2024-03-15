@@ -159,9 +159,6 @@ public class AuthControllerCrudTests
             x.GetUserCode(usuarioModel, UserCodeKind.PasswordReset))
             .ReturnsAsync(codigoUsuarioModel);
         hashServiceMock.Setup(x => 
-            x.Hash(resetUserPasswordRequest.currentPassword))
-            .Returns(AuthControllerFakeData.FAKE_HASH_OUTPUT);
-        hashServiceMock.Setup(x => 
             x.Hash(resetUserPasswordRequest.newPassword))
             .Returns(newPasswordHash);
         
