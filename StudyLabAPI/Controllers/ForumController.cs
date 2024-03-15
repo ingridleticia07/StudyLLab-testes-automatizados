@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using StudyLabAPI.Models;
+﻿using StudyLabAPI.Models;
 using ILogger = Serilog.ILogger;
 using StudyLabAPI.Repositories;
 

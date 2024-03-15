@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models;
-using StudyLabAPI.Models.Options;
 using StudyLabAPI.Utils;
 
 namespace StudyLabAPI.Context;

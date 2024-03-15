@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StudyLabAPI.Controllers;
-using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models;
 using StudyLabAPI.Summaries;
 

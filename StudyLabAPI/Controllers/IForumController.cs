@@ -1,5 +1,4 @@
 ﻿using StudyLabAPI.Models;
-using StudyLabAPI.Repositories;
 
 namespace StudyLabAPI.Controllers
 {

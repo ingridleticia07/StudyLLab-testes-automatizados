@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace StudyLabAPI.Models
+﻿namespace StudyLabAPI.Models
 {
     public class RegisteredRespostaForumModel
     {

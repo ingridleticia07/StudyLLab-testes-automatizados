@@ -1,6 +1,5 @@
 ﻿using StudyLabAPI.Models;
 using StudyLabAPI.Repositories;
-using System.Collections.Generic;
 using ILogger = Serilog.ILogger;
 
 namespace StudyLabAPI.Controllers
