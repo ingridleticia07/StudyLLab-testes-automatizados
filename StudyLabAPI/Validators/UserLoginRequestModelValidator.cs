@@ -1,5 +1,6 @@
 using FluentValidation;
 using StudyLabAPI.Models;
+using StudyLabAPI.Validators.CustomValidators;
 
 namespace StudyLabAPI.Validators;
 
@@ -9,7 +10,7 @@ public class UserLoginRequestModelValidator : AbstractValidator<UserLoginRequest
     {
         RuleFor(m => m.email)
             .NotEmpty()
-            .EmailAddress();
+            .MatchEmail();
         RuleFor(m => m.password)
             .NotNull()
             .NotEmpty()
