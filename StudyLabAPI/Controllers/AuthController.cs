@@ -275,16 +275,6 @@ public class AuthController : IAuthController
             logger.Error(exception, "Código de recuperação de senha não corresponde ao código válido");
             throw exception;
         }
-        logger.Information("Verificando senha atual do usuário ID[{ID}]",
-            usuarioModel.idUsuario);
-        string currentPasswordHash = hashService.Hash(resetUserPasswordRequestModel.currentPassword);
-        bool currentPassword = currentPasswordHash == usuarioModel.senhaUsuario;
-        if(!currentPassword)
-        {
-            CurrentPasswordNotMatchException exception = new(resetUserPasswordRequestModel.currentPassword);
-            logger.Error(exception, "Senha atual não corresponde à senha do usuário");
-            throw exception;
-        }
         
         codigoUsuarioRepository.UseCode(resetCode);
         string newPassword = hashService.Hash(resetUserPasswordRequestModel.newPassword);

@@ -12,11 +12,6 @@ public class ResetUserPasswordRequestModelValidator : AbstractValidator<ResetUse
             .NotEmpty()
             //.MinimumLength(8)
             .MaximumLength(60);
-        RuleFor(m => m.currentPassword)
-            .NotNull()
-            .NotEmpty()
-            //.MinimumLength(8)
-            .MaximumLength(60);
         RuleFor(m => m.resetCode)
             .NotNull()
             .NotEmpty();

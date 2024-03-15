@@ -43,7 +43,7 @@ public class ResetPasswordEmailTemplate : IEmailTemplate
                                                 <tr>
                                                   <tr>
                                                     <td>
-                                                      <small>Olá {username}, aqui está o seu código de redefinição de senha:</small>
+                                                      <small>Olá {{ username }}, aqui está o seu código de redefinição de senha:</small>
                                                     </td>
                                                   </tr>
                                                 </tr>
@@ -51,7 +51,7 @@ public class ResetPasswordEmailTemplate : IEmailTemplate
                                               <table>
                                                 <tr class="text-center">
                                                   <td>
-                                                    <h2>{code}</h2>
+                                                    <h2>{{ code }}</h2>
                                                   </td>
                                                 </tr>
                                               </table>
