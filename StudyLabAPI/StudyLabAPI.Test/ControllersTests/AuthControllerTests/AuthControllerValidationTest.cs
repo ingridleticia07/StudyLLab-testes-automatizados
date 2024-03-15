@@ -8,16 +8,16 @@ namespace StudyLabAPI.Test.ControllersTests.AuthControllerTests;
 
 public class AuthControllerValidationTest
 {
-    private readonly IValidator<RegisterUserRequestModel> registerUserRequestModelValidator = new RegisterUserRequestModelValidator();
-    private readonly IValidator<UserLoginRequestModel> userLoginRequestModelValidator = new UserLoginRequestModelValidator();
-    private readonly IValidator<ConfirmUserEmailRequestModel> confirmUserEmailRequestModelValidator = new ConfirmUserEmailRequestModelValidator();
-    private readonly IValidator<ResetUserPasswordRequestModel> resetUserPasswordRequestModelValidator = new ResetUserPasswordRequestModelValidator();
+    private readonly IValidator<RegisterUserRequestModel> _registerUserRequestModelValidator = new RegisterUserRequestModelValidator();
+    private readonly IValidator<UserLoginRequestModel> _userLoginRequestModelValidator = new UserLoginRequestModelValidator();
+    private readonly IValidator<ConfirmUserEmailRequestModel> _confirmUserEmailRequestModelValidator = new ConfirmUserEmailRequestModelValidator();
+    private readonly IValidator<ResetUserPasswordRequestModel> _resetUserPasswordRequestModelValidator = new ResetUserPasswordRequestModelValidator();
     
     [Theory]
     [MemberData(nameof(InvalidRegisterUserRequestModelsParameters))]
     public void RegisterUserRequestModelValidatorInvalidModelTest(RegisterUserRequestModel model)
     {
-        ValidationResult result = registerUserRequestModelValidator.Validate(model);
+        ValidationResult result = _registerUserRequestModelValidator.Validate(model);
         
         Assert.False(result.IsValid);
     }
@@ -26,7 +26,7 @@ public class AuthControllerValidationTest
     [MemberData(nameof(ValidRegisterUserRequestModelParameters))]
     public void RegisterUserRequestModelValidtorValidModelTest(RegisterUserRequestModel model)
     {
-        ValidationResult result = registerUserRequestModelValidator.Validate(model);
+        ValidationResult result = _registerUserRequestModelValidator.Validate(model);
         
         Assert.True(result.IsValid);
     }
@@ -205,7 +205,7 @@ public class AuthControllerValidationTest
     [MemberData(nameof(InvalidUserLoginRequestModelsParameters))]
     public void UserLoginRequestModelValidatorTest(UserLoginRequestModel model)
     {
-        ValidationResult result = userLoginRequestModelValidator.Validate(model);
+        ValidationResult result = _userLoginRequestModelValidator.Validate(model);
         
         Assert.False(result.IsValid);
     }
@@ -247,7 +247,7 @@ public class AuthControllerValidationTest
     [MemberData(nameof(InvalidConfirmUserEmailRequestModelsParameters))]
     public void ConfirmUserEmailRequestModelValidatorTest(ConfirmUserEmailRequestModel model)
     {
-        ValidationResult result = confirmUserEmailRequestModelValidator.Validate(model);
+        ValidationResult result = _confirmUserEmailRequestModelValidator.Validate(model);
         
         Assert.False(result.IsValid);
     }
@@ -274,7 +274,7 @@ public class AuthControllerValidationTest
     [MemberData(nameof(InvalidResetUserPasswordRequestModelsParameters))]
     public void ResetUserPasswordRequestModelValidatorTest(ResetUserPasswordRequestModel model)
     {
-        ValidationResult result = resetUserPasswordRequestModelValidator.Validate(model);
+        ValidationResult result = _resetUserPasswordRequestModelValidator.Validate(model);
         
         Assert.False(result.IsValid);
     }
