@@ -14,6 +14,6 @@ public class UserLoginRequestModelValidator : AbstractValidator<UserLoginRequest
         RuleFor(m => m.password)
             .NotNull()
             .NotEmpty()
-            .MaximumLength(60);
+            .MinimumLength(8);
     }
 }

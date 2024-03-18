@@ -18,20 +18,19 @@ public class RegisterUserRequestModelValidator : AbstractValidator<RegisterUserR
         RuleFor(m => m.password)
             .NotNull()
             .NotEmpty()
-            //.MinimumLength(8)
-            .MaximumLength(60);
+            .MinimumLength(8)
+            .MaximumLength(20);
         RuleFor(m => m.codigoUsuario)
             .NotNull()
-            .GreaterThanOrEqualTo(0);
+            .GreaterThan(99999); // Isso era pra ser string, Deus me perdoe
         RuleFor(m => m.role)
             .IsInEnum();
         RuleFor(m => m.codeCurso)
             .NotNull()
-            .GreaterThanOrEqualTo(0);
+            .GreaterThan(0);
         RuleFor(m => m.imagem)
             .NotNull()
             .NotEmpty()
-            .MaximumLength(45)
             .When(m => m.imagem is not null);
     }
 }
