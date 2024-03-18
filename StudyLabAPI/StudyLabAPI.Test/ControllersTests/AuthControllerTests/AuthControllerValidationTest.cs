@@ -51,127 +51,181 @@ public class AuthControllerValidationTest
             {
                 email = "",
                 username = "test",
-                password = "test",
-                codeCurso = 0,
+                password = "test1234",
+                codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123,
+                codigoUsuario = 123456,
             },
             new RegisterUserRequestModel
             {
                 email = "test",
                 username = "test",
-                password = "test",
-                codeCurso = 0,
+                password = "test1234",
+                codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123,
+                codigoUsuario = 123456,
             },
             new RegisterUserRequestModel
             {
                 email = "test@",
                 username = "test",
-                password = "test",
-                codeCurso = 0,
+                password = "test1234",
+                codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123,
+                codigoUsuario = 123456,
             },
             new RegisterUserRequestModel
             {
                 email = "test@test",
                 username = "test",
-                password = "test",
-                codeCurso = 0,
+                password = "test1234",
+                codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123,
+                codigoUsuario = 123456,
             },
             new RegisterUserRequestModel
             {
                 email = "test@.com",
                 username = "test",
-                password = "test",
-                codeCurso = 0,
+                password = "test1234",
+                codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123,
+                codigoUsuario = 123456,
             },
             new RegisterUserRequestModel
             {
                 email = "test@test.com",
                 username = "",
-                password = "test",
-                codeCurso = 0,
+                password = "test1234",
+                codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123,
+                codigoUsuario = 123456,
             },
             new RegisterUserRequestModel
             {
                 email = "test@test.com",
                 username = new('a', 46),
-                password = "test",
-                codeCurso = 0,
+                password = "test1234",
+                codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123,
+                codigoUsuario = 123456,
             },
             new RegisterUserRequestModel
             {
                 email = "test@test.com",
                 username = "test",
                 password = "",
-                codeCurso = 0,
+                codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123,
+                codigoUsuario = 123456,
             },
             new RegisterUserRequestModel
             {
                 email = "test@test.com",
                 username = "test",
-                password = new('a', 61),
-                codeCurso = 0,
+                password = new('a', 21),
+                codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123,
+                codigoUsuario = 123456,
             },
             new RegisterUserRequestModel
             {
                 email = "test@test.com",
                 username = "test",
-                password = "test",
+                password = new('a', 1),
+                codeCurso = 1,
+                role = UserRole.User,
+                codigoUsuario = 123456,
+            },
+            new RegisterUserRequestModel
+            {
+                email = "test@test.com",
+                username = "test",
+                password = new('a', 7),
+                codeCurso = 1,
+                role = UserRole.User,
+                codigoUsuario = 123456,
+            },
+            new RegisterUserRequestModel
+            {
+                email = "test@test.com",
+                username = "test",
+                password = "test1234",
+                codeCurso = -1,
+                role = UserRole.User,
+                codigoUsuario = 123456,
+            },
+            new RegisterUserRequestModel
+            {
+                email = "test@test.com",
+                username = "test",
+                password = "test1234",
                 codeCurso = 0,
+                role = UserRole.User,
+                codigoUsuario = 123456,
+            },
+            new RegisterUserRequestModel
+            {
+                email = "test@test.com",
+                username = "test",
+                password = "test1234",
+                codeCurso = 1,
                 role = UserRole.User,
                 codigoUsuario = -1,
             },
             new RegisterUserRequestModel
             {
+                email = "test@test.com",
                 username = "test",
-                password = "test",
-                codeCurso = 0,
+                password = "test1234",
+                codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123
+                codigoUsuario = 1,
             },
             new RegisterUserRequestModel
             {
-                password = "test",
-                codeCurso = 0,
+                email = "test@test.com",
+                username = "test",
+                password = "test1234",
+                codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123
+                codigoUsuario = 99999,
+            },
+            new RegisterUserRequestModel
+            {
+                username = "test",
+                password = "test1234",
+                codeCurso = 1,
+                role = UserRole.User,
+                codigoUsuario = 123456
+            },
+            new RegisterUserRequestModel
+            {
+                password = "test1234",
+                codeCurso = 1,
+                role = UserRole.User,
+                codigoUsuario = 123456
             },
             new RegisterUserRequestModel
             {
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123
+                codigoUsuario = 123456
             },
             new RegisterUserRequestModel
             {
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123
+                codigoUsuario = 123456
             },
             new RegisterUserRequestModel
             {
                 role = UserRole.User,
-                codigoUsuario = 123
+                codigoUsuario = 123456
             },
             new RegisterUserRequestModel
             {
-                codigoUsuario = 123
+                codigoUsuario = 123456
             },
             new RegisterUserRequestModel(),
         };
@@ -184,19 +238,19 @@ public class AuthControllerValidationTest
             {
                 email = "test@alu.ufc.br",
                 username = "test",
-                password = "test",
-                codeCurso = 0,
+                password = "test1234",
+                codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 1233
+                codigoUsuario = 123456
             },
             new RegisterUserRequestModel
             {
                 email = "test@ufc.br",
                 username = "test",
-                password = "test",
-                codeCurso = 0,
+                password = "test1234",
+                codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 1233
+                codigoUsuario = 123456
             }
         };
     }
