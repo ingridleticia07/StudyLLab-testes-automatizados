@@ -206,3 +206,6 @@ $$;
 alter function get_curso_id(text) owner to admin;
 
 
+insert into curso (id_curso, nome_curso) values 
+    (1, 'Engenharia de Software'), 
+    (2, 'Ciência da Computação');

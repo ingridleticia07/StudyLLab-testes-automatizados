@@ -2,6 +2,7 @@
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models;
 using StudyLabAPI.Utils;
+// ReSharper disable PropertyCanBeMadeInitOnly.Global
 
 namespace StudyLabAPI.Context;
 
