@@ -1,22 +1,23 @@
 *{
     margin: 0;
+    font-family: "Roboto", sans-serif;
+}
+h1{
+    size: 32px;
 }
 
 body{
     height: 100vh;
-  overflow: hidden;
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 .primary{
     height: 100%;
     display: flex;
     background-color: rgba(245, 245, 245, 1);
+    
 }
-
-.content{
-    width: 100;
-}
-
 
 .top-nav {
     display: flex;
@@ -125,6 +126,92 @@ body{
 }
 
 .content {
-    margin-left: 60px;
-    padding: 1rem;
+    margin: 80px 40px 1rem 40px;
+    border-radius: 1rem;
+    padding: 10;
+    flex: 1;
+    background:rgba(247, 249, 252, 0.9);
 }
+
+.user-managentment{
+    border-radius: 1rem;
+    margin: 0px;
+    background-color: #ffffff;
+    flex: 1;
+    padding: 3rem;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+  
+.user-table thead {
+    background-color: #f7f9fc;
+}
+  
+.user-table th, .user-table td {
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 1px solid #e1e1e1;
+}
+  
+.user-table th:first-child,
+.user-table td:first-child {
+    text-align: center;
+}
+  
+.user-table td {
+    color: #505050;
+}
+  
+.action-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+  
+.action-button img {
+    width: 1.2rem;
+}
+
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 1rem;
+    margin-top: 0;
+}
+
+.pagination span {
+  margin-right: 1rem;
+}
+
+.pagination button {
+  background-color: #ebebeb;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 0 0.25rem;
+  cursor: pointer;
+}
+
+.pagination button:hover {
+  background-color: #dcdcdc;
+}
+
+.pagination .current-page {
+  font-weight: bold;
+  background-color: #505050;
+  color: white;
+}
+
+.breadcrumbs {
+    margin-bottom: 1rem;
+    color: #505050;
+  }
+  
+  .breadcrumbs span {
+    font-size: 0.9rem;
+  }
