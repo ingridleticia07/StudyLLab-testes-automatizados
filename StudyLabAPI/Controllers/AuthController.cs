@@ -10,6 +10,7 @@ using StudyLabAPI.Services.Email.Models;
 using StudyLabAPI.Services.Email.Models.Template;
 using StudyLabAPI.Services.Hash;
 using StudyLabAPI.Services.Jwt;
+using StudyLabAPI.Validators;
 using ILogger = Serilog.ILogger;
 using ValidationException = StudyLabAPI.Exceptions.ValidationException;
 
@@ -61,6 +62,16 @@ public class AuthController : IAuthController
         this.resetUserPasswordRequestModelMapper = resetUserPasswordRequestModelMapper;
     }
     
+    /// <summary>
+    /// Cadastra um novo usuário. Ele irá validar os campos da requisição, verificar se já existe um usuário com o mesmo código de usuário (matrícula) e email,
+    /// relacionar o curso ao usuário, gerar uma senha criptografada, cadastrar o usuário, gerar um token de autenticação e enviar um email de confirmação.
+    /// </summary>
+    /// <param name="registerUserRequestModel">Modelo usado para transferir as infomaçoes do futuro usuario vindo da requisição.</param>
+    /// <returns>Retorna o modelo de leitura (<see cref="UserReadModel"/>) do usuário cadastrado e o token de autenticação.</returns>
+    /// <exception cref="ValidationException">Ocorre quando alguma informação contradiz alguma regra de validação.
+    /// Regras: <seealso cref="RegisterUserRequestModelValidator"/>.</exception>
+    /// <exception cref="ExistsUserException">Ocorre quando já existe algum usuário com a mesma matrícula ou email.</exception>
+    /// <exception cref="CursoNotFound">Ocorre quando o curso solicitado para relação não existe.</exception>
     public async Task<(UserReadModel, string)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel)
     {
         logger.Information("Validando campos da requisição de cadastro para Username[{Username}]",
@@ -129,6 +140,16 @@ public class AuthController : IAuthController
         return (userReadModel, jwtUser);
     }
     
+    /// <summary>
+    /// Realiza a autenticação de um usuário. Ele irá validar os campos da requisição, verificar se o usuário existe, verificar se a senha está correta
+    /// e gerar o token de autenticação.
+    /// </summary>
+    /// <param name="userLoginRequestModel">Modelo usado para transferir as infomações de login da requisição para o controller.</param>
+    /// <returns>Retorna o modelo de leitura (<see cref="UserReadModel"/>) do usuário cadastrado e o token de autenticação.</returns>
+    /// <exception cref="ValidationException">Ocorre quando alguma informação contradiz alguma regra de validação.
+    /// Regras: <seealso cref="UserLoginRequestModelValidator"/>.</exception>
+    /// <exception cref="UsuarioNotFoundException"></exception>
+    /// <exception cref="InvalidLoginPasswordException"></exception>
     public async Task<(UserReadModel, string)> LoginUser(UserLoginRequestModel userLoginRequestModel)
     {
         logger.Information("Validando campos da requisição de login para Email[{UserEmail}]",
@@ -172,6 +193,19 @@ public class AuthController : IAuthController
         return (userReadModel, jwtUser);
     }
     
+    /// <summary>
+    /// Confirma a conta de um usuário, usando o código enviado pelo email ao cadastrar-se ou solicitar um novo código por
+    /// <see cref="RequestConfirmationCode"/>. Ele valida os campos da requisição, verifica se o usuário existe, se o código de confirmação
+    /// estiver correto, ele irá confirma a conta, se não ele irá lançar uma exceção.
+    /// </summary>
+    /// <param name="confirmUserEmailRequestModel">Informação sobre o codigo enviado na requisição</param>
+    /// <param name="userId">Usuário a qual o codigo está relacionado</param>
+    /// <returns>Informações sobre o código válidado</returns>
+    /// <exception cref="ValidationException">Ocorre quando alguma informação contradiz alguma regra de validação.
+    /// Regras: <seealso cref="ConfirmUserEmailRequestModelValidator"/>.</exception>
+    /// <exception cref="UsuarioNotFoundException">Ocorre quando um usuário não é encontrado.</exception>
+    /// <exception cref="ConfirmationCodeNotFoundException">Ocorre quando o código recebido no modelo não existe.</exception>
+    /// <exception cref="UserCodeNotMatchException">Ocorre quando o código recebido no modelo não é igual ao criado anteriormente.</exception>
     public async Task<CodigoUsuarioReadModel> ConfirmUserEmail(ConfirmUserEmailRequestModel confirmUserEmailRequestModel,
         int userId)
     {
@@ -299,6 +333,13 @@ public class AuthController : IAuthController
         return resetUserPasswordReadModel;
     }
     
+    /// <summary>
+    /// Requisita um novo email de confirmação para o usuário. Ele verifica se há um usuário com este ID e se o email já foi confirmado
+    /// (não impede de enviar um novo email de confirmação, mas não é necessário, pois o email já foi confirmado). 
+    /// </summary>
+    /// <param name="userId">ID do usuário.</param>
+    /// <returns>Se o email foi enviado com sucesso.</returns>
+    /// <exception cref="UsuarioNotFoundException">Ocorre quando o usuario não foi encontrado.</exception>
     public async Task<bool> RequestConfirmationCode(int userId)
     {
         logger.Information("Recuperando usuário com ID[{ID}]",
@@ -346,7 +387,7 @@ public class AuthController : IAuthController
         return emailSended;
     }
     
-    private async Task<bool> GenerateAndSendResetUserPassword(UsuarioModel usuarioModel)
+    async private Task<bool> GenerateAndSendResetUserPassword(UsuarioModel usuarioModel)
     {
         logger.Information("Gerando código de recuperação de senha para usuário Email[{UserEmail}]",
             usuarioModel.emailUsuario);
@@ -367,7 +408,7 @@ public class AuthController : IAuthController
         return emailSended;
     }
     
-    private async Task<bool> GenerateAndSendConfirmationEmail(UsuarioModel usuarioModel)
+    async private Task<bool> GenerateAndSendConfirmationEmail(UsuarioModel usuarioModel)
     {
         logger.Information("Gerando código de confirmação de email para usuário Email[{UserEmail}]",
             usuarioModel.emailUsuario);
