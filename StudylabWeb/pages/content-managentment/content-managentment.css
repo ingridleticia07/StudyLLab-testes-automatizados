@@ -2,6 +2,9 @@
     margin: 0;
     font-family: "Roboto", sans-serif;
 }
+h1{
+    size: 32px;
+}
 
 body{
     height: 100vh;
@@ -133,42 +136,113 @@ body{
     background:rgba(247, 249, 252, 0.9);
 }
 
-h1{
-    size: 32px;
-}
-.user-managentment{
+
+.content-managentment{
     border-radius: 1rem;
     margin: 0px;
     background-color: #ffffff;
     flex: 1;
     padding: 3rem;
 }
+.content-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-.user-table {
+.filter-button {
+    padding: 0.5rem 1rem;
+    color: rgba(88, 91, 96, 1);
+    font-size: 20px;
+    background-color: #ffffff;
+    border: 1px solid #e1e1e1;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
+    outline: none;
+}
+
+.filter-button:hover {
+    background-color: #f7f7f7;
+}
+
+.filter-button:active {
+    background-color: #ebebeb;
+    box-shadow: none;
+    transform: translateY(2px);
+}
+
+.content-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
 }
   
-.user-table thead {
+.content-table thead {
     background-color: #f7f9fc;
 }
   
-.user-table th, .user-table td {
+.content-table th, .content-table td {
     text-align: left;
     padding: 1rem;
     border-bottom: 1px solid #e1e1e1;
 }
   
-.user-table th:first-child,
-.user-table td:first-child {
+.content-table th:first-child,
+.content-table td:first-child {
     text-align: center;
 }
   
-.user-table td {
-    color: #505050;
+.content-table td {
+    color: rgba(88, 91, 96, 1);
 }
   
+.status-circle {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.status-approved .status-circle {
+    background-color: rgba(56, 160, 108, 1);
+}
+
+.status-approved {
+    background: rgba(225, 252, 239, 1);
+    padding: 5px;
+    border-radius: 5px;
+    color: rgba(20, 128, 74, 1);
+    font-weight: bold;
+}
+
+.status-pending .status-circle {
+    background-color: rgba(221, 146, 60, 1);
+}
+
+.status-pending {
+    background: rgba(252, 242, 230, 1);
+    border-radius: 5px;
+    padding: 5px;
+    color: rgba(170, 91, 0, 1);
+    font-weight: bold;
+}
+
+.status-rejected .status-circle {
+    background-color: rgba(239, 84, 102, 1);
+}
+
+.status-rejected {
+    background: rgba(255, 237, 239, 1);
+    border-radius: 5px;
+    padding: 5px;
+    color: rgba(209, 41, 61, 1);
+    font-weight: bold;
+}
+
 .action-button {
     background: none;
     border: none;

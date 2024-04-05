@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StudyLab</title>
-    <link rel="stylesheet" href="user-managentment.css" />
+    <link rel="stylesheet" href="content-managentment.css" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   </head>
 
@@ -55,7 +55,7 @@
               /></a>
             </li>
             <li>
-              <a href="../content-managentment/content-managentment.html"
+              <a href="#"
                 ><img
                   class="icon-sidebar"
                   src="../../assets/img/icon-folder.svg"
@@ -81,81 +81,81 @@
       
       <div class="externo">
         <div class="breadcrumbs">
-          <span>Página Inicial > Gerenciamento de Usuários</span>
+          <span>Página Inicial > Conteúdos</span>
         </div>
         <main class="content">
-          <div class="user-managentment">
-            <H1>Usuários</H1>
+          <div class="content-managentment">
+            <div class="content-header">
+            <H1>Conteúdos</H1>
+            <button class="filter-button"> <img src="../../assets/img/Filter.svg" alt="funil">Filtro</button>
+            </div>
             <div>
               <br><br>
-              <table class="user-table">
+              <table class="content-table">
                 <thead>
                   <tr>
                     <th><input type="checkbox" name="select-all" id="select-all"></th>
-                    <th>MATRÍCULA</th>
-                    <th>ALUNO(A)</th>
-                    <th>CURSO</th>
-                    <th>EMAIL</th>
+                    <th>TÍTULO</th>
+                    <th>DISCIPLINA</th>
+                    <th>AUTOR</th>
+                    <th>TIPO</th>
+                    <th>STATUS</th>
                     <th>AÇÕES</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td><input type="checkbox" name="user"></td>
-                    <td>493782</td>
+                    <td><input type="checkbox" name="content"></td>
+                    <td>Lista 1 de Lógica</td>
+                    <td>Lógica para computação</td>
                     <td>Alicia Santos</td>
-                    <td>Engenharia de Software</td>
-                    <td>aliciasantos@algum-email.br</td>
+                    <td>Lista</td>
                     <td>
-                      <button class="action-button"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
+                      <span class="status-rejected">
+                        <span class="status-circle"></span>
+                        Rejeitado
+                      </span>
+                    </td>
+                    <td>
+                      <button class="action-button"><img src="../../assets/img/eye.svg" alt="Visualizar"></button>
                       <button class="action-button"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
                     </td>
                   </tr>
                   <tr>
-                    <td><input type="checkbox" name="user"></td>
-                    <td>493782</td>
+                    <td><input type="checkbox" name="content"></td>
+                    <td>Lista 2 de Lógica</td>
+                    <td>Lógica para computação</td>
                     <td>Alicia Santos</td>
-                    <td>Engenharia de Software</td>
-                    <td>aliciasantos@algum-email.br</td>
+                    <td>Lista</td>
                     <td>
-                      <button class="action-button"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
+                      <span class="status-approved">
+                        <span class="status-circle"></span>
+                        Aprovado
+                      </span>
+                    </td>
+                    <td>
+                      <button class="action-button"><img src="../../assets/img/eye.svg" alt="Visualizar"></button>
                       <button class="action-button"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
                     </td>
                   </tr>
                   <tr>
-                    <td><input type="checkbox" name="user"></td>
-                    <td>493782</td>
+                    <td><input type="checkbox" name="content"></td>
+                    <td>Lista 3 de Lógica</td>
+                    <td>Lógica para computação</td>
                     <td>Alicia Santos</td>
-                    <td>Engenharia de Software</td>
-                    <td>aliciasantos@algum-email.br</td>
+                    <td>Lista</td>
                     <td>
-                      <button class="action-button"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
+                      <span class="status-pending">
+                        <span class="status-circle"></span>
+                        Pendente
+                      </span>
+                    </td>
+                    <td>
+                      <button class="action-button"><img src="../../assets/img/eye.svg" alt="Visualizar"></button>
                       <button class="action-button"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
                     </td>
                   </tr>
-                  <tr>
-                    <td><input type="checkbox" name="user"></td>
-                    <td>493782</td>
-                    <td>Alicia Santos</td>
-                    <td>Engenharia de Software</td>
-                    <td>aliciasantos@algum-email.br</td>
-                    <td>
-                      <button class="action-button"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
-                      <button class="action-button"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><input type="checkbox" name="user"></td>
-                    <td>493782</td>
-                    <td>Alicia Santos</td>
-                    <td>Engenharia de Software</td>
-                    <td>aliciasantos@algum-email.br</td>
-                    <td>
-                      <button class="action-button"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
-                      <button class="action-button"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
-                    </td>
-                  </tr>
-                </tbody>  <!-- usuarios -->
+                </tbody>  <!-- Conteúdos -->
               </table>
             </div>
           </div>
@@ -167,6 +167,6 @@
       </div>  
     </div>
 
-    <script src="user-managentment.js"></script>
+    <script src="content-managentment.html"></script>
   </body>
 </html>
