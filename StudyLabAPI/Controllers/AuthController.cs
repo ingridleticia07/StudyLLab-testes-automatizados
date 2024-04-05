@@ -229,11 +229,21 @@ public class AuthController : IAuthController
         return codigoUsuarioReadModel;
     }
     
-    public async Task<ResetUserPasswordReadModel> ResetUserPassword(ResetUserPasswordRequestModel resetUserPasswordRequestModel,
-        int userId)
+    /// <summary>
+    /// Usa o código de recuperação de senha para alterar a senha do usuário. Ele irá validar os campos da requisição, verificar se o usuário existe,
+    /// verifica se o código recebido é igual ao código gerado anteriormente, alterar a senha do usuário e invalidar o código de recuperação.
+    /// </summary>
+    /// <param name="resetUserPasswordRequestModel">Modelo que contém as informações de recuperação de senha</param>
+    /// <returns>Retornar o mesmo modelo recebido por parâmetro.</returns>
+    /// <exception cref="ValidationException">Ocorre quando alguma informação contradiz alguma regra de validação.
+    /// Regras: <seealso cref="ConfirmUserEmailRequestModelValidator"/>.</exception>
+    /// <exception cref="UsuarioNotFoundException">Ocorre quando o usuário não é encontrado</exception>
+    /// <exception cref="ResetPasswordCodeNotFoundException">Ocorre quando o codigo de recuperação não é encontrado ou não existe.</exception>
+    /// <exception cref="UserCodeNotMatchException">O código recebido não é o mesmo que esta no banco.</exception>
+    public async Task<ResetUserPasswordReadModel> ResetUserPassword(ResetUserPasswordRequestModel resetUserPasswordRequestModel)
     {
-        logger.Information("Validando campos da requisição de recuperação de senha para ID[{ID}]",
-            userId);
+        logger.Information("Validando campos da requisição de recuperação de senha para Email[{Email}]",
+            resetUserPasswordRequestModel.userEmail);
         ValidationResult validationResult = await resetUserPasswordRequestModelValidator
             .ValidateAsync(resetUserPasswordRequestModel);
         if(!validationResult.IsValid)
@@ -244,13 +254,14 @@ public class AuthController : IAuthController
             throw exception;
         }
         
-        logger.Information("Recuperando usuário com ID[{ID}]",
-            userId);
+        logger.Information("Recuperando usuário com Email[{Email}]",
+            resetUserPasswordRequestModel.userEmail);
         UsuarioModel? usuarioModel = await usuarioRepository
-            .GetUsuarioById(userId);
+            .GetUsuarioByEmail(resetUserPasswordRequestModel.userEmail);
         if(usuarioModel is null)
         {
-            UsuarioNotFoundException exception = new(nameof(userId), userId.ToString());
+            UsuarioNotFoundException exception = new(nameof(resetUserPasswordRequestModel.userEmail), 
+                resetUserPasswordRequestModel.userEmail);
             logger.Error(exception, "Usuário não encontrado");
             throw exception;
         }
@@ -261,7 +272,7 @@ public class AuthController : IAuthController
             .GetUserCode(usuarioModel, UserCodeKind.PasswordReset);
         if(resetCode is null)
         {
-            ResetPasswordCodeNotFoundException exception = new(userId);
+            ResetPasswordCodeNotFoundException exception = new(resetUserPasswordRequestModel.userEmail);
             logger.Error(exception, "Código de recuperação de senha não encontrado");
             throw exception;
         }
@@ -310,14 +321,22 @@ public class AuthController : IAuthController
         return emailSended;
     }
     
-    public async Task<bool> RequestPasswordResetCode(int userId)
+    /// <summary>
+    /// Requisita um codigo de recuperação de senha para o usuário. Ele verifica se o usuário existe e gera um novo código de recuperação.
+    /// </summary>
+    /// <param name="requestResetPasswordEmailRequestModel">Informações para envio do email de recuperação.</param>
+    /// <returns>Se o email foi enviado com sucesso.</returns>
+    /// <exception cref="UsuarioNotFoundException">Ocorre quando o usuário não existe</exception>
+    public async Task<bool> RequestPasswordResetCode(RequestResetPasswordEmailRequestModel requestResetPasswordEmailRequestModel)
     {
-        logger.Information("Recuperando usuário com ID[{ID}]",
-            userId);
-        UsuarioModel? usuarioModel = await usuarioRepository.GetUsuarioById(userId);
+        logger.Information("Recuperando usuário com Email[{Email}]",
+            requestResetPasswordEmailRequestModel.userEmail);
+        UsuarioModel? usuarioModel = await usuarioRepository
+            .GetUsuarioByEmail(requestResetPasswordEmailRequestModel.userEmail);
         if(usuarioModel is null)
         {
-            UsuarioNotFoundException exception = new(nameof(userId), userId.ToString());
+            UsuarioNotFoundException exception = new(nameof(requestResetPasswordEmailRequestModel.userEmail), 
+                requestResetPasswordEmailRequestModel.userEmail);
             logger.Error(exception, "Usuário não encontrado");
             throw exception;
         }

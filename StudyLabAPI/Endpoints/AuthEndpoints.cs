@@ -45,7 +45,7 @@ public static class AuthEndpoints
     /// <param name="controller">Controlador que irá gerenciar as necessidades da requisição.</param>
     /// <returns>Resposta da requisição.</returns>
     /// <permission cref="AuthorizationPolicies">Requisições não autenticadas são autorizadas.</permission>
-    private static async Task<IResult> AuthRegisterEndpointHandler(
+    async private static Task<IResult> AuthRegisterEndpointHandler(
         HttpContext _,
         [FromBody] RegisterUserRequestModel registerUserRequest,
         [FromServices] IAuthController controller)
@@ -73,7 +73,7 @@ public static class AuthEndpoints
     /// <param name="controller">Controlador que irá gerenciar as necessidades da requisição.</param>
     /// <returns>Resposta da requisição.</returns>
     /// <permission cref="AuthorizationPolicies">Requisições não autenticadas são autorizadas.</permission>
-    private static async Task<IResult> AuthLoginEndpointHandler(
+    async private static Task<IResult> AuthLoginEndpointHandler(
         HttpContext _,
         [FromBody] UserLoginRequestModel loginRequestModel,
         [FromServices] IAuthController controller)
@@ -113,7 +113,7 @@ public static class AuthEndpoints
     /// <returns>Resposta da requisição</returns>
     /// <permission cref="AuthorizationPolicies">Permitido apenas usuários e administradores autenticados</permission>
     [ProducesResponseType(typeof(CodigoUsuarioReadModel), 200)]
-    private static async Task<IResult> AuthConfirmEmailHandler(
+    async private static Task<IResult> AuthConfirmEmailHandler(
         HttpContext context,
         [FromBody] ConfirmUserEmailRequestModel confirmUserEmailRequestModel,
         [FromServices] IAuthController controller)
@@ -144,7 +144,7 @@ public static class AuthEndpoints
     /// <param name="controller">Controlador que irá gerenciar as nescessidades da requisição</param>
     /// <returns>Resposta da requisição</returns>
     /// <permission cref="AuthorizationPolicies">Permitido apenas usuários e administradores autenticados</permission>
-    private static async Task<IResult> AuthResendConfirmationEmail(
+    async private static Task<IResult> AuthResendConfirmationEmail(
         HttpContext context,
         [FromServices] IAuthController controller)
     {
@@ -179,19 +179,16 @@ public static class AuthEndpoints
     /// <returns>Resposta da requisição</returns>
     /// <permission cref="AuthorizationPolicies">Permitido apenas usuários e administradores autenticados</permission>
     [ProducesResponseType(typeof(ResetUserPasswordReadModel), 200)]
-    private static async Task<IResult> AuthResetPasswordHandler(
+    async private static Task<IResult> AuthResetPasswordHandler(
         HttpContext context,
         [FromBody] ResetUserPasswordRequestModel resetUserPasswordRequestModel,
         [FromServices] IAuthController controller)
     {
-        int userId = int.Parse(context.User.Claims
-            .First(c => c.Type == ClaimTypes.Name).Value);
-        
         ResetUserPasswordReadModel resetUserPasswordReadModel;
         try
         {
             resetUserPasswordReadModel = await controller
-                .ResetUserPassword(resetUserPasswordRequestModel, userId);
+                .ResetUserPassword(resetUserPasswordRequestModel);
         }
         catch (Exception e) when (e is UsuarioNotFoundException or ResetPasswordCodeNotFoundException)
         {
@@ -207,21 +204,20 @@ public static class AuthEndpoints
     /// <summary>
     /// Trada da requisição de <c>/auth/requestResetPassword</c>
     /// </summary>
-    /// <param name="context">Usado para pegar o ID do usuário nos Claims da requisição</param>
-    /// <param name="controller">Controlador que irá gerenciar as nescessidades da requisição</param>
+    /// <param name="context">Usado para pegar o ID do usuário nos Claims da requisição.</param>
+    /// <param name="request">Corpo da requisição, contentdo as informações para requisitar o email de recuperação.</param>
+    /// <param name="controller">Controlador que irá gerenciar as nescessidades da requisição.</param>
     /// <returns>Resposta da requisição</returns>
     /// <permission cref="AuthorizationPolicies">Permitido apenas usuários e administradores autenticados</permission>
-    private static async Task<IResult> AuthRequestResetPasswordHandler(
+    async private static Task<IResult> AuthRequestResetPasswordHandler(
         HttpContext context,
+        [FromBody] RequestResetPasswordEmailRequestModel request,
         [FromServices] IAuthController controller)
     {
-        int userId = int.Parse(context.User.Claims
-            .First(c => c.Type == ClaimTypes.Name).Value);
-        
         bool sended;
         try
         {
-            sended = await controller.RequestPasswordResetCode(userId);
+            sended = await controller.RequestPasswordResetCode(request);
         }
         catch(Exception e)
         {
