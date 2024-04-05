@@ -153,7 +153,7 @@ public class AuthControllerCrudTests
         const string newPasswordHash = "newHash";
         
         usuarioRepositoryMock.Setup(x => 
-            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID))
+            x.GetUsuarioByEmail(AuthControllerFakeData.FAKE_EMAIL))
             .ReturnsAsync(usuarioModel);
         codigoUsuarioRepositoryMock.Setup(x => 
             x.GetUserCode(usuarioModel, UserCodeKind.PasswordReset))
@@ -163,7 +163,7 @@ public class AuthControllerCrudTests
             .Returns(newPasswordHash);
         
         ResetUserPasswordReadModel resetUserPasswordReadModel = await authController
-            .ResetUserPassword(resetUserPasswordRequest, AuthControllerFakeData.FAKE_USER_ID);
+            .ResetUserPassword(resetUserPasswordRequest);
         
         Assert.Equal(codigoUsuarioModel.codigo, resetUserPasswordReadModel.resetCode);
         Assert.Equal(resetUserPasswordRequest.resetCode, resetUserPasswordReadModel.resetCode);
@@ -197,16 +197,18 @@ public class AuthControllerCrudTests
     public async Task RequestPasswordResetCodeTest()
     {
         UsuarioModel usuarioModel = fakeData.fakeUsuarioModel;
+        RequestResetPasswordEmailRequestModel requestResetPasswordEmailRequestModel = fakeData.fakeResetPasswordEmailRequestModel;
         CodigoUsuarioModel codigoUsuarioModel = fakeData.fakeResetUserPasswordCodigoUsuarioModel;
         
         usuarioRepositoryMock.Setup(x =>
-                x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID))
+                x.GetUsuarioByEmail(AuthControllerFakeData.FAKE_EMAIL))
             .ReturnsAsync(usuarioModel);
         codigoUsuarioRepositoryMock.Setup(x =>
                 x.GenerateAndEnsureCode(usuarioModel, UserCodeKind.PasswordReset))
             .ReturnsAsync(codigoUsuarioModel);
         
-        bool success = await authController.RequestPasswordResetCode(AuthControllerFakeData.FAKE_USER_ID);
+        bool success = await authController
+            .RequestPasswordResetCode(requestResetPasswordEmailRequestModel);
         
         Assert.True(success);
     }

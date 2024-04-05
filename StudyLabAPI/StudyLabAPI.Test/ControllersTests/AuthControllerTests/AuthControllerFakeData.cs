@@ -8,7 +8,7 @@ public class AuthControllerFakeData
     public const string FAKE_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjAiLCJyb2xlIjoiVXNlciIsIm5iZiI6MTY5ODI1Mjg1OSwiZXhwIjoxNjk4MjcwODU5LCJpYXQiOjE2OTgyNTI4NTksImlzcyI6IlN0dWR5TGFiQVBJIiwiYXVkIjoiU3R1ZHlMYWJXZWIifQ.qGgy10EM6-fpVAsDd38pw9knoSxrYnktlyflh0Ux3hQ";
     public const string FAKE_HASH_OUTPUT = "hash";
     public const int FAKE_USER_ID = 0;
-    private const string FAKE_EMAIL = "test@alu.ufc.br";
+    public const string FAKE_EMAIL = "test@alu.ufc.br";
     private const int FAKE_USER_CODE = 123456;
     private const string RESET_PASSWORD_CONFIRMATION_EMAIL_CODE = "1234";
     private const string USER_PASSWORD = "Test1234";
@@ -52,8 +52,15 @@ public class AuthControllerFakeData
     public ResetUserPasswordRequestModel fakeResetUserPasswordRequestModel =>
         new()
         {
+            userEmail = FAKE_EMAIL,
             newPassword = "NewTest",
             resetCode = RESET_PASSWORD_CONFIRMATION_EMAIL_CODE
+        };
+
+    public RequestResetPasswordEmailRequestModel fakeResetPasswordEmailRequestModel =>
+        new()
+        {
+            userEmail = FAKE_EMAIL
         };
     
     public CursoModel fakeCursoModel =>
@@ -105,6 +112,7 @@ public class AuthControllerFakeData
     public ResetUserPasswordRequestModel fakeInvalidResetUserPasswordRequestModel =>
         new()
         {
+            userEmail = FAKE_EMAIL,
             resetCode = "", // Empty reset code
             newPassword = "newInvalid"
         };

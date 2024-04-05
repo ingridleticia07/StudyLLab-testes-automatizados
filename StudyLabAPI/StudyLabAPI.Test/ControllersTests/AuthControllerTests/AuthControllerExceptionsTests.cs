@@ -202,7 +202,7 @@ public class AuthControllerExceptionsTests
         ResetUserPasswordRequestModel requestModel = fakeData.fakeInvalidResetUserPasswordRequestModel;
         
         await Assert.ThrowsAsync<ValidationException>(() => authController
-            .ResetUserPassword(requestModel, AuthControllerFakeData.FAKE_USER_ID));
+            .ResetUserPassword(requestModel));
     }
     
     [Fact]
@@ -211,7 +211,7 @@ public class AuthControllerExceptionsTests
         ResetUserPasswordRequestModel requestModel = fakeData. fakeInvalidResetUserPasswordRequestModel;
         
         await Assert.ThrowsAsync<ValidationException>(() => authController
-            .ResetUserPassword(requestModel, AuthControllerFakeData.FAKE_USER_ID));
+            .ResetUserPassword(requestModel));
     }
     
     [Fact]
@@ -224,7 +224,7 @@ public class AuthControllerExceptionsTests
             .ReturnsAsync(() => null);
         
         await Assert.ThrowsAsync<UsuarioNotFoundException>(() => authController
-            .ResetUserPassword(requestModel, AuthControllerFakeData.FAKE_USER_ID));
+            .ResetUserPassword(requestModel));
     }
     
     [Fact]
@@ -234,14 +234,14 @@ public class AuthControllerExceptionsTests
         UsuarioModel usuarioModel = fakeData.fakeUsuarioModel;
         
         usuarioRepositoryMock.Setup(x =>
-            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID))
+            x.GetUsuarioByEmail(AuthControllerFakeData.FAKE_EMAIL))
             .ReturnsAsync(usuarioModel);
         codigoUsuarioRepositoryMock.Setup(x =>
             x.GetUserCode(usuarioModel, UserCodeKind.PasswordReset))
             .ReturnsAsync(() => null);
         
         await Assert.ThrowsAsync<ResetPasswordCodeNotFoundException>(() => authController
-            .ResetUserPassword(requestModel, AuthControllerFakeData.FAKE_USER_ID));
+            .ResetUserPassword(requestModel));
     }
     
     [Fact]
@@ -254,14 +254,14 @@ public class AuthControllerExceptionsTests
         codigoUsuarioModel.codigo = invalidConfirmationCode;
         
         usuarioRepositoryMock.Setup(x =>
-            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID))
+            x.GetUsuarioByEmail(AuthControllerFakeData.FAKE_EMAIL))
             .ReturnsAsync(usuarioModel);
         codigoUsuarioRepositoryMock.Setup(x =>
             x.GetUserCode(usuarioModel, UserCodeKind.PasswordReset))
             .ReturnsAsync(codigoUsuarioModel);
         
         await Assert.ThrowsAsync<UserCodeNotMatchException>(() => authController
-            .ResetUserPassword(requestModel, AuthControllerFakeData.FAKE_USER_ID));
+            .ResetUserPassword(requestModel));
     }
     
     [Fact]
@@ -277,10 +277,13 @@ public class AuthControllerExceptionsTests
     [Fact]
     public async Task RequestPasswordResetUserNotFoundTest()
     {
+        RequestResetPasswordEmailRequestModel requestResetPasswordEmailRequestModel = 
+            fakeData.fakeResetPasswordEmailRequestModel;
+        
         usuarioRepositoryMock.Setup(x =>
-            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID));
+            x.GetUsuarioByEmail(AuthControllerFakeData.FAKE_EMAIL));
         
         await Assert.ThrowsAsync<UsuarioNotFoundException>(() => 
-            authController.RequestPasswordResetCode(AuthControllerFakeData.FAKE_USER_ID));
+            authController.RequestPasswordResetCode(requestResetPasswordEmailRequestModel));
     }
 }
