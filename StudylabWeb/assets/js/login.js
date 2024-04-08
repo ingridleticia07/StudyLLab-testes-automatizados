@@ -1,5 +1,9 @@
-import { instance } from "./axios.js"
-import { saveUserCredentials } from "./auth.js"
+import { login, hasCredentialsSave } from "./lib/auth.js";
+
+if(hasCredentialsSave()) {
+  alert("Você já está logado.")
+  window.location.href = "/pages/home-admin/home-admin.html";
+}
 
 const emailInput = document.querySelector("#email");
 const passwordInput = document.querySelector("#password");
@@ -31,21 +35,14 @@ submitButton.addEventListener("click", (event) => {
     return;
   }
 
-  instance
-  .post(
-    "/auth/login",
-    {
-      email: email,
-      password: password,
-    }
-  )
-  .then(function (res) {
-    saveUserCredentials(res.data)
-    window.location.href = "/pages/home-admin/home-admin.html";
-  })
-  .catch(function (_) {
-    alert("E-mail ou senha inválidos.");
-  })
+  login(
+    email,
+    password,
+    function () {
+      window.location.href = "/pages/home-admin/home-admin.html";
+    },
+    function () {}
+  );
 });
 
 function isValidEmail(email) {
