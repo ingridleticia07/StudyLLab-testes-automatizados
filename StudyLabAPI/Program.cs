@@ -1,6 +1,7 @@
 using Serilog;
 using StudyLabAPI.Endpoints;
 using StudyLabAPI.Endpoints.AuthEndpoints;
+using StudyLabAPI.Middlewares.Auth;
 using StudyLabAPI.Middlewares.Cors;
 using StudyLabAPI.Middlewares.Filters;
 using StudyLabAPI.Services;
@@ -52,6 +53,7 @@ authGroup.MapAuthenticationEndpoints();
 RouteGroupBuilder userGroup = app.MapGroup("user")
     .AddEndpointFilter<ApiKeyFilter>()
     .RequireCors(CorsPoliciesName.ALLOW_ALL_CORS_POLICY)
+    .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE)
     .WithTags("Usuário");
 userGroup.MapUserEndpoints();
 
@@ -72,5 +74,11 @@ RouteGroupBuilder materialGroup = app.MapGroup("material")
     .RequireCors(CorsPoliciesName.ALLOW_ALL_CORS_POLICY)
     .WithTags("Material");
 materialGroup.MapMaterialEndpoints();
+
+RouteGroupBuilder utilsGroup = app.MapGroup("utils")
+    .AddEndpointFilter<ApiKeyFilter>()
+    .RequireCors(CorsPoliciesName.ALLOW_ALL_CORS_POLICY)
+    .WithTags("Utils");
+utilsGroup.MapUtilsEndpoints();
 
 app.Run();
