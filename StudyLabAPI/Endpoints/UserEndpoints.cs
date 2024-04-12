@@ -18,7 +18,6 @@ public static class UserEndpoints
     public static RouteGroupBuilder MapUserEndpoints(this RouteGroupBuilder builder)
     {
         builder.MapGet("profile", GetUserProfileInfo)
-            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE)
             .WithOpenApi(UserSummaries.UserProfileInfoSpecification);
         
         return builder;
