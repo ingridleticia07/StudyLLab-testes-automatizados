@@ -1,9 +1,7 @@
 using System.Text;
 using Konscious.Security.Cryptography;
 using Microsoft.Extensions.Options;
-using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models.Options;
-using StudyLabAPI.Utils;
 
 namespace StudyLabAPI.Services.Hash;
 

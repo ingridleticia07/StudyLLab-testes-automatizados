@@ -2,10 +2,8 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models.Options;
 using StudyLabAPI.Services;
-using StudyLabAPI.Utils;
 
 namespace StudyLabAPI.Middlewares.Auth;
 
