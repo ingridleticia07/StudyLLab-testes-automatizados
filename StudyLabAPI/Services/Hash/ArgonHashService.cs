@@ -12,12 +12,11 @@ public class ArgonHashService : IHashService
     private readonly Argon2HashParametersOptions _options;
     private readonly string _salt;
 
-    public ArgonHashService(IOptions<Argon2HashParametersOptions> options)
+    public ArgonHashService(IOptions<Argon2HashParametersOptions> options,
+        EnvironmentService environmentService)
     {
         _options = options.Value;
-        _salt = EnvVars.GetPasswordSalt() ?? 
-                throw new EnvironmentVariableIsNullOrEmptyException(
-                    nameof(EnvVars.PASSWORD_SALT));
+        _salt = environmentService.passwordSalt;
     }
     
     public string Hash(string password)

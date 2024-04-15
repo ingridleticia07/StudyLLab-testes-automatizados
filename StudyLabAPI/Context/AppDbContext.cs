@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models;
-using StudyLabAPI.Utils;
+using StudyLabAPI.Services;
 // ReSharper disable PropertyCanBeMadeInitOnly.Global
 
 namespace StudyLabAPI.Context;
@@ -11,9 +10,7 @@ namespace StudyLabAPI.Context;
 /// </summary>
 public class AppDbContext : DbContext
 {
-    private readonly string _connectionString = EnvVars.GetPostgresConnectionString() ?? 
-                                                throw new EnvironmentVariableIsNullOrEmptyException(
-                                                    nameof(EnvVars.POSTGRES_CONNECTION_STRING));
+    private string connectionString { get; }
     
     /// <summary>
     /// Tabela de usuários. <see cref="UsuarioModel"/>
@@ -55,6 +52,11 @@ public class AppDbContext : DbContext
     /// </summary>
     public DbSet<DocumentoModel> documento { get; set; } = null!;
 
+    public AppDbContext(EnvironmentService environmentService)
+    {
+        connectionString = environmentService.postgresConnectionString;
+    }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
-        optionsBuilder.UseNpgsql(_connectionString);
+        optionsBuilder.UseNpgsql(connectionString);
 }

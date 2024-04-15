@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models.Options;
+using StudyLabAPI.Services;
 using StudyLabAPI.Utils;
 
 namespace StudyLabAPI.Middlewares.Auth;
@@ -13,11 +14,11 @@ public class AuthenticationJwtBearerConfiguration : IConfigureNamedOptions<JwtBe
     private readonly JwtParametersOptions _jwtOptions;
     private readonly string _privateKey;
 
-    public AuthenticationJwtBearerConfiguration(IOptions<JwtParametersOptions> jwtOptions)
+    public AuthenticationJwtBearerConfiguration(IOptions<JwtParametersOptions> jwtOptions,
+        EnvironmentService environmentService)
     {
         _jwtOptions = jwtOptions.Value;
-        _privateKey = EnvVars.GetJwtKey() ?? 
-                     throw new EnvironmentVariableIsNullOrEmptyException(nameof(EnvVars.JWT_KEY));
+        _privateKey = environmentService.jwtKey;
     }
     
     public void Configure(string? name, JwtBearerOptions options)

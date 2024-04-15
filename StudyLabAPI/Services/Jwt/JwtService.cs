@@ -24,11 +24,17 @@ public class JwtService : IJwtService
         }
     }
 
-    public JwtService(IOptions<JwtParametersOptions> options)
+    public JwtService(IOptions<JwtParametersOptions> options,
+        EnvironmentService environmentService)
     {
         _options = options.Value;
-        _privateKey = EnvVars.GetJwtKey() ?? 
-                     throw new EnvironmentVariableIsNullOrEmptyException(nameof(EnvVars.JWT_KEY));
+        _privateKey = environmentService.jwtKey;
+    }
+    public JwtService(JwtParametersOptions options,
+        EnvironmentService environmentService)
+    {
+        _options = options;
+        _privateKey = environmentService.jwtKey;
     }
     
     public string GenerateJwt(JwtPayload payload)
