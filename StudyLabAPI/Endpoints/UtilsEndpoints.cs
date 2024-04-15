@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using StudyLabAPI.Controllers;
 using StudyLabAPI.Middlewares.Auth;
+using StudyLabAPI.Summaries;
 
 namespace StudyLabAPI.Endpoints;
 
@@ -9,9 +10,11 @@ public static class UtilsEndpoints
 {
     public static IEndpointRouteBuilder MapUtilsEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("health", CheckHealth);
+        endpoints.MapGet("health", CheckHealth)
+            .WithOpenApi(UtilsSummaries.CheckHealthSpecifications);
         endpoints.MapGet("authenticated", CheckAuthState)
-            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE);
+            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE)
+            .WithOpenApi(UtilsSummaries.CheckAuthStateSpecifications);
 
         return endpoints;
     }
