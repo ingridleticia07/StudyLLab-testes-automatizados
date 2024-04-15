@@ -12,6 +12,7 @@ using StudyLabAPI.Repositories;
 using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Hash;
 using StudyLabAPI.Services.Jwt;
+using StudyLabAPI.Utils;
 using StudyLabAPI.Validators;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -78,6 +79,8 @@ public static class Di
         services.AddSingleton<IJwtService, JwtService>();
         services.AddTransient<IEmailService, EmailService>();
         services.AddSingleton<IHashService, ArgonHashService>();
+        services.AddSingleton<EnvironmentService>(_ => 
+            EnvVars.CreateEnvironmentServiceFromVariables());
         
         return services;
     }
@@ -158,6 +161,7 @@ public static class Di
         services.AddScoped<IDisciplinaController, DisciplinaController>();
         services.AddScoped<IForumController, ForumController>();
         services.AddScoped<IDocumentoController, DocumentoController>();
+        services.AddScoped<IUtilsController, UtilsController>();
         return services;
     }
 }

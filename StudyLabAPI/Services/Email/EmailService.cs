@@ -16,16 +16,12 @@ public class EmailService : IDisposable, IEmailService
     private readonly string _smtpEmail;
     private readonly string _smtpPassword;
 
-    public EmailService()
+    public EmailService(EnvironmentService environmentService)
     {
-        _smtpServer = EnvVars.GetSmtpServer() ?? 
-                     throw new EnvironmentVariableIsNullOrEmptyException(nameof(EnvVars.SMTP_SERVER));
-        _smtpPort = int.Parse(EnvVars.GetSmtpPort() ?? 
-                         throw new EnvironmentVariableIsNullOrEmptyException(nameof(EnvVars.SMTP_PORT)));
-        _smtpEmail = EnvVars.GetSmtpEmail() ??
-                    throw new EnvironmentVariableIsNullOrEmptyException(nameof(EnvVars.SMTP_EMAIL));
-        _smtpPassword = EnvVars.GetSmtpPassword() ??
-                       throw new EnvironmentVariableIsNullOrEmptyException(nameof(EnvVars.SMTP_PASSWORD));
+        _smtpServer = environmentService.smtpServer;
+        _smtpPort = int.Parse(environmentService.smtpPort);
+        _smtpEmail = environmentService.smtpEmail;
+        _smtpPassword = environmentService.smtpPassword;
         
         smtpClient = new(_smtpServer, _smtpPort)
         {
