@@ -1,31 +1,46 @@
+using StudyLabAPI.Services;
+
 namespace StudyLabAPI.Utils;
 
 internal static class EnvVars
 {
     //TODO: Move the API Key too
-    public const string API_KEY = "API_KEY";
-    public const string POSTGRES_CONNECTION_STRING = "POSTGRES_CONNECTION_STRING";
-    public const string JWT_KEY = "JWT_KEY";
-    public const string SMTP_SERVER = "SMTP_SERVER";
-    public const string SMTP_PORT = "SMTP_PORT";
-    public const string SMTP_EMAIL = "SMTP_EMAIL";
-    public const string SMTP_PASSWORD = "SMTP_PASSWORD";
-    public const string PASSWORD_SALT = "PASSWORD_SALT";
+    private const string API_KEY = "API_KEY";
+    private const string POSTGRES_CONNECTION_STRING = "POSTGRES_CONNECTION_STRING";
+    private const string JWT_KEY = "JWT_KEY";
+    private const string SMTP_SERVER = "SMTP_SERVER";
+    private const string SMTP_PORT = "SMTP_PORT";
+    private const string SMTP_EMAIL = "SMTP_EMAIL";
+    private const string SMTP_PASSWORD = "SMTP_PASSWORD";
+    private const string PASSWORD_SALT = "PASSWORD_SALT";
     
     public static string? GetApiKey() =>
         Environment.GetEnvironmentVariable(API_KEY);
-    public static string? GetPostgresConnectionString() =>
+    private static string? GetPostgresConnectionString() =>
         Environment.GetEnvironmentVariable(POSTGRES_CONNECTION_STRING);
-    public static string? GetJwtKey() =>
+    private static string? GetJwtKey() =>
         Environment.GetEnvironmentVariable(JWT_KEY);
-    public static string? GetSmtpServer() =>
+    private static string? GetSmtpServer() =>
         Environment.GetEnvironmentVariable(SMTP_SERVER);
-    public static string? GetSmtpPort() =>
+    private static string? GetSmtpPort() =>
         Environment.GetEnvironmentVariable(SMTP_PORT);
-    public static string? GetSmtpEmail() =>
+    private static string? GetSmtpEmail() =>
         Environment.GetEnvironmentVariable(SMTP_EMAIL);
-    public static string? GetSmtpPassword() =>
+    private static string? GetSmtpPassword() =>
         Environment.GetEnvironmentVariable(SMTP_PASSWORD);
-    public static string? GetPasswordSalt() =>
+    private static string? GetPasswordSalt() =>
         Environment.GetEnvironmentVariable(PASSWORD_SALT);
+
+    public static EnvironmentService CreateEnvironmentServiceFromVariables() =>
+        new()
+        {
+            apiKey = GetApiKey() ?? throw new ArgumentNullException(API_KEY),
+            postgresConnectionString = GetPostgresConnectionString() ?? throw new ArgumentNullException(POSTGRES_CONNECTION_STRING),
+            jwtKey = GetJwtKey() ?? throw new ArgumentNullException(JWT_KEY),
+            smtpServer = GetSmtpServer() ?? throw new ArgumentNullException(SMTP_SERVER),
+            smtpPort = GetSmtpPort() ?? throw new ArgumentNullException(SMTP_PORT),
+            smtpEmail = GetSmtpEmail() ?? throw new ArgumentNullException(SMTP_EMAIL),
+            smtpPassword = GetSmtpPassword() ?? throw new ArgumentNullException(SMTP_PASSWORD),
+            passwordSalt = GetPasswordSalt() ?? throw new ArgumentNullException(PASSWORD_SALT)
+        };
 }
