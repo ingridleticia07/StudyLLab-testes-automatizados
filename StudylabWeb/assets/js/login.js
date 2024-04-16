@@ -1,8 +1,11 @@
-import { login, hasCredentialsSave } from "./lib/auth.js";
+import { login, hasCredentialsSave, authTokenIsValid, logout } from "./lib/services/auth.js";
 
-if(hasCredentialsSave()) {
+if(await authTokenIsValid()) {
   alert("Você já está logado.")
   window.location.href = "/pages/home-admin/home-admin.html";
+}
+else {
+  logout()
 }
 
 const emailInput = document.querySelector("#email");
