@@ -1,11 +1,11 @@
 import { instance, addAuthorizationHeaderInterceptor, removeAuthorizationHeaderInterceptor } from "./axios.js";
-import User from "./models/user_model.js";
 
 const AUTH_TOKEN = "authToken";
+const AUTH_ENDPOINT = "/auth";
 
 export function login(email, password, thenCallback, catchCallback) {
   instance
-    .post("/auth/login", {
+    .post(AUTH_ENDPOINT + "/login", {
       email: email,
       password: password,
     })
@@ -20,7 +20,9 @@ export function login(email, password, thenCallback, catchCallback) {
 }
 
 export function logout() {
-  localStorage.removeItem(AUTH_TOKEN);
+  if(hasCredentialsSave()) {
+    localStorage.removeItem(AUTH_TOKEN);
+  }
   removeAuthorizationHeaderInterceptor()
   //TODO: Remove usuario do cache
 }
@@ -33,22 +35,14 @@ export function getUserCredentials() {
   return localStorage.getItem(AUTH_TOKEN);
 }
 
-export async function getUserInfo() {
-  let response = await instance.get("/user/profile");
-  if(response.status !== 200) {
-    return null;
+export async function authTokenIsValid() {
+  if(!hasCredentialsSave()) {
+    return false
   }
 
-  let userInfo = new User(
-    response.data.id,
-    response.data.usename,
-    response.data.email,
-    response.data.role,
-    response.data.activate,
-    response.data.curso
-  );
+  const response = await instance.get("/utils/authenticated")
 
-  return userInfo;
+  return response.status === 200
 }
 
 export function updateUserAuthState() {

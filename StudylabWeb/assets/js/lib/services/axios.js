@@ -1,5 +1,6 @@
-import { api_key } from "./keys.js";
+import { api_key } from "../keys.js";
 
+let unauthorizedInterceptor = undefined;
 export const instance = axios.create({
   baseURL: "http://localhost:7125",
   headers: {
@@ -17,6 +18,21 @@ export function addAuthorizationHeaderInterceptor(value) {
 
     return config;
   });
+}
+
+export function addUnauthorizedInterceptor(callback) {
+  unauthorizedInterceptor = instance.interceptors.response.use(
+    function (response) {
+      return response;
+    },
+    function (error) {
+      if (error.response.status === 401) {
+        callback();
+      }
+
+      return Promise.reject(error);
+    }
+  );
 }
 
 export function removeAuthorizationHeaderInterceptor() {
