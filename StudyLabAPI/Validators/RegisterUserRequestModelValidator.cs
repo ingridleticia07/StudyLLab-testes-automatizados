@@ -20,9 +20,9 @@ public class RegisterUserRequestModelValidator : AbstractValidator<RegisterUserR
             .NotEmpty()
             .MinimumLength(8)
             .MaximumLength(20);
-        RuleFor(m => m.codigoUsuario)
+        RuleFor(m => m.matricula)
             .NotNull()
-            .GreaterThan(99999); // Isso era pra ser string, Deus me perdoe
+            .Length(6);
         RuleFor(m => m.role)
             .IsInEnum();
         RuleFor(m => m.codeCurso)

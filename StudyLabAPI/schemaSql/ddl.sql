@@ -155,7 +155,7 @@ create table if not exists usuario
 (
     id_usuario            serial,
     email_usuario         varchar(60) not null,
-    codigo_usuario        integer     not null,
+    matricula             varchar(6)  not null,
     senha_usuario         varchar(60) not null,
     status_usuario        boolean,
     tipo_usuario          integer     not null,
@@ -204,7 +204,6 @@ END;
 $$;
 
 alter function get_curso_id(text) owner to admin;
-
 
 insert into curso (id_curso, nome_curso) values 
     (1, 'Engenharia de Software'), 

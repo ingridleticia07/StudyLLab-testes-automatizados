@@ -89,13 +89,13 @@ public class AuthController : IAuthController
         logger.Information("Verificando se já existe um usuário com o CodigoUsuario[{CodigoUsuario}] e Email[{Email}]",
             registerUserRequestModel.username, registerUserRequestModel.email);
         bool invalidExists = await usuarioRepository
-            .CheckUserByCodigoAndEmail(registerUserRequestModel.codigoUsuario,
+            .CheckUserByMatriculaAndEmail(registerUserRequestModel.matricula,
                 registerUserRequestModel.email);
         if(invalidExists)
         {
             ExistsUserException exception = new(new List<string> 
             { 
-                nameof(registerUserRequestModel.codigoUsuario), 
+                nameof(registerUserRequestModel.matricula), 
                 nameof(registerUserRequestModel.email) 
             });
             logger.Error(exception, "Um usuário com o mesmo {NomeUsuario} ou {Email} já existe",
