@@ -1,4 +1,4 @@
-import { login, hasCredentialsSave, authTokenIsValid, logout } from "./lib/services/auth.js";
+import { login, authTokenIsValid, logout } from "./lib/services/auth.js";
 
 if(await authTokenIsValid()) {
   alert("Você já está logado.")

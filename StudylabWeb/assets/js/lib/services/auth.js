@@ -36,6 +36,7 @@ export function getUserCredentials() {
 }
 
 export async function authTokenIsValid() {
+  updateUserAuthState()
   if(!hasCredentialsSave()) {
     return false
   }
