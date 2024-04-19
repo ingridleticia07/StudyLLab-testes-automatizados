@@ -1,5 +1,5 @@
 import { instance, addAuthorizationHeaderInterceptor, removeAuthorizationHeaderInterceptor } from "./axios.js";
-
+import { getCursoCodeByName } from "../utils/curso_matcher.js"
 const AUTH_TOKEN = "authToken";
 const AUTH_ENDPOINT = "/auth";
 
@@ -13,8 +13,28 @@ export function login(email, password, thenCallback, catchCallback) {
       saveUserCredentials(res.data);
       thenCallback();
     })
-    .catch(function (err) {
-      console.log(err);
+    .catch(function () {
+      catchCallback();
+    });
+}
+
+export function register(username, email, password, matricula, cursoName, thenCallback, catchCallback) {
+  const cursoCode = getCursoCodeByName(cursoName)
+
+  instance
+    .post(AUTH_ENDPOINT + "/register", {
+      username: username,
+      email: email,
+      password: password,
+      codigoUsuario: matricula,
+      role: 0,
+      codeCurso: cursoCode
+    })
+    .then(function (res) {
+      saveUserCredentials(res.data);
+      thenCallback();
+    })
+    .catch(function () {
       catchCallback();
     });
 }
