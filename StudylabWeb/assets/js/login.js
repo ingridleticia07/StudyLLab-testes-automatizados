@@ -1,12 +1,7 @@
-import { login, authTokenIsValid, logout } from "./lib/services/auth.js";
+import { login } from "./lib/services/auth.js";
+import { userAllreadyLogged } from "./lib/utils/events_guards.js"
 
-if(await authTokenIsValid()) {
-  alert("Você já está logado.")
-  window.location.href = "/pages/home-admin/home-admin.html";
-}
-else {
-  logout()
-}
+await userAllreadyLogged();
 
 const emailInput = document.querySelector("#email");
 const passwordInput = document.querySelector("#password");
