@@ -54,7 +54,7 @@ public class AuthControllerValidationTest
                 password = "test1234",
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123456,
+                matricula = 123456,
             },
             new RegisterUserRequestModel
             {
@@ -63,7 +63,7 @@ public class AuthControllerValidationTest
                 password = "test1234",
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123456,
+                matricula = 123456,
             },
             new RegisterUserRequestModel
             {
@@ -72,7 +72,7 @@ public class AuthControllerValidationTest
                 password = "test1234",
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123456,
+                matricula = 123456,
             },
             new RegisterUserRequestModel
             {
@@ -81,7 +81,7 @@ public class AuthControllerValidationTest
                 password = "test1234",
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123456,
+                matricula = 123456,
             },
             new RegisterUserRequestModel
             {
@@ -90,7 +90,7 @@ public class AuthControllerValidationTest
                 password = "test1234",
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123456,
+                matricula = 123456,
             },
             new RegisterUserRequestModel
             {
@@ -99,7 +99,7 @@ public class AuthControllerValidationTest
                 password = "test1234",
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123456,
+                matricula = 123456,
             },
             new RegisterUserRequestModel
             {
@@ -108,7 +108,7 @@ public class AuthControllerValidationTest
                 password = "test1234",
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123456,
+                matricula = 123456,
             },
             new RegisterUserRequestModel
             {
@@ -117,7 +117,7 @@ public class AuthControllerValidationTest
                 password = "",
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123456,
+                matricula = 123456,
             },
             new RegisterUserRequestModel
             {
@@ -126,7 +126,7 @@ public class AuthControllerValidationTest
                 password = new('a', 21),
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123456,
+                matricula = 123456,
             },
             new RegisterUserRequestModel
             {
@@ -135,7 +135,7 @@ public class AuthControllerValidationTest
                 password = new('a', 1),
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123456,
+                matricula = 123456,
             },
             new RegisterUserRequestModel
             {
@@ -144,7 +144,7 @@ public class AuthControllerValidationTest
                 password = new('a', 7),
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123456,
+                matricula = 123456,
             },
             new RegisterUserRequestModel
             {
@@ -153,7 +153,7 @@ public class AuthControllerValidationTest
                 password = "test1234",
                 codeCurso = -1,
                 role = UserRole.User,
-                codigoUsuario = 123456,
+                matricula = 123456,
             },
             new RegisterUserRequestModel
             {
@@ -162,7 +162,7 @@ public class AuthControllerValidationTest
                 password = "test1234",
                 codeCurso = 0,
                 role = UserRole.User,
-                codigoUsuario = 123456,
+                matricula = 123456,
             },
             new RegisterUserRequestModel
             {
@@ -171,7 +171,7 @@ public class AuthControllerValidationTest
                 password = "test1234",
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = -1,
+                matricula = -1,
             },
             new RegisterUserRequestModel
             {
@@ -180,7 +180,7 @@ public class AuthControllerValidationTest
                 password = "test1234",
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 1,
+                matricula = 1,
             },
             new RegisterUserRequestModel
             {
@@ -189,7 +189,7 @@ public class AuthControllerValidationTest
                 password = "test1234",
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 99999,
+                matricula = 99999,
             },
             new RegisterUserRequestModel
             {
@@ -197,35 +197,35 @@ public class AuthControllerValidationTest
                 password = "test1234",
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123456
+                matricula = 123456
             },
             new RegisterUserRequestModel
             {
                 password = "test1234",
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123456
+                matricula = 123456
             },
             new RegisterUserRequestModel
             {
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123456
+                matricula = 123456
             },
             new RegisterUserRequestModel
             {
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123456
+                matricula = 123456
             },
             new RegisterUserRequestModel
             {
                 role = UserRole.User,
-                codigoUsuario = 123456
+                matricula = 123456
             },
             new RegisterUserRequestModel
             {
-                codigoUsuario = 123456
+                matricula = 123456
             },
             new RegisterUserRequestModel(),
         };
@@ -241,7 +241,7 @@ public class AuthControllerValidationTest
                 password = "test1234",
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123456
+                matricula = 123456
             },
             new RegisterUserRequestModel
             {
@@ -250,7 +250,7 @@ public class AuthControllerValidationTest
                 password = "test1234",
                 codeCurso = 1,
                 role = UserRole.User,
-                codigoUsuario = 123456
+                matricula = 123456
             }
         };
     }

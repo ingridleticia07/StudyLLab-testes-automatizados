@@ -36,10 +36,10 @@ public class UsuarioRepository : IUsuarioRepository
         return userModel;
     }
     
-    public async Task<bool> CheckUserByCodigoAndEmail(int codigoUsuario, string email)
+    public async Task<bool> CheckUserByMatriculaAndEmail(string matricula, string email)
     {
         bool exists = await dbContext.usuarios
-            .AnyAsync(u => u.codigoUsuario == codigoUsuario || 
+            .AnyAsync(u => u.matricula == matricula || 
                            u.emailUsuario == email);
         return exists;
     }
