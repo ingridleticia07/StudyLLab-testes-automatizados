@@ -9,7 +9,7 @@ public class AuthControllerFakeData
     public const string FAKE_HASH_OUTPUT = "hash";
     public const int FAKE_USER_ID = 0;
     public const string FAKE_EMAIL = "test@alu.ufc.br";
-    private const int FAKE_USER_CODE = 123456;
+    private const string FAKE_USER_CODE = "123456";
     private const string RESET_PASSWORD_CONFIRMATION_EMAIL_CODE = "1234";
     private const string USER_PASSWORD = "Test1234";
 
@@ -18,7 +18,7 @@ public class AuthControllerFakeData
         {
             idUsuario = FAKE_USER_ID,
             emailUsuario = FAKE_EMAIL,
-            codigoUsuario = FAKE_USER_CODE,
+            matricula = FAKE_USER_CODE,
             senhaUsuario = FAKE_HASH_OUTPUT,
             statusUsuario = false,
             tipoUsuario = UserRole.User,
@@ -33,7 +33,7 @@ public class AuthControllerFakeData
             username = "Test",
             email = FAKE_EMAIL,
             password = USER_PASSWORD,
-            codigoUsuario = FAKE_USER_CODE,
+            matricula = FAKE_USER_CODE,
             role = UserRole.User,
             codeCurso = 1,
             imagem = null
@@ -93,7 +93,7 @@ public class AuthControllerFakeData
             username = "invalid",
             email = "", // Empty email
             password = USER_PASSWORD,
-            codigoUsuario = FAKE_USER_CODE,
+            matricula = FAKE_USER_CODE,
             role = UserRole.User,
             codeCurso = 1,
             imagem = null

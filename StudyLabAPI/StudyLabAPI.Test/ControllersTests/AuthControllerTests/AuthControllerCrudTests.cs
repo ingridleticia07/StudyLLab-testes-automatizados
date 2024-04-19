@@ -68,7 +68,7 @@ public class AuthControllerCrudTests
         RegisterUserRequestModel requestModel = fakeData.fakeRegisterUserRequestModel;
         
         usuarioRepositoryMock.Setup(x => 
-            x.CheckUserByCodigoAndEmail(requestModel.codigoUsuario, requestModel.email))
+            x.CheckUserByMatriculaAndEmail(requestModel.matricula, requestModel.email))
             .ReturnsAsync(false);
         cursoRepositoryMock.Setup(x =>
             x.GetCursoById(requestModel.codeCurso))
