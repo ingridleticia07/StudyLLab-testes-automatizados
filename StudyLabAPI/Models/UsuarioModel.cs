@@ -17,9 +17,9 @@ public class UsuarioModel
     [Required]
     public string emailUsuario { get; set; }
 
-    [Column("codigo_usuario")]
+    [Column("matricula")]
     [Required]
-    public int codigoUsuario { get; set; }
+    public string matricula { get; set; }
 
     [Column("senha_usuario")]
     [MaxLength(60)]
