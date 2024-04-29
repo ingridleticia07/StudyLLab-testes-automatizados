@@ -107,8 +107,8 @@
                     <td>Engenharia de Software</td>
                     <td>aliciasantos@algum-email.br</td>
                     <td>
-                      <button class="action-button"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
-                      <button class="action-button"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
+                      <button class="action-button banir"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
+                      <button class="action-button deletar"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
                     </td>
                   </tr>
                   <tr>
@@ -118,8 +118,8 @@
                     <td>Engenharia de Software</td>
                     <td>aliciasantos@algum-email.br</td>
                     <td>
-                      <button class="action-button"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
-                      <button class="action-button"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
+                      <button class="action-button banir"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
+                      <button class="action-button deletar"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
                     </td>
                   </tr>
                   <tr>
@@ -129,8 +129,8 @@
                     <td>Engenharia de Software</td>
                     <td>aliciasantos@algum-email.br</td>
                     <td>
-                      <button class="action-button"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
-                      <button class="action-button"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
+                      <button class="action-button banir"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
+                      <button class="action-button deletar"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
                     </td>
                   </tr>
                   <tr>
@@ -140,8 +140,8 @@
                     <td>Engenharia de Software</td>
                     <td>aliciasantos@algum-email.br</td>
                     <td>
-                      <button class="action-button"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
-                      <button class="action-button"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
+                      <button class="action-button banir"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
+                      <button class="action-button deletar"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
                     </td>
                   </tr>
                   <tr>
@@ -151,8 +151,8 @@
                     <td>Engenharia de Software</td>
                     <td>aliciasantos@algum-email.br</td>
                     <td>
-                      <button class="action-button"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
-                      <button class="action-button"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
+                      <button class="action-button banir"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
+                      <button class="action-button deletar"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
                     </td>
                   </tr>
                 </tbody>  <!-- usuarios -->
@@ -165,6 +165,40 @@
           </div>
         </main>
       </div>  
+    </div>
+
+    <div id="modal-excluir" class="modal-container">
+      <div class="modal">
+        <header>
+          <h2 class="subtitulo">Confirmar exclusão</h2>
+          <button class="fechar">×</button>
+        </header>
+        <div class="corpo-modal">
+          <p>Tem certeza de que deseja excluir este usuário?<br>    
+            Esta ação é irreversível. </p> <br>
+        </div>
+        <footer>
+          <button class="btn cancelar">Cancelar</button>
+          <button class="btn confirmar">Excluir</button>
+        </footer>
+      </div>
+    </div>
+
+    <div id="modal-banir" class="modal-container">
+      <div class="modal">
+        <header>
+          <h2 class="subtitulo">Confirmar banimento</h2>
+          <button class="fechar">×</button>
+        </header>
+        <div class="corpo-modal">
+          <p>Tem certeza de que deseja banir este usuário?<br>    
+            Esta ação é irreversível. </p> <br>
+        </div>
+        <footer>
+          <button class="btn cancelar">Cancelar</button>
+          <button class="btn confirmar">Banir</button>
+        </footer>
+      </div>
     </div>
 
     <script src="user-managentment.js"></script>

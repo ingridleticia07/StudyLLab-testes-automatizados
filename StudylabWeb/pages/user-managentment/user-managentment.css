@@ -212,3 +212,76 @@ h1{
   .breadcrumbs span {
     font-size: 0.9rem;
   }
+
+.modal-container{
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 2000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal{
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    
+    width: 400px;
+    height: 200px;
+    gap: 0px;
+    border-radius: 12px;
+    opacity: 0px;
+    padding: 20px;
+    padding-right: 30px;
+    position: relative;
+}
+
+.modal header{
+    padding: 20px;
+}
+
+.modal .corpo-modal{
+    padding-left: 20px;
+}
+.modal footer{
+    text-align: right;
+}
+
+.fechar{
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 6px solid white;
+    background: #ffffff;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.btn {
+
+    padding: 12px 50px;
+    margin-top: auto;
+    border-radius:0.5rem;
+    border:0.5px solid  #FF8700;
+    cursor: pointer;
+    margin-left: 10px;
+}
+  
+.cancelar {
+  background-color: #ffffff;
+  color: #FF8700;
+}
+  
+.confirmar {
+  background-color: #FF8700;
+  color: white;
+}

@@ -327,7 +327,7 @@ body{
     text-align: right;
 }
 
-#fechar{
+.fechar{
     position: absolute;
     right: 20px;
     top: 15px;

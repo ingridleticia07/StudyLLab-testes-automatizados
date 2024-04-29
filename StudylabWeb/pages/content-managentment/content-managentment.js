@@ -1,38 +1,55 @@
-var modal = document.getElementById("modal-excluir");
-var closeButton = document.getElementById("fechar");
-var deleteButton = document.querySelectorAll(".deletar");
-var cancelButton = document.getElementById("cancelarButton");
-var confirmButton = document.getElementById("confirarmButton");
+const modalExc = document.getElementById("modal-excluir");
+const modalBan = document.getElementById("modal-banir");
+const deleteButtons = document.querySelectorAll(".deletar");
+const banButtons = document.querySelectorAll(".banir");
 
-
-function openModal() {
-  modal.style.display = "flex";
+function openModal(elemento) {
+  elemento.style.display = "flex";
 }
 
-function closeModal() {
-  modal.style.display = "none";
+function closeModal(elemento) {
+  elemento.style.display = "none";
 }
 
-deleteButton.forEach(function(botao) {
+deleteButtons.forEach(function(botao) {
     botao.addEventListener("click", function() {
         console.log("Botão deletar clicado!");
-        openModal(0)
+        openModal(modalExc);
     });
 });
 
-modal.onclick = function() {
-    closeModal();
-}
+banButtons.forEach(function(botao) {
+  botao.addEventListener("click", function() {
+      console.log("Botão de banir clicado!");
+      openModal(modalBan);
+  });
+});
 
-closeButton.onclick = function() {
-  closeModal();
+
+document.querySelectorAll('.fechar').forEach(function(botao) {
+  botao.addEventListener("click", function() {
+    const modal = botao.closest('.modal-container');
+    closeModal(modal);
+  });
+});
+
+document.querySelectorAll('.cancelar').forEach(function(botao) {
+  botao.addEventListener("click", function() {
+    const modal = botao.closest('.modal-container');
+    closeModal(modal);
+  });
+});
+
+document.querySelectorAll('.confirmar').forEach(function(botao) {
+  botao.addEventListener("click", function() {
+    const modal = botao.closest('.modal-container');
+    closeModal(modal);
+  });
+});
+
+
+window.onclick = function(event) {
+  if (event.target.classList.contains('modal-container')) {
+    closeModal(event.target);
+  }
 };
-
-cancelButton.onclick = function() {
-  closeModal();
-};
-
-confirmButton.onclick = function() {
-    closeModal();
-}
-
