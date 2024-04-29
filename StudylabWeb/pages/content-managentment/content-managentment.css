@@ -359,3 +359,44 @@ body{
     background-color: #FF8700;
     color: white;
   }
+
+/* Estilos do Modal */
+.confirmacao {
+  display: none;
+  position: fixed;
+  left: 0;
+  bottom: 50px;
+  width: 100%;
+  animation-name: slideIn;
+  animation-duration: 0.5s;
+}
+
+.modal-content {
+  background-color: #4BAF75;
+  color: white;
+  margin: 0 auto;
+  padding: 15px;
+  border-radius: 8px; 
+  width: 250px;
+  text-align: center;
+}
+
+.checkmark{
+    align-items: center;
+}
+
+@keyframes slideOf {
+    from {opacity: 1;}
+    to {opacity: 0;}
+}
+
+@keyframes slideIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+  
+.desfazer {
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+}

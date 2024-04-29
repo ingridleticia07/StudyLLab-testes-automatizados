@@ -2,6 +2,7 @@ const modalExc = document.getElementById("modal-excluir");
 const modalBan = document.getElementById("modal-banir");
 const deleteButtons = document.querySelectorAll(".deletar");
 const banButtons = document.querySelectorAll(".banir");
+var modal = document.getElementById("modalConfirmacao");
 
 function openModal(elemento) {
   elemento.style.display = "flex";
@@ -44,6 +45,7 @@ document.querySelectorAll('.confirmar').forEach(function(botao) {
   botao.addEventListener("click", function() {
     const modal = botao.closest('.modal-container');
     closeModal(modal);
+    showModal();
   });
 });
 
@@ -53,3 +55,16 @@ window.onclick = function(event) {
     closeModal(event.target);
   }
 };
+
+function showModal() {
+  modal.style.animationName = "slideIn";
+  modal.style.display = "block"; 
+
+  setTimeout(function() {
+    modal.style.animationName = "slideOf"; 
+    setTimeout(function() {
+      modal.style.display = "none"; 
+    }, 500); 
+  }, 10000);
+}
+
