@@ -64,7 +64,7 @@ function showModal() {
     modal.style.animationName = "slideOf"; 
     setTimeout(function() {
       modal.style.display = "none"; 
-    }, 500); 
-  }, 10000);
+    }, 200); 
+  }, 5000);
 }
 

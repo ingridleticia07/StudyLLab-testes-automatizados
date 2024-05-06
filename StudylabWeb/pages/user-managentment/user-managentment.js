@@ -2,6 +2,8 @@ const modalExc = document.getElementById("modal-excluir");
 const modalBan = document.getElementById("modal-banir");
 const deleteButtons = document.querySelectorAll(".deletar");
 const banButtons = document.querySelectorAll(".banir");
+const confirmDeleteButton = document.querySelector("#modal-excluir .confirmar");
+const confirmBanButton = document.querySelector("#modal-banir .confirmar");
 
 function openModal(elemento) {
   elemento.style.display = "flex";
@@ -10,13 +12,6 @@ function openModal(elemento) {
 function closeModal(elemento) {
   elemento.style.display = "none";
 }
-
-deleteButtons.forEach(function(botao) {
-    botao.addEventListener("click", function() {
-        console.log("Botão deletar clicado!");
-        openModal(modalExc);
-    });
-});
 
 banButtons.forEach(function(botao) {
   botao.addEventListener("click", function() {
@@ -33,17 +28,23 @@ document.querySelectorAll('.fechar').forEach(function(botao) {
   });
 });
 
-document.querySelectorAll('.cancelar').forEach(function(botao) {
+deleteButtons.forEach(function(botao) {
   botao.addEventListener("click", function() {
-    const modal = botao.closest('.modal-container');
-    closeModal(modal);
+    openModal(modalExc);
+    confirmDeleteButton.addEventListener("click", function() {
+        closeModal(modalExc);
+        showModal(document.getElementById('modalConfirmacaoExcluir'));
+    });
   });
 });
 
-document.querySelectorAll('.confirmar').forEach(function(botao) {
+banButtons.forEach(function(botao) {
   botao.addEventListener("click", function() {
-    const modal = botao.closest('.modal-container');
-    closeModal(modal);
+    openModal(modalBan);
+    confirmBanButton.addEventListener("click", function() {
+        closeModal(modalBan);
+        showModal(document.getElementById('modalConfirmacaoBanir'));
+    });
   });
 });
 
@@ -56,7 +57,6 @@ window.onclick = function(event) {
 
 
 document.addEventListener('DOMContentLoaded', (event) => {
-  // Selecionar todos os checkboxes quando o checkbox do cabeçalho é marcado
   const selectAllCheckbox = document.getElementById('select-all');
   selectAllCheckbox.addEventListener('change', function() {
     const userCheckboxes = document.querySelectorAll('.user-table tbody input[type="checkbox"]');
@@ -65,3 +65,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
   });
 });
+
+function showModal(modal) {
+  modal.style.animationName = "slideIn";
+  modal.style.display = "block"; 
+
+  setTimeout(function() {
+    modal.style.animationName = "slideOf"; 
+    setTimeout(function() {
+      modal.style.display = "none"; 
+    }, 200); 
+  }, 5000);
+}
