@@ -2,6 +2,8 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using StudyLabAPI.Context;
 using StudyLabAPI.Controllers;
 using StudyLabAPI.Mapper;
@@ -55,15 +57,27 @@ public static class Di
     /// Adiciona serviços para exportação de métricas ao container de DI, usando o OpenTelemetry.
     /// </summary>
     /// <returns><see cref="IServiceCollection"/> para que outras chamadas possam ser encadeadas.</returns>
-    public static IServiceCollection AddOTMetrics(this IServiceCollection services)
+    public static IServiceCollection AddOtMetrics(this IServiceCollection services)
     {
         services.AddOpenTelemetry()
-            .WithMetrics(x =>
+            .ConfigureResource(b =>
             {
-                x.AddPrometheusExporter();
-
-                x.AddMeter("Microsoft.AspNetCore.Hosting", "Microsoft.AspNetCore.Server.Kestrel");
-                
+                b.AddService("StudyLabAPI");
+            })
+            .WithTracing(t =>
+            {
+                t.AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddEntityFrameworkCoreInstrumentation()
+                    .AddOtlpExporter();
+            })
+            .WithMetrics(m =>
+            {
+                m.AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddRuntimeInstrumentation()
+                    .AddProcessInstrumentation()
+                    .AddPrometheusExporter(f => f.DisableTotalNameSuffixForCounters = true);
             });
 
         return services;

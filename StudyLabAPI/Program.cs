@@ -22,7 +22,7 @@ builder.Services
     .AddApiMetadata()
     .AddServicesConfiguration(builder.Configuration)
     .ConfigureServices()
-    .AddOTMetrics()
+    .AddOtMetrics()
     .AddCustomCors();
 
 builder.Services.AddStorageServices()
