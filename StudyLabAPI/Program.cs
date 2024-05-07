@@ -22,6 +22,7 @@ builder.Services
     .AddApiMetadata()
     .AddServicesConfiguration(builder.Configuration)
     .ConfigureServices()
+    .AddOTMetrics()
     .AddCustomCors();
 
 builder.Services.AddStorageServices()
@@ -37,10 +38,14 @@ WebApplication app = builder.Build();
 
 if(app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app
+        .UseSwagger()
+        .UseSwaggerUI();
 }
-app.UseCors()
+
+app.MapPrometheusScrapingEndpoint();
+app
+    .UseCors()
     .UseAuthentication()
     .UseAuthorization();
 

@@ -1,6 +1,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
+using OpenTelemetry.Metrics;
 using StudyLabAPI.Context;
 using StudyLabAPI.Controllers;
 using StudyLabAPI.Mapper;
@@ -48,6 +49,23 @@ public static class Di
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerConfiguration>();
         services.AddTransient<IConfigureOptions<JwtBearerOptions>, AuthenticationJwtBearerConfiguration>();
         
+        return services;
+    }
+    /// <summary>
+    /// Adiciona serviços para exportação de métricas ao container de DI, usando o OpenTelemetry.
+    /// </summary>
+    /// <returns><see cref="IServiceCollection"/> para que outras chamadas possam ser encadeadas.</returns>
+    public static IServiceCollection AddOTMetrics(this IServiceCollection services)
+    {
+        services.AddOpenTelemetry()
+            .WithMetrics(x =>
+            {
+                x.AddPrometheusExporter();
+
+                x.AddMeter("Microsoft.AspNetCore.Hosting", "Microsoft.AspNetCore.Server.Kestrel");
+                
+            });
+
         return services;
     }
     /// <summary>
