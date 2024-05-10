@@ -68,3 +68,40 @@ function showModal() {
   }, 5000);
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+  const filterButton = document.querySelector(".filter-button");
+  const dropdownContent = document.querySelector(".dropdown-content");
+  const allFilterOptions = document.querySelectorAll('.filter-options');
+
+  filterButton.addEventListener("click", function(event) {
+    dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+    allFilterOptions.forEach(option => option.style.display = "none"); // Fechar outros submenus quando o menu principal é aberto
+    event.stopPropagation(); // Impede que o evento de clique se propague para o window
+  });
+
+  document.querySelectorAll('.dropdown-item').forEach(item => {
+    item.addEventListener('click', function(event) {
+      const targetId = item.getAttribute('data-target');
+      const targetElement = document.getElementById(targetId);
+
+      allFilterOptions.forEach(option => {
+        if (option === targetElement) {
+          option.style.display = option.style.display === "block" ? "none" : "block";
+        } else {
+          option.style.display = "none";
+        }
+      });
+
+      event.stopPropagation(); // Impede que o evento de clique se propague para o window
+    });
+  });
+
+  // Fechar todos os menus quando clicado fora deles
+  window.addEventListener("click", function(event) {
+    if (!event.target.matches('.filter-button') && !event.target.closest('.dropdown-content') && !event.target.closest('.filter-options')) {
+      dropdownContent.style.display = "none";
+      allFilterOptions.forEach(option => option.style.display = "none");
+    }
+  });
+});
+ 

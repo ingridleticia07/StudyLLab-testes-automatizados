@@ -399,3 +399,44 @@ body{
   text-decoration: none;
   cursor: pointer;
 }
+
+.filter-container {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  right: 150px;
+  border-radius: 8px; 
+  top : 60px;
+}
+
+.filter-options {
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 2;
+  border-radius: 8px; 
+  right: -35px;
+  padding: 10px;
+  top : 60px;
+}
+
+.dropdown-item {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+}
+
+.filter-options div {
+  margin-top: 5px;
+}
