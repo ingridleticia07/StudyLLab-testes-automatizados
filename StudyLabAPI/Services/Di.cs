@@ -77,7 +77,7 @@ public static class Di
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation()
                     .AddProcessInstrumentation()
-                    .AddPrometheusExporter(f => f.DisableTotalNameSuffixForCounters = true);
+                    .AddPrometheusExporter();
             });
 
         return services;
