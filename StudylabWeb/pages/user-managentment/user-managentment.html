@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StudyLab</title>
+    <link rel="stylesheet" href="user-managentment.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  </head>
+
+  <body>
+    <header class="top-nav">
+      <div class="logo"><img src="../../assets/img/StudyLab.svg" alt="" /></div>
+      <div class="search-bar">
+        <input type="search" placeholder="Procurar..." />
+        <button type="submit">
+          <img src="../../assets/img/icon-lupa.svg" alt="" />
+        </button>
+      </div>
+      <div class="user-controls">
+        <a class="icon-user-control-1" href="#"
+          ><img src="../../assets/img/icon-sino.svg" alt=""
+        /></a>
+        <a class="icon-user-control-2" href="#"
+          ><img src="../../assets/img/icon-user-header.svg" alt=""
+        /></a>
+      </div>
+    </header>
+    <div class="primary">
+      <aside class="sidebar">
+        <nav class="menu">
+          <ul>
+            <li>
+              <a href="../home-admin/home-admin.html"
+                ><img
+                  class="icon-sidebar"
+                  src="../../assets/img/icon-home.svg"
+                  alt=""
+              /></a>
+            </li>
+            <li>
+              <a href="#"
+                ><img
+                  class="icon-sidebar"
+                  src="../../assets/img/icon-book.svg"
+                  alt=""
+              /></a>
+            </li>
+            <li>
+              <a href="#"
+                ><img
+                  class="icon-sidebar"
+                  src="../../assets/img/icon-user.svg"
+                  alt=""
+              /></a>
+            </li>
+            <li>
+              <a href="../content-managentment/content-managentment.html"
+                ><img
+                  class="icon-sidebar"
+                  src="../../assets/img/icon-folder.svg"
+                  alt=""
+              /></a>
+            </li>
+            <li>
+              <a href="#"
+                ><img class="icon-sidebar" src="../../assets/img/icon-i.svg" alt=""
+              /></a>
+            </li>
+            <li>
+              <a href="#"
+                ><img
+                  class="icon-sidebar"
+                  src="../../assets/img/icon-help.svg"
+                  alt=""
+              /></a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+      
+      <div class="externo">
+        <div class="breadcrumbs">
+          <span>Página Inicial > Gerenciamento de Usuários</span>
+        </div>
+        <main class="content">
+          <div class="user-managentment">
+            <H1>Usuários</H1>
+            <div>
+              <br><br>
+              <table class="user-table">
+                <thead>
+                  <tr>
+                    <th><input type="checkbox" name="select-all" id="select-all"></th>
+                    <th>MATRÍCULA</th>
+                    <th>ALUNO(A)</th>
+                    <th>CURSO</th>
+                    <th>EMAIL</th>
+                    <th>AÇÕES</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><input type="checkbox" name="user"></td>
+                    <td>493782</td>
+                    <td>Alicia Santos</td>
+                    <td>Engenharia de Software</td>
+                    <td>aliciasantos@algum-email.br</td>
+                    <td>
+                      <button class="action-button banir"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
+                      <button class="action-button deletar"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" name="user"></td>
+                    <td>493782</td>
+                    <td>Alicia Santos</td>
+                    <td>Engenharia de Software</td>
+                    <td>aliciasantos@algum-email.br</td>
+                    <td>
+                      <button class="action-button banir"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
+                      <button class="action-button deletar"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" name="user"></td>
+                    <td>493782</td>
+                    <td>Alicia Santos</td>
+                    <td>Engenharia de Software</td>
+                    <td>aliciasantos@algum-email.br</td>
+                    <td>
+                      <button class="action-button banir"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
+                      <button class="action-button deletar"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" name="user"></td>
+                    <td>493782</td>
+                    <td>Alicia Santos</td>
+                    <td>Engenharia de Software</td>
+                    <td>aliciasantos@algum-email.br</td>
+                    <td>
+                      <button class="action-button banir"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
+                      <button class="action-button deletar"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" name="user"></td>
+                    <td>493782</td>
+                    <td>Alicia Santos</td>
+                    <td>Engenharia de Software</td>
+                    <td>aliciasantos@algum-email.br</td>
+                    <td>
+                      <button class="action-button banir"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
+                      <button class="action-button deletar"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
+                    </td>
+                  </tr>
+                </tbody>  <!-- usuarios -->
+              </table>
+            </div>
+          </div>
+          <div class="pagination">
+            <span>1-1 de 1</span>
+            <button><img src="../../assets/img/Button_Prev.svg" alt="anterior"></button> 1/1 <button><img src="../../assets/img/Button_next.svg" alt="proximo"></button>
+          </div>
+        </main>
+      </div>  
+    </div>
+
+    <div id="modal-excluir" class="modal-container">
+      <div class="modal">
+        <header>
+          <h2 class="subtitulo">Confirmar exclusão</h2>
+          <button class="fechar">×</button>
+        </header>
+        <div class="corpo-modal">
+          <p>Tem certeza de que deseja excluir este usuário?<br>    
+            Esta ação é irreversível. </p> <br>
+        </div>
+        <footer>
+          <button class="btn cancelar">Cancelar</button>
+          <button class="btn confirmar">Excluir</button>
+        </footer>
+      </div>
+    </div>
+
+    <div id="modal-banir" class="modal-container">
+      <div class="modal">
+        <header>
+          <h2 class="subtitulo">Confirmar banimento</h2>
+          <button class="fechar">×</button>
+        </header>
+        <div class="corpo-modal">
+          <p>Tem certeza de que deseja banir este usuário?<br>    
+            Esta ação é irreversível. </p> <br>
+        </div>
+        <footer>
+          <button class="btn cancelar">Cancelar</button>
+          <button class="btn confirmar">Banir</button>
+        </footer>
+      </div>
+    </div>
+
+    <div id="modalConfirmacaoExcluir" class="confirmacao">
+      <div class="modal-content">
+        <p><img class="checkmark" src="../../assets/img/icon-check.svg">  Usuário removido com sucesso!  |  <a href="#" class="desfazer">  Desfazer</a></p>
+      </div>
+    </div>
+
+    <div id="modalConfirmacaoBanir" class="confirmacao">
+      <div class="modal-content">
+        <p><img class="checkmark" src="../../assets/img/icon-check.svg">  Usuário banido!  |  <a href="#" class="desfazer">  Desfazer</a></p>
+      </div>
+    </div>
+
+    <script src="user-managentment.js"></script>
+  </body>
+</html>
