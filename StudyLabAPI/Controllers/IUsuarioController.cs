@@ -14,6 +14,14 @@ namespace StudyLabAPI.Controllers;
 /// </remarks>
 public interface IUsuarioController
 {
+    /// <summary>
+    /// Recupera todos os usuários cadastrados no banco, limitados por paginação.
+    /// </summary>
+    /// <param name="page">Número da página</param>
+    /// <param name="pageSize">Tamanho da página</param>
+    /// <returns>Representa uma tarefa assíncrona,
+    /// ela retorna os usuários cadastrados
+    /// em uma lista do comprimento de <see cref="pageSize"/> ou menor</returns>
     public Task<IReadOnlyList<UserReadModel>> GetUsers(int page, int pageSize);
     /// <summary>
     /// Procura por um usuário pelo ID.

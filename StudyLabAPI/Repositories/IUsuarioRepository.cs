@@ -21,7 +21,14 @@ public interface IUsuarioRepository
     /// <returns>Representa uma tarefa assíncrona do banco,
     /// ela retorna o resultado da busca ou <c>null</c></returns>
     public Task<UsuarioModel?> GetUsuarioByEmail(string email);
-
+    /// <summary>
+    /// Recupera todos os usuários cadastrados no banco, limitados por paginação.
+    /// </summary>
+    /// <param name="page">Número da página</param>
+    /// <param name="pageSize">Tamanho da página</param>
+    /// <returns>Representa uma tarefa assíncrona do banco,
+    /// ela retorna os usuários cadastrados
+    /// em uma lista do comprimento de <see cref="pageSize"/> ou menor</returns>
     public Task<IList<UsuarioModel>> GetUsers(int page, int pageSize);
     /// <summary>
     /// Verifica se há um usuario com o <paramref name="matricula"/> ou <paramref name="email"/>

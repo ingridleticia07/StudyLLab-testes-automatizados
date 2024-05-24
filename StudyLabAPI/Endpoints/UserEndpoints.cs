@@ -18,6 +18,7 @@ public static class UserEndpoints
     public static RouteGroupBuilder MapUserEndpoints(this RouteGroupBuilder builder)
     {
         builder.MapGet("/", GetUsers)
+            .WithOpenApi(UserSummaries.GetUsersSpecificatiom)
             .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_ADMIN_ROLE);
         builder.MapGet("profile", GetUserProfileInfo)
             .WithOpenApi(UserSummaries.UserProfileInfoSpecification)
@@ -26,6 +27,17 @@ public static class UserEndpoints
         return builder;
     }
 
+    /// <summary>
+    /// Trata requisição de <c>/user/</c>
+    /// </summary>
+    /// <param name="context">Contexto da requisição para pegar as informações de autenticação do usuário.</param>
+    /// /// <param name="page">Número da pagina</param>
+    /// <param name="pageSize">Tamanho de cada pagina</param>
+    /// <param name="controller">Controlador que irá gerenciar as necessidades da requisição.</param>
+    /// <returns>Resposta da requisição.</returns>
+    /// <permission cref="AuthorizationPolicies">Requisições devem estar autenticadas.
+    /// Política: <see cref="AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_ADMIN_ROLE"/></permission>
+    [ProducesResponseType(typeof(ICollection<UserReadModel>), 200)]
     private async static Task<IResult> GetUsers(HttpContext context,
         [FromQuery] int page,
         [FromQuery] int pageSize,
