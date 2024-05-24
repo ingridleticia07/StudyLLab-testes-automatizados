@@ -17,12 +17,34 @@ public static class UserEndpoints
     /// <returns></returns>
     public static RouteGroupBuilder MapUserEndpoints(this RouteGroupBuilder builder)
     {
+        builder.MapGet("/", GetUsers)
+            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_ADMIN_ROLE);
         builder.MapGet("profile", GetUserProfileInfo)
-            .WithOpenApi(UserSummaries.UserProfileInfoSpecification);
+            .WithOpenApi(UserSummaries.UserProfileInfoSpecification)
+            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE);
         
         return builder;
     }
-    
+
+    private async static Task<IResult> GetUsers(HttpContext context,
+        [FromQuery] int page,
+        [FromQuery] int pageSize,
+        [FromServices] IUsuarioController controller)
+    {
+        IReadOnlyList<UserReadModel> result;
+
+        try
+        {
+            result = await controller.GetUsers(page, pageSize);
+        }
+        catch (Exception e)
+        {
+            return Results.BadRequest(e.Message);
+        }
+
+        return Results.Ok(result);
+    }
+
     /// <summary>
     /// Trata requisição de <c>/user/profile</c>
     /// </summary>
@@ -32,7 +54,7 @@ public static class UserEndpoints
     /// <permission cref="AuthorizationPolicies">Requisições devem estar autenticadas.
     /// Política: <see cref="AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE"/></permission>
     [ProducesResponseType(typeof(UserReadModel), 200)]
-    private static async Task<IResult> GetUserProfileInfo(HttpContext context,
+    private async static Task<IResult> GetUserProfileInfo(HttpContext context,
         [FromServices] IUsuarioController controller)
     {
         int userId = int.Parse(context.User.Claims.First(claim => claim.Type == ClaimTypes.Name).Value);

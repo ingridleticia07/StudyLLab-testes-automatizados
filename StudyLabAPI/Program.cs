@@ -58,7 +58,6 @@ authGroup.MapAuthenticationEndpoints();
 RouteGroupBuilder userGroup = app.MapGroup("user")
     .AddEndpointFilter<ApiKeyFilter>()
     .RequireCors(CorsPoliciesName.ALLOW_ALL_CORS_POLICY)
-    .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE)
     .WithTags("Usuário");
 userGroup.MapUserEndpoints();
 
