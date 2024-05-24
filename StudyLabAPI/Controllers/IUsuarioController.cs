@@ -14,6 +14,7 @@ namespace StudyLabAPI.Controllers;
 /// </remarks>
 public interface IUsuarioController
 {
+    public Task<IReadOnlyList<UserReadModel>> GetUsers(int page, int pageSize);
     /// <summary>
     /// Procura por um usuário pelo ID.
     /// </summary>

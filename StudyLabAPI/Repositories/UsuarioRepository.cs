@@ -35,6 +35,18 @@ public class UsuarioRepository : IUsuarioRepository
         await dbContext.Entry(userModel).Reference(m => m.curso).LoadAsync();
         return userModel;
     }
+
+    public async Task<IList<UsuarioModel>> GetUsers(int page, int pageSize)
+    {
+        var result = await dbContext.usuarios
+            .AsNoTracking()
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Include(f => f.curso)
+            .ToListAsync();
+        
+        return result;
+    }
     
     public async Task<bool> CheckUserByMatriculaAndEmail(string matricula, string email)
     {
