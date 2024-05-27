@@ -43,6 +43,7 @@ public class UsuarioRepository : IUsuarioRepository
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Include(f => f.curso)
+            .OrderBy(f => f.idUsuario)
             .ToListAsync();
         
         return result;
@@ -58,6 +59,9 @@ public class UsuarioRepository : IUsuarioRepository
 
     public async Task CreateUser(UsuarioModel usuarioModel) =>
         await dbContext.usuarios.AddAsync(usuarioModel);
+
+    public void DeleteUser(UsuarioModel usuario) =>
+        dbContext.usuarios.Remove(usuario);
     
     public async Task Flush() => 
         await dbContext.SaveChangesAsync();

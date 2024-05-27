@@ -46,6 +46,8 @@ public interface IUsuarioRepository
     /// <remarks>O campo <c>idUsuario</c> da entidade <paramref name="usuarioModel"/>
     /// não deve conter valor.</remarks>
     public Task CreateUser(UsuarioModel usuarioModel);
+
+    public void DeleteUser(UsuarioModel usuario);
     /// <summary>
     /// Salva todas as alterações feitas no banco de dados.
     /// </summary>

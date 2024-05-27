@@ -44,7 +44,7 @@ public static class AuthAnonEndpoints
         {
             (UserReadModel _, jwtNewUser) = await controller.RegisterNewUser(registerUserRequest);
         }
-        catch(CursoNotFound ex)
+        catch(CursoNotFoundException ex)
         {
             return Results.NotFound(ex.Message);
         }
