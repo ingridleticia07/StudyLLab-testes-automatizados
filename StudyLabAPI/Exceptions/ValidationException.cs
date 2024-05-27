@@ -8,4 +8,6 @@ public class ValidationException : Exception
 
     public ValidationException(IEnumerable<string> errors) : 
         base(string.Format(MESSAGE, errors.ToSeparatedString())) { }
+    public ValidationException(string error) : 
+        base(string.Format(MESSAGE, error)) { }
 }
