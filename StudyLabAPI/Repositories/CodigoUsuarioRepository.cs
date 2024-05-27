@@ -27,6 +27,16 @@ public class CodigoUsuarioRepository : ICodigoUsuarioRepository
     
     public CodigoUsuarioModel UseCode(CodigoUsuarioModel codigoUsuarioModel) =>
         dbContext.codigoUsuario.Remove(codigoUsuarioModel).Entity;
+
+    public async Task<int> DeleteAllUsersCodes(UsuarioModel usuarioModel)
+    {
+        IEnumerable<CodigoUsuarioModel> codes = await dbContext.codigoUsuario
+            .Where(c => c.usuarioModel == usuarioModel)
+            .ToListAsync();
+        dbContext.codigoUsuario.RemoveRange(codes);
+
+        return codes.Count();
+    }
     
     public async Task<CodigoUsuarioModel> GenerateAndEnsureCode(UsuarioModel usuarioModel, 
         UserCodeKind codeKind)

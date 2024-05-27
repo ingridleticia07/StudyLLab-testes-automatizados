@@ -30,4 +30,7 @@ public interface IUsuarioController
     /// <returns>O modelo de leitura do usuário encontrado.</returns>
     /// <exception cref="UsuarioNotFoundException">Se o usuário não for encontrado.</exception>
     public Task<UserReadModel> GetUserInfoById(int id);
+
+    public Task<UserReadModel> UpdateUser(int userId, UpdateUserRequestModel request);
+    public Task<int> DeleteUser(int userId);
 }

@@ -24,6 +24,8 @@ public interface ICodigoUsuarioRepository
     /// <param name="codigoUsuarioModel">Código que será removido</param>
     /// <returns>Retorna o modelo do código removido</returns>
     public CodigoUsuarioModel UseCode(CodigoUsuarioModel codigoUsuarioModel);
+
+    public Task<int> DeleteAllUsersCodes(UsuarioModel usuarioModel);
     /// <summary>
     /// Gerá um novo código para o usuário com o tipo especificado, se houver outro codigo do mesmo tipo atrelado a este
     /// usuário, ele será removido e o novo código será gerado.
