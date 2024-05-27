@@ -20,11 +20,38 @@ public static class UserEndpoints
         builder.MapGet("/", GetUsers)
             .WithOpenApi(UserSummaries.GetUsersSpecificatiom)
             .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_ADMIN_ROLE);
+        builder.MapPut("/{id:int}", PutUpdateUser)
+            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_ADMIN_ROLE);
+        builder.MapDelete("/{id:int}", DeleteUser)
+            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_ADMIN_ROLE);
+        
         builder.MapGet("profile", GetUserProfileInfo)
             .WithOpenApi(UserSummaries.UserProfileInfoSpecification)
             .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE);
         
         return builder;
+    }
+
+    private async static Task<IResult> DeleteUser(HttpContext context,
+        [FromRoute] int id,
+        [FromServices] IUsuarioController controller)
+    {
+        int deletedId;
+
+        try
+        {
+            deletedId = await controller.DeleteUser(id);
+        }
+        catch (ValidationException e)
+        {
+            return Results.BadRequest(e.Message);
+        }
+        catch (UsuarioNotFoundException e)
+        {
+            return Results.NotFound(e.Message);
+        }
+        
+        return Results.Ok(deletedId);
     }
 
     /// <summary>
@@ -55,6 +82,29 @@ public static class UserEndpoints
         }
 
         return Results.Ok(result);
+    }
+    
+    private async static Task<IResult> PutUpdateUser(HttpContext context,
+        [FromRoute] int id,
+        [FromBody] UpdateUserRequestModel request,
+        [FromServices] IUsuarioController controller)
+    {
+        UserReadModel updatedUser;
+
+        try
+        {
+            updatedUser = await controller.UpdateUser(id, request);
+        }
+        catch (ValidationException e)
+        {
+            return Results.BadRequest(e.Message);
+        }
+        catch (Exception e) when (e is CursoNotFoundException or UsuarioNotFoundException)
+        {
+            return Results.NotFound(e.Message);
+        }
+
+        return Results.Ok(updatedUser);
     }
 
     /// <summary>
