@@ -17,43 +17,27 @@ public static class UserEndpoints
     /// <returns></returns>
     public static RouteGroupBuilder MapUserEndpoints(this RouteGroupBuilder builder)
     {
+
+        #region Admin permision
         builder.MapGet("/", GetUsers)
-            .WithOpenApi(UserSummaries.GetUsersSpecificatiom)
+            .WithOpenApi(UserSummaries.AdminGetUsersSpecificatiom)
             .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_ADMIN_ROLE);
         builder.MapPut("/{id:int}", PutUpdateUser)
+            .WithOpenApi(UserSummaries.AdminPutUpdateUserSpecification)
             .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_ADMIN_ROLE);
         builder.MapDelete("/{id:int}", DeleteUser)
+            .WithOpenApi(UserSummaries.AdminDeleteUserSpecefication)
             .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_ADMIN_ROLE);
+        #endregion
         
         builder.MapGet("profile", GetUserProfileInfo)
-            .WithOpenApi(UserSummaries.UserProfileInfoSpecification)
+            .WithOpenApi(UserSummaries.GetUserProfileInfoSpecification)
             .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE);
         
         return builder;
     }
 
-    private async static Task<IResult> DeleteUser(HttpContext context,
-        [FromRoute] int id,
-        [FromServices] IUsuarioController controller)
-    {
-        int deletedId;
-
-        try
-        {
-            deletedId = await controller.DeleteUser(id);
-        }
-        catch (ValidationException e)
-        {
-            return Results.BadRequest(e.Message);
-        }
-        catch (UsuarioNotFoundException e)
-        {
-            return Results.NotFound(e.Message);
-        }
-        
-        return Results.Ok(deletedId);
-    }
-
+    #region Admin permision
     /// <summary>
     /// Trata requisição de <c>/user/</c>
     /// </summary>
@@ -83,7 +67,15 @@ public static class UserEndpoints
 
         return Results.Ok(result);
     }
-    
+    /// <summary>
+    /// Trata requisição PUT de <c>/user/</c>
+    /// </summary>
+    /// <param name="context">Contexto da requisição para pegar as informações de autenticação do usuário.</param>
+    /// <param name="id">ID do usuário</param>
+    /// <param name="request">Informações que serão atualizadas do usuário, com os novos valores</param>
+    /// <param name="controller">Controlador que irá gerenciar as necessidades da requisição.</param>
+    /// <returns>Resposta da requisição</returns>
+    [ProducesResponseType(typeof(UserReadModel), 200)]
     private async static Task<IResult> PutUpdateUser(HttpContext context,
         [FromRoute] int id,
         [FromBody] UpdateUserRequestModel request,
@@ -93,7 +85,7 @@ public static class UserEndpoints
 
         try
         {
-            updatedUser = await controller.UpdateUser(id, request);
+            updatedUser = await controller.UpdateUserById(id, request);
         }
         catch (ValidationException e)
         {
@@ -106,6 +98,38 @@ public static class UserEndpoints
 
         return Results.Ok(updatedUser);
     }
+    /// <summary>
+    /// Trata requisição de <c>/user/:id</c>
+    /// </summary>
+    /// <param name="context">Contexto da requisição para pegar as informações de autenticação do usuário.</param>
+    /// <param name="id">ID do usuário</param>
+    /// <param name="controller">Controlador que irá gerenciar as necessidades da requisição.</param>
+    /// <returns>Resposta da requisição.</returns>
+    /// <permission cref="AuthorizationPolicies">Requisições devem estar autenticadas.
+    /// Política: <see cref="AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_ADMIN_ROLE"/></permission>
+    [ProducesResponseType(typeof(int), 200)]
+    private async static Task<IResult> DeleteUser(HttpContext context,
+        [FromRoute] int id,
+        [FromServices] IUsuarioController controller)
+    {
+        int deletedId;
+
+        try
+        {
+            deletedId = await controller.DeleteUser(id);
+        }
+        catch (ValidationException e)
+        {
+            return Results.BadRequest(e.Message);
+        }
+        catch (UsuarioNotFoundException e)
+        {
+            return Results.NotFound(e.Message);
+        }
+        
+        return Results.Ok(deletedId);
+    }
+    #endregion
 
     /// <summary>
     /// Trata requisição de <c>/user/profile</c>
