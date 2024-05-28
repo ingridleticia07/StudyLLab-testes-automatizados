@@ -71,7 +71,7 @@ public class AuthController : IAuthController
     /// <exception cref="ValidationException">Ocorre quando alguma informação contradiz alguma regra de validação.
     /// Regras: <seealso cref="RegisterUserRequestModelValidator"/>.</exception>
     /// <exception cref="ExistsUserException">Ocorre quando já existe algum usuário com a mesma matrícula ou email.</exception>
-    /// <exception cref="CursoNotFound">Ocorre quando o curso solicitado para relação não existe.</exception>
+    /// <exception cref="CursoNotFoundException">Ocorre quando o curso solicitado para relação não existe.</exception>
     public async Task<(UserReadModel, string)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel)
     {
         logger.Information("Validando campos da requisição de cadastro para Username[{Username}]",
@@ -110,7 +110,7 @@ public class AuthController : IAuthController
             .GetCursoById(cursoId);
         if(relatedCurso is null)
         {
-            CursoNotFound exception = new(cursoId);
+            CursoNotFoundException exception = new(cursoId);
             logger.Error(exception, "Curso não encontrado");
             throw exception;
         }
@@ -128,7 +128,7 @@ public class AuthController : IAuthController
             registerUserRequestModel.username);
         await usuarioRepository.CreateUser(usuarioModel);
         await GenerateAndSendConfirmationEmail(usuarioModel);
-        await usuarioRepository.Flush();
+        await usuarioRepository.FlushChanges();
         
         logger.Information("Gerando token de autenticação para ID[{ID}]",
             usuarioModel.idUsuario);

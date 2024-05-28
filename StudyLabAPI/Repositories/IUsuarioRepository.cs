@@ -22,6 +22,15 @@ public interface IUsuarioRepository
     /// ela retorna o resultado da busca ou <c>null</c></returns>
     public Task<UsuarioModel?> GetUsuarioByEmail(string email);
     /// <summary>
+    /// Recupera todos os usuários cadastrados no banco, limitados por paginação.
+    /// </summary>
+    /// <param name="page">Número da página</param>
+    /// <param name="pageSize">Tamanho da página</param>
+    /// <returns>Representa uma tarefa assíncrona do banco,
+    /// ela retorna os usuários cadastrados
+    /// em uma lista do comprimento de <see cref="pageSize"/> ou menor</returns>
+    public Task<IList<UsuarioModel>> GetUsers(int page, int pageSize);
+    /// <summary>
     /// Verifica se há um usuario com o <paramref name="matricula"/> ou <paramref name="email"/>
     /// já cadastrado no banco.
     /// </summary>
@@ -38,8 +47,13 @@ public interface IUsuarioRepository
     /// não deve conter valor.</remarks>
     public Task CreateUser(UsuarioModel usuarioModel);
     /// <summary>
+    /// Deleta um usuário do banco de dados.
+    /// </summary>
+    /// <param name="usuario">Entidade que será excluida do banco.</param>
+    public void DeleteUser(UsuarioModel usuario);
+    /// <summary>
     /// Salva todas as alterações feitas no banco de dados.
     /// </summary>
     /// <returns>Representa uma tarefa assíncrona do banco.</returns>
-    public Task Flush();
+    public Task FlushChanges();
 }

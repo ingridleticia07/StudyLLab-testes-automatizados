@@ -1,0 +1,332 @@
+*{
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+}
+
+body{
+    height: 100vh;
+    overflow: hidden;
+    
+}
+
+.primary{
+    height: 100%;
+    display: flex;
+    background-color: rgba(245, 245, 245, 1);
+    
+}
+
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background-color: #fff;
+    padding: 1rem 1rem;
+    border-bottom: 3px solid rgba(0, 0, 0, 0.2);
+    flex-wrap: wrap;
+}
+
+.logo img{
+    width: 10rem;
+    margin-left: 4rem;
+}
+
+.search-bar{
+    width: 45%;
+    position: relative;
+    display: inline-block;
+}
+
+.search-bar button{
+    background: none;
+    border: none;
+    position: absolute;
+    right: 5px; 
+    top: 50%; 
+    transform: translateY(-50%);
+    cursor: pointer; 
+}
+
+.search-bar button img{
+    width: 1.2rem;
+}
+
+.search-bar input[type="search"] {
+    width: 100%;
+    padding: 1rem 0.8rem;
+    margin-right: 0.5rem;
+    border-radius: .8rem;
+    background-color: #ebebeb;
+    border: none;
+    outline: none;
+}
+
+.user-controls{
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-right: 4rem;
+}
+
+.user-controls a{
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.user-controls img{
+    width: 3rem;
+} 
+
+
+.user-controls .icon-user-control-1 img{
+    width: 1.8rem;
+} 
+
+.sidebar {
+    top: 0rem;
+    left: 0;
+    width: 4.5rem;
+    height: 100%;
+    background-color: #ffffff;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu ul li{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-sidebar {
+    width: 100%;
+    padding: 1rem 0;
+    color: #505050;
+    cursor: pointer;
+    transition: .3S;
+}
+
+.icon-sidebar:hover{
+   transform: translateY(-.2rem)
+}
+
+.externo{
+    margin: 80px 40px 1rem 40px;
+    flex: 1;
+}
+.content {
+    border-radius: 1rem;
+    padding: 10;
+    flex: 1;
+    background:rgba(247, 249, 252, 0.9);
+}
+
+h1{
+    size: 32px;
+}
+.user-managentment{
+    border-radius: 1rem;
+    margin: 0px;
+    background-color: #ffffff;
+    flex: 1;
+    padding: 3rem;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+  
+.user-table thead {
+    background-color: #f7f9fc;
+}
+  
+.user-table th, .user-table td {
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 1px solid #e1e1e1;
+}
+  
+.user-table th:first-child,
+.user-table td:first-child {
+    text-align: center;
+}
+  
+.user-table td {
+    color: #505050;
+}
+  
+.action-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+  
+.action-button img {
+    width: 1.2rem;
+}
+
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 1rem;
+    margin-top: 0;
+}
+
+    .pagination span {
+    margin-right: 1rem;
+    }
+
+    .pagination button {
+        background: none;
+        border: none;
+        cursor: pointer; 
+    }
+
+.pagination .current-page {
+  font-weight: bold;
+  background-color: #505050;
+  color: white;
+}
+
+.breadcrumbs {
+    margin-bottom: 1rem;
+    color: #505050;
+  }
+  
+  .breadcrumbs span {
+    font-size: 0.9rem;
+  }
+
+.modal-container{
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 2000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal{
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    
+    width: 400px;
+    height: 200px;
+    gap: 0px;
+    border-radius: 12px;
+    opacity: 0px;
+    padding: 20px;
+    padding-right: 30px;
+    position: relative;
+}
+
+.modal header{
+    padding: 20px;
+}
+
+.modal .corpo-modal{
+    padding-left: 20px;
+}
+.modal footer{
+    text-align: right;
+}
+
+.fechar{
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 6px solid white;
+    background: #ffffff;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.btn {
+
+    padding: 12px 50px;
+    margin-top: auto;
+    border-radius:0.5rem;
+    border:0.5px solid  #FF8700;
+    cursor: pointer;
+    margin-left: 10px;
+}
+  
+.cancelar {
+  background-color: #ffffff;
+  color: #FF8700;
+}
+  
+.confirmar {
+  background-color: #FF8700;
+  color: white;
+}
+
+.confirmacao {
+  display: none;
+  position: fixed;
+  left: 0;
+  bottom: 50px;
+  width: 100%;
+  animation-name: slideIn;
+  animation-duration: 0.5s;
+}
+
+.modal-content {
+  background-color: #4BAF75;
+  color: white;
+  margin: 0 auto;
+  padding: 15px;
+  border-radius: 8px; 
+  width: 350px;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.checkmark{
+    align-items: center;
+}
+
+@keyframes slideOf {
+    from {opacity: 1;}
+    to {opacity: 0;}
+}
+
+@keyframes slideIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+  
+.desfazer {
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#modalConfirmacaoBanir .modal-content{
+    width: 250px;
+}

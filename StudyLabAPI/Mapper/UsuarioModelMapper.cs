@@ -3,7 +3,7 @@ using StudyLabAPI.Models;
 
 namespace StudyLabAPI.Mapper;
 
-[Mapper]
+[Mapper(ThrowOnMappingNullMismatch = false)]
 public partial class UsuarioModelMapper
 {
     [UseMapper]

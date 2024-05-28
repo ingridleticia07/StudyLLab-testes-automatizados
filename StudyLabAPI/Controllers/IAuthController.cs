@@ -27,7 +27,7 @@ public interface IAuthController
     /// <param name="registerUserRequestModel">Informações do usuário para cadastro</param>
     /// <returns>Representa uma tarefa assíncrona, ela retorna uma tupla contendo as informações cadastradas no banco
     /// e um JWT válido para o usuário.</returns>
-    /// <exception cref="CursoNotFound"><c>codeCurso</c> de <paramref name="registerUserRequestModel"/>
+    /// <exception cref="CursoNotFoundException"><c>codeCurso</c> de <paramref name="registerUserRequestModel"/>
     /// não pertence a nenhum curso.</exception>
     public Task<(UserReadModel, string)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel);
     /// <summary>

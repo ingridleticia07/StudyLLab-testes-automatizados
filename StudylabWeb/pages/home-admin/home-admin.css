@@ -1,16 +1,17 @@
 *{
     margin: 0;
+    font-family: "Roboto", sans-serif;
 }
 
 body{
     height: 100vh;
-  overflow: hidden;
+    overflow: hidden;
 }
 
 .primary{
     height: 100%;
     display: flex;
-    background-color: #f7f9fc;
+    background-color: rgba(245, 245, 245, 1);
 }
 
 .content{

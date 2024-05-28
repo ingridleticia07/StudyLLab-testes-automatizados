@@ -22,6 +22,7 @@ builder.Services
     .AddApiMetadata()
     .AddServicesConfiguration(builder.Configuration)
     .ConfigureServices()
+    .AddOtMetrics()
     .AddCustomCors();
 
 builder.Services.AddStorageServices()
@@ -37,10 +38,14 @@ WebApplication app = builder.Build();
 
 if(app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app
+        .UseSwagger()
+        .UseSwaggerUI();
 }
-app.UseCors()
+
+app.MapPrometheusScrapingEndpoint();
+app
+    .UseCors()
     .UseAuthentication()
     .UseAuthorization();
 
@@ -53,7 +58,6 @@ authGroup.MapAuthenticationEndpoints();
 RouteGroupBuilder userGroup = app.MapGroup("user")
     .AddEndpointFilter<ApiKeyFilter>()
     .RequireCors(CorsPoliciesName.ALLOW_ALL_CORS_POLICY)
-    .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE)
     .WithTags("Usuário");
 userGroup.MapUserEndpoints();
 

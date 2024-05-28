@@ -1,6 +1,9 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using StudyLabAPI.Context;
 using StudyLabAPI.Controllers;
 using StudyLabAPI.Mapper;
@@ -48,6 +51,35 @@ public static class Di
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerConfiguration>();
         services.AddTransient<IConfigureOptions<JwtBearerOptions>, AuthenticationJwtBearerConfiguration>();
         
+        return services;
+    }
+    /// <summary>
+    /// Adiciona serviços para exportação de métricas ao container de DI, usando o OpenTelemetry.
+    /// </summary>
+    /// <returns><see cref="IServiceCollection"/> para que outras chamadas possam ser encadeadas.</returns>
+    public static IServiceCollection AddOtMetrics(this IServiceCollection services)
+    {
+        services.AddOpenTelemetry()
+            .ConfigureResource(b =>
+            {
+                b.AddService("StudyLabAPI");
+            })
+            .WithTracing(t =>
+            {
+                t.AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddEntityFrameworkCoreInstrumentation()
+                    .AddOtlpExporter();
+            })
+            .WithMetrics(m =>
+            {
+                m.AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddRuntimeInstrumentation()
+                    .AddProcessInstrumentation()
+                    .AddPrometheusExporter();
+            });
+
         return services;
     }
     /// <summary>
@@ -107,6 +139,7 @@ public static class Di
         services.AddScoped<IValidator<UserLoginRequestModel>, UserLoginRequestModelValidator>();
         services.AddScoped<IValidator<ConfirmUserEmailRequestModel>, ConfirmUserEmailRequestModelValidator>();
         services.AddScoped<IValidator<ResetUserPasswordRequestModel>, ResetUserPasswordRequestModelValidator>();
+        services.AddScoped<IValidator<UpdateUserRequestModel>, UpdateUserRequestModelValidator>();
         
         return services;
     }
