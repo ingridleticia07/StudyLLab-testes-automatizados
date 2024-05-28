@@ -97,7 +97,7 @@ public class AuthControllerExceptionsTests
             x.GetCursoById(requestModel.codeCurso))
             .ReturnsAsync(() => null);
         
-        await Assert.ThrowsAsync<CursoNotFound>(() => authController.RegisterNewUser(requestModel));
+        await Assert.ThrowsAsync<CursoNotFoundException>(() => authController.RegisterNewUser(requestModel));
     }
     
     [Fact]

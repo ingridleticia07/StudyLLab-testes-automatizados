@@ -128,7 +128,7 @@ public class AuthController : IAuthController
             registerUserRequestModel.username);
         await usuarioRepository.CreateUser(usuarioModel);
         await GenerateAndSendConfirmationEmail(usuarioModel);
-        await usuarioRepository.Flush();
+        await usuarioRepository.FlushChanges();
         
         logger.Information("Gerando token de autenticação para ID[{ID}]",
             usuarioModel.idUsuario);

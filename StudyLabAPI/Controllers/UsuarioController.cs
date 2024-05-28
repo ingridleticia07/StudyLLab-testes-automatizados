@@ -79,7 +79,7 @@ public class UsuarioController : IUsuarioController
         return userRead;
     }
     
-    public async Task<UserReadModel> UpdateUser(int userId, UpdateUserRequestModel request)
+    public async Task<UserReadModel> UpdateUserById(int userId, UpdateUserRequestModel request)
     {
         logger.Information("Validando ID do usuário: ID[{ID}]", userId);
         UserIdValidator validator = new(userId);
@@ -111,7 +111,8 @@ public class UsuarioController : IUsuarioController
         logger.Information("Atualizando informações do usuário ID[{ID}]", userId);
         bool hasUpdatedSomeField = await UpdateUserFields(user, request);
         if (hasUpdatedSomeField)
-            await _userRepository.Flush();
+            await _userRepository.FlushChanges();
+        else logger.Warning("Nenhuma informação foi atualizada para o usuário ID[{ID}]", userId);
         
         logger.Information("Usuário ID[{ID}] atualizado", userId);
         UserReadModel userRead = _usuarioModelMapper.UsuarioModelToUserReadModel(user);
@@ -139,7 +140,7 @@ public class UsuarioController : IUsuarioController
 
         await _codigoUsuarioRepository.DeleteAllUsersCodes(user);
         _userRepository.DeleteUser(user);
-        await _userRepository.Flush();
+        await _userRepository.FlushChanges();
         
         logger.Information("Usuário ID[{ID}] deletado", userId);
         return userId;

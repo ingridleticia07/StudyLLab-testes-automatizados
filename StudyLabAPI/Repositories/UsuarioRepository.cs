@@ -40,10 +40,10 @@ public class UsuarioRepository : IUsuarioRepository
     {
         var result = await dbContext.usuarios
             .AsNoTracking()
+            .OrderBy(f => f.idUsuario)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Include(f => f.curso)
-            .OrderBy(f => f.idUsuario)
             .ToListAsync();
         
         return result;
@@ -63,6 +63,6 @@ public class UsuarioRepository : IUsuarioRepository
     public void DeleteUser(UsuarioModel usuario) =>
         dbContext.usuarios.Remove(usuario);
     
-    public async Task Flush() => 
+    public async Task FlushChanges() => 
         await dbContext.SaveChangesAsync();
 }
