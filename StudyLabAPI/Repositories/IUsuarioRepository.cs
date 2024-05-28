@@ -47,8 +47,13 @@ public interface IUsuarioRepository
     /// não deve conter valor.</remarks>
     public Task CreateUser(UsuarioModel usuarioModel);
     /// <summary>
+    /// Deleta um usuário do banco de dados.
+    /// </summary>
+    /// <param name="usuario">Entidade que será excluida do banco.</param>
+    public void DeleteUser(UsuarioModel usuario);
+    /// <summary>
     /// Salva todas as alterações feitas no banco de dados.
     /// </summary>
     /// <returns>Representa uma tarefa assíncrona do banco.</returns>
-    public Task Flush();
+    public Task FlushChanges();
 }

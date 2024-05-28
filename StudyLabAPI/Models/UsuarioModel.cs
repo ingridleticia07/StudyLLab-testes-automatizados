@@ -7,7 +7,6 @@ namespace StudyLabAPI.Models;
 [Table("usuario")]
 public class UsuarioModel
 {
-    
     [Key]
     [Column("id_usuario")]
     public int idUsuario { get; set; }

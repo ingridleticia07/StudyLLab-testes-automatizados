@@ -139,6 +139,7 @@ public static class Di
         services.AddScoped<IValidator<UserLoginRequestModel>, UserLoginRequestModelValidator>();
         services.AddScoped<IValidator<ConfirmUserEmailRequestModel>, ConfirmUserEmailRequestModelValidator>();
         services.AddScoped<IValidator<ResetUserPasswordRequestModel>, ResetUserPasswordRequestModelValidator>();
+        services.AddScoped<IValidator<UpdateUserRequestModel>, UpdateUserRequestModelValidator>();
         
         return services;
     }

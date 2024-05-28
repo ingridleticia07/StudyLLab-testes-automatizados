@@ -1,9 +1,9 @@
 namespace StudyLabAPI.Exceptions;
 
-public class CursoNotFound : Exception
+public class CursoNotFoundException : Exception
 {
     private const string MESSAGE = "The Curso with ID[{0}] was not found.";
     
-    public CursoNotFound(int id) : base(string.Format(MESSAGE, id))
+    public CursoNotFoundException(int id) : base(string.Format(MESSAGE, id))
     { }
 }
