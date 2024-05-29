@@ -1,3 +1,5 @@
+import { getUserInfo } from "../../assets/js/lib/services/user.js";
+
 const modalExc = document.getElementById("modal-excluir");
 const modalBan = document.getElementById("modal-banir");
 const deleteButtons = document.querySelectorAll(".deletar");
@@ -68,3 +70,6 @@ function showModal() {
   }, 5000);
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+  getUserInfo()
+});

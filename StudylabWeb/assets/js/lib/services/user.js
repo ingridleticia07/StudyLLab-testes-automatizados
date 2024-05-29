@@ -9,7 +9,7 @@ export async function getUserInfo() {
   if(cachedUserInfo !== null) {
     return cachedUserInfo
   }
-  let response = await instance.get(USER_ENDPOINT + "/profile");
+  let response = await instance.get(USER_ENDPOINT + "/");
   if (response.status !== 200) {
     return null;
   }
@@ -22,7 +22,7 @@ export async function getUserInfo() {
     response.data.active,
     response.data.curso
   );
-
+console.log(userInfo);
   saveUserInfo(userInfo);
   return userInfo;
 }
