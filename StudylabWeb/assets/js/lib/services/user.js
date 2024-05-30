@@ -27,6 +27,14 @@ console.log(userInfo);
   return userInfo;
 }
 
+export async function getAllUsersInfo(page, pageSize) {
+  let response = await instance.get(USER_ENDPOINT + "/?page="+page+"&pageSize="+pageSize+"");
+  if (response.status !== 200) {
+    return null;
+  }
+  return response.data;
+}
+
 function getUserInfoCached() {
   if(!hasUserInfoSaved()) {
     return null;

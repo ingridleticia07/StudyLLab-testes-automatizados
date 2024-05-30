@@ -1,3 +1,5 @@
+import { getAllUsersInfo } from "../../assets/js/lib/services/user.js";
+
 const modalExc = document.getElementById("modal-excluir");
 const modalBan = document.getElementById("modal-banir");
 const deleteButtons = document.querySelectorAll(".deletar");
@@ -76,4 +78,38 @@ function showModal(modal) {
       modal.style.display = "none"; 
     }, 200); 
   }, 5000);
+};
+
+document.addEventListener('DOMContentLoaded', async function() {
+  
+  try {
+    const data = await getAllUsersInfo(1,1);
+    populateTable(data);
+    
+  } catch (error) {
+    console.error('Error fetching user info:', error);
+  }
+});
+
+const populateTable = (users) =>{
+  const tableBody = document.querySelector('#user-table tbody');
+  tableBody.innerHTML = ''; // Clear existing rows
+
+  users.forEach(user => {
+    const row = document.createElement('tr');
+
+    row.innerHTML = `
+      <td><input type="checkbox" name="user"></td>
+      <td>${user.id}</td>
+      <td>${user.username}</td>
+      <td>${user.curso.nome}</td>
+      <td>${user.email}</td>
+      <td>
+        <button class="action-button banir"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
+        <button class="action-button deletar"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
+      </td>
+    `;
+
+    tableBody.appendChild(row);
+  });
 }
