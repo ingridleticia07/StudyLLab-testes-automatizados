@@ -9,6 +9,13 @@ export const instance = axios.create({
 });
 
 let authorizationInterceptor = undefined;
+
+let authToken = sessionStorage.getItem('authToken');
+
+if(authToken){
+  addAuthorizationHeaderInterceptor(authToken)
+};
+
 export function addAuthorizationHeaderInterceptor(value) {
   removeAuthorizationHeaderInterceptor();
   authorizationInterceptor = instance.interceptors.request.use(function (

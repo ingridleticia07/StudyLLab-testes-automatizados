@@ -83,6 +83,7 @@ function showModal(modal) {
 document.addEventListener('DOMContentLoaded', async function() {
   
   try {
+    
     const data = await getAllUsersInfo(1,1);
     populateTable(data);
     
