@@ -12,7 +12,7 @@ updateUserAuthState()
 const user = await getUserInfo(); //TODO: Fazer cache das informações do usuário
 console.log(user);
 
-//Logout provisório
+//TODO: Logout provisório
 const userIcon = document.querySelector("#user-icon");
 userIcon.addEventListener("click", () => {
     logout();
