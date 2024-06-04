@@ -48,14 +48,13 @@ public static class UserEndpoints
     /// <returns>Resposta da requisição.</returns>
     /// <permission cref="AuthorizationPolicies">Requisições devem estar autenticadas.
     /// Política: <see cref="AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_ADMIN_ROLE"/></permission>
-    [ProducesResponseType(typeof(ICollection<UserReadModel>), 200)]
+    [ProducesResponseType(typeof(UsersListResponse), 200)]
     private async static Task<IResult> GetUsers(HttpContext context,
         [FromQuery] int page,
         [FromQuery] int pageSize,
         [FromServices] IUsuarioController controller)
     {
-        IReadOnlyList<UserReadModel> result;
-
+        UsersListResponse result;
         try
         {
             result = await controller.GetUsers(page, pageSize);

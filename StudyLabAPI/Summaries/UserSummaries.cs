@@ -23,7 +23,7 @@ public static class UserSummaries
                                     Reference = new()
                                     {
                                         Type = ReferenceType.Schema,
-                                        Id = "UserReadModel[]"
+                                        Id = "UsersListResponse"
                                     }
                                 }
                             }
