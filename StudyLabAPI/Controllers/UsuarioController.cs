@@ -35,7 +35,7 @@ public class UsuarioController : IUsuarioController
         this.logger = logger;
     }
 
-    public async Task<IReadOnlyList<UserReadModel>> GetUsers(int page, int pageSize)
+    public async Task<UsersListResponse> GetUsers(int page, int pageSize)
     {
         logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
             page, pageSize);
@@ -50,7 +50,8 @@ public class UsuarioController : IUsuarioController
         logger.Information("Recuperando usuários da página Page[{Page}] PageSize[{PageSize}]",
             page, pageSize);
 
-        var result = await _userRepository.GetUsers(page, pageSize);
+        (var result, int resultCount, int usersCount) = await _userRepository
+            .GetUsersAndCount(page, pageSize);
 
         var userReadResult = result
             .Select(_usuarioModelMapper.UsuarioModelToUserReadModel)
@@ -58,8 +59,19 @@ public class UsuarioController : IUsuarioController
         
         logger.Information("Recuperado {Count} usuários da página Page[{Page}] PageSize[{PageSize}]",
             userReadResult.Count, page, pageSize);
+        logger.Information("Recuperando informações extras para a resposta");
+        
+        int maxPage = usersCount / pageSize;
+        if (usersCount % pageSize != 0)
+            maxPage++;
 
-        return userReadResult;
+        return new()
+        {
+            maxPage = maxPage,
+            usersCount = usersCount,
+            pageCount = resultCount,
+            users = userReadResult
+        };
     }
     
     public async Task<UserReadModel> GetUserInfoById(int id)
