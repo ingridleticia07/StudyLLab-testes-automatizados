@@ -1,4 +1,7 @@
 import { getAllUsersInfo } from "../../assets/js/lib/services/user.js";
+import { updateUserAuthState } from "../../assets/js/lib/services/auth.js";
+
+updateUserAuthState();
 
 const modalExc = document.getElementById("modal-excluir");
 const modalBan = document.getElementById("modal-banir");
@@ -69,8 +72,17 @@ function showModal(modal) {
 
 document.addEventListener("DOMContentLoaded", async function () {
   try {
-    const data = await getAllUsersInfo(1, 10);
-    populateTable(data);
+    const page = 1;
+    const pageSize = 10;
+    const data = await getAllUsersInfo(page, pageSize);
+
+    const users = data.users;
+    const countInPage = data.pageCount;
+    const totalRecords = data.usersCount;
+    const maxPage = data.maxPage
+
+    updatePageCount(totalRecords, countInPage, page, pageSize, maxPage)
+    populateTable(users);
   } catch (error) {
     console.error("Error fetching user info:", error);
   }
@@ -91,6 +103,11 @@ const deleteIcon = () => {
 
   return deleteIcon;
 };
+
+function updatePageCount(recordsCount, countInPage, currentPageIndex, pageSize, maxPage) {
+  //TODO: Implement pagination and update informations
+  console.log(recordsCount, countInPage, currentPageIndex, pageSize, maxPage);
+}
 
 const populateTable = (users) => {
   const tableBody = document.querySelector("#user-table tbody");

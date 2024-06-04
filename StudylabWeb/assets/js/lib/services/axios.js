@@ -11,8 +11,6 @@ export const instance = axios.create({
 
 let authorizationInterceptor = undefined;
 
-updateUserAuthState();
-
 export function addAuthorizationHeaderInterceptor(value) {
   removeAuthorizationHeaderInterceptor();
   authorizationInterceptor = instance.interceptors.request.use(function (
