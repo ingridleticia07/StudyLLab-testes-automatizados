@@ -98,6 +98,7 @@ public static class Di
     /// <returns><see cref="IServiceCollection"/> para que outras chamadas possam ser encadeadas.</returns>
     public static IServiceCollection AddStorageServices(this IServiceCollection services)
     {
+        services.AddDbContextFactory<AppDbContext>();
         services.AddDbContext<AppDbContext>();
         
         return services;

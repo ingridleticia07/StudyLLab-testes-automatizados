@@ -9,36 +9,51 @@ namespace StudyLabAPI.Repositories;
 /// </summary>
 public class UsuarioRepository : IUsuarioRepository
 {
-    private AppDbContext dbContext { get; }
+    private readonly AppDbContext _dbContext;
+    private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
 
-    public UsuarioRepository(AppDbContext dbContext)
+    public UsuarioRepository(AppDbContext dbContext, IDbContextFactory<AppDbContext> dbContextFactory)
     {
-        this.dbContext = dbContext;
+        _dbContext = dbContext;
+        _dbContextFactory = dbContextFactory;
     }
     
     public async Task<UsuarioModel?> GetUsuarioById(int id)
     {
-        UsuarioModel? userModel = await dbContext.usuarios
+        UsuarioModel? userModel = await _dbContext.usuarios
             .FindAsync(id);
         if (userModel is null) return null;
         
-        await dbContext.Entry(userModel).Reference(m => m.curso).LoadAsync();
+        await _dbContext.Entry(userModel).Reference(m => m.curso).LoadAsync();
         return userModel;
     }
 
     public async Task<UsuarioModel?> GetUsuarioByEmail(string email)
     {
-        UsuarioModel? userModel = await dbContext.usuarios
+        UsuarioModel? userModel = await _dbContext.usuarios
             .FirstOrDefaultAsync(u => u.emailUsuario == email);
         if(userModel is null) return null;
         
-        await dbContext.Entry(userModel).Reference(m => m.curso).LoadAsync();
+        await _dbContext.Entry(userModel).Reference(m => m.curso).LoadAsync();
         return userModel;
     }
 
-    public async Task<IList<UsuarioModel>> GetUsers(int page, int pageSize)
+    public Task<IList<UsuarioModel>> GetUsers(int page, int pageSize) =>
+        GetUsers(_dbContext, page, pageSize);
+
+    private async Task<IList<UsuarioModel>> GetUsersWFactory(int page, int pageSize)
     {
-        var result = await dbContext.usuarios
+        await using AppDbContext? inDbContext = await _dbContextFactory.CreateDbContextAsync();
+
+        if (inDbContext is null)
+            throw new("Was not possible to instanciaite a new DbContext");
+        
+        return await GetUsers(inDbContext, page, pageSize);
+    }
+    
+    private async Task<IList<UsuarioModel>> GetUsers(AppDbContext inDbContext, int page, int pageSize)
+    {
+        var result = await inDbContext.usuarios
             .AsNoTracking()
             .OrderBy(f => f.idUsuario)
             .Skip((page - 1) * pageSize)
@@ -48,21 +63,48 @@ public class UsuarioRepository : IUsuarioRepository
         
         return result;
     }
+
+    public Task<int> GetUsersCount() =>
+        GetUsersCount(_dbContext);
+
+    private async Task<int> GetUsersCountWFactory()
+    {
+        await using AppDbContext? inDbContext = await _dbContextFactory.CreateDbContextAsync();
+
+        if (inDbContext is null)
+            throw new("Was not possible to instanciaite a new DbContext");
+        
+        return await GetUsersCount(inDbContext);
+    }
+        
+    private async Task<int> GetUsersCount(AppDbContext inDbContext) =>
+        await inDbContext.usuarios.CountAsync();
+    
+    public async Task<(IList<UsuarioModel>, int, int)> GetUsersAndCount(int page, int pageSize)
+    {
+        var usersTask = GetUsersWFactory(page, pageSize);
+        var usersCountTask = GetUsersCountWFactory();
+        await Task.WhenAll(usersTask, usersCountTask);
+        
+        var result = usersTask.Result;
+        int usersCount = usersCountTask.Result;
+        return (result, result.Count, usersCount);
+    }
     
     public async Task<bool> CheckUserByMatriculaAndEmail(string matricula, string email)
     {
-        bool exists = await dbContext.usuarios
+        bool exists = await _dbContext.usuarios
             .AnyAsync(u => u.matricula == matricula || 
                            u.emailUsuario == email);
         return exists;
     }
 
     public async Task CreateUser(UsuarioModel usuarioModel) =>
-        await dbContext.usuarios.AddAsync(usuarioModel);
+        await _dbContext.usuarios.AddAsync(usuarioModel);
 
     public void DeleteUser(UsuarioModel usuario) =>
-        dbContext.usuarios.Remove(usuario);
+        _dbContext.usuarios.Remove(usuario);
     
     public async Task FlushChanges() => 
-        await dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
 }

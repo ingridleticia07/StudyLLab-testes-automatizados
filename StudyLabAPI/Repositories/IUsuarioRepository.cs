@@ -31,6 +31,22 @@ public interface IUsuarioRepository
     /// em uma lista do comprimento de <see cref="pageSize"/> ou menor</returns>
     public Task<IList<UsuarioModel>> GetUsers(int page, int pageSize);
     /// <summary>
+    /// Recupera a quantidade de usuarios cadastrados.
+    /// </summary>
+    /// <returns>Representa uma tarefa assíncrona do banco,
+    /// ela retorna a quantidade de registros na tabela</returns>
+    public Task<int> GetUsersCount();
+    /// <summary>
+    /// Retornar um conjunto de informações sobre os usuários cadastrados, limitados por paginação.
+    /// </summary>
+    /// <param name="page">Número da página</param>
+    /// <param name="pageSize">Tamanho da página</param>
+    /// <returns>Representa uma tarefa assíncrona,
+    /// ela retornar uma tupla contendo: (<see cref="IList{T}"/> de usuários, 
+    /// <see cref="int"/> quantidade de usuários na página,
+    /// <see cref="int"/> quantidade de usuários cadastrados)</returns>
+    public Task<(IList<UsuarioModel>, int, int)> GetUsersAndCount(int page, int pageSize);
+    /// <summary>
     /// Verifica se há um usuario com o <paramref name="matricula"/> ou <paramref name="email"/>
     /// já cadastrado no banco.
     /// </summary>
