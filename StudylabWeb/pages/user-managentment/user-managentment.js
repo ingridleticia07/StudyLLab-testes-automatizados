@@ -28,12 +28,19 @@ document.querySelectorAll('.fechar').forEach(function(botao) {
   });
 });
 
+document.querySelectorAll('.cancelar').forEach(function(botao) {
+  botao.addEventListener("click", function() {
+    const modal = botao.closest('.modal-container');
+    closeModal(modal);
+  });
+});
+
 deleteButtons.forEach(function(botao) {
   botao.addEventListener("click", function() {
     openModal(modalExc);
     confirmDeleteButton.addEventListener("click", function() {
-        closeModal(modalExc);
-        showModal(document.getElementById('modalConfirmacaoExcluir'));
+      closeModal(modalExc);
+      showModal(document.getElementById('modalConfirmacaoExcluir'));
     });
   });
 });
@@ -42,8 +49,8 @@ banButtons.forEach(function(botao) {
   botao.addEventListener("click", function() {
     openModal(modalBan);
     confirmBanButton.addEventListener("click", function() {
-        closeModal(modalBan);
-        showModal(document.getElementById('modalConfirmacaoBanir'));
+      closeModal(modalBan);
+      showModal(document.getElementById('modalConfirmacaoBanir'));
     });
   });
 });

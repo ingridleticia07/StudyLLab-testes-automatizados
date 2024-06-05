@@ -105,3 +105,12 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
  
+document.addEventListener('DOMContentLoaded', (event) => {
+  const selectAllCheckbox = document.getElementById('select-all');
+  selectAllCheckbox.addEventListener('change', function() {
+    const userCheckboxes = document.querySelectorAll('.content-table tbody input[type="checkbox"]');
+    userCheckboxes.forEach((checkbox) => {
+      checkbox.checked = this.checked;
+    });
+  });
+});
