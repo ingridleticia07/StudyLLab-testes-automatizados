@@ -2,9 +2,7 @@
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models.Options;
-using StudyLabAPI.Utils;
 using JwtPayload = StudyLabAPI.Services.Jwt.Models.JwtPayload;
 
 namespace StudyLabAPI.Services.Jwt;
@@ -46,7 +44,7 @@ public class JwtService : IJwtService
             SigningCredentials = credentials,
             Issuer = _options.issuer,
             IssuedAt = DateTime.Now,
-            Expires = DateTime.Now.AddDays(1),
+            Expires = DateTime.Now.AddSeconds(_options.expirationTime),
             Audience = _options.audience,
             Subject = payload.CreateClaimsIdentity()
         });

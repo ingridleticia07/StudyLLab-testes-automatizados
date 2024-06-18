@@ -1,4 +1,5 @@
 import { api_key } from "../keys.js";
+import { updateUserAuthState } from "./auth.js";
 
 let unauthorizedInterceptor = undefined;
 export const instance = axios.create({
@@ -9,6 +10,7 @@ export const instance = axios.create({
 });
 
 let authorizationInterceptor = undefined;
+
 export function addAuthorizationHeaderInterceptor(value) {
   removeAuthorizationHeaderInterceptor();
   authorizationInterceptor = instance.interceptors.request.use(function (

@@ -22,9 +22,24 @@ export async function getUserInfo() {
     response.data.active,
     response.data.curso
   );
-
+console.log(userInfo);
   saveUserInfo(userInfo);
   return userInfo;
+}
+
+export async function getAllUsersInfo(page, pageSize) {
+  let response = await instance.get(USER_ENDPOINT + "?page="+page+"&pageSize="+pageSize);
+
+  if (response.status !== 200) {
+    return null;
+  }
+  return response.data;
+}
+
+export function deleteUser(id) {
+  let response = instance.delete(USER_ENDPOINT + "/" + id);
+
+  return response.status !== 200
 }
 
 function getUserInfoCached() {

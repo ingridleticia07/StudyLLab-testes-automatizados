@@ -1,8 +1,6 @@
 using System.Net;
 using System.Net.Mail;
-using StudyLabAPI.Exceptions;
 using StudyLabAPI.Services.Email.Models;
-using StudyLabAPI.Utils;
 using MailMessage = System.Net.Mail.MailMessage;
 // ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
 

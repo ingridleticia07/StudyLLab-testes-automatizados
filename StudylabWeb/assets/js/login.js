@@ -1,10 +1,13 @@
 import { login } from "./lib/services/auth.js";
+import { userAllreadyLogged } from "./lib/utils/events_guards.js"
 
-const emailInput = document.querySelector('#email');
-const passwordInput = document.querySelector('#password');
-const submitButton = document.querySelector('#button-submit');
+await userAllreadyLogged();
 
-submitButton.addEventListener('click', (event) => {
+const emailInput = document.querySelector("#email");
+const passwordInput = document.querySelector("#password");
+const submitButton = document.querySelector("#button-submit");
+
+submitButton.addEventListener("click", (event) => {
   event.preventDefault(); // previne o envio do formulário
 
   const email = emailInput.value.trim();
@@ -12,26 +15,24 @@ submitButton.addEventListener('click', (event) => {
 
   // Verifica se o campo de e-mail está vazio
   if (!email) {
-    alert('Por favor, digite seu e-mail.');
+    alert("Por favor, digite seu e-mail.");
     emailInput.focus();
     return;
   }
 
   // Verifica se o email é válido
   if (!isValidEmail(email)) {
-    alert('Por favor, digite um e-mail institucional válido.');
+    alert("Por favor, digite um e-mail institucional válido.");
     emailInput.focus();
     return;
   }
 
-  // Verifica se a senha tem pelo menos 6 caracteres
-  if (password.length < 6) {
-    alert('A senha deve ter pelo menos 6 caracteres.');
+  if (password.length < 8) {
+    alert("A senha deve ter pelo menos 8 caracteres.");
     passwordInput.focus();
     return;
   };
 
-  // Se chegou até aqui, o formulário está válido
   login(
     email,
     password,
@@ -49,7 +50,7 @@ function isValidEmail(email) {
 
 var togglePassword = document.getElementById("toggle-password");
 
-window.togglePasswordVisibility = ()=>{
+function togglePasswordVisibility() {
   if (passwordInput.type === "password") {
     passwordInput.type = "text";
     togglePassword.src = "/assets/img/eye-close.svg";
@@ -58,4 +59,4 @@ window.togglePasswordVisibility = ()=>{
     togglePassword.src = "/assets/img/eye.svg";
     togglePassword.alt = "Mostrar senha";
   }
-};
+}
