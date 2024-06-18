@@ -1,3 +1,5 @@
+import { login } from "./lib/services/auth.js";
+
 const emailInput = document.querySelector('#email');
 const passwordInput = document.querySelector('#password');
 const submitButton = document.querySelector('#button-submit');
@@ -27,10 +29,17 @@ submitButton.addEventListener('click', (event) => {
     alert('A senha deve ter pelo menos 6 caracteres.');
     passwordInput.focus();
     return;
-  }
+  };
 
   // Se chegou até aqui, o formulário está válido
-  alert('Login bem-sucedido!');
+  login(
+    email,
+    password,
+    function () {
+      window.location.href = "/pages/home-admin/home-admin.html";
+    },
+    function () {}
+  );
 });
 
 function isValidEmail(email) {
@@ -40,15 +49,13 @@ function isValidEmail(email) {
 
 var togglePassword = document.getElementById("toggle-password");
 
-
-function togglePasswordVisibility() {
-
-    if (passwordInput.type === "password") {
-      passwordInput.type = "text";
-      togglePassword.src = "/assets/img/eye-close.svg";
-    } else {
-      passwordInput.type = "password";
-      togglePassword.src = "/assets/img/eye.svg";
-      togglePassword.alt = "Mostrar senha"
-    }
+window.togglePasswordVisibility = ()=>{
+  if (passwordInput.type === "password") {
+    passwordInput.type = "text";
+    togglePassword.src = "/assets/img/eye-close.svg";
+  } else {
+    passwordInput.type = "password";
+    togglePassword.src = "/assets/img/eye.svg";
+    togglePassword.alt = "Mostrar senha";
   }
+};

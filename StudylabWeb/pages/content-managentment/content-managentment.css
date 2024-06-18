@@ -1,22 +1,20 @@
 *{
     margin: 0;
     font-family: "Roboto", sans-serif;
-}
-h1{
-    size: 32px;
+    font-size: 0.8rem;
 }
 
-body{
-    height: 100vh;
-    overflow: hidden;
-    
+
+body {
+    height: 100vh; 
+    overflow: hidden; 
 }
 
 .primary{
     height: 100%;
+    width: 100%;
     display: flex;
     background-color: rgba(245, 245, 245, 1);
-    
 }
 
 .top-nav {
@@ -24,24 +22,24 @@ body{
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    padding: 0.5% 1%; 
     background-color: #fff;
-    padding: 1rem 1rem;
     border-bottom: 3px solid rgba(0, 0, 0, 0.2);
     flex-wrap: wrap;
 }
 
-.logo img{
-    width: 10rem;
+.logo img {
+    width: 7rem; 
     margin-left: 4rem;
 }
 
-.search-bar{
-    width: 45%;
+.search-bar {
+    width: 45%; 
     position: relative;
     display: inline-block;
 }
 
-.search-bar button{
+.search-bar button {
     background: none;
     border: none;
     position: absolute;
@@ -51,13 +49,13 @@ body{
     cursor: pointer; 
 }
 
-.search-bar button img{
-    width: 1.2rem;
+.search-bar button img {
+    width: 1rem;
 }
 
 .search-bar input[type="search"] {
     width: 100%;
-    padding: 1rem 0.8rem;
+    padding: 0.5rem 0.8rem; 
     margin-right: 0.5rem;
     border-radius: .8rem;
     background-color: #ebebeb;
@@ -65,40 +63,41 @@ body{
     outline: none;
 }
 
-.user-controls{
+.user-controls {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1rem; 
     margin-right: 4rem;
 }
 
-.user-controls a{
+.user-controls a {
     background: none;
     border: none;
     cursor: pointer;
 }
 
-.user-controls img{
-    width: 3rem;
+.user-controls img {
+    width: 2.5rem; 
 } 
 
-
-.user-controls .icon-user-control-1 img{
-    width: 1.8rem;
-} 
+.user-controls .icon-user-control-1 img {
+    width: 1.3rem;
+}
 
 .sidebar {
     top: 0rem;
     left: 0;
-    width: 4.5rem;
+    width: 4%;
     height: 100%;
     background-color: #ffffff;
     box-shadow: 2px 0 5px rgba(0,0,0,0.1);
 }
 
+
 .menu ul {
     list-style: none;
     padding: 0;
+    padding-top: 2rem;
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -114,7 +113,7 @@ body{
 }
 
 .icon-sidebar {
-    width: 100%;
+    width: 80%;
     padding: 1rem 0;
     color: #505050;
     cursor: pointer;
@@ -126,24 +125,34 @@ body{
 }
 
 .externo{
-    margin: 80px 40px 1rem 40px;
+    margin: 2%;
     flex: 1;
 }
 .content {
     border-radius: 1rem;
-    padding: 10;
     flex: 1;
     background:rgba(247, 249, 252, 0.9);
 }
 
-
 .content-managentment{
-    border-radius: 1rem;
-    margin: 0px;
+    border-top-right-radius: 1rem;
+    border-top-left-radius: 1rem;
     background-color: #ffffff;
     flex: 1;
-    padding: 3rem;
+    padding: 3%;
+    padding-bottom: 0.5%;
+    padding-left: 4%;
+    min-height: calc(10 * 3rem); 
 }
+
+h1{
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 1.8rem;
+}
+
 .content-header{
     display: flex;
     justify-content: space-between;
@@ -153,7 +162,7 @@ body{
 .filter-button {
     padding: 0.8rem 2rem;
     color: rgba(88, 91, 96, 1);
-    font-size: 20px;
+    font-size: 1rem;
     font-weight: bold;
     background-color: #ffffff;
     border: 1px solid #e1e1e1;
@@ -182,28 +191,38 @@ body{
 .content-table thead {
     background-color: #f7f9fc;
 }
-  
-.content-table th, .content-table td {
-    text-align: left;
-    padding: 1rem;
-    border-bottom: 1px solid #e1e1e1;
+
+.content-table tbody tr{
+    transition: .3S;
 }
-  
-.content-table th:first-child,
-.content-table td:first-child {
+.content-table tbody tr:hover {
+    transform: translateY(-.05rem)
+}
+
+.content-table th {
     text-align: center;
+    padding: 0.5rem;
+    border-bottom: 1px solid #C5C8CF;
+}
+.content-table td {
+    text-align: center;
+    border-bottom: 1px solid #E9EDF5;
 }
   
+.content-table td:hover {
+    border-bottom: 1px solid #C5C8CF;
+}
+
 .content-table td {
     color: rgba(88, 91, 96, 1);
 }
   
 .status-circle {
-    height: 10px;
-    width: 10px;
+    height: 0.8rem;
+    width: 0.8rem;
     border-radius: 50%;
     display: inline-block;
-    margin-right: 5px;
+    margin-right: 0.4rem;
     vertical-align: middle;
 }
 
@@ -213,8 +232,8 @@ body{
 
 .status-approved {
     background: rgba(225, 252, 239, 1);
-    padding: 5px;
-    border-radius: 5px;
+    padding: 0.4rem;
+    border-radius: 0.4rem;
     color: rgba(20, 128, 74, 1);
     font-weight: bold;
 }
@@ -225,8 +244,8 @@ body{
 
 .status-pending {
     background: rgba(252, 242, 230, 1);
-    border-radius: 5px;
-    padding: 5px;
+    border-radius: 0.4rem;
+    padding: 0.4rem;
     color: rgba(170, 91, 0, 1);
     font-weight: bold;
 }
@@ -237,8 +256,8 @@ body{
 
 .status-rejected {
     background: rgba(255, 237, 239, 1);
-    border-radius: 5px;
-    padding: 5px;
+    border-radius: 0.4rem;
+    padding: 0.4rem;
     color: rgba(209, 41, 61, 1);
     font-weight: bold;
 }
@@ -258,25 +277,19 @@ body{
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding: 1rem;
-    margin-top: 0;
 }
 
-    .pagination span {
-    margin-right: 1rem;
-    }
-
-    .pagination button {
-        background: none;
-        border: none;
-        cursor: pointer; 
-    }
-
-.pagination .current-page {
-  font-weight: bold;
-  background-color: #505050;
-  color: white;
+.pagination span {
+margin-right: 1rem;
 }
+
+.pagination button {
+    background: none;
+    border: none;
+    cursor: pointer; 
+}
+
+
 
 .breadcrumbs {
     margin-bottom: 1rem;
@@ -305,66 +318,58 @@ body{
     display: flex;
     flex-direction: column;
     justify-content: space-between; 
-    
-    width: 400px;
-    height: 200px;
-    gap: 0px;
-    border-radius: 12px;
-    opacity: 0px;
-    padding: 20px;
-    padding-right: 30px;
+    width: 25rem;
+    height: 10rem;
+    border-radius: 1rem;
+    padding: 2rem;
     position: relative;
 }
 
-.modal header{
-    padding: 20px;
-}
-
-.modal .corpo-modal{
-    padding-left: 20px;
-}
 .modal footer{
-    text-align: right;
+    text-align: center;
 }
 
 .fechar{
     position: absolute;
-    right: 20px;
-    top: 15px;
-    width: 50px;
-    height: 50px;
+    right: 1rem;
+    top: 0.5rem;
+    width: 4rem;
+    height: 4rem;
     border-radius: 50%;
     border: 6px solid white;
     background: #ffffff;
-    font-size: 30px;
+    font-size: 2rem;
     cursor: pointer;
 }
 
 .btn {
+  padding: 0.8rem 3.5rem;
+  margin-top: auto;
+  border-radius:0.5rem;
+  border:0.5px solid  #FF8700;
+  cursor: pointer;
+  margin-left: 1rem;
+  transition: 0.3s;
+}
 
-    padding: 12px 50px;
-    margin-top: auto;
-    border-radius:0.5rem;
-    border:0.5px solid  #FF8700;
-    cursor: pointer;
-    margin-left: 10px;
-  }
-  
-  .cancelar {
-    background-color: #ffffff;
-    color: #FF8700;
-  }
-  
-  .confirmar {
-    background-color: #FF8700;
-    color: white;
-  }
+.btn:hover{
+    transform: translateY(-.1rem);
+}  
+
+.cancelar {
+  background-color: #ffffff;
+  color: #FF8700;
+}
+
+.confirmar {
+  background-color: #FF8700;
+  color: white;
+}
 
 .confirmacao {
   display: none;
   position: fixed;
-  left: 0;
-  bottom: 50px;
+  bottom: 3rem;
   width: 100%;
   animation-name: slideIn;
   animation-duration: 0.5s;
@@ -373,10 +378,10 @@ body{
 .modal-content {
   background-color: #4BAF75;
   color: white;
-  margin: 0 auto;
-  padding: 15px;
+  margin: auto;
+  padding: 0.8rem;
   border-radius: 8px; 
-  width: 250px;
+  width: 15rem;
   text-align: center;
 }
 
@@ -398,4 +403,45 @@ body{
   color: white;
   text-decoration: none;
   cursor: pointer;
+}
+
+.filter-container {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 12.5rem;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  right: 11rem;
+  border-radius: 8px; 
+  top : 5rem;
+}
+
+.filter-options {
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 12.5rem;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 2;
+  border-radius: 8px; 
+  right: -3.5rem;
+  padding: 0.8rem;
+  top : 5rem;
+}
+
+.dropdown-item {
+  color: black;
+  padding: 1rem 1.2rem;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+}
+
+.filter-options div {
+  margin-top: 0.4rem;
 }

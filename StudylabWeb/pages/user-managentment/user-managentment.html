@@ -26,6 +26,7 @@
         /></a>
       </div>
     </header>
+
     <div class="primary">
       <aside class="sidebar">
         <nav class="menu">
@@ -39,7 +40,7 @@
               /></a>
             </li>
             <li>
-              <a href="#"
+              <a href="../discipline-management/discipline-management.html"
                 ><img
                   class="icon-sidebar"
                   src="../../assets/img/icon-book.svg"
@@ -47,7 +48,7 @@
               /></a>
             </li>
             <li>
-              <a href="#"
+              <a href="../user-managentment/user-managentment.html"
                 ><img
                   class="icon-sidebar"
                   src="../../assets/img/icon-user.svg"
@@ -81,7 +82,7 @@
       
       <div class="externo">
         <div class="breadcrumbs">
-          <span>Página Inicial > Gerenciamento de Usuários</span>
+          <p>Página Inicial > Gerenciamento de Usuários</p>
         </div>
         <main class="content">
           <div class="user-managentment">
@@ -100,6 +101,17 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <tr>
+                    <td><input type="checkbox" name="user"></td>
+                    <td>493782</td>
+                    <td>Alicia Santos</td>
+                    <td>Engenharia de Software</td>
+                    <td>aliciasantos@algum-email.br</td>
+                    <td>
+                      <button class="action-button banir"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
+                      <button class="action-button deletar"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
+                    </td>
+                  </tr>
                   <tr>
                     <td><input type="checkbox" name="user"></td>
                     <td>493782</td>
@@ -203,13 +215,13 @@
 
     <div id="modalConfirmacaoExcluir" class="confirmacao">
       <div class="modal-content">
-        <p><img class="checkmark" src="../../assets/img/icon-check.svg">  Usuário removido com sucesso!  |  <a href="#" class="desfazer">  Desfazer</a></p>
+        <p><img class="checkmark" src="../../assets/img/icon-check.svg"><sup> Usuário removido com sucesso!  |  <a href="#" class="desfazer">  Desfazer</a></sup></p>
       </div>
     </div>
 
     <div id="modalConfirmacaoBanir" class="confirmacao">
       <div class="modal-content">
-        <p><img class="checkmark" src="../../assets/img/icon-check.svg">  Usuário banido!  |  <a href="#" class="desfazer">  Desfazer</a></p>
+        <p><img class="checkmark" src="../../assets/img/icon-check.svg"><sup> Usuário banido!  |  <a href="#" class="desfazer">  Desfazer</a></sup></p>
       </div>
     </div>
 

@@ -39,7 +39,7 @@
               /></a>
             </li>
             <li>
-              <a href="#"
+              <a href="../discipline-management/discipline-management.html"
                 ><img
                   class="icon-sidebar"
                   src="../../assets/img/icon-book.svg"
@@ -47,7 +47,7 @@
               /></a>
             </li>
             <li>
-              <a href="#"
+              <a href="../user-managentment/user-managentment.html"
                 ><img
                   class="icon-sidebar"
                   src="../../assets/img/icon-user.svg"
@@ -55,7 +55,7 @@
               /></a>
             </li>
             <li>
-              <a href="#"
+              <a href="../content-managentment/content-managentment.html"
                 ><img
                   class="icon-sidebar" 
                   src="../../assets/img/icon-folder.svg"
@@ -85,10 +85,45 @@
         </div>
         <main class="content">
           <div class="content-managentment">
+            
             <div class="content-header">
-            <H1>Conteúdos</H1>
-            <button id="filter-btn" class="filter-button"> <img src="../../assets/img/Filter.svg">  Filtro</button>
+              <H1>Conteúdos</H1>
+              <div class="filter-container">
+                <button id="filter-btn" class="filter-button"> <img src="../../assets/img/Filter.svg">  Filtro</button>
+                <div class="dropdown-content">
+                  <div class="dropdown-item" data-target="content-options">Conteúdo ></div>
+                  <div class="dropdown-item" data-target="date-options">Data ></div>
+                  <div class="dropdown-item" data-target="status-options">Status ></div>
+                </div>
+                <div class="filter-options" id="content-options" style="display:none;">
+                  <!-- Conteúdo -->
+                  <div><label><input type="checkbox"> Todos</label></div>
+                  <div><label><input type="checkbox"> Prova</label></div>
+                  <div><label><input type="checkbox"> Artigo</label></div>
+                  <div><label><input type="checkbox"> Lista</label></div>
+                  <div><label><input type="checkbox"> Atividade</label></div>
+                  <div><label><input type="checkbox"> Trabalho</label></div>
+                  <div><label><input type="checkbox"> Slide</label></div>
+                </div>
+                <div class="filter-options" id="date-options" style="display:none;">
+                  <!-- Data -->
+                  <div><label><input type="checkbox"> Hoje</label></div>
+                  <div><label><input type="checkbox"> Últimos 7 dias</label></div>
+                  <div><label><input type="checkbox"> Último mês</label></div>
+                  <div><label><input type="checkbox"> Último trimestre</label></div>
+                  <div><label><input type="checkbox"> Último ano</label></div>
+                </div>
+                <div class="filter-options" id="status-options" style="display:none;">
+                  <!-- Status -->
+                  <div><label><input type="checkbox"> Aprovado</label></div>
+                  <div><label><input type="checkbox"> Resolvido</label></div>
+                  <div><label><input type="checkbox"> Pendente</label></div>
+                  <div><label><input type="checkbox"> Rejeitado</label></div>
+                  <div><label><input type="checkbox"> Em análise</label></div>
+                </div>
+              </div>
             </div>
+            
             <div>
               <br><br>
               <table class="content-table">
@@ -190,7 +225,7 @@
                     </td>
                   </tr>
                   
-                </tbody>  <!-- Conteúdos -->
+                </tbody>  <!-- Dados -->
               </table>
             </div>
           </div>
@@ -221,7 +256,7 @@
 
     <div id="modalConfirmacao" class="confirmacao">
       <div class="modal-content">
-        <p><img class="checkmark" src="../../assets/img/icon-check.svg">  Conteúdo excluído  |  <a href="#" class="desfazer">  Desfazer</a></p>
+        <p><img class="checkmark" src="../../assets/img/icon-check.svg"><sup> Conteúdo excluído  |  <a href="#" class="desfazer">  Desfazer</a></sup></p>
       </div>
     </div>
     
