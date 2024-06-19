@@ -70,23 +70,43 @@ function showModal(modal) {
   }, 5000);
 }
 
-document.addEventListener("DOMContentLoaded", async function () {
+async function getUsers(page,pageSize) {
   try {
-    const page = 1;
-    const pageSize = 10;
+
     const data = await getAllUsersInfo(page, pageSize);
 
-    const users = data.users;
-    const countInPage = data.pageCount;
-    const totalRecords = data.usersCount;
-    const maxPage = data.maxPage
-
-    updatePageCount(totalRecords, countInPage, page, pageSize, maxPage)
+    const { users, pageCount: countInPage, usersCount: totalRecords, maxPage } = data;
+    
+    updatePageCount(totalRecords, countInPage, page, pageSize, maxPage);
     populateTable(users);
+    addButtonsPagination(maxPage,countInPage);
   } catch (error) {
     console.error("Error fetching user info:", error);
   }
+}
+
+function addButtonsPagination(maxRegisterCounts,itemsPerPage){
+    const paginationContainer = document.querySelector('body .pagination');
+
+    paginationContainer.innerHTML = ''; // Clear previous buttons
+
+    for (let i = 1; i <= maxRegisterCounts; i++) {
+        const button = document.createElement('button');
+        button.textContent = i;
+        button.addEventListener('click', function() {
+            document.querySelectorAll('.pagination button').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            getUsers(i, itemsPerPage);
+        });
+        paginationContainer.appendChild(button);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const itemsPerPage = 1;
+  getUsers(1,itemsPerPage);
 });
+
 
 const blockIcon = () => {
   const blockIcon = document.createElement("img");
@@ -106,7 +126,7 @@ const deleteIcon = () => {
 
 function updatePageCount(recordsCount, countInPage, currentPageIndex, pageSize, maxPage) {
   //TODO: Implement pagination and update informations
-  console.log(recordsCount, countInPage, currentPageIndex, pageSize, maxPage);
+  //console.log(recordsCount, countInPage, currentPageIndex, pageSize, maxPage);
 }
 
 const populateTable = (users) => {
