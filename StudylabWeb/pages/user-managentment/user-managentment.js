@@ -24,13 +24,19 @@ function openDeleteModal(userId) {
   confirmDeleteButton.onclick = async function() {
     closeModal(modalExc);
     showModal(document.getElementById("modalConfirmacaoExcluir"));
+    
+    let userDeletedSuccessfully = false;
+    let rowToRemove = tableBody.querySelector(`tr[id='${userId}']`)
+    
     try{
       await deleteUser(userId)
-      let rowToRemove = tableBody.querySelector(`tr[id='${userId}']`)
-      tableBody.removeChild(rowToRemove);
+      userDeletedSuccessfully = true;
     }catch(e){
       console.log(e);
     }
+
+    if(userDeletedSuccessfully)
+      tableBody.removeChild(rowToRemove);
   };
 }
 

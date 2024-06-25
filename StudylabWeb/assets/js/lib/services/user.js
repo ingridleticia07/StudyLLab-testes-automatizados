@@ -36,8 +36,8 @@ export async function getAllUsersInfo(page, pageSize) {
   return response.data;
 }
 
-export function deleteUser(id) {
-  let response = instance.delete(USER_ENDPOINT + "/" + id);
+export async function deleteUser(id) {
+  let response = await instance.delete(USER_ENDPOINT + "/" + id);
 
   return response.status !== 200
 }
