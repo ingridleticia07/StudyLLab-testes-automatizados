@@ -117,9 +117,13 @@ function addButtonsPagination(maxRegisterCounts,itemsPerPage){
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async() => {
+  let preloaderDiv = document.getElementById("pre-loader");
+
   const itemsPerPage = 10;
-  getUsers(1,itemsPerPage);
+  await getUsers(1,itemsPerPage);
+
+  preloaderDiv.style.display = "none";
 });
 
 
