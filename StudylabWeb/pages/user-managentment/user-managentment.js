@@ -1,4 +1,4 @@
-import { getAllUsersInfo } from "../../assets/js/lib/services/user.js";
+import { getAllUsersInfo,deleteUser } from "../../assets/js/lib/services/user.js";
 import { updateUserAuthState } from "../../assets/js/lib/services/auth.js";
 
 updateUserAuthState();
@@ -8,6 +8,7 @@ const modalBan = document.getElementById("modal-banir");
 const banButtons = document.querySelectorAll(".banir");
 const confirmDeleteButton = document.querySelector("#modal-excluir .confirmar");
 const confirmBanButton = document.querySelector("#modal-banir .confirmar");
+const tableBody = document.querySelector("#user-table tbody");
 
 function openModal(elemento) {
   elemento.style.display = "flex";
@@ -19,10 +20,18 @@ function closeModal(elemento) {
 
 function openDeleteModal(userId) {
   openModal(modalExc);
-  confirmDeleteButton.addEventListener("click", function () {
+  
+  confirmDeleteButton.onclick = async function() {
     closeModal(modalExc);
     showModal(document.getElementById("modalConfirmacaoExcluir"));
-  });
+    try{
+      await deleteUser(userId)
+      let rowToRemove = tableBody.querySelector(`tr[id='${userId}']`)
+      tableBody.removeChild(rowToRemove);
+    }catch(e){
+      console.log(e);
+    }
+  };
 }
 
 function openBanModal(userId) {
@@ -103,7 +112,7 @@ function addButtonsPagination(maxRegisterCounts,itemsPerPage){
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const itemsPerPage = 1;
+  const itemsPerPage = 10;
   getUsers(1,itemsPerPage);
 });
 
@@ -130,7 +139,6 @@ function updatePageCount(recordsCount, countInPage, currentPageIndex, pageSize, 
 }
 
 const populateTable = (users) => {
-  const tableBody = document.querySelector("#user-table tbody");
   tableBody.innerHTML = ""; // Clear existing rows
 
   users.forEach((user) => {
@@ -142,6 +150,7 @@ const populateTable = (users) => {
 function createUserRow(user) {
   //User informations
   const row = document.createElement("tr");
+  row.id = user.id;
   const inputColumn = document.createElement("td");
   inputColumn.innerHTML = `<input type="checkbox" name="user">`;
 
