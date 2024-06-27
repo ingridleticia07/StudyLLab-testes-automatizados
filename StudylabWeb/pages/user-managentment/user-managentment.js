@@ -31,10 +31,10 @@ function openDeleteModal(userId) {
       await deleteUser(userId)
 
       userDeletedSuccessfully = true;
-      
+
       showModal(document.getElementById("modalConfirmacaoExcluir"));
     }catch(e){
-      console.log(e);
+      showModal(document.getElementById("modalErroAoExcluir"));
     }
     
     if(userDeletedSuccessfully)
