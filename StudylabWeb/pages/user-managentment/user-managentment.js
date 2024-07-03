@@ -1,13 +1,13 @@
-import { getAllUsersInfo,deleteUser } from "../../assets/js/lib/services/user.js";
+import { getAllUsersInfo,deleteUser,changeUserStatus } from "../../assets/js/lib/services/user.js";
 import { updateUserAuthState } from "../../assets/js/lib/services/auth.js";
 
 updateUserAuthState();
 
 const modalExc = document.getElementById("modal-excluir");
-const modalBan = document.getElementById("modal-banir");
+const modalBloquear = document.getElementById("modal-bloquear");
 const banButtons = document.querySelectorAll(".banir");
 const confirmDeleteButton = document.querySelector("#modal-excluir .confirmar");
-const confirmBanButton = document.querySelector("#modal-banir .confirmar");
+const confirmBlockButton = document.querySelector("#modal-bloquear .confirmar");
 const tableBody = document.querySelector("#user-table tbody");
 
 function openModal(elemento) {
@@ -25,7 +25,7 @@ function openDeleteModal(userId) {
     closeModal(modalExc);
     
     let userDeletedSuccessfully = false;
-    let rowToRemove = tableBody.querySelector(`tr[id='${userId}']`)
+    let rowToRemove = tableBody.querySelector(`tr[id='${userId}']`);
     
     try{
       await deleteUser(userId)
@@ -43,12 +43,35 @@ function openDeleteModal(userId) {
 }
 
 function openBanModal(userId) {
-  openModal(modalBan);
-  confirmBanButton.addEventListener("click", function () {
-    closeModal(modalBan);
-    showModal(document.getElementById("modalConfirmacaoBanir"));
-  });
-}
+  openModal(modalBloquear);
+
+  let userBlockedSuccessfully = false;
+  let rowToBlock = tableBody.querySelector(`tr[id='${userId}']`);
+  let currentUserStatus = rowToBlock.children[5].textContent;
+
+  confirmBlockButton.onclick = async function() {
+
+    try{
+
+      let newStatus;
+
+      if(currentUserStatus == "true")
+        newStatus = false;
+      else
+        newStatus = true;
+      
+      closeModal(modalBloquear);
+
+      await changeUserStatus(userId,newStatus)
+
+      showModal(document.getElementById("modalConfirmacaoBloqueioUsuario"));
+    }catch(e){
+      console.log(e);
+      showModal(document.getElementById("modalErroAoBloquearUsuario"));
+    }
+
+  };
+  };
 
 document.querySelectorAll(".fechar").forEach(function (botao) {
   botao.addEventListener("click", function () {
@@ -178,12 +201,15 @@ function createUserRow(user) {
   const emailColumn = document.createElement("td");
   emailColumn.textContent = user.email;
 
+  const statusColumn = document.createElement("td");
+  statusColumn.textContent = user.active;
+
   row.appendChild(inputColumn);
   row.appendChild(idColumn);
   row.appendChild(usernameColumn);
   row.appendChild(cursoColumn);
   row.appendChild(emailColumn);
-
+  row.appendChild(statusColumn);
   //Action buttons
   const actionColumn = document.createElement("td");
 
@@ -199,7 +225,7 @@ function createUserRow(user) {
   const banButton = document.createElement("button");
   banButton.id = `ban-u-${user.id}`;
   banButton.classList.add("action-button");
-  banButton.classList.add("banir");
+  banButton.classList.add("bloquear");
   banButton.appendChild(blockIcon());
   banButton.addEventListener("click", () => {
     openBanModal(user.id);

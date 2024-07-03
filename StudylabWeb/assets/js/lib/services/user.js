@@ -42,6 +42,18 @@ export async function deleteUser(id) {
   return response.status !== 200
 }
 
+export async function changeUserStatus(id,status) {
+  let response = await instance.put(USER_ENDPOINT + "/" + id,{
+    active:status
+  })
+  .then(function(res){
+
+  }).catch(function(error){
+    console.log(error);
+  });
+
+}
+
 function getUserInfoCached() {
   if(!hasUserInfoSaved()) {
     return null;
