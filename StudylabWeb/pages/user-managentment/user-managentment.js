@@ -47,8 +47,26 @@ function openBanModal(userId) {
 
   let userBlockedSuccessfully = false;
   let rowToBlock = tableBody.querySelector(`tr[id='${userId}']`);
+  let tituloElement = modalBloquear.querySelector('header .subtitulo');
+  let textoElement = modalBloquear.querySelector('div #texto');
   let currentUserStatus = rowToBlock.children[5].textContent;
-
+  let btnConfirmElement = modalBloquear.querySelector('.btn.confirmar');
+  let tituloModal = "";
+  let textoModal = "";
+  let btnModal = "";
+  if(currentUserStatus == "true"){
+    tituloModal = "Confirmar bloqueio de usuário";
+    textoModal = "Deseja bloquear esse usuário?";
+    btnModal = "Bloquear";
+  }else{
+    tituloModal = "Confirmar desbloqueio de usuário";
+    textoModal = "Deseja desbloquear esse usuário?";
+    btnModal = "Desbloquear";
+  }
+  
+  tituloElement.textContent = tituloModal;
+  textoElement.textContent = textoModal;
+  btnConfirmElement.textContent = btnModal;
   confirmBlockButton.onclick = async function() {
 
     try{
@@ -59,7 +77,7 @@ function openBanModal(userId) {
         newStatus = false;
       else
         newStatus = true;
-      
+
       closeModal(modalBloquear);
 
       await changeUserStatus(userId,newStatus)
@@ -71,7 +89,7 @@ function openBanModal(userId) {
     }
 
   };
-  };
+};
 
 document.querySelectorAll(".fechar").forEach(function (botao) {
   botao.addEventListener("click", function () {
@@ -168,6 +186,14 @@ const deleteIcon = () => {
   return deleteIcon;
 };
 
+const unblockIcon = () => {
+  const unblockIcon = document.createElement("img");
+  unblockIcon.src = "../../assets/img/icon-unblock.png";
+  unblockIcon.alt = "Desbloquear";
+
+  return unblockIcon;
+};
+
 function updatePageCount(recordsCount, countInPage, currentPageIndex, pageSize, maxPage) {
   //TODO: Implement pagination and update informations
   //console.log(recordsCount, countInPage, currentPageIndex, pageSize, maxPage);
@@ -226,7 +252,11 @@ function createUserRow(user) {
   banButton.id = `ban-u-${user.id}`;
   banButton.classList.add("action-button");
   banButton.classList.add("bloquear");
-  banButton.appendChild(blockIcon());
+
+  if(user.active)
+    banButton.appendChild(blockIcon());
+  else
+    banButton.appendChild(unblockIcon());
   banButton.addEventListener("click", () => {
     openBanModal(user.id);
   });
