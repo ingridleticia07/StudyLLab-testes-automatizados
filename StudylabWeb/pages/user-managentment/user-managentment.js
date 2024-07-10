@@ -47,14 +47,15 @@ function openBanModal(userId) {
 
   let userBlockedSuccessfully = false;
   let rowToBlock = tableBody.querySelector(`tr[id='${userId}']`);
+  let iconElement = rowToBlock.querySelector(`#ban-u-${userId} img`);
   let tituloElement = modalBloquear.querySelector('header .subtitulo');
   let textoElement = modalBloquear.querySelector('div #texto');
-  let currentUserStatus = rowToBlock.children[5].textContent;
+  let currentUserStatus = rowToBlock.children[5];
   let btnConfirmElement = modalBloquear.querySelector('.btn.confirmar');
   let tituloModal = "";
   let textoModal = "";
   let btnModal = "";
-  if(currentUserStatus == "true"){
+  if(currentUserStatus.textContent == "true"){
     tituloModal = "Confirmar bloqueio de usuário";
     textoModal = "Deseja bloquear esse usuário?";
     btnModal = "Bloquear";
@@ -72,11 +73,17 @@ function openBanModal(userId) {
     try{
 
       let newStatus;
-
-      if(currentUserStatus == "true")
+      
+      if(currentUserStatus.textContent == "true"){
         newStatus = false;
-      else
+        iconElement.src = "../../assets/img/icon-unblock.png";
+        iconElement.alt = "Desbloquear";
+      }else{
         newStatus = true;
+        iconElement.src = "../../assets/img/icon-edit.svg";
+        iconElement.alt = "Bloquear";
+      }
+      currentUserStatus.textContent = newStatus;
 
       closeModal(modalBloquear);
 
