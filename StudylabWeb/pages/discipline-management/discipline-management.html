@@ -9,6 +9,10 @@
   </head>
 
   <body>
+    <div id="pre-loader">
+      <div class="spinner"></div>
+    </div>
+
     <header class="top-nav">
       <div class="logo"><img src="../../assets/img/StudyLab.svg" alt="" /></div>
       <div class="search-bar">
@@ -91,7 +95,7 @@
           </div>
             <div>
               <br><br>
-              <table class="content-table">
+              <table class="content-table" id="disciplina-table">
                 <thead>
                   <tr>
                     <th><input type="checkbox" name="select-all" id="select-all"></th>
@@ -104,50 +108,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td><input type="checkbox" name="content"></td>
-                    <td>CC 1 de Lógica</td>
-                    <td>Lógica para computação</td>
-                    <td>Alicia Santos</td>
-                    <td>CC</td>
-                    <td>
-                      40
-                    </td>
-                    <td>
-                      <button class="action-button"><img src="../../assets/img/eye.svg" alt="Visualizar"></button>
-                      <button class="action-button deletar"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><input type="checkbox" name="content"></td>
-                    <td>CC 2 de Lógica</td>
-                    <td>Lógica para computação</td>
-                    <td>Alicia Santos</td>
-                    <td>CC</td>
-                    <td>
-                      30
-                    </td>
-                    <td>
-                      <button class="action-button"><img src="../../assets/img/eye.svg" alt="Visualizar"></button>
-                      <button class="action-button deletar"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
-                    </td>
-                  </tr>
-                 
-                 
-                  <tr>
-                    <td><input type="checkbox" name="content"></td>
-                    <td>receitas do padre</td>
-                    <td>Culinaria</td>
-                    <td>marciel</td>
-                    <td>CC</td>
-                    <td>
-                     40
-                    </td>
-                    <td>
-                      <button class="action-button"><img src="../../assets/img/eye.svg" alt="Visualizar"></button>
-                      <button class="action-button deletar"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
-                    </td>
-                  </tr>
                   
                 </tbody>  <!-- Conteúdos -->
               </table>
@@ -183,7 +143,7 @@
         <p><img class="checkmark" src="../../assets/img/icon-check.svg">  Conteúdo excluído  |  <a href="#" class="desfazer">  Desfazer</a></p>
       </div>
     </div>
-    
-    <script src="discipline-management.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" src="discipline-management.js"></script>
   </body>
 </html>

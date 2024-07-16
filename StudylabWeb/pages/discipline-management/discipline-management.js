@@ -1,8 +1,11 @@
+import { getAllDisciplinas } from "../../assets/js/lib/services/disciplina.js";
+
 const modalExc = document.getElementById("modal-excluir");
 const modalBan = document.getElementById("modal-banir");
 const deleteButtons = document.querySelectorAll(".deletar");
 const banButtons = document.querySelectorAll(".banir");
 var modal = document.getElementById("modalConfirmacao");
+const tableBody = document.querySelector("#disciplina-table tbody");
 
 function openModal(elemento) {
   elemento.style.display = "flex";
@@ -67,4 +70,59 @@ function showModal() {
     }, 200); 
   }, 5000);
 }
+
+function createDisciplinaRow(disciplina) {
+  //User informations
+  const row = document.createElement("tr");
+  row.id = disciplina.idDisciplina;
+  const inputColumn = document.createElement("td");
+  inputColumn.innerHTML = `<input type="checkbox" name="disciplina">`;
+
+  const codigoColumn = document.createElement("td");
+  codigoColumn.textContent = disciplina.codigoDisciplina;
+
+  const disciplinaColumn = document.createElement("td");
+  disciplinaColumn.textContent = disciplina.nomeDisciplina;
+
+  const professorColumn = document.createElement("td");
+  professorColumn.textContent = disciplina.professorDisciplina;
+
+  const cursoColumn = document.createElement("td");
+  cursoColumn.textContent = disciplina.curso.nomeCurso;
+
+  const quantidadeAlunos = document.createElement("td");
+  quantidadeAlunos.textContent = disciplina.quantidadeAluno;
+
+  row.appendChild(inputColumn);
+  row.appendChild(codigoColumn);
+  row.appendChild(disciplinaColumn);
+  row.appendChild(professorColumn);
+  row.appendChild(cursoColumn);
+  row.appendChild(quantidadeAlunos);
+  //Action buttons
+  return row;
+}
+
+
+const populateTable = (disciplinas) => {
+  tableBody.innerHTML = ""; // Clear existing rows
+
+  disciplinas.forEach((disciplina) => {
+    const row = createDisciplinaRow(disciplina);
+    tableBody.appendChild(row);
+  });
+};
+
+async function getDisciplinasInfo(page,pageSize) {
+  try {
+    const disciplinas = await getAllDisciplinas(page, pageSize);
+    populateTable(disciplinas);
+  } catch (error) {
+    console.error("Error fetching user info:", error);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", async() => {
+  await getDisciplinasInfo(1,10);
+});
 
