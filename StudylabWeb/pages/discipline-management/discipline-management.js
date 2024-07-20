@@ -123,6 +123,8 @@ async function getDisciplinasInfo(page,pageSize) {
 }
 
 document.addEventListener("DOMContentLoaded", async() => {
+  let preloaderDiv = document.getElementById("pre-loader");
   await getDisciplinasInfo(1,10);
+  preloaderDiv.style.display = "none";
 });
 
