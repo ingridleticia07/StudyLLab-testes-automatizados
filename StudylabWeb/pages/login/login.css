@@ -30,13 +30,13 @@ body{
 }
 
 .form{
-    width: 80%;
+    width: auto;
     display: flex
 }
 
 .login-form {
     width: 100%;
-    height: 31rem;
+    height: auto;
     border-radius: 1rem;
     background-color: white;
     display: flex;
@@ -48,8 +48,8 @@ body{
 .form-login-content{
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: baseline;
+    justify-content: flex-start;
     width: 100%;
     gap: 1rem;
 }

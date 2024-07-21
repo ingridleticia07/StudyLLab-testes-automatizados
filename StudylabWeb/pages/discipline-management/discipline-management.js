@@ -4,6 +4,9 @@ const modalExc = document.getElementById("modal-excluir");
 const modalBan = document.getElementById("modal-banir");
 const deleteButtons = document.querySelectorAll(".deletar");
 const banButtons = document.querySelectorAll(".banir");
+const cadastrarDisciplinaBtn = document.querySelector("#cadastrar-btn");
+const cadastrarDisciplinaBtnSubmit = document.querySelector("#button-submit");
+const modalCadastrarDisciplina = document.querySelector("#modal-cadastrar-disciplina");
 var modal = document.getElementById("modalConfirmacao");
 const tableBody = document.querySelector("#disciplina-table tbody");
 
@@ -128,3 +131,10 @@ document.addEventListener("DOMContentLoaded", async() => {
   preloaderDiv.style.display = "none";
 });
 
+cadastrarDisciplinaBtn.addEventListener('click',function(){
+  openModal(modalCadastrarDisciplina);
+});
+
+cadastrarDisciplinaBtnSubmit.addEventListener('click',function(e){
+  
+});
