@@ -1,4 +1,4 @@
-import { getAllDisciplinas } from "../../assets/js/lib/services/disciplina.js";
+import { getAllDisciplinas,createDisciplina } from "../../assets/js/lib/services/disciplina.js";
 
 const modalExc = document.getElementById("modal-excluir");
 const modalBan = document.getElementById("modal-banir");
@@ -135,6 +135,21 @@ cadastrarDisciplinaBtn.addEventListener('click',function(){
   openModal(modalCadastrarDisciplina);
 });
 
-cadastrarDisciplinaBtnSubmit.addEventListener('click',function(e){
+cadastrarDisciplinaBtnSubmit.addEventListener('click',async function(e){
+  const formCadastrarDisciplina = modalCadastrarDisciplina.querySelector('form');
+  let disciplina = formCadastrarDisciplina.querySelector('#disciplina').value;
+  let nomeProfessor = formCadastrarDisciplina.querySelector('#nome-professor').value;
+  let curso = formCadastrarDisciplina.querySelector('#curso').value;
+  let numeroAlunos = formCadastrarDisciplina.querySelector('#numero-alunos').value;
+  let codigoDisciplina = formCadastrarDisciplina.querySelector('#codigo-disciplina').value;
+
+  const disciplinaDTO = {
+    nomeDisciplina:disciplina,
+    professorDisciplina:nomeProfessor,
+    curso:curso,
+    quantidadeAluno:numeroAlunos,
+    codigoDisciplina:codigoDisciplina
+  };
   
+  await createDisciplina(disciplinaDTO);
 });
