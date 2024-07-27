@@ -7,6 +7,8 @@ const banButtons = document.querySelectorAll(".banir");
 const cadastrarDisciplinaBtn = document.querySelector("#cadastrar-btn");
 const cadastrarDisciplinaBtnSubmit = document.querySelector("#button-submit");
 const modalCadastrarDisciplina = document.querySelector("#modal-cadastrar-disciplina");
+const modalSuccess = document.querySelector("#modalSuccess");
+const modalWarning = document.querySelector("#modalWarning");
 var modal = document.getElementById("modalConfirmacao");
 const tableBody = document.querySelector("#disciplina-table tbody");
 
@@ -51,7 +53,7 @@ document.querySelectorAll('.confirmar').forEach(function(botao) {
   botao.addEventListener("click", function() {
     const modal = botao.closest('.modal-container');
     closeModal(modal);
-    showModal();
+    showModal(modal);
   });
 });
 
@@ -62,14 +64,14 @@ window.onclick = function(event) {
   }
 };
 
-function showModal() {
-  modal.style.animationName = "slideIn";
-  modal.style.display = "block"; 
+function showModal(modalElement) {
+  modalElement.style.animationName = "slideIn";
+  modalElement.style.display = "block"; 
 
   setTimeout(function() {
-    modal.style.animationName = "slideOf"; 
+    modalElement.style.animationName = "slideOf"; 
     setTimeout(function() {
-      modal.style.display = "none"; 
+      modalElement.style.display = "none"; 
     }, 200); 
   }, 5000);
 }
@@ -150,6 +152,12 @@ cadastrarDisciplinaBtnSubmit.addEventListener('click',async function(e){
     quantidadeAluno:numeroAlunos,
     codigoDisciplina:codigoDisciplina
   };
-  
-  await createDisciplina(disciplinaDTO);
+
+   try{
+     const retorno = await createDisciplina(disciplinaDTO);
+     openModal(modalSuccess);
+   }catch(e){
+    console.log(e.response.data);
+    openModal(modalWarning);
+   }
 });

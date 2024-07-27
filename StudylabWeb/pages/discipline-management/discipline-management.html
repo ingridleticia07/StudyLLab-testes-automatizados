@@ -131,6 +131,16 @@
           <div class="disciplina">
             <div class="form-content">
               <p class="titulo">Cadastrar disciplina</p>
+              <div id="modalSuccess" style="display: none;">
+                <div class="modal-content">
+                  <p><img class="checkmark" src="../../assets/img/icon-check.svg">  Disciplina cadastrada com sucesso!</p>
+                </div>
+              </div>
+              <div id="modalWarning" style="display: none;">
+                <div class="modal-content" style="background-color: rgb(255, 136, 0)!important">
+                  <p> Erro ao cadastrar disciplina. Tente novamente mais tarde!</p>
+                </div>
+              </div>
               <div class="form">
                 <form class="form-inputs">
                   <div class="disciplina-container">
@@ -205,12 +215,6 @@
           <button class="btn cancelar">Cancelar</button>
           <button class="btn confirmar">Excluir</button>
         </footer>
-      </div>
-    </div>
-
-    <div id="modalConfirmacao" class="confirmacao">
-      <div class="modal-content">
-        <p><img class="checkmark" src="../../assets/img/icon-check.svg">  Conteúdo excluído  |  <a href="#" class="desfazer">  Desfazer</a></p>
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
