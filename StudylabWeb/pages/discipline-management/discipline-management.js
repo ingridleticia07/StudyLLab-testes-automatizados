@@ -76,6 +76,22 @@ function showModal(modalElement) {
   }, 5000);
 }
 
+const editIcon = () => {
+  const editIcon = document.createElement("img");
+  editIcon.src = "../../assets/img/pencil.png";
+  editIcon.alt = "Editar";
+
+  return editIcon;
+};
+
+const excluirIcon = () => {
+  const excluirIcon = document.createElement("img");
+  excluirIcon.src = "../../assets/img/icon-delete.svg";
+  excluirIcon.alt = "Editar";
+
+  return excluirIcon;
+};
+
 function createDisciplinaRow(disciplina) {
   //User informations
   const row = document.createElement("tr");
@@ -97,13 +113,39 @@ function createDisciplinaRow(disciplina) {
 
   const quantidadeAlunos = document.createElement("td");
   quantidadeAlunos.textContent = disciplina.quantidadeAluno;
-
+  
   row.appendChild(inputColumn);
   row.appendChild(codigoColumn);
   row.appendChild(disciplinaColumn);
   row.appendChild(professorColumn);
   row.appendChild(cursoColumn);
   row.appendChild(quantidadeAlunos);
+
+  const actionColumn = document.createElement("td");
+
+  const editarDisciplinaBtn = document.createElement("button");
+  editarDisciplinaBtn.id = `disciplina-u-${disciplina.idDisciplina}`;
+  editarDisciplinaBtn.appendChild(editIcon());
+  editarDisciplinaBtn.classList.add("action-button");
+  editarDisciplinaBtn.classList.add("bloquear");
+  
+  editarDisciplinaBtn.addEventListener("click", () => {
+    //openBanModal(user.id);
+  });
+
+  const excluirDisciplinaBtn = document.createElement("button");
+  excluirDisciplinaBtn.id = `disciplina-u-${disciplina.idDisciplina}`;
+  excluirDisciplinaBtn.appendChild(excluirIcon());
+  excluirDisciplinaBtn.classList.add("action-button");
+  excluirDisciplinaBtn.classList.add("bloquear");
+  
+  excluirDisciplinaBtn.addEventListener("click", () => {
+    //openBanModal(user.id);
+  });
+  
+  actionColumn.appendChild(editarDisciplinaBtn);
+  actionColumn.appendChild(excluirDisciplinaBtn);
+  row.appendChild(actionColumn);
   //Action buttons
   return row;
 }

@@ -482,3 +482,14 @@ body{
 #button-submit:hover{
     filter: brightness(120%);
 }
+
+.action-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+  
+.action-button img {
+    width: 1.2rem;
+}
