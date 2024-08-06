@@ -11,6 +11,7 @@ const modalSuccess = document.querySelector("#modalSuccess");
 const modalWarning = document.querySelector("#modalWarning");
 var modal = document.getElementById("modalConfirmacao");
 const tableBody = document.querySelector("#disciplina-table tbody");
+const itemsPerPageValue = 5;
 
 function openModal(elemento) {
   elemento.style.display = "flex";
@@ -163,15 +164,38 @@ const populateTable = (disciplinas) => {
 async function getDisciplinasInfo(page,pageSize) {
   try {
     const disciplinas = await getAllDisciplinas(page, pageSize);
-    populateTable(disciplinas);
+
+    const { pageCount, maxPage } = disciplinas;
+
+    console.log(pageCount,maxPage);
+    populateTable(disciplinas.disciplinas);
+    addButtonsPagination(maxPage,pageSize);
   } catch (error) {
     console.error("Error fetching user info:", error);
   }
 }
 
+function addButtonsPagination(maxRegisterCounts,itemsPerPage){
+  const paginationContainer = document.querySelector('body .pagination');
+
+  paginationContainer.innerHTML = ''; // Clear previous buttons
+
+  for (let i = 1; i <= maxRegisterCounts; i++) {
+      const button = document.createElement('button');
+      button.textContent = i;
+      button.addEventListener('click', function() {
+          document.querySelectorAll('.pagination button').forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+          getDisciplinasInfo(i, itemsPerPage);
+      });
+      paginationContainer.appendChild(button);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", async() => {
   let preloaderDiv = document.getElementById("pre-loader");
-  await getDisciplinasInfo(1,10);
+
+  await getDisciplinasInfo(1,itemsPerPageValue);
   preloaderDiv.style.display = "none";
 });
 

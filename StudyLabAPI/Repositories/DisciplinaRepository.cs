@@ -72,13 +72,13 @@ namespace StudyLabAPI.Repositories
 
         public async Task<(IList<DisciplinaModel>, int, int)> GetDisciplinasAndCount(int page, int pageSize)
         {
-            var usersTask = GetDisciplinasWFactory(page, pageSize);
-            var usersCountTask = GetDisciplinasCountWFactory();
-            await Task.WhenAll(usersTask, usersCountTask);
+            var disciplinaTask = GetDisciplinasWFactory(page, pageSize);
+            var disciplinaCountTask = GetDisciplinasCountWFactory();
+            await Task.WhenAll(disciplinaTask, disciplinaCountTask);
 
-            var result = usersTask.Result;
-            int usersCount = usersCountTask.Result;
-            return (result, result.Count, usersCount);
+            var result = disciplinaTask.Result;
+            int disciplinaCount = disciplinaCountTask.Result;
+            return (result, result.Count, disciplinaCount);
         }
 
         public Task<IList<DisciplinaModel>> GetAllDisciplinas(int page, int pageSize) =>
