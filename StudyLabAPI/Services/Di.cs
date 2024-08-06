@@ -123,6 +123,7 @@ public static class Di
     /// <returns><see cref="IServiceCollection"/> para que outras chamadas possam ser encadeadas.</returns>
     public static IServiceCollection AddMappers(this IServiceCollection services)
     {
+        services.AddTransient<DisciplinaModelMapper>();
         services.AddTransient<UsuarioModelMapper>();
         services.AddTransient<RegisterUserRequestModelMapper>();
         services.AddTransient<CodigoUsuarioModelMapper>();

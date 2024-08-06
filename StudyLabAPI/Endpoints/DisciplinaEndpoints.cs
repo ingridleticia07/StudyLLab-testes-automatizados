@@ -24,13 +24,15 @@ public static class DisciplinaEndpoints
     
     [ProducesResponseType(typeof(List<DisciplinaReadModel>), 200)]
     private static async Task<IResult> GetDisciplinas(HttpContext context,
+        [FromQuery] int page,
+        [FromQuery] int pageSize,
         [FromServices] IDisciplinaController controller)
     {
 
-        List<DisciplinaReadModel>? result;
+        DisciplinaListResponse? result;
         try
         {
-            result = await controller.GetAllDisciplinas();
+            result = await controller.GetAllDisciplinas(page,pageSize);
         }
         catch (Exception e)
         {

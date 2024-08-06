@@ -1,6 +1,9 @@
-﻿using StudyLabAPI.Models;
+﻿using StudyLabAPI.Mapper;
+using StudyLabAPI.Models;
 using StudyLabAPI.Repositories;
+using StudyLabAPI.Validators.CustomValidators.RequestQuery;
 using ILogger = Serilog.ILogger;
+using ValidationException = StudyLabAPI.Exceptions.ValidationException;
 namespace StudyLabAPI.Controllers
 {
     public class DisciplinaController : IDisciplinaController
@@ -10,9 +13,14 @@ namespace StudyLabAPI.Controllers
 
         private ICursoRepository cursoRepository { get; }
 
-        public DisciplinaController(IDisciplinaRepository disciplinaRepository, ICursoRepository cursoRepository,
+        private readonly DisciplinaModelMapper _disciplinaModelMapper;
+
+        public DisciplinaController(IDisciplinaRepository disciplinaRepository, 
+            DisciplinaModelMapper disciplinaModelMapper,
+            ICursoRepository cursoRepository,
             ILogger logger)
         {
+            _disciplinaModelMapper = disciplinaModelMapper;
             this.disciplinaRepository = disciplinaRepository;
             this.logger = logger;
             this.cursoRepository = cursoRepository;
@@ -33,22 +41,44 @@ namespace StudyLabAPI.Controllers
                 curso = relatedCurso
             };
         }
-        public async Task<List<DisciplinaReadModel>> GetAllDisciplinas()
+        public async Task<DisciplinaListResponse> GetAllDisciplinas(int page,int pageSize)
         {
-            List<DisciplinaModel> disciplinasListadas = await disciplinaRepository.GetAllDisciplinas();
+            logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
+            page, pageSize);
 
-            List<DisciplinaReadModel> result = disciplinasListadas.Select(disciplina => new DisciplinaReadModel
+            PageValidator validator = new(page, pageSize);
+
+            if (!validator.isValid)
             {
-                idDisciplina = disciplina.idDisciplina,
-                nomeDisciplina = disciplina.nomeDisciplina,
-                professorDisciplina = disciplina.professorDisciplina,
-                quantidadeAluno = disciplina.quantidadeAluno,
-                curso = (disciplina.curso != null) ? (disciplina.curso) : null,
-                codigoDisciplina = disciplina.codigoDisciplina
+                ValidationException exception = new(["Parâmetros de paginação inválidos"]);
+                logger.Error(exception, "Parâmetros de paginação inválidos");
+                throw exception;
+            }
 
-            }).ToList();
+            logger.Information("Recuperando usuários da página Page[{Page}] PageSize[{PageSize}]",
+                page, pageSize);
 
-            return result;
+            (var result, int resultCount, int disciplinaCount) = await disciplinaRepository
+                .GetDisciplinasAndCount(page, pageSize);
+
+            var disciplinaReadResult = result.Select(_disciplinaModelMapper.DisciplinaModelToDisciplinaReadModel)
+                .ToList();
+
+            logger.Information("Recuperado {Count} usuários da página Page[{Page}] PageSize[{PageSize}]",
+                disciplinaReadResult.Count, page, pageSize);
+            logger.Information("Recuperando informações extras para a resposta");
+
+            int maxPage = disciplinaCount / pageSize;
+            if (disciplinaCount % pageSize != 0)
+                maxPage++;
+
+            return new()
+            {
+                maxPage = maxPage,
+                disciplinaCount = disciplinaCount,
+                pageCount = resultCount,
+                disciplinas = disciplinaReadResult
+            };
         }
 
         public async Task<bool> VerifyDisciplinaCreated(RegisterDisciplinaRequestModel disciplinaModel)
