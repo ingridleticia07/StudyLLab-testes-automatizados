@@ -55,7 +55,7 @@ namespace StudyLabAPI.Controllers
                 throw exception;
             }
 
-            logger.Information("Recuperando usuários da página Page[{Page}] PageSize[{PageSize}]",
+            logger.Information("Recuperando disciplinas da página Page[{Page}] PageSize[{PageSize}]",
                 page, pageSize);
 
             (var result, int resultCount, int disciplinaCount) = await disciplinaRepository

@@ -9,6 +9,7 @@ const banButtons = document.querySelectorAll(".banir");
 const confirmDeleteButton = document.querySelector("#modal-excluir .confirmar");
 const confirmBlockButton = document.querySelector("#modal-bloquear .confirmar");
 const tableBody = document.querySelector("#user-table tbody");
+const itemsPerPageValue = 5;
 
 function openModal(elemento) {
   elemento.style.display = "flex";
@@ -170,8 +171,7 @@ function addButtonsPagination(maxRegisterCounts,itemsPerPage){
 document.addEventListener("DOMContentLoaded", async() => {
   let preloaderDiv = document.getElementById("pre-loader");
 
-  const itemsPerPage = 10;
-  await getUsers(1,itemsPerPage);
+  await getUsers(1,itemsPerPageValue);
 
   preloaderDiv.style.display = "none";
 });

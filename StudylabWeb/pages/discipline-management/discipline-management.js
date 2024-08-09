@@ -165,11 +165,11 @@ async function getDisciplinasInfo(page,pageSize) {
   try {
     const disciplinas = await getAllDisciplinas(page, pageSize);
 
-    const { pageCount, maxPage } = disciplinas;
+    const { pageCount: countInPage, maxPage } = disciplinas;
 
-    console.log(pageCount,maxPage);
+    console.log(countInPage,itemsPerPageValue);
     populateTable(disciplinas.disciplinas);
-    addButtonsPagination(maxPage,pageSize);
+    addButtonsPagination(maxPage,itemsPerPageValue);
   } catch (error) {
     console.error("Error fetching user info:", error);
   }
