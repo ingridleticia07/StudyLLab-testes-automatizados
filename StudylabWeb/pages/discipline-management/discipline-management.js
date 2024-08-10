@@ -1,4 +1,4 @@
-import { getAllDisciplinas,createDisciplina } from "../../assets/js/lib/services/disciplina.js";
+import { getAllDisciplinas,createDisciplina,editarDisciplina } from "../../assets/js/lib/services/disciplina.js";
 
 const modalExc = document.getElementById("modal-excluir");
 const modalBan = document.getElementById("modal-banir");
@@ -18,8 +18,11 @@ function openModal(elemento) {
   elemento.style.display = "flex";
 }
 
-function copulateEditarDisciplinaModal(data) {
-  console.log(data);
+function copulateModalDisciplina(data){
+
+  let IdDisciplina = modalEditarDisciplina.querySelector("#id-disciplina");
+  IdDisciplina.value = data.idDisciplina;
+
   let disciplina = modalEditarDisciplina.querySelector("#disciplina");
   disciplina.value = data.nomeDisciplina;
 
@@ -34,6 +37,52 @@ function copulateEditarDisciplinaModal(data) {
 
   let codigoDisciplina = modalEditarDisciplina.querySelector("#codigo-disciplina");
   codigoDisciplina.value = data.codigoDisciplina;
+
+}
+
+function copulateModalAndChangeDisciplina(data) {
+  copulateModalDisciplina(data);
+
+  let editarDisciplinaSubmitBtn = modalEditarDisciplina.querySelector("#button-submit");
+  
+  editarDisciplinaSubmitBtn.onclick = async function() {
+    
+    let IdDisciplina = modalEditarDisciplina.querySelector("#id-disciplina").value;
+
+    let disciplina = modalEditarDisciplina.querySelector("#disciplina").value;
+
+    let professor = modalEditarDisciplina.querySelector("#nome-professor").value;
+
+    let curso = modalEditarDisciplina.querySelector("#curso").value;
+
+    let numeroAlunos = modalEditarDisciplina.querySelector("#numero-alunos").value;
+
+    let codigoDisciplina = modalEditarDisciplina.querySelector("#codigo-disciplina").value;
+
+    var data = {
+      idDisciplina:IdDisciplina,
+      nomeDisciplina:disciplina,
+      professorDisciplina:professor,
+      curso:curso,
+      quantidadeAluno:numeroAlunos,
+      codigoDisciplina:codigoDisciplina
+    };
+
+    
+    try{
+
+      closeModal(modalEditarDisciplina);
+
+      await editarDisciplina(data);
+
+      getDisciplinasInfo(1,itemsPerPageValue);
+      //showModal(document.getElementById("modalConfirmacaoBloqueioUsuario"));
+    }catch(e){
+      console.log(e);
+      //showModal(document.getElementById("modalErroAoBloquearUsuario"));
+    }
+
+  };
 }
 
 function closeModal(elemento) {
@@ -151,7 +200,7 @@ function createDisciplinaRow(disciplina) {
   
   editarDisciplinaBtn.addEventListener("click", () => {
     openModal(modalEditarDisciplina);
-    copulateEditarDisciplinaModal(disciplina);
+    copulateModalAndChangeDisciplina(disciplina);
   });
 
   const excluirDisciplinaBtn = document.createElement("button");

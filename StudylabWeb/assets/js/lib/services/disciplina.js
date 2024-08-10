@@ -26,3 +26,20 @@ export async function createDisciplina(disciplina) {
   }
   return response.data;
 }
+
+export async function editarDisciplina(disciplina) {
+  console.log(disciplina);
+  let response = await instance.put(DISCIPLINA_ENDPOINT+"/editarDisciplina",{
+    idDisciplina:disciplina.idDisciplina,
+    nomeDisciplina:disciplina.nomeDisciplina,
+    professorDisciplina:disciplina.professorDisciplina,
+    curso:disciplina.curso,
+    quantidadeAluno:disciplina.quantidadeAluno,
+    codigoDisciplina:disciplina.codigoDisciplina
+  });
+
+  if (response.status !== 200) {
+    return null;
+  }
+  return response.data;
+}
