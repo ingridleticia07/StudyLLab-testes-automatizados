@@ -89,6 +89,7 @@ namespace StudyLabAPI.Controllers
 
             DisciplinaModel novaDisciplina = new()
             {
+                idDisciplina = disciplinaModel.idDisciplina,
                 nomeDisciplina = disciplinaModel.nomeDisciplina,
                 professorDisciplina = disciplinaModel.professorDisciplina,
                 curso = relatedCurso,

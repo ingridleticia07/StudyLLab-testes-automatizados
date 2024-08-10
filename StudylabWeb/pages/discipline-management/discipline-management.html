@@ -203,6 +203,87 @@
       </div>
     </div>
 
+    <!--Editar disciplina-->
+    <div id="modal-editar-disciplina" class="modal-container">
+      <div class="modal-formulario">
+        <header>
+          <h2 class="subtitulo"></h2>
+          <button class="fechar">×</button>
+        </header>
+        <div class="corpo-modal">
+          <div class="disciplina">
+            <div class="form-content">
+              <p class="titulo">Editar disciplina</p>
+              <div id="modalSuccess" style="display: none;">
+                <div class="modal-content">
+                  <p><img class="checkmark" src="../../assets/img/icon-check.svg">  Disciplina Editada com sucesso!</p>
+                </div>
+              </div>
+              <div id="modalWarning" style="display: none;">
+                <div class="modal-content" style="background-color: rgb(255, 136, 0)!important">
+                  <p> Erro ao editar disciplina. Tente novamente mais tarde!</p>
+                </div>
+              </div>
+              <div class="form">
+                <form class="form-inputs">
+                  <div class="disciplina-container">
+                      <label>Disciplina</label>
+                      <input
+                        type="email"
+                        name="email"
+                        id="disciplina"
+                        placeholder="seu email"
+                      />
+                  </div>
+                  <div class="nome-professor-container">
+                    <label>Professor</label>
+                    <input
+                      type="text"
+                      name="professor"
+                      id="nome-professor"
+                      placeholder="nome do professor"
+                    />
+                  </div>
+                  <div class="curso-container">
+                    <label>Curso</label>
+                    <select id="curso">
+                      <option value="0" selected disabled>Selecione um curso</option>
+                      <option value="1">Eng. software</option>
+                      <option value="2">Ciência da computação</option>
+                      <option value="3">Eng. Prod</option>
+                      <option value="4">Eng. Civil</option>
+                      <option value="5">Eng. Mecanica</option>
+                    </select>
+                  </div>
+                  <div class="numero-alunos-container">
+                    <label>Número de alunos</label>
+                    <input
+                      type="number"
+                      name="num_alunos"
+                      id="numero-alunos"
+                      placeholder="número de alunos"
+                      min="1"
+                      max="100"
+                    />
+                  </div>
+                  <div class="codigo-disciplina-container">
+                    <label>Código disciplina</label>
+                    <input
+                      type="text"
+                      name="codigo_disciplina"
+                      id="codigo-disciplina"
+                      placeholder="código da disciplina"
+                    />
+                  </div>
+                </div>
+              </form>
+              <button id="button-submit">Cadastrar</button>
+            </div>
+          </div>  
+        </div>
+      </div>
+    </div>
+
     <div id="modal-excluir" class="modal-container">
       <div class="modal">
         <header>

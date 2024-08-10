@@ -9,7 +9,8 @@ namespace StudyLabAPI.Repositories
         private readonly AppDbContext _dbContext;
 
         private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
-        public DisciplinaRepository(AppDbContext dbContext, IDbContextFactory<AppDbContext> dbContextFactory) {
+        public DisciplinaRepository(AppDbContext dbContext, IDbContextFactory<AppDbContext> dbContextFactory)
+        {
             _dbContext = dbContext;
             _dbContextFactory = dbContextFactory;
         }
@@ -50,13 +51,15 @@ namespace StudyLabAPI.Repositories
 
         public async Task<bool> VerifyDisciplinaCreated(DisciplinaModel disciplina)
         {
-            bool existingDisciplina = await _dbContext.disciplinas
-                .AnyAsync(d => d.nomeDisciplina == disciplina.nomeDisciplina || 
-                               d.codigoDisciplina == disciplina.codigoDisciplina);
+            bool existingDisciplina =  await _dbContext.disciplinas
+            .AnyAsync(d =>
+            (d.nomeDisciplina == disciplina.nomeDisciplina ||
+             d.codigoDisciplina == disciplina.codigoDisciplina) &&
+             d.idDisciplina != disciplina.idDisciplina);
 
             return existingDisciplina;
         }
-        
+
         //TODO: Mesma coisa do GetDisciplinaById?
         public async Task<bool> VerifyDisciplinaCreatedWithId(int disciplinaIdentifier)
         {

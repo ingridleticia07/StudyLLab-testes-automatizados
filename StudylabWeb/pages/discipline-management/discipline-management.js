@@ -7,6 +7,7 @@ const banButtons = document.querySelectorAll(".banir");
 const cadastrarDisciplinaBtn = document.querySelector("#cadastrar-btn");
 const cadastrarDisciplinaBtnSubmit = document.querySelector("#button-submit");
 const modalCadastrarDisciplina = document.querySelector("#modal-cadastrar-disciplina");
+const modalEditarDisciplina = document.querySelector("#modal-editar-disciplina");
 const modalSuccess = document.querySelector("#modalSuccess");
 const modalWarning = document.querySelector("#modalWarning");
 var modal = document.getElementById("modalConfirmacao");
@@ -15,6 +16,24 @@ const itemsPerPageValue = 5;
 
 function openModal(elemento) {
   elemento.style.display = "flex";
+}
+
+function copulateEditarDisciplinaModal(data) {
+  console.log(data);
+  let disciplina = modalEditarDisciplina.querySelector("#disciplina");
+  disciplina.value = data.nomeDisciplina;
+
+  let professor = modalEditarDisciplina.querySelector("#nome-professor");
+  professor.value = data.professorDisciplina;
+
+  let curso = modalEditarDisciplina.querySelector("#curso");
+  curso.value = data.curso.idCurso;
+
+  let numeroAlunos = modalEditarDisciplina.querySelector("#numero-alunos");
+  numeroAlunos.value = data.quantidadeAluno;
+
+  let codigoDisciplina = modalEditarDisciplina.querySelector("#codigo-disciplina");
+  codigoDisciplina.value = data.codigoDisciplina;
 }
 
 function closeModal(elemento) {
@@ -131,7 +150,8 @@ function createDisciplinaRow(disciplina) {
   editarDisciplinaBtn.classList.add("bloquear");
   
   editarDisciplinaBtn.addEventListener("click", () => {
-    //openBanModal(user.id);
+    openModal(modalEditarDisciplina);
+    copulateEditarDisciplinaModal(disciplina);
   });
 
   const excluirDisciplinaBtn = document.createElement("button");
