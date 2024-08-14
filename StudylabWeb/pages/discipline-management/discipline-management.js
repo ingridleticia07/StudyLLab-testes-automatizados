@@ -40,7 +40,7 @@ function copulateModalDisciplina(data){
 
 }
 
-function copulateModalAndChangeDisciplina(data) {
+function copulateModalAndChangeDisciplina(data,page) {
   copulateModalDisciplina(data);
 
   let editarDisciplinaSubmitBtn = modalEditarDisciplina.querySelector("#button-submit");
@@ -68,17 +68,16 @@ function copulateModalAndChangeDisciplina(data) {
       codigoDisciplina:codigoDisciplina
     };
 
-    
     try{
 
       closeModal(modalEditarDisciplina);
 
       await editarDisciplina(data);
 
-      getDisciplinasInfo(1,itemsPerPageValue);
+      getDisciplinasInfo(page,itemsPerPageValue);
       //showModal(document.getElementById("modalConfirmacaoBloqueioUsuario"));
     }catch(e){
-      console.log(e);
+      
       //showModal(document.getElementById("modalErroAoBloquearUsuario"));
     }
 
@@ -161,7 +160,8 @@ const excluirIcon = () => {
   return excluirIcon;
 };
 
-function createDisciplinaRow(disciplina) {
+function createDisciplinaRow(disciplina,page) {
+  
   //User informations
   const row = document.createElement("tr");
   row.id = disciplina.idDisciplina;
@@ -191,7 +191,7 @@ function createDisciplinaRow(disciplina) {
   row.appendChild(quantidadeAlunos);
 
   const actionColumn = document.createElement("td");
-
+  
   const editarDisciplinaBtn = document.createElement("button");
   editarDisciplinaBtn.id = `disciplina-u-${disciplina.idDisciplina}`;
   editarDisciplinaBtn.appendChild(editIcon());
@@ -200,7 +200,7 @@ function createDisciplinaRow(disciplina) {
   
   editarDisciplinaBtn.addEventListener("click", () => {
     openModal(modalEditarDisciplina);
-    copulateModalAndChangeDisciplina(disciplina);
+    copulateModalAndChangeDisciplina(disciplina,page);
   });
 
   const excluirDisciplinaBtn = document.createElement("button");
@@ -221,11 +221,10 @@ function createDisciplinaRow(disciplina) {
 }
 
 
-const populateTable = (disciplinas) => {
+const populateTable = (disciplinas,page) => {
   tableBody.innerHTML = ""; // Clear existing rows
-
   disciplinas.forEach((disciplina) => {
-    const row = createDisciplinaRow(disciplina);
+    const row = createDisciplinaRow(disciplina,page);
     tableBody.appendChild(row);
   });
 };
@@ -236,8 +235,8 @@ async function getDisciplinasInfo(page,pageSize) {
 
     const { pageCount: countInPage, maxPage } = disciplinas;
 
-    console.log(countInPage,itemsPerPageValue);
-    populateTable(disciplinas.disciplinas);
+    
+    populateTable(disciplinas.disciplinas,page);
     addButtonsPagination(maxPage,itemsPerPageValue);
   } catch (error) {
     console.error("Error fetching user info:", error);
@@ -292,7 +291,7 @@ cadastrarDisciplinaBtnSubmit.addEventListener('click',async function(e){
      const retorno = await createDisciplina(disciplinaDTO);
      openModal(modalSuccess);
    }catch(e){
-    console.log(e.response.data);
+    
     openModal(modalWarning);
    }
 });
