@@ -43,3 +43,13 @@ export async function editarDisciplina(disciplina) {
   }
   return response.data;
 }
+
+export async function deleteDisciplina(idDisciplina) {
+  let response = await instance.delete(DISCIPLINA_ENDPOINT+
+    "/excluirDisciplina?disciplinaIdentifier="+idDisciplina);
+
+  if (response.status !== 200) {
+    return null;
+  }
+  return response.data;
+}

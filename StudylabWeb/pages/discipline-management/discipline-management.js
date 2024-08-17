@@ -1,4 +1,4 @@
-import { getAllDisciplinas,createDisciplina,editarDisciplina } from "../../assets/js/lib/services/disciplina.js";
+import { getAllDisciplinas,createDisciplina,editarDisciplina,deleteDisciplina } from "../../assets/js/lib/services/disciplina.js";
 
 const modalExc = document.getElementById("modal-excluir");
 const modalBan = document.getElementById("modal-banir");
@@ -8,6 +8,8 @@ const cadastrarDisciplinaBtn = document.querySelector("#cadastrar-btn");
 const cadastrarDisciplinaBtnSubmit = document.querySelector("#button-submit");
 const modalCadastrarDisciplina = document.querySelector("#modal-cadastrar-disciplina");
 const modalEditarDisciplina = document.querySelector("#modal-editar-disciplina");
+const modalExcluirDisciplina = document.querySelector("#modal-excluir-disciplina");
+const confirmDeleteButton = document.querySelector("#modal-excluir-disciplina .confirmar");
 const modalSuccess = document.querySelector("#modalSuccess");
 const modalWarning = document.querySelector("#modalWarning");
 var modal = document.getElementById("modalConfirmacao");
@@ -84,6 +86,23 @@ function copulateModalAndChangeDisciplina(data,page) {
   };
 }
 
+
+function openDeleteModal(page,disciplinaId) {
+  openModal(modalExcluirDisciplina);
+  
+  confirmDeleteButton.onclick = async function() {
+    closeModal(modalExcluirDisciplina);
+    try{
+      await deleteDisciplina(disciplinaId);
+
+      getDisciplinasInfo(page,itemsPerPageValue);
+    }catch(e){
+      showModal(document.getElementById("modalErroAoExcluir"));
+    }
+  };
+}
+
+  let editarDisciplinaSubmitBtn = modalEditarDisciplina.querySelector("#button-submit");
 function closeModal(elemento) {
   elemento.style.display = "none";
 }
@@ -210,7 +229,7 @@ function createDisciplinaRow(disciplina,page) {
   excluirDisciplinaBtn.classList.add("bloquear");
   
   excluirDisciplinaBtn.addEventListener("click", () => {
-    //openBanModal(user.id);
+    openDeleteModal(page,disciplina.idDisciplina);
   });
   
   actionColumn.appendChild(editarDisciplinaBtn);

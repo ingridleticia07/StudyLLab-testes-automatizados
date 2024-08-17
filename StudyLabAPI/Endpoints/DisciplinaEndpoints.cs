@@ -65,7 +65,7 @@ public static class DisciplinaEndpoints
 
         return Results.Ok(result);
     }
-    
+
     [ProducesResponseType(typeof(RegisterDisciplinaRequestModel), 200)]
     private static async Task<IResult> CreateDisciplina(HttpContext context,
         [FromBody] RegisterDisciplinaRequestModel novaDisciplina,
@@ -121,7 +121,7 @@ public static class DisciplinaEndpoints
     
     [ProducesResponseType(typeof(DisciplinaModel), 200)]
     private static async Task<IResult> DeleteDisciplina(HttpContext context,
-        [FromBody] int disciplinaIdentifier, //TODO: Precissa do modelo inteiro para deletar?
+        [FromQuery] int disciplinaIdentifier, //TODO: Precissa do modelo inteiro para deletar?
         [FromServices] IDisciplinaController controller)
     {
         try
