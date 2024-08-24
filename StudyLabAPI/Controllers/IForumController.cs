@@ -4,7 +4,7 @@ namespace StudyLabAPI.Controllers
 {
     public interface IForumController
     {
-        public Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussao();
+        public Task<TopicoDiscussaoListResponse?> GetAllTopicosDiscussao(int page, int pageSize);
 
         public Task<TopicoDiscussaoModel> CreateTopicoDiscussao(RegisteredTopicoDiscussaoRequestModel topicoDiscussao);
 

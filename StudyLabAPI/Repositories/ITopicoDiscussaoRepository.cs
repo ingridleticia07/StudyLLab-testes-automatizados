@@ -12,7 +12,9 @@ public interface ITopicoDiscussaoRepository
     /// </summary>
     /// <returns>Representa uma tarefa asincrona do banco,
     /// ela retorna uma <see cref="List{T}"/> com todos os topicos de discussão</returns>
-    public Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussao();
+    public Task<IList<TopicoDiscussaoModel>> GetAllTopicosDiscussao(int page, int pageSize);
+
+    public Task<(IList<TopicoDiscussaoModel>, int, int)> GetTopicosAndCount(int page, int pageSize);
     /// <summary>
     /// Recupera um tópico de discussão pelo ID
     /// </summary>

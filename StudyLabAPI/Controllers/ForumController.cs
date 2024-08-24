@@ -1,6 +1,9 @@
-﻿using StudyLabAPI.Models;
-using ILogger = Serilog.ILogger;
+﻿using StudyLabAPI.Mapper;
+using StudyLabAPI.Models;
 using StudyLabAPI.Repositories;
+using StudyLabAPI.Validators.CustomValidators.RequestQuery;
+using ILogger = Serilog.ILogger;
+using ValidationException = StudyLabAPI.Exceptions.ValidationException;
 
 namespace StudyLabAPI.Controllers
 {
@@ -17,10 +20,14 @@ namespace StudyLabAPI.Controllers
 
         private IForumRepository forumRepository { get; }
 
-        public ForumController(ITopicoDiscussaoRepository topicoDiscussaoRepository, 
+        private readonly TopicoDiscussaoModelMapper _topicoModelMapper;
+
+        public ForumController(TopicoDiscussaoModelMapper topicoDiscussaoModelMapper,
+            ITopicoDiscussaoRepository topicoDiscussaoRepository, 
             IDisciplinaRepository DisciplinaRepository, IUsuarioRepository usuarioRepository,
             IRespostaForumRepository respostaForumRepository,IForumRepository forumRepository, ILogger logger)
         {
+            this._topicoModelMapper = topicoDiscussaoModelMapper;
             this.topicoDiscussaoRepository = topicoDiscussaoRepository;
             this.DisciplinaRepository = DisciplinaRepository;
             this.usuarioRepository = usuarioRepository;
@@ -28,14 +35,44 @@ namespace StudyLabAPI.Controllers
             this.forumRepository = forumRepository;
             this.logger = logger;
         }
-        public async Task<List<TopicoDiscussaoModel>> GetAllTopicosDiscussao()
+        public async Task<TopicoDiscussaoListResponse> GetAllTopicosDiscussao(int page, int pageSize)
         {
-            // Implement your logic to get all DisciplinaModel objects
-            // You can use your repository to fetch the data
-            List<TopicoDiscussaoModel> topicosDiscussaoListado = await topicoDiscussaoRepository.GetAllTopicosDiscussao();
-            // You should map DisciplinaModel to DisciplinaReadModel and return the list
+            logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
+            page, pageSize);
 
-            return topicosDiscussaoListado;
+            PageValidator validator = new(page, pageSize);
+
+            if (!validator.isValid)
+            {
+                ValidationException exception = new(["Parâmetros de paginação inválidos"]);
+                logger.Error(exception, "Parâmetros de paginação inválidos");
+                throw exception;
+            }
+
+            logger.Information("Recuperando topicos da página Page[{Page}] PageSize[{PageSize}]",
+                page, pageSize);
+
+            (var result, int resultCount, int topicosCount) = await topicoDiscussaoRepository
+            .GetTopicosAndCount(page, pageSize);
+
+            var topicosReadResult = result.Select(_topicoModelMapper.TopicoDiscussaoModelToDiscussaoReadModel)
+                .ToList();
+
+            logger.Information("Recuperado {Count} usuários da página Page[{Page}] PageSize[{PageSize}]",
+                topicosReadResult.Count, page, pageSize);
+            logger.Information("Recuperando informações extras para a resposta");
+
+            int maxPage = topicosCount / pageSize;
+            if (topicosCount % pageSize != 0)
+                maxPage++;
+
+            return new()
+            {
+                maxPage = maxPage,
+                topicoCount = topicosCount,
+                pageCount = resultCount,
+                topicos = topicosReadResult
+            };
         }
 
 

@@ -41,13 +41,15 @@ namespace StudyLabAPI.Endpoints
         
         [ProducesResponseType(typeof(List<TopicoDiscussaoModel>), 200)]
         private static async Task<IResult> GetAllTopicosDiscussao(HttpContext context,
-        [FromServices] IForumController controller)
+            [FromQuery] int page,
+            [FromQuery] int pageSize,
+            [FromServices] IForumController controller)
         {
 
-            List<TopicoDiscussaoModel>? result;
+            TopicoDiscussaoListResponse? result;
             try
             {
-                result = await controller.GetAllTopicosDiscussao();
+                result = await controller.GetAllTopicosDiscussao(page,pageSize);
             }
             catch (Exception e)
             {

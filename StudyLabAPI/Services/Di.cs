@@ -124,11 +124,12 @@ public static class Di
     public static IServiceCollection AddMappers(this IServiceCollection services)
     {
         services.AddTransient<DisciplinaModelMapper>();
+        services.AddTransient<TopicoDiscussaoModelMapper>();
         services.AddTransient<UsuarioModelMapper>();
         services.AddTransient<RegisterUserRequestModelMapper>();
         services.AddTransient<CodigoUsuarioModelMapper>();
         services.AddTransient<ResetUserPasswordRequestModelMapper>();
-        
+
         return services;
     }
     /// <summary>
