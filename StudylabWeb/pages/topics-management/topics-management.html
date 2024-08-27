@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StudyLab</title>
-    <link rel="stylesheet" href="discipline-management.css" />
+    <link rel="stylesheet" href="topics-management.css" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   </head>
 
@@ -59,7 +59,7 @@
               /></a>
             </li>
             <li>
-              <a href="../topics-management/topics-management.html"
+              <a href="#"
                 ><img
                   class="icon-sidebar" 
                   src="../../assets/img/icon-folder.svg"
@@ -90,7 +90,7 @@
         <main class="content">
           <div class="content-managentment">
             <div class="content-header">
-            <H1>Disciplinas</H1>
+            <H1>Tópicos</H1>
             <button id="cadastrar-btn">Cadastrar Disciplina</button>
           </div>
           <div class="pagination">
@@ -101,11 +101,8 @@
                 <thead>
                   <tr>
                     <th><input type="checkbox" name="select-all" id="select-all"></th>
-                    <th>CÓDIGO</th>
+                    <th>TÓPICO</th>
                     <th>NOME DISCIPLINA</th>
-                    <th>PROFESSOR</th>
-                    <th>CURSO</th>
-                    <th>ALUNOS</th>
                     <th>AÇÕES</th>
                   </tr>
                 </thead>
@@ -136,7 +133,7 @@
               <div id="modalSuccess" style="display: none;">
                 <div class="modal-content">
                   <p><img class="checkmark" src="../../assets/img/icon-check.svg">  Disciplina cadastrada com sucesso!</p>
-                </div>  
+                </div>
               </div>
               <div id="modalWarning" style="display: none;">
                 <div class="modal-content" style="background-color: rgb(255, 136, 0)!important">
@@ -307,6 +304,6 @@
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script type="module" src="discipline-management.js"></script>
+    <script type="module" src="topics-management.js"></script>
   </body>
 </html>
