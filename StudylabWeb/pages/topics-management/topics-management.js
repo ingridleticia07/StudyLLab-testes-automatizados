@@ -1,13 +1,58 @@
 import { getAllTopicosDisciplina} from "../../assets/js/lib/services/topico.js";
+import { getAllDisciplinas} from "../../assets/js/lib/services/disciplina.js";
 
 const tableBody = document.querySelector("#disciplina-table tbody");
+const btnCadastrarTopico = document.querySelector("#cadastrar-btn");
+const modalCadastrarTopico = document.querySelector("#modal-cadastrar-topico");
+const disciplinaOptions = modalCadastrarTopico.querySelector("#select-disciplina");
 const itemsPerPageValue = 5;
+
+async function copulateTopicosDisciplina(){
+  try {
+    const disciplinasCount = await getAllDisciplinas(1, 1);
+
+    const disciplinas = await getAllDisciplinas(1, disciplinasCount.maxPage);
+    addTopico(disciplinas.disciplinas);
+
+  } catch (error) {
+    console.error("Error fetching user info:", error);
+  }
+}
+
+function addTopico(disciplinas){
+  disciplinas.forEach(optionData => {
+    const option = document.createElement('option');
+    option.value = optionData.idDisciplina;
+    option.text = optionData.nomeDisciplina;
+    disciplinaOptions.appendChild(option);
+  });
+}
 
 window.onclick = function(event) {
   if (event.target.classList.contains('modal-container')) {
     closeModal(event.target);
   }
 };
+
+function openModal(elemento) {
+  elemento.style.display = "flex";
+}
+
+function closeModal(elemento) {
+  elemento.style.display = "none";
+}
+
+function showModal(modalElement) {
+  modalElement.style.animationName = "slideIn";
+  modalElement.style.display = "block"; 
+
+  setTimeout(function() {
+    modalElement.style.animationName = "slideOf"; 
+    setTimeout(function() {
+      modalElement.style.display = "none"; 
+    }, 200); 
+  }, 5000);
+}
 
 const editIcon = () => {
   const editIcon = document.createElement("img");
@@ -102,8 +147,20 @@ function addButtonsPagination(maxRegisterCounts,itemsPerPage){
   }
 }
 
+btnCadastrarTopico.addEventListener('click',function(){
+  openModal(modalCadastrarTopico);
+});
+
+document.querySelectorAll('.fechar').forEach(function(botao) {
+  botao.addEventListener("click", function() {
+    const modal = botao.closest('.modal-container');
+    closeModal(modal);
+  });
+});
+
 document.addEventListener("DOMContentLoaded", async() => {
   let preloaderDiv = document.getElementById("pre-loader");
   await getTopicosInfo(1,itemsPerPageValue);
   preloaderDiv.style.display = "none";
+  copulateTopicosDisciplina();
 });

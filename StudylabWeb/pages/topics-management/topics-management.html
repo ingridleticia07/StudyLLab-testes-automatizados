@@ -91,7 +91,7 @@
           <div class="content-managentment">
             <div class="content-header">
             <H1>Tópicos</H1>
-            <button id="cadastrar-btn">Cadastrar Disciplina</button>
+            <button id="cadastrar-btn">Cadastrar Tópico disciplina</button>
           </div>
           <div class="pagination">
           </div>
@@ -120,7 +120,7 @@
       </div>  
     </div>
 
-    <div id="modal-cadastrar-disciplina" class="modal-container">
+    <div id="modal-cadastrar-topico" class="modal-container">
       <div class="modal-formulario">
         <header>
           <h2 class="subtitulo"></h2>
@@ -129,7 +129,7 @@
         <div class="corpo-modal">
           <div class="disciplina">
             <div class="form-content">
-              <p class="titulo">Cadastrar disciplina</p>
+              <p class="titulo">Cadastrar tópico disciplina</p>
               <div id="modalSuccess" style="display: none;">
                 <div class="modal-content">
                   <p><img class="checkmark" src="../../assets/img/icon-check.svg">  Disciplina cadastrada com sucesso!</p>
@@ -143,53 +143,19 @@
               <div class="form">
                 <form class="form-inputs">
                   <div class="disciplina-container">
-                      <label>Disciplina</label>
+                      <label>Tópico</label>
                       <input
-                        type="email"
-                        name="email"
-                        id="disciplina"
-                        placeholder="Disciplina"
+                        type="text"
+                        name="topico"
+                        id="nomeTopico"
+                        placeholder="Nome do tópico"
                       />
                   </div>
-                  <div class="nome-professor-container">
-                    <label>Professor</label>
-                    <input
-                      type="text"
-                      name="professor"
-                      id="nome-professor"
-                      placeholder="nome do professor"
-                    />
-                  </div>
-                  <div class="curso-container">
-                    <label>Curso</label>
-                    <select id="curso">
-                      <option value="0" selected disabled>Selecione um curso</option>
-                      <option value="1">Eng. software</option>
-                      <option value="2">Ciência da computação</option>
-                      <option value="3">Eng. Prod</option>
-                      <option value="4">Eng. Civil</option>
-                      <option value="5">Eng. Mecanica</option>
+                  <div class="disciplina-container">
+                    <label>Disciplina</label>
+                    <select id="select-disciplina">
+                      <option value="0" selected disabled>Selecione uma disciplina</option>
                     </select>
-                  </div>
-                  <div class="numero-alunos-container">
-                    <label>Número de alunos</label>
-                    <input
-                      type="number"
-                      name="num_alunos"
-                      id="numero-alunos"
-                      placeholder="número de alunos"
-                      min="1"
-                      max="100"
-                    />
-                  </div>
-                  <div class="codigo-disciplina-container">
-                    <label>Código disciplina</label>
-                    <input
-                      type="text"
-                      name="codigo_disciplina"
-                      id="codigo-disciplina"
-                      placeholder="código da disciplina"
-                    />
                   </div>
                 </div>
               </form>
