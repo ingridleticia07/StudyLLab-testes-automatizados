@@ -1,13 +1,26 @@
 import { instance } from "./axios.js";
 
-const DISCIPLINA_ENDPOINT = "/forum";
+const FORUM_ENDPOINT = "/forum";
 
 export async function getAllTopicosDisciplina(page, pageSize) {
-    let response = await instance.get(DISCIPLINA_ENDPOINT+
+    let response = await instance.get(FORUM_ENDPOINT+
       "/listarTopicosDiscussao?page="+page+"&pageSize="+pageSize+"");
   
     if (response.status !== 200) {
       return null;
     }
     return response.data;
+}
+
+export async function createTopico(topico) {
+  let response = await instance.post(FORUM_ENDPOINT+"/criarTopicoDiscussao",{
+    nomeTopico:topico.nomeTopico,
+    dataTopico:topico.dataTopico,
+    disciplina:topico.disciplina
+  });
+
+  if (response.status !== 200) {
+    return null;
+  }
+  return response.data;
 }

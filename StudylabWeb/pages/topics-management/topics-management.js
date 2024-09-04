@@ -1,8 +1,9 @@
-import { getAllTopicosDisciplina} from "../../assets/js/lib/services/topico.js";
+import { getAllTopicosDisciplina,createTopico} from "../../assets/js/lib/services/topico.js";
 import { getAllDisciplinas} from "../../assets/js/lib/services/disciplina.js";
 
 const tableBody = document.querySelector("#disciplina-table tbody");
 const btnCadastrarTopico = document.querySelector("#cadastrar-btn");
+const btnSubmitTopico = document.querySelector("#button-submit");
 const modalCadastrarTopico = document.querySelector("#modal-cadastrar-topico");
 const disciplinaOptions = modalCadastrarTopico.querySelector("#select-disciplina");
 const itemsPerPageValue = 5;
@@ -149,6 +150,31 @@ function addButtonsPagination(maxRegisterCounts,itemsPerPage){
 
 btnCadastrarTopico.addEventListener('click',function(){
   openModal(modalCadastrarTopico);
+});
+
+btnSubmitTopico.addEventListener('click',async function(e){
+  const formCadastrarDisciplina = modalCadastrarTopico.querySelector('form');
+  let nomeTopico = formCadastrarDisciplina.querySelector('#nomeTopico').value;
+  let disciplina = formCadastrarDisciplina.querySelector('#select-disciplina').value;
+  
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+  const day = String(currentDate.getDate()).padStart(2, '0');
+  const dateNow = `${year}-${month}-${day}`;
+
+  const topicoDTO = {
+    nomeTopico:nomeTopico,
+    dataTopico:dateNow,
+    disciplina:disciplina
+  };
+
+   try{
+     await createTopico(topicoDTO);
+     closeModal(modalCadastrarTopico);
+   }catch(e){
+    
+   }
 });
 
 document.querySelectorAll('.fechar').forEach(function(botao) {
