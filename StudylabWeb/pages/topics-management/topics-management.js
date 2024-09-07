@@ -6,7 +6,9 @@ const btnCadastrarTopico = document.querySelector("#cadastrar-btn");
 const btnSubmitTopico = document.querySelector("#button-submit");
 const modalCadastrarTopico = document.querySelector("#modal-cadastrar-topico");
 const disciplinaOptions = modalCadastrarTopico.querySelector("#select-disciplina");
+const modalErroCadastrarTopico = document.querySelector("#modalErroAoCadastrarTopico");
 const itemsPerPageValue = 5;
+var actualPage = 1;
 
 async function copulateTopicosDisciplina(){
   try {
@@ -143,6 +145,7 @@ function addButtonsPagination(maxRegisterCounts,itemsPerPage){
           document.querySelectorAll('.pagination button').forEach(btn => btn.classList.remove('active'));
           button.classList.add('active');
           getTopicosInfo(i, itemsPerPage);
+          actualPage = i;
       });
       paginationContainer.appendChild(button);
   }
@@ -171,9 +174,12 @@ btnSubmitTopico.addEventListener('click',async function(e){
 
    try{
      await createTopico(topicoDTO);
+     getTopicosInfo(1,itemsPerPage);
      closeModal(modalCadastrarTopico);
    }catch(e){
-    
+    getTopicosInfo(1,itemsPerPageValue);
+    closeModal(modalCadastrarTopico);
+    showModal(modalErroCadastrarTopico);
    }
 });
 
