@@ -43,7 +43,7 @@
               /></a>
             </li>
             <li>
-              <a href="#"
+              <a href="../discipline-management/discipline-management.html"
                 ><img
                   class="icon-sidebar"
                   src="../../assets/img/icon-book.svg"
@@ -130,14 +130,14 @@
           <div class="disciplina">
             <div class="form-content">
               <p class="titulo">Cadastrar tópico disciplina</p>
-              <div id="modalSuccess" style="display: none;">
-                <div class="modal-content">
-                  <p><img class="checkmark" src="../../assets/img/icon-check.svg">  Disciplina cadastrada com sucesso!</p>
+              <div id="modalErroAoCadastrarTopico" style="display: none!important">
+                <div class="modal-content" style="background-color: rgb(255, 136, 0)!important;">
+                  <p>Erro ao cadastrar tópico. Verifique se esse tópico já existe!</p>
                 </div>
               </div>
-              <div id="modalWarning" style="display: none;">
-                <div class="modal-content" style="background-color: rgb(255, 136, 0)!important">
-                  <p> Erro ao cadastrar disciplina. Tente novamente mais tarde!</p>
+              <div id="modalSuccess" style="display: none;">
+                <div class="modal-content">
+                  <p><img class="checkmark" src="../../assets/img/icon-check.svg">  Tópico cadastrado com sucesso!</p>
                 </div>
               </div>
               <div class="form">
@@ -166,8 +166,8 @@
       </div>
     </div>
 
-    <!--Editar disciplina-->
-    <div id="modal-editar-disciplina" class="modal-container">
+    <!--Editar topico-->
+    <div id="modal-editar-topico" class="modal-container">
       <div class="modal-formulario">
         <header>
           <h2 class="subtitulo"></h2>
@@ -176,77 +176,44 @@
         <div class="corpo-modal">
           <div class="disciplina">
             <div class="form-content">
-              <p class="titulo">Editar disciplina</p>
-              <div id="modalSuccess" style="display: none;">
-                <div class="modal-content">
-                  <p><img class="checkmark" src="../../assets/img/icon-check.svg">  Disciplina Editada com sucesso!</p>
+              <p class="titulo">Cadastrar tópico disciplina</p>
+              <div id="modalErroAoEditarTopico" style="display: none!important">
+                <div class="modal-content" style="background-color: rgb(255, 136, 0)!important;">
+                  <p>Erro ao editar tópico. Verifique se esse tópico já existe!</p>
                 </div>
               </div>
-              <div id="modalWarning" style="display: none;">
-                <div class="modal-content" style="background-color: rgb(255, 136, 0)!important">
-                  <p> Erro ao editar disciplina. Tente novamente mais tarde!</p>
+              <div id="modalSuccess" style="display: none;">
+                <div class="modal-content">
+                  <p><img class="checkmark" src="../../assets/img/icon-check.svg">  Tópico cadastrado com sucesso!</p>
                 </div>
               </div>
               <div class="form">
                 <form class="form-inputs">
                   <input
-                      type="hidden"
-                      name="idDisciplina"
-                      id="id-disciplina"
-                      value=""
-                    />
+                    type="hidden"
+                    name="Idtopico"
+                    id="id-topico"
+                    value=""
+                    placeholder="Id do tópico"
+                  />
                   <div class="disciplina-container">
-                      <label>Disciplina</label>
+                      <label>Tópico</label>
                       <input
-                        type="email"
-                        name="email"
-                        id="disciplina"
-                        placeholder="seu email"
+                        type="text"
+                        name="topico"
+                        id="nome-topico"
+                        placeholder="Nome do tópico"
                       />
                   </div>
-                  <div class="nome-professor-container">
-                    <label>Professor</label>
-                    <input
-                      type="text"
-                      name="professor"
-                      id="nome-professor"
-                      placeholder="nome do professor"
-                    />
-                  </div>
-                  <div class="curso-container">
-                    <label>Curso</label>
-                    <select id="curso">
-                      <option value="0" selected disabled>Selecione um curso</option>
-                      <option value="1">Eng. software</option>
-                      <option value="2">Ciência da computação</option>
-                      <option value="3">Eng. Civil</option>
-                      <option value="4">Eng. Prod</option>
-                      <option value="5">Eng. Mecanica</option>
+                  <div class="disciplina-container">
+                    <label>Disciplina</label>
+                    <select id="select-disciplina">
+                      <option value="0" selected disabled>Selecione uma disciplina</option>
                     </select>
-                  </div>
-                  <div class="numero-alunos-container">
-                    <label>Número de alunos</label>
-                    <input
-                      type="number"
-                      name="num_alunos"
-                      id="numero-alunos"
-                      placeholder="número de alunos"
-                      min="1"
-                      max="100"
-                    />
-                  </div>
-                  <div class="codigo-disciplina-container">
-                    <label>Código disciplina</label>
-                    <input
-                      type="text"
-                      name="codigo_disciplina"
-                      id="codigo-disciplina"
-                      placeholder="código da disciplina"
-                    />
                   </div>
                 </div>
               </form>
-              <button id="button-submit">Salvar</button>
+              <button id="button-submit">Salvar edição</button>
             </div>
           </div>  
         </div>
@@ -269,13 +236,6 @@
         </footer>
       </div>
     </div>
-
-    <div id="modalErroAoCadastrarTopico" class="confirmacao">
-      <div class="modal-content" style="background-color: rgb(255, 136, 0)!important;">
-        <p>Erro ao cadastrar tópico. Verifique se esse tópico já existe!</p>
-      </div>
-    </div>
-
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="module" src="topics-management.js"></script>
   </body>

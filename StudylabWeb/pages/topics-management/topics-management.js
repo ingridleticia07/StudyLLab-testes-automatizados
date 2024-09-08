@@ -5,7 +5,9 @@ const tableBody = document.querySelector("#disciplina-table tbody");
 const btnCadastrarTopico = document.querySelector("#cadastrar-btn");
 const btnSubmitTopico = document.querySelector("#button-submit");
 const modalCadastrarTopico = document.querySelector("#modal-cadastrar-topico");
+const modalEditarTopico = document.querySelector("#modal-editar-topico");
 const disciplinaOptions = modalCadastrarTopico.querySelector("#select-disciplina");
+const disciplinaOptionsToChange = modalEditarTopico.querySelector("#select-disciplina");
 const modalErroCadastrarTopico = document.querySelector("#modalErroAoCadastrarTopico");
 const itemsPerPageValue = 5;
 var actualPage = 1;
@@ -28,6 +30,11 @@ function addTopico(disciplinas){
     option.value = optionData.idDisciplina;
     option.text = optionData.nomeDisciplina;
     disciplinaOptions.appendChild(option);
+
+    const optionToChange = document.createElement('option');
+    optionToChange.value = optionData.idDisciplina;
+    optionToChange.text = optionData.nomeDisciplina;
+    disciplinaOptionsToChange.appendChild(optionToChange);
   });
 }
 
@@ -73,8 +80,64 @@ const excluirIcon = () => {
   return excluirIcon;
 };
 
-function createTopicoRow(topicoDisciplina,page) {
+function copulateModalTopico(data){
+
+  let idDisciplina = modalEditarTopico.querySelector("#select-disciplina");
+  idDisciplina.value = data.disciplina.idDisciplina;
+
+  let topico = modalEditarTopico.querySelector("#nome-topico");
+  topico.value = data.nomeTopico;
+
+  let idTopico = modalEditarTopico.querySelector("#id-topico");
+  idTopico.value = data.idTopico;
+}
+
+
+function copulateModalAndChangeTopico(data,page) {
+  copulateModalTopico(data);
+
+  let editarTopicoSubmitBtn = modalEditarTopico.querySelector("#button-submit");
   
+  /*editarDisciplinaSubmitBtn.onclick = async function() {
+    
+    let IdDisciplina = modalEditarDisciplina.querySelector("#id-disciplina").value;
+
+    let disciplina = modalEditarDisciplina.querySelector("#disciplina").value;
+
+    let professor = modalEditarDisciplina.querySelector("#nome-professor").value;
+
+    let curso = modalEditarDisciplina.querySelector("#curso").value;
+
+    let numeroAlunos = modalEditarDisciplina.querySelector("#numero-alunos").value;
+
+    let codigoDisciplina = modalEditarDisciplina.querySelector("#codigo-disciplina").value;
+
+    var data = {
+      idDisciplina:IdDisciplina,
+      nomeDisciplina:disciplina,
+      professorDisciplina:professor,
+      curso:curso,
+      quantidadeAluno:numeroAlunos,
+      codigoDisciplina:codigoDisciplina
+    };
+
+    try{
+
+      closeModal(modalEditarDisciplina);
+
+      await editarDisciplina(data);
+
+      getDisciplinasInfo(page,itemsPerPageValue);
+      //showModal(document.getElementById("modalConfirmacaoBloqueioUsuario"));
+    }catch(e){
+      
+      //showModal(document.getElementById("modalErroAoBloquearUsuario"));
+    }
+
+  };*/
+}
+
+function createTopicoRow(topicoDisciplina,page) {
   //User informations
   const row = document.createElement("tr");
   row.id = topicoDisciplina.idTopico;
@@ -98,9 +161,14 @@ function createTopicoRow(topicoDisciplina,page) {
   editarTopicoBtn.appendChild(editIcon());
   editarTopicoBtn.classList.add("action-button");
   editarTopicoBtn.classList.add("bloquear");
-
+  
+  editarTopicoBtn.addEventListener("click", function() {
+      openModal(modalEditarTopico);
+      copulateModalAndChangeTopico(topicoDisciplina,page);
+  });
+  
   const excluirTopicoBtn = document.createElement("button");
-  excluirTopicoBtn.id = `disciplina-u-${disciplina.idDisciplina}`;
+  excluirTopicoBtn.id = `disciplina-u-${topicoDisciplina.disciplina.idDisciplina}`;
   excluirTopicoBtn.appendChild(excluirIcon());
   excluirTopicoBtn.classList.add("action-button");
   excluirTopicoBtn.classList.add("bloquear");
@@ -178,7 +246,6 @@ btnSubmitTopico.addEventListener('click',async function(e){
      closeModal(modalCadastrarTopico);
    }catch(e){
     getTopicosInfo(1,itemsPerPageValue);
-    closeModal(modalCadastrarTopico);
     showModal(modalErroCadastrarTopico);
    }
 });
