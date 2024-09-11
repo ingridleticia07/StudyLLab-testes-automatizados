@@ -1,4 +1,4 @@
-import { getAllTopicosDisciplina,createTopico} from "../../assets/js/lib/services/topico.js";
+import { getAllTopicosDisciplina,createTopico,updateTopico} from "../../assets/js/lib/services/topico.js";
 import { getAllDisciplinas} from "../../assets/js/lib/services/disciplina.js";
 
 const tableBody = document.querySelector("#disciplina-table tbody");
@@ -9,6 +9,7 @@ const modalEditarTopico = document.querySelector("#modal-editar-topico");
 const disciplinaOptions = modalCadastrarTopico.querySelector("#select-disciplina");
 const disciplinaOptionsToChange = modalEditarTopico.querySelector("#select-disciplina");
 const modalErroCadastrarTopico = document.querySelector("#modalErroAoCadastrarTopico");
+const modalErroEditarTopico = document.querySelector("#modalErroAoEditarTopico");
 const itemsPerPageValue = 5;
 var actualPage = 1;
 
@@ -98,43 +99,35 @@ function copulateModalAndChangeTopico(data,page) {
 
   let editarTopicoSubmitBtn = modalEditarTopico.querySelector("#button-submit");
   
-  /*editarDisciplinaSubmitBtn.onclick = async function() {
-    
-    let IdDisciplina = modalEditarDisciplina.querySelector("#id-disciplina").value;
+  editarTopicoSubmitBtn.onclick = async function() {
 
-    let disciplina = modalEditarDisciplina.querySelector("#disciplina").value;
+    const formEditarTopico = modalEditarTopico.querySelector('form');
+    let idTopico = formEditarTopico.querySelector('#id-topico').value;
+    let nomeTopico = formEditarTopico.querySelector('#nome-topico').value;
+    let idDisciplina = formEditarTopico.querySelector('#select-disciplina').value;
 
-    let professor = modalEditarDisciplina.querySelector("#nome-professor").value;
-
-    let curso = modalEditarDisciplina.querySelector("#curso").value;
-
-    let numeroAlunos = modalEditarDisciplina.querySelector("#numero-alunos").value;
-
-    let codigoDisciplina = modalEditarDisciplina.querySelector("#codigo-disciplina").value;
-
-    var data = {
-      idDisciplina:IdDisciplina,
-      nomeDisciplina:disciplina,
-      professorDisciplina:professor,
-      curso:curso,
-      quantidadeAluno:numeroAlunos,
-      codigoDisciplina:codigoDisciplina
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const dateNow = `${year}-${month}-${day}`;
+  
+    const topicoDTO = {
+      idTopico:idTopico,
+      nomeTopico:nomeTopico,
+      dataTopico:dateNow,
+      disciplina:idDisciplina
     };
 
     try{
-
-      closeModal(modalEditarDisciplina);
-
-      await editarDisciplina(data);
-
-      getDisciplinasInfo(page,itemsPerPageValue);
-      //showModal(document.getElementById("modalConfirmacaoBloqueioUsuario"));
+      await updateTopico(topicoDTO);
+      getTopicosInfo(1,itemsPerPageValue);
+      closeModal(modalEditarTopico);
     }catch(e){
-      
-      //showModal(document.getElementById("modalErroAoBloquearUsuario"));
+     getTopicosInfo(1,itemsPerPageValue);
+     showModal(modalErroEditarTopico);
     }
-
-  };*/
+  };
 }
 
 function createTopicoRow(topicoDisciplina,page) {
@@ -242,7 +235,7 @@ btnSubmitTopico.addEventListener('click',async function(e){
 
    try{
      await createTopico(topicoDTO);
-     getTopicosInfo(1,itemsPerPage);
+     getTopicosInfo(1,itemsPerPageValue);
      closeModal(modalCadastrarTopico);
    }catch(e){
     getTopicosInfo(1,itemsPerPageValue);

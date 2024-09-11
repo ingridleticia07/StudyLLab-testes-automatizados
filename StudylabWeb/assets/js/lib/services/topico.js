@@ -24,3 +24,17 @@ export async function createTopico(topico) {
   }
   return response.data;
 }
+
+export async function updateTopico(topico) {
+  let response = await instance.put(FORUM_ENDPOINT+"/editarTopicoDiscussao",{
+    idTopico:topico.idTopico,
+    nomeTopico:topico.nomeTopico,
+    dataTopico:topico.dataTopico,
+    disciplina:topico.disciplina
+  });
+
+  if (response.status !== 200) {
+    return null;
+  }
+  return response.data;
+}

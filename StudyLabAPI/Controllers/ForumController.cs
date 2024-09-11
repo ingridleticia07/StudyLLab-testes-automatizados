@@ -129,6 +129,7 @@ namespace StudyLabAPI.Controllers
             {
                 idTopico = topicoDiscussaoModel.idTopico,
                 nomeTopico = topicoDiscussaoModel.nomeTopico,
+                disciplina = relatedDisciplina,
                 dataTopico = topicoDiscussaoModel.dataTopico
             };
             await topicoDiscussaoRepository.UpdateTopicoDiscussao(NovotopicoDiscussao);

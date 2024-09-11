@@ -28,7 +28,7 @@ export async function createDisciplina(disciplina) {
 }
 
 export async function editarDisciplina(disciplina) {
-  console.log(disciplina);
+  
   let response = await instance.put(DISCIPLINA_ENDPOINT+"/editarDisciplina",{
     idDisciplina:disciplina.idDisciplina,
     nomeDisciplina:disciplina.nomeDisciplina,
