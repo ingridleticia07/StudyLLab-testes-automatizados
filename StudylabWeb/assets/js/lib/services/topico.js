@@ -38,3 +38,13 @@ export async function updateTopico(topico) {
   }
   return response.data;
 }
+
+export async function deleteTopicoDisciplina(idTopico) {
+  console.log(idTopico)
+  let response = await instance.delete(FORUM_ENDPOINT+"/deletarTopicoDiscussao?idTopicoDiscussao="+idTopico);
+
+  if (response.status !== 200) {
+    return null;
+  }
+  return response.data;
+}

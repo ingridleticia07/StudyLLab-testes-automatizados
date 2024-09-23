@@ -1,9 +1,11 @@
-import { getAllTopicosDisciplina,createTopico,updateTopico} from "../../assets/js/lib/services/topico.js";
+import { getAllTopicosDisciplina,createTopico,updateTopico,deleteTopicoDisciplina} from "../../assets/js/lib/services/topico.js";
 import { getAllDisciplinas} from "../../assets/js/lib/services/disciplina.js";
 
 const tableBody = document.querySelector("#disciplina-table tbody");
 const btnCadastrarTopico = document.querySelector("#cadastrar-btn");
 const btnSubmitTopico = document.querySelector("#button-submit");
+const modalExcluirTopico = document.querySelector("#modal-excluir-topico");
+const confirmDeleteButton = document.querySelector("#modal-excluir-topico .confirmar");
 const modalCadastrarTopico = document.querySelector("#modal-cadastrar-topico");
 const modalEditarTopico = document.querySelector("#modal-editar-topico");
 const disciplinaOptions = modalCadastrarTopico.querySelector("#select-disciplina");
@@ -23,6 +25,21 @@ async function copulateTopicosDisciplina(){
   } catch (error) {
     console.error("Error fetching user info:", error);
   }
+}
+
+function openDeleteModal(topicoId,page) {
+  openModal(modalExcluirTopico);
+  
+  confirmDeleteButton.onclick = async function() {
+    closeModal(modalExcluirTopico);
+    try{
+      await deleteTopicoDisciplina(topicoId);
+
+      getTopicosInfo(page,itemsPerPageValue);
+    }catch(e){
+      console.log(e);
+    }
+  };
 }
 
 function addTopico(disciplinas){
@@ -166,6 +183,10 @@ function createTopicoRow(topicoDisciplina,page) {
   excluirTopicoBtn.classList.add("action-button");
   excluirTopicoBtn.classList.add("bloquear");
   
+  excluirTopicoBtn.addEventListener('click',async function(e){
+    openDeleteModal(topicoDisciplina.idTopico, page);
+  });
+
   actionColumn.appendChild(editarTopicoBtn);
   actionColumn.appendChild(excluirTopicoBtn);
   row.appendChild(actionColumn);
@@ -242,6 +263,8 @@ btnSubmitTopico.addEventListener('click',async function(e){
     showModal(modalErroCadastrarTopico);
    }
 });
+
+
 
 document.querySelectorAll('.fechar').forEach(function(botao) {
   botao.addEventListener("click", function() {

@@ -138,11 +138,11 @@ namespace StudyLabAPI.Controllers
             return (NovotopicoDiscussao);
         }
 
-        public async Task DeleteTopicoDiscussao(TopicoDiscussaoModel topicoDiscussao)
+        public async Task DeleteTopicoDiscussao(int idTopicoDiscussao)
         {
             //verificar se disciplina existe, por meio do buscar disciplina
             //para em caso de exstir, excluir a mesma
-            await topicoDiscussaoRepository.DeleteTopicoDiscussao(topicoDiscussao.idTopico);
+            await topicoDiscussaoRepository.DeleteTopicoDiscussao(idTopicoDiscussao);
             await topicoDiscussaoRepository.Flush();
         }
 

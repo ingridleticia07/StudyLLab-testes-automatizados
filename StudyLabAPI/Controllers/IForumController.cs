@@ -14,7 +14,7 @@ namespace StudyLabAPI.Controllers
 
         public Task<bool> VerifyTopicoDiscussaoExistsWithId(RegisteredTopicoDiscussaoRequestModel topicoDiscussao);
 
-        public Task DeleteTopicoDiscussao(TopicoDiscussaoModel idTopicoDiscussao);
+        public Task DeleteTopicoDiscussao(int idTopicoDiscussao);
 
         public Task<List<RespostaForumModel?>> GetAllRespostasForum();
 
