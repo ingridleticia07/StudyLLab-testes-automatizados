@@ -5,6 +5,7 @@ const tableBody = document.querySelector("#disciplina-table tbody");
 const btnCadastrarTopico = document.querySelector("#cadastrar-btn");
 const btnSubmitTopico = document.querySelector("#button-submit");
 const modalExcluirTopico = document.querySelector("#modal-excluir-topico");
+const modalExcluirTopicoWarning = document.querySelector("#modal-excluir-warning");
 const confirmDeleteButton = document.querySelector("#modal-excluir-topico .confirmar");
 const modalCadastrarTopico = document.querySelector("#modal-cadastrar-topico");
 const modalEditarTopico = document.querySelector("#modal-editar-topico");
@@ -37,7 +38,7 @@ function openDeleteModal(topicoId,page) {
 
       getTopicosInfo(page,itemsPerPageValue);
     }catch(e){
-      console.log(e);
+      showModal(modalExcluirTopicoWarning);
     }
   };
 }
@@ -72,14 +73,14 @@ function closeModal(elemento) {
 
 function showModal(modalElement) {
   modalElement.style.animationName = "slideIn";
-  modalElement.style.display = "block"; 
+  modalElement.style.display = "flex"; 
 
   setTimeout(function() {
     modalElement.style.animationName = "slideOf"; 
     setTimeout(function() {
       modalElement.style.display = "none"; 
     }, 200); 
-  }, 5000);
+  }, 3000);
 }
 
 const editIcon = () => {
