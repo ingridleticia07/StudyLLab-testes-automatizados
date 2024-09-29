@@ -9,5 +9,7 @@
         public DateOnly dataTopico { get; set; }
 
         public DisciplinaModel disciplina { get; set; }
+
+        public UsuarioModel usuario { get; set; }
     }
 }

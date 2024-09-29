@@ -19,5 +19,8 @@ namespace StudyLabAPI.Models
         [ForeignKey("fk_disciplina")]
         public DisciplinaModel disciplina { get; set; }
 
+        [ForeignKey("fk_created_user")]
+        public UsuarioModel usuario { get; set; }
+
     }
 }

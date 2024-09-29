@@ -22,7 +22,7 @@ export async function getUserInfo() {
     response.data.active,
     response.data.curso
   );
-console.log(userInfo);
+
   saveUserInfo(userInfo);
   return userInfo;
 }

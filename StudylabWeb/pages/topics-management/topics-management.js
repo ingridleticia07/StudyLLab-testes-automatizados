@@ -1,6 +1,6 @@
 import { getAllTopicosDisciplina,createTopico,updateTopico,deleteTopicoDisciplina} from "../../assets/js/lib/services/topico.js";
 import { getAllDisciplinas} from "../../assets/js/lib/services/disciplina.js";
-
+import {getUserInfo} from "../../assets/js/lib/services/user.js"
 const tableBody = document.querySelector("#disciplina-table tbody");
 const btnCadastrarTopico = document.querySelector("#cadastrar-btn");
 const btnSubmitTopico = document.querySelector("#button-submit");
@@ -15,10 +15,10 @@ const modalErroCadastrarTopico = document.querySelector("#modalErroAoCadastrarTo
 const modalErroEditarTopico = document.querySelector("#modalErroAoEditarTopico");
 const itemsPerPageValue = 5;
 var actualPage = 1;
+var usuario = null;
 
 async function copulateTopicosDisciplina(){
   try {
-
     const disciplinas = await getAllDisciplinas();
     addTopico(disciplinas);
 
@@ -165,30 +165,35 @@ function createTopicoRow(topicoDisciplina,page) {
   row.appendChild(disciplinaColumn);
 
   const actionColumn = document.createElement("td");
-  
-  const editarTopicoBtn = document.createElement("button");
-  editarTopicoBtn.id = `disciplina-u-${topicoDisciplina.idTopico}`;
-  editarTopicoBtn.appendChild(editIcon());
-  editarTopicoBtn.classList.add("action-button");
-  editarTopicoBtn.classList.add("bloquear");
-  
-  editarTopicoBtn.addEventListener("click", function() {
-      openModal(modalEditarTopico);
-      copulateModalAndChangeTopico(topicoDisciplina);
-  });
-  
-  const excluirTopicoBtn = document.createElement("button");
-  excluirTopicoBtn.id = `disciplina-u-${topicoDisciplina.disciplina.idDisciplina}`;
-  excluirTopicoBtn.appendChild(excluirIcon());
-  excluirTopicoBtn.classList.add("action-button");
-  excluirTopicoBtn.classList.add("bloquear");
-  
-  excluirTopicoBtn.addEventListener('click',async function(e){
-    openDeleteModal(topicoDisciplina.idTopico, page);
-  });
 
-  actionColumn.appendChild(editarTopicoBtn);
-  actionColumn.appendChild(excluirTopicoBtn);
+  if(topicoDisciplina.usuario.idUsuario == usuario.id)
+  {
+    console.log('s')
+    const editarTopicoBtn = document.createElement("button");
+    editarTopicoBtn.id = `disciplina-u-${topicoDisciplina.idTopico}`;
+    editarTopicoBtn.appendChild(editIcon());
+    editarTopicoBtn.classList.add("action-button");
+    editarTopicoBtn.classList.add("bloquear");
+    
+    editarTopicoBtn.addEventListener("click", function() {
+        openModal(modalEditarTopico);
+        copulateModalAndChangeTopico(topicoDisciplina);
+    });
+
+    const excluirTopicoBtn = document.createElement("button");
+    excluirTopicoBtn.id = `disciplina-u-${topicoDisciplina.disciplina.idDisciplina}`;
+    excluirTopicoBtn.appendChild(excluirIcon());
+    excluirTopicoBtn.classList.add("action-button");
+    excluirTopicoBtn.classList.add("bloquear");
+    
+    excluirTopicoBtn.addEventListener('click',async function(e){
+      openDeleteModal(topicoDisciplina.idTopico, page);
+    });
+    
+    actionColumn.appendChild(editarTopicoBtn);
+    actionColumn.appendChild(excluirTopicoBtn);
+  }
+
   row.appendChild(actionColumn);
   //Action buttons
   return row;
@@ -205,6 +210,9 @@ const populateTable = (topicos,page) => {
 
 async function getTopicosInfo(page,pageSize) {
   try {
+
+    usuario = await getUserInfo();
+    
     const topicos = await getAllTopicosDisciplina(page, pageSize);
     const { pageCount: countInPage, maxPage } = topicos;
     
@@ -251,7 +259,8 @@ btnSubmitTopico.addEventListener('click',async function(e){
   const topicoDTO = {
     nomeTopico:nomeTopico,
     dataTopico:dateNow,
-    disciplina:disciplina
+    disciplina:disciplina,
+    idUsuario: usuario.id
   };
 
    try{
@@ -263,8 +272,6 @@ btnSubmitTopico.addEventListener('click',async function(e){
     showModal(modalErroCadastrarTopico);
    }
 });
-
-
 
 document.querySelectorAll('.fechar').forEach(function(botao) {
   botao.addEventListener("click", function() {

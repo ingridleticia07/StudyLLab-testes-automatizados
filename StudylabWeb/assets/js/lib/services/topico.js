@@ -16,7 +16,8 @@ export async function createTopico(topico) {
   let response = await instance.post(FORUM_ENDPOINT+"/criarTopicoDiscussao",{
     nomeTopico:topico.nomeTopico,
     dataTopico:topico.dataTopico,
-    disciplina:topico.disciplina
+    disciplina:topico.disciplina,
+    idUsuario: topico.idUsuario
   });
 
   if (response.status !== 200) {

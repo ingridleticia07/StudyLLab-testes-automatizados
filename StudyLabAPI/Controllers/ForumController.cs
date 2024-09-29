@@ -114,12 +114,14 @@ namespace StudyLabAPI.Controllers
             int disciplinaId = topicoDiscussao.disciplina;
 
             DisciplinaModel? relatedDisciplina = await DisciplinaRepository.GetDisciplinaById(disciplinaId);
+            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(topicoDiscussao.idUsuario);
 
             TopicoDiscussaoModel NovotopicoDiscussao = new()
             {
                 nomeTopico = topicoDiscussao.nomeTopico,
                 dataTopico = topicoDiscussao.dataTopico,
-                disciplina = relatedDisciplina
+                disciplina = relatedDisciplina,
+                usuario = relatedUsuario
             };
             await topicoDiscussaoRepository.CreateTopicoDiscussao(NovotopicoDiscussao);
 
