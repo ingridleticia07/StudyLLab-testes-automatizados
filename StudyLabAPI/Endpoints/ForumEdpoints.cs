@@ -11,6 +11,7 @@ namespace StudyLabAPI.Endpoints
         {
             builder.MapGet("listarTopicosDiscussao", GetAllTopicosDiscussao)
                 .WithOpenApi(ForumSummaries.ForumGetAllTopicosDiscussao);
+            builder.MapGet("listarRespostasForumByDisciplinaOrTopico", GetRespostaForumByDisciplinaOrTopico);
             builder.MapPost("criarTopicoDiscussao", CreateTopicoDiscussao)
                 .WithOpenApi(ForumSummaries.ForumCreateTopicoDiscussao);
             builder.MapPut("editarTopicoDiscussao", UpdateTopicoDiscussao)
@@ -38,7 +39,29 @@ namespace StudyLabAPI.Endpoints
 
             return builder;
         }
-        
+
+        [ProducesResponseType(typeof(List<RespostaForumModel>), 200)]
+        private static async Task<IResult> GetRespostaForumByDisciplinaOrTopico(HttpContext context,
+            [FromQuery] int page,
+            [FromQuery] int pageSize,
+            [FromQuery] int idDisciplina,
+            [FromQuery] int idTopico,
+            [FromServices] IForumController controller)
+        {
+
+            RespostaForumListResponse? result;
+            try
+            {
+                result = await controller.GetAllRespostasForumByDisciplinaOrTopico(page, pageSize, idTopico,idDisciplina);
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+
+            return Results.Ok(result);
+        }
+
         [ProducesResponseType(typeof(List<TopicoDiscussaoModel>), 200)]
         private static async Task<IResult> GetAllTopicosDiscussao(HttpContext context,
             [FromQuery] int page,

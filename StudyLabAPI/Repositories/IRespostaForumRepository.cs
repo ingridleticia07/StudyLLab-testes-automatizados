@@ -7,6 +7,10 @@ namespace StudyLabAPI.Repositories;
 /// </summary>
 public interface IRespostaForumRepository
 {
+    public Task<IList<RespostaForumModel>> GetAllRespostaForumDiscussao(int page, int pageSize, int? idDisciplina, int? idTopico);
+
+    public Task<(IList<RespostaForumModel>, int, int)> GetRespostaForumAndCount(int page, int pageSize, int? idDisciplina, int? idTopico);
+
     /// <summary>
     /// Retorna todas as respostas de forum cadastradas
     /// </summary>

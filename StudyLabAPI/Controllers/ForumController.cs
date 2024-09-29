@@ -22,12 +22,15 @@ namespace StudyLabAPI.Controllers
 
         private readonly TopicoDiscussaoModelMapper _topicoModelMapper;
 
-        public ForumController(TopicoDiscussaoModelMapper topicoDiscussaoModelMapper,
-            ITopicoDiscussaoRepository topicoDiscussaoRepository, 
+        private readonly RespotaForumModelMapper _respostaForumModelMapper;
+
+        public ForumController(TopicoDiscussaoModelMapper topicoDiscussaoModelMapper, RespotaForumModelMapper
+            respostaForumModelMapper, ITopicoDiscussaoRepository topicoDiscussaoRepository, 
             IDisciplinaRepository DisciplinaRepository, IUsuarioRepository usuarioRepository,
             IRespostaForumRepository respostaForumRepository,IForumRepository forumRepository, ILogger logger)
         {
             this._topicoModelMapper = topicoDiscussaoModelMapper;
+            this._respostaForumModelMapper = respostaForumModelMapper;
             this.topicoDiscussaoRepository = topicoDiscussaoRepository;
             this.DisciplinaRepository = DisciplinaRepository;
             this.usuarioRepository = usuarioRepository;
@@ -149,9 +152,48 @@ namespace StudyLabAPI.Controllers
         public async Task<List<RespostaForumModel?>> GetAllRespostasForum()
         {
             List<RespostaForumModel> RespostaForumListado = await respostaforumRepository.GetAllRespostasForum();
-            // You should map DisciplinaModel to DisciplinaReadModel and return the list
 
             return RespostaForumListado;
+        }
+
+        public async Task<RespostaForumListResponse> GetAllRespostasForumByDisciplinaOrTopico(int page, int pageSize, int? idDisciplina, int? idTopico)
+        {
+            logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
+            page, pageSize);
+
+            PageValidator validator = new(page, pageSize);
+
+            if (!validator.isValid)
+            {
+                ValidationException exception = new(["Parâmetros de paginação inválidos"]);
+                logger.Error(exception, "Parâmetros de paginação inválidos");
+                throw exception;
+            }
+
+            logger.Information("Recuperando topicos da página Page[{Page}] PageSize[{PageSize}]",
+                page, pageSize);
+
+            (var result, int resultCount, int respostaForumCount) = await respostaforumRepository
+            .GetRespostaForumAndCount(page, pageSize, idDisciplina, idTopico);
+
+            var respostaForumReadResult = result.Select(_respostaForumModelMapper.RespotaForumModelMapperToRespostaForumReadModel)
+                .ToList();
+
+            logger.Information("Recuperado {Count} usuários da página Page[{Page}] PageSize[{PageSize}]",
+                respostaForumReadResult.Count, page, pageSize);
+            logger.Information("Recuperando informações extras para a resposta");
+
+            int maxPage = respostaForumCount / pageSize;
+            if (respostaForumCount % pageSize != 0)
+                maxPage++;
+
+            return new()
+            {
+                maxPage = maxPage,
+                respostaForumCount = respostaForumCount,
+                pageCount = resultCount,
+                respostasForum = respostaForumReadResult
+            };
         }
 
         public async Task<bool> VerifyRespostaForumExists(RegisteredRespostaForumModel respostaForum)
