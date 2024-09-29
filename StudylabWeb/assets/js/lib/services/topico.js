@@ -4,7 +4,7 @@ const FORUM_ENDPOINT = "/forum";
 
 export async function getAllTopicosDisciplina(page, pageSize) {
     let response = await instance.get(FORUM_ENDPOINT+
-      "/listarTopicosDiscussao?page="+page+"&pageSize="+pageSize+"");
+      "/listarTopicosDiscussaoWithPagination?page="+page+"&pageSize="+pageSize+"");
   
     if (response.status !== 200) {
       return null;

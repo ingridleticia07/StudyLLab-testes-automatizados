@@ -8,8 +8,9 @@ public static class DisciplinaEndpoints
 {
     public static RouteGroupBuilder MapDisciplinaEndpoints(this RouteGroupBuilder builder)
     {
-        builder.MapGet("listarDisciplinas", GetDisciplinas)
+        builder.MapGet("listarDisciplinasWithPagination", GetDisciplinas)
             .WithOpenApi(DisciplinaSummaries.DisciplinaGetDisciplinas);
+        builder.MapGet("listarDisciplinas", GetAllDisciplinas);
         builder.MapGet("listarDisciplina/{idDisciplina:int}", GetDisciplina)
             .WithOpenApi(DisciplinaSummaries.DisciplinaGetDisciplina);
         builder.MapPost("cadastrarDisciplina", CreateDisciplina)
@@ -21,7 +22,25 @@ public static class DisciplinaEndpoints
 
         return builder;
     }
-    
+
+    [ProducesResponseType(typeof(List<DisciplinaReadModel>), 200)]
+    private static async Task<IResult> GetAllDisciplinas(HttpContext context,
+        [FromServices] IDisciplinaController controller)
+    {
+
+        List<DisciplinaModel>? result;
+        try
+        {
+            result = await controller.GetAllDisciplinas();
+        }
+        catch (Exception e)
+        {
+            return Results.BadRequest(e.Message);
+        }
+
+        return Results.Ok(result);
+    }
+
     [ProducesResponseType(typeof(List<DisciplinaReadModel>), 200)]
     private static async Task<IResult> GetDisciplinas(HttpContext context,
         [FromQuery] int page,
@@ -32,7 +51,7 @@ public static class DisciplinaEndpoints
         DisciplinaListResponse? result;
         try
         {
-            result = await controller.GetAllDisciplinas(page,pageSize);
+            result = await controller.GetAllDisciplinasWithPagination(page,pageSize);
         }
         catch (Exception e)
         {

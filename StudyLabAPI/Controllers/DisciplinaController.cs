@@ -41,7 +41,14 @@ namespace StudyLabAPI.Controllers
                 curso = relatedCurso
             };
         }
-        public async Task<DisciplinaListResponse> GetAllDisciplinas(int page,int pageSize)
+
+        public async Task<List<DisciplinaModel?>> GetAllDisciplinas()
+        {
+            List<DisciplinaModel?> disciplinas = await disciplinaRepository.GetAllDisciplinas();
+
+            return disciplinas;
+        } 
+        public async Task<DisciplinaListResponse> GetAllDisciplinasWithPagination(int page,int pageSize)
         {
             logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
             page, pageSize);

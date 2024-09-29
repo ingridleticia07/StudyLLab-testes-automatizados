@@ -7,12 +7,13 @@ namespace StudyLabAPI.Repositories;
 /// </summary>
 public interface ITopicoDiscussaoRepository
 {
+    public Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussao();
     /// <summary>
     /// Recupera todos os topicos de discussão cadastrados
     /// </summary>
     /// <returns>Representa uma tarefa asincrona do banco,
     /// ela retorna uma <see cref="List{T}"/> com todos os topicos de discussão</returns>
-    public Task<IList<TopicoDiscussaoModel>> GetAllTopicosDiscussao(int page, int pageSize);
+    public Task<IList<TopicoDiscussaoModel>> GetTopicosDiscussaoLimitedByPageAndPageSize(int page, int pageSize);
 
     public Task<(IList<TopicoDiscussaoModel>, int, int)> GetTopicosAndCount(int page, int pageSize);
     /// <summary>

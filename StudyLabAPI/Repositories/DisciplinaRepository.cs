@@ -15,6 +15,9 @@ namespace StudyLabAPI.Repositories
             _dbContextFactory = dbContextFactory;
         }
 
+        public async Task<List<DisciplinaModel?>> GetAllDisciplinas() =>
+            await _dbContext.disciplinas.ToListAsync();
+
         private async Task<IList<DisciplinaModel>> GetDisciplinasWFactory(int page, int pageSize)
         {
             await using AppDbContext? inDbContext = await _dbContextFactory.CreateDbContextAsync();
@@ -22,7 +25,7 @@ namespace StudyLabAPI.Repositories
             if (inDbContext is null)
                 throw new("Was not possible to instanciaite a new DbContext");
 
-            return await GetAllDisciplinas(inDbContext, page, pageSize);
+            return await GetAllDisciplinasWithPagination(inDbContext, page, pageSize);
         }
 
         private async Task<int> GetDisciplinasCountWFactory()
@@ -84,10 +87,10 @@ namespace StudyLabAPI.Repositories
             return (result, result.Count, disciplinaCount);
         }
 
-        public Task<IList<DisciplinaModel>> GetAllDisciplinas(int page, int pageSize) =>
-            GetAllDisciplinas(_dbContext, page, pageSize);
+        public Task<IList<DisciplinaModel>> GetAllDisciplinasWithPagination(int page, int pageSize) =>
+            GetAllDisciplinasWithPagination(_dbContext, page, pageSize);
 
-        public async Task<IList<DisciplinaModel>> GetAllDisciplinas(AppDbContext inDbContext, int page, int pageSize)
+        public async Task<IList<DisciplinaModel>> GetAllDisciplinasWithPagination(AppDbContext inDbContext, int page, int pageSize)
         {
             var result = await inDbContext.disciplinas
             .AsNoTracking()

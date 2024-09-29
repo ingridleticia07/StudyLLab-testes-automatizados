@@ -15,6 +15,9 @@ namespace StudyLabAPI.Repositories
             _dbContextFactory = dbContextFactory;
         }
 
+        public async Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussao() =>
+            await dbContext.discussao.ToListAsync();
+
         private async Task<IList<TopicoDiscussaoModel>> GetTopicoWFactory(int page, int pageSize)
         {
             await using AppDbContext? inDbContext = await _dbContextFactory.CreateDbContextAsync();
@@ -22,7 +25,7 @@ namespace StudyLabAPI.Repositories
             if (inDbContext is null)
                 throw new("Was not possible to instanciaite a new DbContext");
 
-            return await GetAllTopicosDiscussao(inDbContext, page, pageSize);
+            return await GetTopicosDiscussaoLimitedByPageAndPageSize(inDbContext, page, pageSize);
         }
 
         private async Task<int> GetTopicosCountWFactory()
@@ -35,13 +38,12 @@ namespace StudyLabAPI.Repositories
             return await GetTopicosAndCount(inDbContext);
         }
 
-
         private async Task<int> GetTopicosAndCount(AppDbContext inDbContext) =>
             await inDbContext.discussao.CountAsync();
 
-        public Task<IList<TopicoDiscussaoModel>> GetAllTopicosDiscussao(int page, int pageSize) =>
-                GetAllTopicosDiscussao(dbContext, page, pageSize);
-        public async Task<IList<TopicoDiscussaoModel>> GetAllTopicosDiscussao(AppDbContext inDbContext, int page, int pageSize)
+        public Task<IList<TopicoDiscussaoModel>> GetTopicosDiscussaoLimitedByPageAndPageSize(int page, int pageSize) =>
+                GetTopicosDiscussaoLimitedByPageAndPageSize(dbContext, page, pageSize);
+        public async Task<IList<TopicoDiscussaoModel>> GetTopicosDiscussaoLimitedByPageAndPageSize(AppDbContext inDbContext, int page, int pageSize)
         {
             var result = await inDbContext.discussao
             .AsNoTracking()

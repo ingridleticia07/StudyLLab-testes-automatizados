@@ -1,4 +1,4 @@
-import { getAllDisciplinas,createDisciplina,editarDisciplina,deleteDisciplina } from "../../assets/js/lib/services/disciplina.js";
+import { getAllDisciplinasWithPagination,createDisciplina,editarDisciplina,deleteDisciplina } from "../../assets/js/lib/services/disciplina.js";
 
 const modalExc = document.getElementById("modal-excluir");
 const modalBan = document.getElementById("modal-banir");
@@ -250,7 +250,7 @@ const populateTable = (disciplinas,page) => {
 
 async function getDisciplinasInfo(page,pageSize) {
   try {
-    const disciplinas = await getAllDisciplinas(page, pageSize);
+    const disciplinas = await getAllDisciplinasWithPagination(page, pageSize);
 
     const { pageCount: countInPage, maxPage } = disciplinas;
 

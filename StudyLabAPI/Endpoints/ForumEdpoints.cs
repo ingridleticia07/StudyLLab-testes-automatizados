@@ -11,6 +11,8 @@ namespace StudyLabAPI.Endpoints
         {
             builder.MapGet("listarTopicosDiscussao", GetAllTopicosDiscussao)
                 .WithOpenApi(ForumSummaries.ForumGetAllTopicosDiscussao);
+            builder.MapGet("listarTopicosDiscussaoWithPagination", GetTopicosDiscussaoLimitedByPageAndPageSize)
+                .WithOpenApi(ForumSummaries.ForumGetAllTopicosDiscussao);
             builder.MapGet("listarRespostasForumByDisciplinaOrTopico", GetRespostaForumByDisciplinaOrTopico);
             builder.MapPost("criarTopicoDiscussao", CreateTopicoDiscussao)
                 .WithOpenApi(ForumSummaries.ForumCreateTopicoDiscussao);
@@ -63,7 +65,7 @@ namespace StudyLabAPI.Endpoints
         }
 
         [ProducesResponseType(typeof(List<TopicoDiscussaoModel>), 200)]
-        private static async Task<IResult> GetAllTopicosDiscussao(HttpContext context,
+        private static async Task<IResult> GetTopicosDiscussaoLimitedByPageAndPageSize(HttpContext context,
             [FromQuery] int page,
             [FromQuery] int pageSize,
             [FromServices] IForumController controller)
@@ -72,7 +74,7 @@ namespace StudyLabAPI.Endpoints
             TopicoDiscussaoListResponse? result;
             try
             {
-                result = await controller.GetAllTopicosDiscussao(page,pageSize);
+                result = await controller.GetTopicosDiscussaoLimitedByPageAndPageSize(page,pageSize);
             }
             catch (Exception e)
             {
@@ -81,7 +83,25 @@ namespace StudyLabAPI.Endpoints
 
             return Results.Ok(result);
         }
-        
+
+        [ProducesResponseType(typeof(List<TopicoDiscussaoModel>), 200)]
+        private static async Task<IResult> GetAllTopicosDiscussao(HttpContext context,
+            [FromServices] IForumController controller)
+        {
+
+            List<TopicoDiscussaoModel>? result;
+            try
+            {
+                result = await controller.GetAllTopicosDiscussao();
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+
+            return Results.Ok(result);
+        }
+
         [ProducesResponseType(typeof(RegisteredTopicoDiscussaoRequestModel), 200)]
         private static async Task<IResult> CreateTopicoDiscussao(HttpContext context,
             [FromBody] RegisteredTopicoDiscussaoRequestModel novoTopico,

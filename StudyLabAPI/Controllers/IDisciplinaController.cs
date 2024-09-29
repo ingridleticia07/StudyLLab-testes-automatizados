@@ -27,7 +27,13 @@ public interface IDisciplinaController
     /// </summary>
     /// <returns>Representa uma tarefa assíncrona,
     /// ela retorna uma <see cref="List{T}"/> com todas as disciplinas</returns>
-    public Task<DisciplinaListResponse> GetAllDisciplinas(int page, int pageSize);
+    public Task<DisciplinaListResponse> GetAllDisciplinasWithPagination(int page, int pageSize);
+    /// <summary>
+    /// Recupera todas as disciplinas cadastradas.
+    /// </summary>
+    /// <returns>Representa uma tarefa assíncrona,
+    /// ela retorna uma <see cref="List{T}"/> com todas as disciplinas</returns>
+    public Task<List<DisciplinaModel>> GetAllDisciplinas();
     /// <summary>
     /// Verifica se a disciplina especificada no modelo existe.
     /// </summary>

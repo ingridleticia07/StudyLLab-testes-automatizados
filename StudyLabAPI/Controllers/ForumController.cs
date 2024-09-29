@@ -25,9 +25,9 @@ namespace StudyLabAPI.Controllers
         private readonly RespotaForumModelMapper _respostaForumModelMapper;
 
         public ForumController(TopicoDiscussaoModelMapper topicoDiscussaoModelMapper, RespotaForumModelMapper
-            respostaForumModelMapper, ITopicoDiscussaoRepository topicoDiscussaoRepository, 
+            respostaForumModelMapper, ITopicoDiscussaoRepository topicoDiscussaoRepository,
             IDisciplinaRepository DisciplinaRepository, IUsuarioRepository usuarioRepository,
-            IRespostaForumRepository respostaForumRepository,IForumRepository forumRepository, ILogger logger)
+            IRespostaForumRepository respostaForumRepository, IForumRepository forumRepository, ILogger logger)
         {
             this._topicoModelMapper = topicoDiscussaoModelMapper;
             this._respostaForumModelMapper = respostaForumModelMapper;
@@ -38,7 +38,7 @@ namespace StudyLabAPI.Controllers
             this.forumRepository = forumRepository;
             this.logger = logger;
         }
-        public async Task<TopicoDiscussaoListResponse> GetAllTopicosDiscussao(int page, int pageSize)
+        public async Task<TopicoDiscussaoListResponse> GetTopicosDiscussaoLimitedByPageAndPageSize(int page, int pageSize)
         {
             logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
             page, pageSize);
@@ -78,6 +78,12 @@ namespace StudyLabAPI.Controllers
             };
         }
 
+        public async Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussao()
+        {
+            List<TopicoDiscussaoModel?> topicosDiscussao = await topicoDiscussaoRepository.GetAllTopicosDiscussao();
+
+            return topicosDiscussao;
+        }
 
         public async Task<bool> VerifyTopicoDiscussaoExists(RegisteredTopicoDiscussaoRequestModel topicoDiscussao)
         {
@@ -231,7 +237,7 @@ namespace StudyLabAPI.Controllers
 
             int UsuarioId = respostaForum.usuario;
 
-            TopicoDiscussaoModel? relatedTopicoDiscussao = 
+            TopicoDiscussaoModel? relatedTopicoDiscussao =
                 await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoId);
 
             UsuarioModel? relatedUsuario =
@@ -291,7 +297,7 @@ namespace StudyLabAPI.Controllers
             int topicoDiscussaoId = forum.topicoDiscussao;
 
             int usuarioId = forum.usuario;
-            
+
             RespostaForumModel? relatedRespostaForum = await respostaforumRepository.GetRespostaForumById(respostaForumId);
 
             TopicoDiscussaoModel? relatedTopicoDiscussao = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoId);

@@ -18,10 +18,9 @@ var actualPage = 1;
 
 async function copulateTopicosDisciplina(){
   try {
-    const disciplinasCount = await getAllDisciplinas(1, 1);
 
-    const disciplinas = await getAllDisciplinas(1, disciplinasCount.maxPage);
-    addTopico(disciplinas.disciplinas);
+    const disciplinas = await getAllDisciplinas();
+    addTopico(disciplinas);
 
   } catch (error) {
     console.error("Error fetching user info:", error);
@@ -112,7 +111,7 @@ function copulateModalTopico(data){
 }
 
 
-function copulateModalAndChangeTopico(data,page) {
+function copulateModalAndChangeTopico(data) {
   copulateModalTopico(data);
 
   let editarTopicoSubmitBtn = modalEditarTopico.querySelector("#button-submit");
@@ -175,7 +174,7 @@ function createTopicoRow(topicoDisciplina,page) {
   
   editarTopicoBtn.addEventListener("click", function() {
       openModal(modalEditarTopico);
-      copulateModalAndChangeTopico(topicoDisciplina,page);
+      copulateModalAndChangeTopico(topicoDisciplina);
   });
   
   const excluirTopicoBtn = document.createElement("button");

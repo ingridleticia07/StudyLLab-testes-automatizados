@@ -31,11 +31,17 @@ public interface IDisciplinaRepository
     /// caso contrário, retorna <c>false</c></returns>
     public Task<bool> VerifyDisciplinaCreatedWithId(int disciplinaId);
     /// <summary>
+    /// Recupera as disciplinas no banco com paginação.
+    /// </summary>
+    /// <returns>Representa uma tarefa asincrona do banco,
+    /// ela retorna uma <see cref="List{T}"/> contendo todas as disciplinas</returns>
+    public Task<IList<DisciplinaModel>> GetAllDisciplinasWithPagination(int page, int pageSize);
+    /// <summary>
     /// Recupera todas as disciplinas no banco.
     /// </summary>
     /// <returns>Representa uma tarefa asincrona do banco,
     /// ela retorna uma <see cref="List{T}"/> contendo todas as disciplinas</returns>
-    public Task<IList<DisciplinaModel>> GetAllDisciplinas(int page, int pageSize);
+    public Task<List<DisciplinaModel>> GetAllDisciplinas();
     /// <summary>
     /// Cadastra uma nova disciplina
     /// </summary>
