@@ -32,11 +32,6 @@ export function addTopico(topicos){
         option.value = optionData.idTopico;
         option.text = optionData.nomeTopico;
         topicoFilter.appendChild(option);
-
-        const optionToChange = document.createElement('option');
-        optionToChange.value = optionData.idDisciplina;
-        optionToChange.text = optionData.nomeDisciplina;
-        topicoFilter.appendChild(optionToChange);
     });
 }
 
