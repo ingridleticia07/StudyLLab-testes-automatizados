@@ -2,24 +2,15 @@ import { instance } from "./axios.js";
 
 const FORUM_ENDPOINT = "/forum";
 
-export async function getAllTopicosDisciplinaWithPagination(page, pageSize) {
+export async function getForumByDisciplinaOrTopico(page, pageSize, idDisciplina, idTopico) {
     let response = await instance.get(FORUM_ENDPOINT+
-      "/listarTopicosDiscussaoWithPagination?page="+page+"&pageSize="+pageSize+"");
-  
+      "/listarRespostasForumByDisciplinaOrTopico?page="+page+
+      "&pageSize="+pageSize+"&idDisciplina="+idDisciplina+"&idTopico="+idTopico+"");
+        console.log(idDisciplina+" "+idTopico);
     if (response.status !== 200) {
       return null;
     }
     return response.data;
-}
-
-export async function getAllTopicosDisciplina(page, pageSize) {
-  let response = await instance.get(FORUM_ENDPOINT+
-    "/listarTopicosDiscussao");
-
-  if (response.status !== 200) {
-    return null;
-  }
-  return response.data;
 }
 
 export async function createTopico(topico) {

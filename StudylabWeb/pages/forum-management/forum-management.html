@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StudyLab</title>
-    <link rel="stylesheet" href="topics-management.css" />
+    <link rel="stylesheet" href="forum-management.css" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   </head>
 
@@ -90,8 +90,15 @@
         <main class="content">
           <div class="content-managentment">
             <div class="content-header">
-            <H1>Tópicos</H1>
-            <button id="cadastrar-btn">Cadastrar Tópico disciplina</button>
+            <H1>Forum</H1>
+            <select id="disciplina-filter" class="filter">
+              <option value="0" selected disabled>Disciplina</option>
+            </select>
+            <select id="topico-filter" class="filter">
+              <option value="0" selected disabled>Tópico</option>
+            </select>
+            <button  id="btn-buscar-forum"><img src="../../assets/img/icon-lupa.svg" style="max-height: 25px;"></button>
+            <button id="cadastrar-btn">Responder forum</button>
           </div>
           <div class="pagination">
           </div>
@@ -102,7 +109,8 @@
                   <tr>
                     <th><input type="checkbox" name="select-all" id="select-all"></th>
                     <th>TÓPICO</th>
-                    <th>NOME DISCIPLINA</th>
+                    <th>Resposta</th>
+                    <th>Disciplina</th>
                     <th>AÇÕES</th>
                   </tr>
                 </thead>
@@ -251,6 +259,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script type="module" src="topics-management.js"></script>
+    <script type="module" src="forum-management.js"></script>
   </body>
 </html>

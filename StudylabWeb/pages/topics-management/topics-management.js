@@ -1,4 +1,4 @@
-import { getAllTopicosDisciplina,createTopico,updateTopico,deleteTopicoDisciplina} from "../../assets/js/lib/services/topico.js";
+import { getAllTopicosDisciplinaWithPagination,createTopico,updateTopico,deleteTopicoDisciplina} from "../../assets/js/lib/services/topico.js";
 import { getAllDisciplinas} from "../../assets/js/lib/services/disciplina.js";
 import {getUserInfo} from "../../assets/js/lib/services/user.js"
 const tableBody = document.querySelector("#disciplina-table tbody");
@@ -213,7 +213,7 @@ async function getTopicosInfo(page,pageSize) {
 
     usuario = await getUserInfo();
     
-    const topicos = await getAllTopicosDisciplina(page, pageSize);
+    const topicos = await getAllTopicosDisciplinaWithPagination(page, pageSize);
     const { pageCount: countInPage, maxPage } = topicos;
     
     populateTable(topicos.topicos,page);

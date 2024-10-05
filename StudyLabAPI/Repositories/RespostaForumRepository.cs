@@ -102,16 +102,46 @@ namespace StudyLabAPI.Repositories
                 GetAllRespostaForumDiscussao(dbContext, page, pageSize,idDisciplina,idTopico);
         public async Task<IList<RespostaForumModel>> GetAllRespostaForumDiscussao(AppDbContext inDbContext,int page, int pageSize, int? idDisciplina, int? idTopico)
         {
-            var result = await inDbContext.respostaForum
-            .AsNoTracking()
-            .OrderBy(f => f.topicoDiscussao)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .Include(f => f.topicoDiscussao)
-            .Include(f => f.topicoDiscussao.disciplina)
-            .Include(f => f.usuario)
-            .Where(f => f.topicoDiscussao.idTopico == idTopico || f.topicoDiscussao.disciplina.idDisciplina == idDisciplina)
-            .ToListAsync();
+            var result = new List<RespostaForumModel>();
+
+            if (idDisciplina !=0 && idTopico != 0)
+            {
+                result = await inDbContext.respostaForum
+                .AsNoTracking()
+                .OrderByDescending(f => f.dataResposta)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Include(f => f.topicoDiscussao)
+                .Include(f => f.topicoDiscussao.disciplina)
+                .Include(f => f.usuario)
+                .Where(f => f.topicoDiscussao.idTopico == idTopico && f.topicoDiscussao.disciplina.idDisciplina == idDisciplina)
+                .ToListAsync();
+            }
+            else if(idDisciplina != 0 || idTopico != 0)
+            {
+                result = await inDbContext.respostaForum
+                .AsNoTracking()
+                .OrderByDescending(f => f.dataResposta)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Include(f => f.topicoDiscussao)
+                .Include(f => f.topicoDiscussao.disciplina)
+                .Include(f => f.usuario)
+                .Where(f => f.topicoDiscussao.idTopico == idTopico || f.topicoDiscussao.disciplina.idDisciplina == idDisciplina)
+                .ToListAsync();
+            }
+            else
+            {
+                result = await inDbContext.respostaForum
+                .AsNoTracking()
+                .OrderByDescending(f => f.dataResposta)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Include(f => f.topicoDiscussao)
+                .Include(f => f.topicoDiscussao.disciplina)
+                .Include(f => f.usuario)
+                .ToListAsync();
+            }
 
             return result;
         }

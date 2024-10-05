@@ -54,7 +54,7 @@ namespace StudyLabAPI.Endpoints
             RespostaForumListResponse? result;
             try
             {
-                result = await controller.GetAllRespostasForumByDisciplinaOrTopico(page, pageSize, idTopico,idDisciplina);
+                result = await controller.GetAllRespostasForumByDisciplinaOrTopico(page, pageSize,idDisciplina,idTopico);
             }
             catch (Exception e)
             {
