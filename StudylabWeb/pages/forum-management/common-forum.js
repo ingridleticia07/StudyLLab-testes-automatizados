@@ -1,6 +1,7 @@
 
 const modalExcluirTopico = document.querySelector("#modal-excluir-topico");
 const modalEditarTopico = document.querySelector("#modal-editar-topico");
+const modalRespostaForum = document.querySelector("#modal-resposta-forum");
 
 export function openModal(elemento) {
     elemento.style.display = "flex";
@@ -21,6 +22,14 @@ export function showModal(modalElement) {
         }, 200); 
     }, 3000);
 }
+
+export const viewIcon = () => {
+    const editIcon = document.createElement("img");
+    editIcon.src = "../../assets/img/eye.svg";
+    editIcon.alt = "Editar";
+
+    return editIcon;
+};
 
 export const editIcon = () => {
     const editIcon = document.createElement("img");
@@ -53,6 +62,11 @@ confirmDeleteButton.onclick = async function() {
     };
 }
 
+export function copulateModalRespostaForum(data){
+    let textAreaResposta = modalRespostaForum.querySelector("#editor-2 .editorAria");
+    textAreaResposta.innerHTML = data.resposta;
+}
+
 export function copulateModalTopico(data){
 
     let idDisciplina = modalEditarTopico.querySelector("#select-disciplina");
@@ -77,7 +91,8 @@ export function createForumRow(forum,page,usuario) {
   
     const respostaForumColumn = document.createElement("td");
     respostaForumColumn.textContent = forum.resposta;
-  
+    respostaForumColumn.style.display = 'none';
+
     const disciplinaColumn = document.createElement("td");
     disciplinaColumn.textContent = forum.topicoDiscussao.disciplina.nomeDisciplina;
     
@@ -87,6 +102,18 @@ export function createForumRow(forum,page,usuario) {
     row.appendChild(disciplinaColumn);
   
     const actionColumn = document.createElement("td");
+
+    const visualizarForumBtn = document.createElement("button");
+    visualizarForumBtn.id = `forum-${forum.idTopico}`;
+    visualizarForumBtn.appendChild(viewIcon());
+    visualizarForumBtn.classList.add("action-button");
+    visualizarForumBtn.classList.add("bloquear");
+    visualizarForumBtn.addEventListener("click", function() {
+        openModal(modalRespostaForum);
+        copulateModalRespostaForum(forum);
+    });
+
+    actionColumn.appendChild(visualizarForumBtn);
 
     if(forum.usuario.idUsuario == usuario.id)
     {
