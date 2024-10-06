@@ -94,9 +94,20 @@ namespace StudyLabAPI.Repositories
             return await GetRespostaForumAndCount(inDbContext, idTopico, idDisciplina);
         }
 
-        private async Task<int> GetRespostaForumAndCount(AppDbContext inDbContext, int ?idTopico, int? idDisciplina) =>
-            await inDbContext.respostaForum.Where(f => f.topicoDiscussao.idTopico == idTopico 
-            || f.topicoDiscussao.disciplina.idDisciplina == idDisciplina).CountAsync();
+        private async Task<int> GetRespostaForumAndCount(AppDbContext inDbContext, int ?idTopico, int? idDisciplina)
+        {
+            int count = 0;
+
+            if(idTopico!=0 || idDisciplina != 0)
+                count = await inDbContext.respostaForum.Where(f => f.topicoDiscussao.idTopico == idTopico || f.topicoDiscussao.disciplina.idDisciplina == idDisciplina).CountAsync();
+
+            else if(idTopico!=0 && idDisciplina!=0)
+                count = await inDbContext.respostaForum.Where(f => f.topicoDiscussao.idTopico == idTopico && f.topicoDiscussao.disciplina.idDisciplina == idDisciplina).CountAsync();
+            else
+                count = await inDbContext.respostaForum.CountAsync();
+
+            return count;
+        }
 
         public Task<IList<RespostaForumModel>> GetAllRespostaForumDiscussao(int page, int pageSize, int? idDisciplina, int? idTopico) =>
                 GetAllRespostaForumDiscussao(dbContext, page, pageSize,idDisciplina,idTopico);
@@ -108,27 +119,28 @@ namespace StudyLabAPI.Repositories
             {
                 result = await inDbContext.respostaForum
                 .AsNoTracking()
+                .Where(f => f.topicoDiscussao.idTopico == idTopico && f.topicoDiscussao.disciplina.idDisciplina == idDisciplina)
                 .OrderByDescending(f => f.dataResposta)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Include(f => f.topicoDiscussao)
-                .Include(f => f.topicoDiscussao.disciplina)
+                .ThenInclude(td => td.disciplina)
                 .Include(f => f.usuario)
-                .Where(f => f.topicoDiscussao.idTopico == idTopico && f.topicoDiscussao.disciplina.idDisciplina == idDisciplina)
                 .ToListAsync();
             }
             else if(idDisciplina != 0 || idTopico != 0)
             {
                 result = await inDbContext.respostaForum
                 .AsNoTracking()
+                .Where(f => f.topicoDiscussao.idTopico == idTopico || f.topicoDiscussao.disciplina.idDisciplina == idDisciplina)
                 .OrderByDescending(f => f.dataResposta)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Include(f => f.topicoDiscussao)
-                .Include(f => f.topicoDiscussao.disciplina)
+                .ThenInclude(td => td.disciplina)
                 .Include(f => f.usuario)
-                .Where(f => f.topicoDiscussao.idTopico == idTopico || f.topicoDiscussao.disciplina.idDisciplina == idDisciplina)
                 .ToListAsync();
+
             }
             else
             {
@@ -138,7 +150,7 @@ namespace StudyLabAPI.Repositories
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Include(f => f.topicoDiscussao)
-                .Include(f => f.topicoDiscussao.disciplina)
+                .ThenInclude(td => td.disciplina)
                 .Include(f => f.usuario)
                 .ToListAsync();
             }

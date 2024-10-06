@@ -92,7 +92,7 @@ async function getForumByDisciplinaAndTopico(page,pageSize,idDisciplina,idTopico
     const forums = await getForumByDisciplinaOrTopico(page, pageSize,idDisciplina,idTopico);
     
     const { pageCount: countInPage, maxPage } = forums;
-    
+    console.log(forums)
     populateTable(forums.respostasForum,page,idDisciplina,idTopico);
     addButtonsPagination(maxPage,itemsPerPageValue,idDisciplina,idTopico);
   } catch (error) {
@@ -102,8 +102,8 @@ async function getForumByDisciplinaAndTopico(page,pageSize,idDisciplina,idTopico
 
 function addButtonsPagination(maxRegisterCounts,itemsPerPage,idDisciplina,idTopico){
   const paginationContainer = document.querySelector('body .pagination');
-
-  paginationContainer.innerHTML = ''; // Clear previous buttons
+  
+  paginationContainer.innerHTML = '';
 
   for (let i = 1; i <= maxRegisterCounts; i++) {
       const button = document.createElement('button');
@@ -118,7 +118,20 @@ function addButtonsPagination(maxRegisterCounts,itemsPerPage,idDisciplina,idTopi
   }
 }
 
-btnResponderForum.addEventListener('click',function(){
+btnResponderForum.addEventListener('click',async function(){
+  let topicoSelected = document.querySelector("#topico-filter");
+  if(topicoSelected.value !=0){
+    let textTopico = topicoSelected.querySelector('option[value="'+topicoSelected.value+'"]').textContent;
+    const selectText = document.querySelector("#editor-1 #topico-filter");
+    selectText.innerHTML = '';
+    const option = document.createElement("option");
+    option.value = topicoSelected.value;
+    option.textContent = textTopico;
+    selectText.appendChild(option);
+  }else{
+    
+  }
+
   openModal(modalResponderForum);
 });
 
@@ -164,6 +177,5 @@ btnBuscarForumBtn.addEventListener('click',async()=>{
   let idDisciplina = document.getElementById("disciplina-filter").value;
   let idTopico = document.getElementById("topico-filter").value;
 
-  console.log(idDisciplina+" "+idTopico)
   await getForumByDisciplinaAndTopico(1,itemsPerPageValue,idDisciplina,idTopico)
 });
