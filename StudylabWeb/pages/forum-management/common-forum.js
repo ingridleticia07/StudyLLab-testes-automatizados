@@ -93,6 +93,9 @@ export function createForumRow(forum,page,usuario) {
     respostaForumColumn.textContent = forum.resposta;
     respostaForumColumn.style.display = 'none';
 
+    const usuarioColum = document.createElement("td");
+    usuarioColum.textContent = forum.usuario.nomeUsuario;
+
     const disciplinaColumn = document.createElement("td");
     disciplinaColumn.textContent = forum.topicoDiscussao.disciplina.nomeDisciplina;
     
@@ -100,6 +103,7 @@ export function createForumRow(forum,page,usuario) {
     row.appendChild(topicoColumn);
     row.appendChild(respostaForumColumn);
     row.appendChild(disciplinaColumn);
+    row.appendChild(usuarioColum);
   
     const actionColumn = document.createElement("td");
 

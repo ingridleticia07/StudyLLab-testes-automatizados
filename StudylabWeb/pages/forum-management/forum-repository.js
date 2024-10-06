@@ -1,8 +1,9 @@
 
 import { getAllDisciplinas} from "../../assets/js/lib/services/disciplina.js";
-import { getAllTopicosDisciplina} from "../../assets/js/lib/services/topico.js";
+import { getAllTopicosDisciplina,getAllTopicosDisciplinaByDisciplina} from "../../assets/js/lib/services/topico.js";
 
 const topicoFilter = document.querySelector("#topico-filter");
+const topicoFilterModal = document.querySelector("#topico-filter-modal");
 const disciplinaFilter = document.querySelector("#disciplina-filter");
 
 export function addDisciplinas(disciplinas){
@@ -35,10 +36,30 @@ export function addTopico(topicos){
     });
 }
 
+export function addTopicoForModal(topicosFilter){
+  
+    topicosFilter.forEach(optionData => {
+        const option = document.createElement('option');
+        option.value = optionData.idTopico;
+        option.text = optionData.nomeTopico;
+        topicoFilterModal.appendChild(option);
+    });
+}
+
 export async function copulateTopicoFilter(){
     try {
         const topicos = await getAllTopicosDisciplina();
         addTopico(topicos);
+
+    } catch (error) {
+        console.error("Error fetching user info:", error);
+    }
+}
+
+export async function copulateTopicoFilterByDisciplina(idDisciplina){
+    try {
+        const topicos = await getAllTopicosDisciplinaByDisciplina(idDisciplina);
+        addTopicoForModal(topicos);
 
     } catch (error) {
         console.error("Error fetching user info:", error);

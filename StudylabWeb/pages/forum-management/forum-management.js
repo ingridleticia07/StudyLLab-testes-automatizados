@@ -1,7 +1,7 @@
 import {getUserInfo} from "../../assets/js/lib/services/user.js";
 import {getForumByDisciplinaOrTopico,createRespostaForum} from "../../assets/js/lib/services/forum.js";
-import {copulateTopicoFilter, copulateDisciplinaFilter} from "./forum-repository.js";
-import {closeModal,editIcon,excluirIcon,openModal,showModal,createForumRow} from "./common-forum.js";
+import {copulateTopicoFilter, copulateDisciplinaFilter,copulateTopicoFilterByDisciplina} from "./forum-repository.js";
+import {closeModal,openModal,showModal,createForumRow} from "./common-forum.js";
 
 const tableBody = document.querySelector("#disciplina-table tbody");
 const btnResponderForum = document.querySelector("#cadastrar-forum-btn");
@@ -92,7 +92,7 @@ async function getForumByDisciplinaAndTopico(page,pageSize,idDisciplina,idTopico
     const forums = await getForumByDisciplinaOrTopico(page, pageSize,idDisciplina,idTopico);
     
     const { pageCount: countInPage, maxPage } = forums;
-    console.log(forums)
+    
     populateTable(forums.respostasForum,page,idDisciplina,idTopico);
     addButtonsPagination(maxPage,itemsPerPageValue,idDisciplina,idTopico);
   } catch (error) {
@@ -120,16 +120,22 @@ function addButtonsPagination(maxRegisterCounts,itemsPerPage,idDisciplina,idTopi
 
 btnResponderForum.addEventListener('click',async function(){
   let topicoSelected = document.querySelector("#topico-filter");
-  if(topicoSelected.value !=0){
-    let textTopico = topicoSelected.querySelector('option[value="'+topicoSelected.value+'"]').textContent;
-    const selectText = document.querySelector("#editor-1 #topico-filter");
+  let disciplinaSelected = document.querySelector("#disciplina-filter");
+  
+  const selectText = document.querySelector("#topico-filter-modal");
+  
+  if(selectText!=null){
     selectText.innerHTML = '';
+  }
+
+  if(topicoSelected.value != 0){
+    let textTopico = topicoSelected.querySelector('option[value="'+topicoSelected.value+'"]').textContent;
     const option = document.createElement("option");
     option.value = topicoSelected.value;
     option.textContent = textTopico;
     selectText.appendChild(option);
   }else{
-    
+    copulateTopicoFilterByDisciplina(disciplinaSelected.value);
   }
 
   openModal(modalResponderForum);
@@ -144,16 +150,17 @@ btnCadastrarResposta.addEventListener('click',async function(){
   const month = String(currentDate.getMonth() + 1).padStart(2, '0');
   const day = String(currentDate.getDate()).padStart(2, '0');
   const dateNow = `${year}-${month}-${day}`;
+  const topicoFilterModal = document.querySelector("#topico-filter-modal");
 
   usuario = await getUserInfo();
 
   const respostaForumDTO = {
     resposta:html,
     dataResposta:dateNow,
-    topicoDiscussao:8,
+    topicoDiscussao:topicoFilterModal.value,
     usuario:usuario.id
   };
-  alert(html.length)
+  
   await createRespostaForum(respostaForumDTO);
 
 });

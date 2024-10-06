@@ -7,6 +7,8 @@ namespace StudyLabAPI.Repositories;
 /// </summary>
 public interface ITopicoDiscussaoRepository
 {
+    public Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussaoByDisciplina(int idDisciplina);
+
     public Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussao();
     /// <summary>
     /// Recupera todos os topicos de discussão cadastrados

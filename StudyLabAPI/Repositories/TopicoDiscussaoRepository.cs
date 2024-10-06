@@ -15,6 +15,24 @@ namespace StudyLabAPI.Repositories
             _dbContextFactory = dbContextFactory;
         }
 
+        public async Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussaoByDisciplina(int idDisciplina)
+        {
+            var result = new List<TopicoDiscussaoModel>();
+
+            if (idDisciplina != 0)
+            {
+                result = await dbContext.discussao.Where(f => f.disciplina.idDisciplina == idDisciplina)
+                .AsNoTracking()
+                .ToListAsync();
+            }
+            else
+            {
+                result = await dbContext.discussao.ToListAsync();
+            }
+
+            return result;
+        }
+
         public async Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussao() =>
             await dbContext.discussao.Include(r => r.usuario).ToListAsync();
 

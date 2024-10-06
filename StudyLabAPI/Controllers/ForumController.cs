@@ -85,6 +85,13 @@ namespace StudyLabAPI.Controllers
             return topicosDiscussao;
         }
 
+        public async Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussaoByDisciplina(int idDisciplina)
+        {
+            List<TopicoDiscussaoModel?> topicosDiscussao = await topicoDiscussaoRepository.GetAllTopicosDiscussaoByDisciplina(idDisciplina);
+
+            return topicosDiscussao;
+        }
+
         public async Task<bool> VerifyTopicoDiscussaoExists(RegisteredTopicoDiscussaoRequestModel topicoDiscussao)
         {
             TopicoDiscussaoModel topicoDiscussaoModel = new()

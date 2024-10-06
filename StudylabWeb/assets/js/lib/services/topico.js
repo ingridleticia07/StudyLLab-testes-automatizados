@@ -22,6 +22,16 @@ export async function getAllTopicosDisciplina(page, pageSize) {
   return response.data;
 }
 
+export async function getAllTopicosDisciplinaByDisciplina(idDisciplina) {
+  let response = await instance.get(FORUM_ENDPOINT+
+    "/listarTopicosDiscussaoByDisciplina?idDisciplina="+idDisciplina);
+
+  if (response.status !== 200) {
+    return null;
+  }
+  return response.data;
+}
+
 export async function createTopico(topico) {
   let response = await instance.post(FORUM_ENDPOINT+"/criarTopicoDiscussao",{
     nomeTopico:topico.nomeTopico,

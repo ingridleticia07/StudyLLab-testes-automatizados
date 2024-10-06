@@ -11,6 +11,8 @@ namespace StudyLabAPI.Endpoints
         {
             builder.MapGet("listarTopicosDiscussao", GetAllTopicosDiscussao)
                 .WithOpenApi(ForumSummaries.ForumGetAllTopicosDiscussao);
+            builder.MapGet("listarTopicosDiscussaoByDisciplina", GetAllTopicosDiscussaoByDisciplina)
+                .WithOpenApi(ForumSummaries.ForumGetAllTopicosDiscussao);
             builder.MapGet("listarTopicosDiscussaoWithPagination", GetTopicosDiscussaoLimitedByPageAndPageSize)
                 .WithOpenApi(ForumSummaries.ForumGetAllTopicosDiscussao);
             builder.MapGet("listarRespostasForumByDisciplinaOrTopico", GetRespostaForumByDisciplinaOrTopico);
@@ -93,6 +95,25 @@ namespace StudyLabAPI.Endpoints
             try
             {
                 result = await controller.GetAllTopicosDiscussao();
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+
+            return Results.Ok(result);
+        }
+
+        [ProducesResponseType(typeof(List<TopicoDiscussaoModel>), 200)]
+        private static async Task<IResult> GetAllTopicosDiscussaoByDisciplina(HttpContext context,
+            [FromQuery] int idDisciplina,
+            [FromServices] IForumController controller)
+        {
+
+            List<TopicoDiscussaoModel>? result;
+            try
+            {
+                result = await controller.GetAllTopicosDiscussaoByDisciplina(idDisciplina);
             }
             catch (Exception e)
             {

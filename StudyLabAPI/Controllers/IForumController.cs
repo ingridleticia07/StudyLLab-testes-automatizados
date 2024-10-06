@@ -8,6 +8,8 @@ namespace StudyLabAPI.Controllers
 
         public Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussao();
 
+        public Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussaoByDisciplina(int idDisciplina);
+
         public Task<RespostaForumListResponse?> GetAllRespostasForumByDisciplinaOrTopico(int page, int pageSize, int? idDisciplina, int? idTopico);
 
         public Task<TopicoDiscussaoModel> CreateTopicoDiscussao(RegisteredTopicoDiscussaoRequestModel topicoDiscussao);
