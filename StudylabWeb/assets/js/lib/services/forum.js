@@ -13,6 +13,22 @@ export async function getForumByDisciplinaOrTopico(page, pageSize, idDisciplina,
     return response.data;
 }
 
+export async function createRespostaForum(respostaForumDTO) {
+  console.log(respostaForumDTO)
+  let response = await instance.post(FORUM_ENDPOINT+
+    "/cadastrarRespostaForum",{
+      resposta:respostaForumDTO.resposta,
+      dataResposta:respostaForumDTO.dataResposta,
+      topicoDiscussao:respostaForumDTO.topicoDiscussao,
+      usuario:respostaForumDTO.usuario
+    });
+      
+  if (response.status !== 200) {
+    return null;
+  }
+  return response.data;
+}
+
 export async function createTopico(topico) {
   let response = await instance.post(FORUM_ENDPOINT+"/criarTopicoDiscussao",{
     nomeTopico:topico.nomeTopico,

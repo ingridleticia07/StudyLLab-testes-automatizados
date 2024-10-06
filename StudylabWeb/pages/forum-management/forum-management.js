@@ -1,5 +1,5 @@
 import {getUserInfo} from "../../assets/js/lib/services/user.js";
-import {getForumByDisciplinaOrTopico} from "../../assets/js/lib/services/forum.js";
+import {getForumByDisciplinaOrTopico,createRespostaForum} from "../../assets/js/lib/services/forum.js";
 import {copulateTopicoFilter, copulateDisciplinaFilter} from "./forum-repository.js";
 import {closeModal,editIcon,excluirIcon,openModal,showModal,createForumRow} from "./common-forum.js";
 
@@ -13,6 +13,7 @@ const modalResponderForum = document.querySelector("#modal-responder-forum");
 const modalErroCadastrarTopico = document.querySelector("#modalErroAoCadastrarTopico");
 const modalErroEditarTopico = document.querySelector("#modalErroAoEditarTopico");
 const btnBuscarForumBtn = document.querySelector("#btn-buscar-forum");
+const btnCadastrarResposta = document.querySelector("#button-submit");
 const itemsPerPageValue = 5;
 var actualPage = 1;
 var usuario = null;
@@ -121,33 +122,27 @@ btnResponderForum.addEventListener('click',function(){
   openModal(modalResponderForum);
 });
 
+btnCadastrarResposta.addEventListener('click',async function(){
 
-btnSubmitTopico.addEventListener('click',async function(e){
-  const formCadastrarDisciplina = modalCadastrarTopico.querySelector('form');
-  let nomeTopico = formCadastrarDisciplina.querySelector('#nomeTopico').value;
-  let disciplina = formCadastrarDisciplina.querySelector('#select-disciplina').value;
-  
+  const html = $("#editor-1").find('.editorAria').html();
+
   const currentDate = new Date();
   const year = currentDate.getFullYear();
   const month = String(currentDate.getMonth() + 1).padStart(2, '0');
   const day = String(currentDate.getDate()).padStart(2, '0');
   const dateNow = `${year}-${month}-${day}`;
 
-  const topicoDTO = {
-    nomeTopico:nomeTopico,
-    dataTopico:dateNow,
-    disciplina:disciplina,
-    idUsuario: usuario.id
-  };
+  usuario = await getUserInfo();
 
-   try{
-     await createTopico(topicoDTO);
-     getTopicosInfo(1,itemsPerPageValue);
-     closeModal(modalCadastrarTopico);
-   }catch(e){
-    getTopicosInfo(1,itemsPerPageValue);
-    showModal(modalErroCadastrarTopico);
-   }
+  const respostaForumDTO = {
+    resposta:html,
+    dataResposta:dateNow,
+    topicoDiscussao:8,
+    usuario:usuario.id
+  };
+  alert(html.length)
+  await createRespostaForum(respostaForumDTO);
+
 });
 
 document.querySelectorAll('.fechar').forEach(function(botao) {

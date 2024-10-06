@@ -30,7 +30,7 @@ $(function () {
               //console.log(command + " " + url);
               document.execCommand($(this).data('command'), false, url);
         // document.execCommand($(this).data('command') && 'enableObjectResizing', false, url);
-      } else document.execCommand($(this).data('command'), false, url);
+      } else document.execCommand($(this).data('command'), false);
     });
       $('.editorAria img').click(function(){
         document.execCommand('enableObjectResizing', false);
