@@ -4,12 +4,12 @@ import {copulateTopicoFilter, copulateDisciplinaFilter} from "./forum-repository
 import {closeModal,editIcon,excluirIcon,openModal,showModal,createForumRow} from "./common-forum.js";
 
 const tableBody = document.querySelector("#disciplina-table tbody");
-const btnCadastrarTopico = document.querySelector("#cadastrar-btn");
+const btnResponderForum = document.querySelector("#cadastrar-forum-btn");
 const btnSubmitTopico = document.querySelector("#button-submit");
 const modalExcluirTopico = document.querySelector("#modal-excluir-topico");
 const modalExcluirTopicoWarning = document.querySelector("#modal-excluir-warning");
 const confirmDeleteButton = document.querySelector("#modal-excluir-topico .confirmar");
-const modalCadastrarTopico = document.querySelector("#modal-cadastrar-topico");
+const modalResponderForum = document.querySelector("#modal-responder-forum");
 const modalErroCadastrarTopico = document.querySelector("#modalErroAoCadastrarTopico");
 const modalErroEditarTopico = document.querySelector("#modalErroAoEditarTopico");
 const btnBuscarForumBtn = document.querySelector("#btn-buscar-forum");
@@ -117,8 +117,8 @@ function addButtonsPagination(maxRegisterCounts,itemsPerPage,idDisciplina,idTopi
   }
 }
 
-btnCadastrarTopico.addEventListener('click',function(){
-  openModal(modalCadastrarTopico);
+btnResponderForum.addEventListener('click',function(){
+  openModal(modalResponderForum);
 });
 
 
