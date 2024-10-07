@@ -6,7 +6,7 @@ export async function getForumByDisciplinaOrTopico(page, pageSize, idDisciplina,
     let response = await instance.get(FORUM_ENDPOINT+
       "/listarRespostasForumByDisciplinaOrTopico?page="+page+
       "&pageSize="+pageSize+"&idDisciplina="+idDisciplina+"&idTopico="+idTopico+"");
-        console.log(idDisciplina+" "+idTopico);
+        
     if (response.status !== 200) {
       return null;
     }
@@ -14,7 +14,7 @@ export async function getForumByDisciplinaOrTopico(page, pageSize, idDisciplina,
 }
 
 export async function createRespostaForum(respostaForumDTO) {
-  console.log(respostaForumDTO)
+  
   let response = await instance.post(FORUM_ENDPOINT+
     "/cadastrarRespostaForum",{
       resposta:respostaForumDTO.resposta,
@@ -60,6 +60,16 @@ export async function updateTopico(topico) {
 export async function deleteTopicoDisciplina(idTopico) {
   console.log(idTopico)
   let response = await instance.delete(FORUM_ENDPOINT+"/deletarTopicoDiscussao?idTopicoDiscussao="+idTopico);
+
+  if (response.status !== 200) {
+    return null;
+  }
+  return response.data;
+}
+
+export async function deleteRespostaForum(idResposta) {
+  
+  let response = await instance.delete(FORUM_ENDPOINT+"/DeletarRespostaForum?idRespostaForum="+idResposta);
 
   if (response.status !== 200) {
     return null;

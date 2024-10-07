@@ -292,9 +292,9 @@ namespace StudyLabAPI.Controllers
             return (NewRespostaForum);
         }
 
-        public async Task DeleteRespostaForum(RespostaForumModel respostaForum)
+        public async Task DeleteRespostaForum(int idRespostaForum)
         {
-            await respostaforumRepository.DeleteRespostaForum(respostaForum.idResposta);
+            await respostaforumRepository.DeleteRespostaForum(idRespostaForum);
             await respostaforumRepository.Flush();
         }
 

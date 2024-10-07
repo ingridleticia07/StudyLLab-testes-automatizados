@@ -1,6 +1,7 @@
 
 import { getAllDisciplinas} from "../../assets/js/lib/services/disciplina.js";
 import { getAllTopicosDisciplina,getAllTopicosDisciplinaByDisciplina} from "../../assets/js/lib/services/topico.js";
+import {deleteRespostaForum} from "../../assets/js/lib/services/forum.js";
 
 const topicoFilter = document.querySelector("#topico-filter");
 const topicoFilterModal = document.querySelector("#topico-filter-modal");
@@ -56,10 +57,20 @@ export async function copulateTopicoFilter(){
     }
 }
 
+
 export async function copulateTopicoFilterByDisciplina(idDisciplina){
     try {
         const topicos = await getAllTopicosDisciplinaByDisciplina(idDisciplina);
         addTopicoForModal(topicos);
+
+    } catch (error) {
+        console.error("Error fetching user info:", error);
+    }
+}
+
+export async function excluirRespostaForum(idResposta){
+    try {
+        await deleteRespostaForum(idResposta);
 
     } catch (error) {
         console.error("Error fetching user info:", error);

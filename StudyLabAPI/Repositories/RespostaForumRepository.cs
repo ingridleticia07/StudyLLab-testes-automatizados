@@ -120,7 +120,7 @@ namespace StudyLabAPI.Repositories
                 result = await inDbContext.respostaForum
                 .AsNoTracking()
                 .Where(f => f.topicoDiscussao.idTopico == idTopico && f.topicoDiscussao.disciplina.idDisciplina == idDisciplina)
-                .OrderByDescending(f => f.dataResposta)
+                .OrderByDescending(f => f.idResposta)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Include(f => f.topicoDiscussao)
@@ -133,7 +133,7 @@ namespace StudyLabAPI.Repositories
                 result = await inDbContext.respostaForum
                 .AsNoTracking()
                 .Where(f => f.topicoDiscussao.idTopico == idTopico || f.topicoDiscussao.disciplina.idDisciplina == idDisciplina)
-                .OrderByDescending(f => f.dataResposta)
+                .OrderByDescending(f => f.idResposta)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Include(f => f.topicoDiscussao)
@@ -146,7 +146,7 @@ namespace StudyLabAPI.Repositories
             {
                 result = await inDbContext.respostaForum
                 .AsNoTracking()
-                .OrderByDescending(f => f.dataResposta)
+                .OrderByDescending(f => f.idResposta)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Include(f => f.topicoDiscussao)

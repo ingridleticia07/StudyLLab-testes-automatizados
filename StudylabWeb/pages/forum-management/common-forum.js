@@ -1,7 +1,17 @@
+import {getUserInfo} from "../../assets/js/lib/services/user.js";
+import {deleteRespostaForum} from "../../assets/js/lib/services/forum.js";
+import {getForumByDisciplinaOrTopico,createRespostaForum} from "../../assets/js/lib/services/forum.js";
 
-const modalExcluirTopico = document.querySelector("#modal-excluir-topico");
 const modalEditarTopico = document.querySelector("#modal-editar-topico");
 const modalRespostaForum = document.querySelector("#modal-resposta-forum");
+const modalExcluirResposta = document.querySelector("#modal-excluir-resposta");
+const confirmDeleteButton = document.querySelector("#modal-excluir-resposta .confirmar");
+const tableBody = document.querySelector("#disciplina-table tbody");
+const modalResponderForum = document.querySelector("#modal-responder-forum");
+
+var usuario = null;
+var actualPage = 1;
+const itemsPerPageValue = 5;
 
 export function openModal(elemento) {
     elemento.style.display = "flex";
@@ -22,6 +32,23 @@ export function showModal(modalElement) {
         }, 200); 
     }, 3000);
 }
+
+export function openDeleteModal(idResposta,page,idDisciplina,idTopico) {
+    openModal(modalExcluirResposta);
+    console.log(page,idDisciplina,idTopico);
+    confirmDeleteButton.onclick = async function() {
+  
+        closeModal(modalExcluirResposta);
+    
+        try{
+            await deleteRespostaForum(idResposta);
+    
+            getForumByDisciplinaAndTopico(actualPage,itemsPerPageValue,0,0);
+        }catch(e){
+            showModal(modalExcluirTopicoWarning);
+        }
+    };
+};
 
 export const viewIcon = () => {
     const editIcon = document.createElement("img");
@@ -47,20 +74,60 @@ export const excluirIcon = () => {
     return excluirIcon;
 };
 
-export function openDeleteModal(topicoId,page) {
-openModal(modalExcluirTopico);
-
-confirmDeleteButton.onclick = async function() {
-    closeModal(modalExcluirTopico);
-        try{
-            await deleteTopicoDisciplina(topicoId);
-
-            //getTopicosInfo(page,itemsPerPageValue);
-        }catch(e){
-            showModal(modalExcluirTopicoWarning);
-        }
-    };
+export async function registerRespostaForum(respostaForumDTO) {
+    try {
+      
+      await createRespostaForum(respostaForumDTO);
+      
+      getForumByDisciplinaAndTopico(actualPage,itemsPerPageValue,0,0);
+      closeModal(modalResponderForum);
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+    }
 }
+
+export async function getForumByDisciplinaAndTopico(page,pageSize,idDisciplina,idTopico) {
+    try {
+  
+      usuario = await getUserInfo();
+      
+      const forums = await getForumByDisciplinaOrTopico(page, pageSize,idDisciplina,idTopico);
+      
+      const { pageCount: countInPage, maxPage } = forums;
+      
+      populateTable(forums.respostasForum,page,usuario);
+      addButtonsPagination(maxPage,itemsPerPageValue,idDisciplina,idTopico);
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+    }
+}
+
+export const populateTable = (forums,page,usuario,getForumByDisciplinaAndTopico) => {
+  
+    tableBody.innerHTML = ""; // Clear existing rows
+    forums.forEach((forum) => {
+      const row = createForumRow(forum,page,usuario,getForumByDisciplinaAndTopico);
+      tableBody.appendChild(row);
+    });
+};
+
+export function addButtonsPagination(maxRegisterCounts,itemsPerPage,idDisciplina,idTopico){
+    const paginationContainer = document.querySelector('body .pagination');
+    
+    paginationContainer.innerHTML = '';
+  
+    for (let i = 1; i <= maxRegisterCounts; i++) {
+        const button = document.createElement('button');
+        button.textContent = i;
+        button.addEventListener('click', function() {
+            document.querySelectorAll('.pagination button').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            getForumByDisciplinaAndTopico(i, itemsPerPage,idDisciplina,idTopico);
+            actualPage = i;
+        });
+        paginationContainer.appendChild(button);
+    }
+  }
 
 export function copulateModalRespostaForum(data){
     let textAreaResposta = modalRespostaForum.querySelector("#editor-2 .editorAria");
@@ -139,7 +206,7 @@ export function createForumRow(forum,page,usuario) {
       excluirForumBtn.classList.add("bloquear");
       
       excluirForumBtn.addEventListener('click',async function(e){
-        openDeleteModal(forum.idForum, page);
+        openDeleteModal(forum.idResposta, page, forum.topicoDiscussao.disciplina.idDisciplina,forum.topicoDiscussao.idTopico);
       });
       
       actionColumn.appendChild(editarForumBtn);

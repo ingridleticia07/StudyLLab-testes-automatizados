@@ -32,7 +32,7 @@ namespace StudyLabAPI.Controllers
 
         public Task<RespostaForumModel> UpdateRespostaForum(RegisteredRespostaForumModel respostaForum);
 
-        public Task DeleteRespostaForum(RespostaForumModel respostaForum);
+        public Task DeleteRespostaForum(int idRespostaForum);
 
         public Task<ForumModel> CreateForum(ResgisteredForumModel respostaForum);
 

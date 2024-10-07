@@ -267,19 +267,19 @@ namespace StudyLabAPI.Endpoints
         
         [ProducesResponseType(typeof(RespostaForumModel), 200)]
         private static async Task<IResult> DeleteRespostaForum(HttpContext context,
-        [FromBody] RespostaForumModel respostaForumModel,
+        [FromQuery] int idRespostaForum,
         [FromServices] IForumController controller)
         {
             try
             {
-                await controller.DeleteRespostaForum(respostaForumModel);
+                await controller.DeleteRespostaForum(idRespostaForum);
             }
             catch (Exception e)
             {
                 return Results.BadRequest(e.Message);
             }
 
-            return Results.Ok(respostaForumModel);
+            return Results.Ok(idRespostaForum);
         }
         
         [ProducesResponseType(typeof(ResgisteredForumModel), 200)]
