@@ -1,8 +1,9 @@
 import {getUserInfo} from "../../assets/js/lib/services/user.js";
-import {deleteRespostaForum} from "../../assets/js/lib/services/forum.js";
+import {deleteRespostaForum,changeRespostaForum} from "../../assets/js/lib/services/forum.js";
 import {getForumByDisciplinaOrTopico,createRespostaForum} from "../../assets/js/lib/services/forum.js";
 
-const modalEditarTopico = document.querySelector("#modal-editar-topico");
+const modalEditarRespostaForum = document.querySelector("#modal-editar-resposta-forum");
+const btnSaveChanges = modalEditarRespostaForum.querySelector("#button-submit");
 const modalRespostaForum = document.querySelector("#modal-resposta-forum");
 const modalExcluirResposta = document.querySelector("#modal-excluir-resposta");
 const confirmDeleteButton = document.querySelector("#modal-excluir-resposta .confirmar");
@@ -35,7 +36,7 @@ export function showModal(modalElement) {
 
 export function openDeleteModal(idResposta,page,idDisciplina,idTopico) {
     openModal(modalExcluirResposta);
-    console.log(page,idDisciplina,idTopico);
+    
     confirmDeleteButton.onclick = async function() {
   
         closeModal(modalExcluirResposta);
@@ -92,7 +93,7 @@ export async function getForumByDisciplinaAndTopico(page,pageSize,idDisciplina,i
       usuario = await getUserInfo();
       
       const forums = await getForumByDisciplinaOrTopico(page, pageSize,idDisciplina,idTopico);
-      
+
       const { pageCount: countInPage, maxPage } = forums;
       
       populateTable(forums.respostasForum,page,usuario);
@@ -134,16 +135,40 @@ export function copulateModalRespostaForum(data){
     textAreaResposta.innerHTML = data.resposta;
 }
 
-export function copulateModalTopico(data){
+export function copulateModalAndChangeRespostaForum(data){
 
-    let idDisciplina = modalEditarTopico.querySelector("#select-disciplina");
-    idDisciplina.value = data.disciplina.idDisciplina;
-  
-    let topico = modalEditarTopico.querySelector("#nome-topico");
-    topico.value = data.nomeTopico;
-  
-    let idTopico = modalEditarTopico.querySelector("#id-topico");
-    idTopico.value = data.idTopico;
+    let textAreaResposta = modalEditarRespostaForum.querySelector("#editor-3 .editorAria");
+    textAreaResposta.innerHTML = data.resposta;
+
+    btnSaveChanges.onclick = async function() {
+        const html = $("#editor-3").find('.editorAria').html();
+
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const dateNow = `${year}-${month}-${day}`;
+
+        usuario = await getUserInfo();
+
+        const respostaForumDTO = {
+            idResposta:data.idResposta,
+            resposta:html,
+            dataResposta:dateNow,
+            topicoDiscussao:data.topicoDiscussao.idTopico,
+            usuario:data.usuario.idUsuario
+        };
+
+        closeModal(modalEditarRespostaForum);
+    
+        try{
+            await changeRespostaForum(respostaForumDTO);
+    
+            getForumByDisciplinaAndTopico(actualPage,itemsPerPageValue,0,0);
+        }catch(e){
+            showModal(modalExcluirTopicoWarning);
+        }
+    };
 }
 
 export function createForumRow(forum,page,usuario) {
@@ -195,8 +220,8 @@ export function createForumRow(forum,page,usuario) {
       editarForumBtn.classList.add("bloquear");
       
       editarForumBtn.addEventListener("click", function() {
-          openModal(modalEditarTopico);
-          copulateModalAndChangeTopico(forum);
+          openModal(modalEditarRespostaForum);
+          copulateModalAndChangeRespostaForum(forum);
       });
   
       const excluirForumBtn = document.createElement("button");

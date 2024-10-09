@@ -29,6 +29,23 @@ export async function createRespostaForum(respostaForumDTO) {
   return response.data;
 }
 
+export async function changeRespostaForum(respostaForumDTO) {
+  
+  let response = await instance.put(FORUM_ENDPOINT+
+    "/AtualizarRespostaForum",{
+      idResposta:respostaForumDTO.idResposta,
+      resposta:respostaForumDTO.resposta,
+      dataResposta:respostaForumDTO.dataResposta,
+      topicoDiscussao:respostaForumDTO.topicoDiscussao,
+      usuario:respostaForumDTO.usuario
+    });
+      
+  if (response.status !== 200) {
+    return null;
+  }
+  return response.data;
+}
+
 export async function createTopico(topico) {
   let response = await instance.post(FORUM_ENDPOINT+"/criarTopicoDiscussao",{
     nomeTopico:topico.nomeTopico,

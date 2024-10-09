@@ -155,7 +155,27 @@ namespace StudyLabAPI.Repositories
                 .ToListAsync();
             }
 
-            return result;
+            return result.Select(resposta => new RespostaForumModel
+            {
+                idResposta = resposta.idResposta,
+                resposta = resposta.resposta,
+                dataResposta = resposta.dataResposta,
+                topicoDiscussao = resposta.topicoDiscussao,
+                usuario = new UsuarioModel
+                {
+                    idUsuario = resposta.usuario.idUsuario,
+                    emailUsuario = null,
+                    matricula = null,
+                    senhaUsuario = null,
+                    statusUsuario = false,
+                    tipoUsuario = default,
+                    curso = null,
+                    nomeUsuario = null,
+                    dataCadastroUsuario = default,
+                    imagemUsuario = null
+                }
+                // Include other properties from RespostaForumModel as needed
+            }).ToList();
         }
 
         public async Task<(IList<RespostaForumModel>, int, int)> GetRespostaForumAndCount(int page, int pageSize, int? idDisciplina, int? idTopico)
