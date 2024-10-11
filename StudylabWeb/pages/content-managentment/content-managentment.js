@@ -1,7 +1,5 @@
 const modalExc = document.getElementById("modal-excluir");
-const modalBan = document.getElementById("modal-banir");
 const deleteButtons = document.querySelectorAll(".deletar");
-const banButtons = document.querySelectorAll(".banir");
 var modal = document.getElementById("modalConfirmacao");
 
 function openModal(elemento) {
@@ -18,14 +16,6 @@ deleteButtons.forEach(function(botao) {
         openModal(modalExc);
     });
 });
-
-banButtons.forEach(function(botao) {
-  botao.addEventListener("click", function() {
-      console.log("Botão de banir clicado!");
-      openModal(modalBan);
-  });
-});
-
 
 document.querySelectorAll('.fechar').forEach(function(botao) {
   botao.addEventListener("click", function() {
@@ -75,8 +65,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
   filterButton.addEventListener("click", function(event) {
     dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
-    allFilterOptions.forEach(option => option.style.display = "none"); // Fechar outros submenus quando o menu principal é aberto
-    event.stopPropagation(); // Impede que o evento de clique se propague para o window
+    allFilterOptions.forEach(option => option.style.display = "none"); 
+    event.stopPropagation(); 
   });
 
   document.querySelectorAll('.dropdown-item').forEach(item => {
@@ -92,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
       });
 
-      event.stopPropagation(); // Impede que o evento de clique se propague para o window
+      event.stopPropagation(); 
     });
   });
 
@@ -108,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function() {
 document.addEventListener('DOMContentLoaded', (event) => {
   const selectAllCheckbox = document.getElementById('select-all');
   selectAllCheckbox.addEventListener('change', function() {
-    const userCheckboxes = document.querySelectorAll('.content-table tbody input[type="checkbox"]');
+    const userCheckboxes = document.querySelectorAll('.table tbody input[type="checkbox"]');
     userCheckboxes.forEach((checkbox) => {
       checkbox.checked = this.checked;
     });

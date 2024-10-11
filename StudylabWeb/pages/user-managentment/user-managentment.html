@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StudyLab</title>
     <link rel="stylesheet" href="user-managentment.css" />
+    <link rel="stylesheet" href="../../assets/global/global.css" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   </head>
 
@@ -85,11 +86,11 @@
           <p>Página Inicial > Gerenciamento de Usuários</p>
         </div>
         <main class="content">
-          <div class="user-managentment">
+          <div class="managentment">
             <H1>Usuários</H1>
             <div>
               <br><br>
-              <table class="user-table" id="user-table">
+              <table class="table" id="user-table">
                 <thead>
                   <tr>
                     <th><input type="checkbox" name="select-all" id="select-all"></th>
@@ -101,7 +102,19 @@
                   </tr>
                 </thead>
                 <tbody>
-                  
+                <!----
+                  <tr>
+                    <td><input type="checkbox" name="user"></td>
+                    <td>493782</td>
+                    <td>Alicia Santos</td>
+                    <td>Engenharia de Software</td>
+                    <td>aliciasantos@algum-email.br</td>
+                    <td>
+                      <button class="action-button"><img src="../../assets/img/icon-edit.svg" alt="Bloquear"></button>
+                      <button class="action-button"><img src="../../assets/img/icon-delete.svg" alt="Excluir"></button>
+                    </td>
+                  </tr> 
+                  -->
                 </tbody>  <!-- usuarios -->
               </table>
             </div>
@@ -159,7 +172,8 @@
         <p><img class="checkmark" src="../../assets/img/icon-check.svg"><sup> Usuário banido!  |  <a href="#" class="desfazer">  Desfazer</a></sup></p>
       </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="module" src="user-managentment.js"></script>
+    <script type="module" src="../../assets/global/global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </body>
 </html>
