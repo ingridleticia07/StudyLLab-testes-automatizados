@@ -24,5 +24,12 @@ namespace StudyLabAPI.Models
         [ForeignKey("fk_topico")]
 
         public TopicoDiscussaoModel topico { get; set; }
+
+        [Column("tipo_arquivo")]
+        public tipoArquivo tipoArquivo { get; set; }
+
+        [ForeignKey("usuario")]
+        public UsuarioModel usuario { get; set; }
+
     }
 }
