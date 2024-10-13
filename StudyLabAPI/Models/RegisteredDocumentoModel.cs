@@ -3,16 +3,18 @@ using StudyLabAPI.Models.Enums;
 
 namespace StudyLabAPI.Models
 {
-    public class RegisteredDocumentoModel : Controller
+    public class RegisteredDocumentoModel
     {
         public int idDocumento { get; set; }
-
-        public DateOnly dataCadastro { get; set; }
 
         public string diretorioMaterial { get; set; }
 
         public tipoMaterialEnum TipoMaterial { get; set; }
 
         public int Idtopico { get; set; }
+
+        public tipoArquivo tipoArquivo { get; set; }
+
+        public int IdUsuario { get; set; }
     }
 }

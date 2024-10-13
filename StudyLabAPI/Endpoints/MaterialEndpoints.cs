@@ -15,12 +15,13 @@ namespace StudyLabAPI.Endpoints
         }
 
         private static async Task<IResult> CreateDocumento(HttpContext context,
-        [FromBody] RegisteredDocumentoModel novoDocumento,
+        [FromForm] RegisteredDocumentoModel novoDocumento,
+        [FromForm] IFormFile file,
         [FromServices] IDocumentoController controller)
         {
             try
             {
-                await controller.CreateDocumento(novoDocumento);
+                await controller.CreateDocumento(novoDocumento,file);
             }
             catch (Exception e)
             {

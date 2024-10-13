@@ -4,7 +4,7 @@ namespace StudyLabAPI.Controllers
 {
     public interface IDocumentoController
     {
-        public Task<DocumentoModel?> CreateDocumento(RegisteredDocumentoModel documento);
+        public Task<DocumentoModel?> CreateDocumento(RegisteredDocumentoModel documento, IFormFile file);
 
         public Task<DocumentoModel?> UpdateDocumento(RegisteredDocumentoModel documentoUpdate);
 

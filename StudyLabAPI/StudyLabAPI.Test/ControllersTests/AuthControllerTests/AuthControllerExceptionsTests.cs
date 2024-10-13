@@ -41,24 +41,6 @@ public class AuthControllerExceptionsTests
         IValidator<ConfirmUserEmailRequestModel> confirmUserEmailRequestModelValidator = new ConfirmUserEmailRequestModelValidator();
         IValidator<ResetUserPasswordRequestModel> resetUserPasswordRequestModelValidator = new ResetUserPasswordRequestModelValidator();
         
-        authController = new(
-            usuarioRepositoryMock.Object,
-            cursoRepositoryMock.Object,
-            codigoUsuarioRepositoryMock.Object,
-            usuarioModelMapper,
-            registerUserRequestModelMapper,
-            codigoUsuarioModelMapper,
-            resetUserPasswordRequestModelMapper,
-            jwtServiceMock.Object,
-            emailServiceMock.Object,
-            hashServiceMock.Object,
-            registerUserRequestModelValidator,
-            userLoginRequestModelValidator,
-            resetUserPasswordRequestModelValidator,
-            confirmUserEmailRequestModelValidator,
-            loggerMock.Object
-        );
-        
         fakeData = new();
     }
 

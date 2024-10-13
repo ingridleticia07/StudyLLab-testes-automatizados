@@ -1,5 +1,6 @@
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Antiforgery;
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Mapper;
 using StudyLabAPI.Models;
@@ -21,6 +22,7 @@ namespace StudyLabAPI.Controllers;
 /// </summary>
 public class AuthController : IAuthController
 {
+    private readonly IAntiforgery _antiforgery;
     private IUsuarioRepository usuarioRepository { get; }
     private ICursoRepository cursoRepository { get; }
     private ICodigoUsuarioRepository codigoUsuarioRepository { get; }
@@ -43,8 +45,9 @@ public class AuthController : IAuthController
         ResetUserPasswordRequestModelMapper resetUserPasswordRequestModelMapper, IJwtService jwtService, IEmailService emailService, IHashService hashService, 
         IValidator<RegisterUserRequestModel> registerUserRequestModelValidator, IValidator<UserLoginRequestModel> userLoginRequestModelValidator, 
         IValidator<ResetUserPasswordRequestModel> resetUserPasswordRequestModelValidator, IValidator<ConfirmUserEmailRequestModel> confirmUserEmailRequestModelValidator, 
-        ILogger logger)
+        ILogger logger, IAntiforgery antiforgery)
     {
+        _antiforgery = antiforgery;
         this.usuarioRepository = usuarioRepository;
         this.cursoRepository = cursoRepository;
         this.codigoUsuarioRepository = codigoUsuarioRepository;
@@ -150,7 +153,7 @@ public class AuthController : IAuthController
     /// Regras: <seealso cref="UserLoginRequestModelValidator"/>.</exception>
     /// <exception cref="UsuarioNotFoundException"></exception>
     /// <exception cref="InvalidLoginPasswordException"></exception>
-    public async Task<(UserReadModel, string)> LoginUser(UserLoginRequestModel userLoginRequestModel)
+    public async Task<(UserReadModel, string, string)> LoginUser(UserLoginRequestModel userLoginRequestModel, HttpContext? httpContext = null)
     {
         logger.Information("Validando campos da requisição de login para Email[{UserEmail}]",
             userLoginRequestModel.email);
@@ -188,9 +191,14 @@ public class AuthController : IAuthController
         logger.Information("Gerando token de autenticação para ID[{ID}]",
             usuarioModel.idUsuario);
         UserReadModel userReadModel = usuarioModelMapper.UsuarioModelToUserReadModel(usuarioModel);
+
         string jwtUser = jwtService.GenerateJwt(new(userReadModel.id.ToString(), userReadModel.role));
-        
-        return (userReadModel, jwtUser);
+
+        _antiforgery.GetAndStoreTokens(httpContext);
+
+        var tokens = _antiforgery.GetAndStoreTokens(httpContext);
+
+        return (userReadModel, jwtUser, tokens.RequestToken);
     }
     
     /// <summary>

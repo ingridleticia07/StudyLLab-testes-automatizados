@@ -28,7 +28,7 @@ namespace StudyLabAPI.Models
         [Column("tipo_arquivo")]
         public tipoArquivo tipoArquivo { get; set; }
 
-        [ForeignKey("usuario")]
+        [ForeignKey("fk_usuario")]
         public UsuarioModel usuario { get; set; }
 
     }

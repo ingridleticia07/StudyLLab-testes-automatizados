@@ -63,14 +63,15 @@ public static class AuthAnonEndpoints
     /// <returns>Resposta da requisição.</returns>
     /// <permission cref="AuthorizationPolicies">Requisições não autenticadas são autorizadas.</permission>
     async private static Task<IResult> AuthLoginEndpointHandler(
-        HttpContext _,
+        HttpContext _httpContext,
         [FromBody] UserLoginRequestModel loginRequestModel,
         [FromServices] IAuthController controller)
     {
         string jwtUser;
+        string antiFogeryToken;
         try
         {
-            (UserReadModel _, jwtUser) = await controller.LoginUser(loginRequestModel);
+            (UserReadModel _, jwtUser, antiFogeryToken) = await controller.LoginUser(loginRequestModel, _httpContext);
         }
         catch (UsuarioNotFoundException e)
         {

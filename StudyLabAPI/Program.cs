@@ -34,6 +34,11 @@ builder.Services.AddStorageServices()
 
 builder.Services.AddAuth();
 
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "X-CSRF-TOKEN";
+});
+
 WebApplication app = builder.Build();
 
 if(app.Environment.IsDevelopment())
@@ -48,6 +53,8 @@ app
     .UseCors()
     .UseAuthentication()
     .UseAuthorization();
+
+app.UseAntiforgery();
 
 RouteGroupBuilder authGroup = app.MapGroup("auth")
     .AddEndpointFilter<ApiKeyFilter>()

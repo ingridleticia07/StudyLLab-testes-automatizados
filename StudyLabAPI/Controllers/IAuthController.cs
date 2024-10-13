@@ -39,7 +39,7 @@ public interface IAuthController
     /// <param name="userLoginRequestModel">Informações de um usuário já cadastrado.</param>
     /// <returns>Representa uma tarefa assíncrona, ela retorna uma tupla com as informações referentes ao usuário
     /// e um JWT válido</returns>
-    public Task<(UserReadModel, string)> LoginUser(UserLoginRequestModel userLoginRequestModel);
+    public Task<(UserReadModel, string, string)> LoginUser(UserLoginRequestModel userLoginRequestModel, HttpContext? httpContext);
     /// <summary>
     /// Usa o código de confirmação em <paramref name="confirmUserEmailRequestModel"/> para confirmar o email,
     /// se o código não for valido, a confirmação não acontecerá.
