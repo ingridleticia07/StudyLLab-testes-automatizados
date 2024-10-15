@@ -78,7 +78,7 @@ namespace StudyLabAPI.Controllers
             string newFileName = $"document_{Guid.NewGuid()}{fileExtension}"; // Generate a unique file name
 
             // Define the destination directory
-            string destinationDirectory = Path.Combine("..", "StudylabWeb", "documents");
+            string destinationDirectory = Path.Combine("wwwroot", "documents");
 
             // Ensure the destination directory exists
             Directory.CreateDirectory(destinationDirectory); // Create directory if it doesn't exist

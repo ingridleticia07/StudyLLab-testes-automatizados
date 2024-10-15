@@ -56,6 +56,8 @@ app
 
 app.UseAntiforgery();
 
+app.UseStaticFiles();
+
 RouteGroupBuilder authGroup = app.MapGroup("auth")
     .AddEndpointFilter<ApiKeyFilter>()
     .RequireCors(CorsPoliciesName.ALLOW_ALL_CORS_POLICY)
