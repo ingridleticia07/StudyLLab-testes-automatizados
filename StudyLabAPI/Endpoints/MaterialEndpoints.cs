@@ -11,6 +11,8 @@ namespace StudyLabAPI.Endpoints
         {
             builder.MapPost("cadastrarDocumento", CreateDocumento)
                 .WithOpenApi(MaterialSummaries.CreateDocumento);
+            builder.MapGet("ListarDocumentosWithPagination", ListarDocumentosWithPagination)
+                .WithOpenApi(MaterialSummaries.CreateDocumento);
             return builder;
         }
 
@@ -29,6 +31,27 @@ namespace StudyLabAPI.Endpoints
             }
 
             return Results.Ok(novoDocumento);
+        }
+
+        private static async Task<IResult> ListarDocumentosWithPagination(HttpContext context,
+            [FromQuery] int page,
+            [FromQuery] int pageSize,
+            [FromQuery] int idDisciplina,
+            [FromQuery] int idTopico,
+            [FromServices] IDocumentoController controller)
+        {
+
+            DocumentoListResponse? result;
+            try
+            {
+                result = await controller.GetAllDocumentosByDisciplinaOrTopico(page, pageSize, idDisciplina, idTopico);
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+
+            return Results.Ok(result);
         }
     }
 }

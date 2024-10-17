@@ -1,5 +1,8 @@
-﻿using StudyLabAPI.Models;
+﻿using StudyLabAPI.Exceptions;
+using StudyLabAPI.Mapper;
+using StudyLabAPI.Models;
 using StudyLabAPI.Repositories;
+using StudyLabAPI.Validators.CustomValidators.RequestQuery;
 using ILogger = Serilog.ILogger;
 
 namespace StudyLabAPI.Controllers
@@ -20,11 +23,15 @@ namespace StudyLabAPI.Controllers
 
         private IDocumentoRepository documentoRepository { get; }
 
-        public DocumentoController(ITopicoDiscussaoRepository topicoDiscussaoRepository,
+        private readonly DocumentoModelMapper _documentoModelMapper;
+
+        public DocumentoController(DocumentoModelMapper
+            documentoModelMapper,ITopicoDiscussaoRepository topicoDiscussaoRepository,
             IDisciplinaRepository DisciplinaRepository, IUsuarioRepository usuarioRepository,
             IRespostaForumRepository respostaForumRepository, IForumRepository forumRepository,
             IDocumentoRepository documentoRepository, ILogger logger)
         {
+            this._documentoModelMapper = documentoModelMapper;
             this.topicoDiscussaoRepository = topicoDiscussaoRepository;
             this.DisciplinaRepository = DisciplinaRepository;
             this.usuarioRepository = usuarioRepository;
@@ -141,6 +148,46 @@ namespace StudyLabAPI.Controllers
             await documentoRepository.Flush();
 
             return (documentoUpdateObj);
+        }
+
+        public async Task<DocumentoListResponse> GetAllDocumentosByDisciplinaOrTopico(int page, int pageSize, int? idDisciplina, int? idTopico)
+        {
+            logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
+            page, pageSize);
+
+            PageValidator validator = new(page, pageSize);
+
+            if (!validator.isValid)
+            {
+                ValidationException exception = new(["Parâmetros de paginação inválidos"]);
+                logger.Error(exception, "Parâmetros de paginação inválidos");
+                throw exception;
+            }
+
+            logger.Information("Recuperando topicos da página Page[{Page}] PageSize[{PageSize}]",
+                page, pageSize);
+
+            (var result, int resultCount, int documentoCount) = await documentoRepository
+            .GetDocumentosAndCount(page, pageSize, idDisciplina, idTopico);
+
+            var documentoReadResult = result.Select(_documentoModelMapper.DocumentoModelMapperToDocumentoReadModel)
+                .ToList();
+
+            logger.Information("Recuperado {Count} usuários da página Page[{Page}] PageSize[{PageSize}]",
+                documentoReadResult.Count, page, pageSize);
+            logger.Information("Recuperando informações extras para a resposta");
+
+            int maxPage = documentoCount / pageSize;
+            if (documentoCount % pageSize != 0)
+                maxPage++;
+
+            return new()
+            {
+                maxPage = maxPage,
+                documentoForumCount = documentoCount,
+                pageCount = resultCount,
+                documentos = documentoReadResult
+            };
         }
     }
 }
