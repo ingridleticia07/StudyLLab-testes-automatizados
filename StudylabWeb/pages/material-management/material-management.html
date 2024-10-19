@@ -4,10 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StudyLab</title>
-    <link rel="stylesheet" href="forum-management.css" />
-    <link rel="stylesheet" href="textField/style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="material-management.css" />
   </head>
 
   <body>
@@ -74,10 +71,10 @@
               /></a>
             </li>
             <li>
-              <a href="../material-management/material-management.html"
+              <a href="#"
                 ><img
-                  class="icon-sidebar" 
-                  src="../../assets/img/icon-folder.svg"
+                  class="icon-check"
+                  src="../../assets/img/icon-help.svg"
                   alt=""
               /></a>
             </li>
@@ -92,7 +89,7 @@
         <main class="content">
           <div class="content-managentment">
             <div class="content-header">
-            <H1>Forum</H1>
+            <H1>Materiais</H1>
             <select id="disciplina-filter" class="filter">
               <option value="0" selected disabled>Disciplina</option>
             </select>
@@ -100,7 +97,7 @@
               <option value="0" selected disabled>Tópico</option>
             </select>
             <button  id="btn-buscar-forum"><img src="../../assets/img/icon-lupa.svg" style="max-height: 25px;"></button>
-            <button id="cadastrar-forum-btn">Responder forum</button>
+            <button id="cadastrar-forum-btn">Cadastrar material</button>
           </div>
           <div class="pagination">
           </div>
@@ -111,7 +108,7 @@
                   <tr>
                     <th><input type="checkbox" name="select-all" id="select-all"></th>
                     <th>TÓPICO</th>
-                    <th hidden>Resposta</th>
+                    <th hidden>documento</th>
                     <th>Disciplina</th>
                     <th>Usuário</th>
                     <th>AÇÕES</th>
@@ -340,10 +337,7 @@
         </header>
       </div>
     </div>
-    <script src="textField/jquery-3.6.0.min.js"></script>
-    <script src="textField/bootstrap-bundle.min.js"></script>
-    <script src="textField/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script type="module" src="forum-management.js"></script>
+    <script type="module" src="material-management.js"></script>
   </body>
 </html>

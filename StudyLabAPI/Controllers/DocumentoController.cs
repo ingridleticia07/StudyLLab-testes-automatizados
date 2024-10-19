@@ -98,8 +98,9 @@ namespace StudyLabAPI.Controllers
             {
                 await file.CopyToAsync(stream);
             }
+            string finalPath = destinationFilePath.Replace("wwwroot", "");
 
-            return destinationFilePath;
+            return finalPath;
         }
 
 

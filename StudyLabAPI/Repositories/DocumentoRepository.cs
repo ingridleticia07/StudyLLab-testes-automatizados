@@ -117,6 +117,7 @@ namespace StudyLabAPI.Repositories
                 tipoArquivo = resposta.tipoArquivo,
                 tipoMaterial = resposta.tipoMaterial,
                 dataCadastro = resposta.dataCadastro,
+                topico = resposta.topico,
                 usuario = new UsuarioModel
                 {
                     idUsuario = resposta.usuario.idUsuario,
@@ -126,7 +127,7 @@ namespace StudyLabAPI.Repositories
                     statusUsuario = false,
                     tipoUsuario = default,
                     curso = null,
-                    nomeUsuario = null,
+                    nomeUsuario = resposta.usuario.nomeUsuario,
                     dataCadastroUsuario = default,
                     imagemUsuario = null
                 }
