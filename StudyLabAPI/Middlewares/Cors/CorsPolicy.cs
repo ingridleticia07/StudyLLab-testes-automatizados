@@ -19,8 +19,9 @@ file static class CustomCorsPolicies
 {
     public static void AllowAllCorsPolicy(CorsPolicyBuilder builder)
     {
-        builder.AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowAnyOrigin();
+        builder.WithOrigins("http://localhost:5500")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod()
+                   .AllowCredentials();
     }
 }

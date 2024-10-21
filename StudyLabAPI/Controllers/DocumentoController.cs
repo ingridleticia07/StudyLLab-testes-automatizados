@@ -1,6 +1,7 @@
 ﻿using StudyLabAPI.Exceptions;
 using StudyLabAPI.Mapper;
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.Enums;
 using StudyLabAPI.Repositories;
 using StudyLabAPI.Validators.CustomValidators.RequestQuery;
 using ILogger = Serilog.ILogger;
@@ -51,17 +52,18 @@ namespace StudyLabAPI.Controllers
 
             UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId);
             
+
+             (string diretorio, tipoArquivo tipoArquivo) = await MoveDocumentFileAsync(file);
+
             DocumentoModel novoDocumento = new()
             {
                 dataCadastro = DateOnly.FromDateTime(DateTime.Now),
-                diretorioMaterial = documento.diretorioMaterial,
+                diretorioMaterial = diretorio,
                 tipoMaterial = documento.TipoMaterial,
                 topico = relatedTopico,
-                tipoArquivo = documento.tipoArquivo,
+                tipoArquivo = tipoArquivo,
                 usuario = relatedUsuario
             };
-
-            string diretorio = await MoveDocumentFileAsync(file);
 
             novoDocumento.diretorioMaterial = diretorio;
 
@@ -72,35 +74,31 @@ namespace StudyLabAPI.Controllers
             return (novoDocumento);
         }
 
-        private async Task<string> MoveDocumentFileAsync(IFormFile file)
+        private async Task<(string, tipoArquivo)> MoveDocumentFileAsync(IFormFile file)
         {
-            // Validate the uploaded file
             if (file == null || file.Length == 0)
             {
                 throw new ArgumentException("No file uploaded.");
             }
 
-            // Get the file extension from the uploaded file
             string fileExtension = Path.GetExtension(file.FileName);
-            string newFileName = $"document_{Guid.NewGuid()}{fileExtension}"; // Generate a unique file name
+            string newFileName = $"document_{Guid.NewGuid()}{fileExtension}";
 
-            // Define the destination directory
             string destinationDirectory = Path.Combine("wwwroot", "documents");
 
-            // Ensure the destination directory exists
-            Directory.CreateDirectory(destinationDirectory); // Create directory if it doesn't exist
+            Directory.CreateDirectory(destinationDirectory);
 
-            // Create the full path for the destination file
             string destinationFilePath = Path.Combine(destinationDirectory, newFileName);
 
-            // Save the file to the specified path
             using (var stream = new FileStream(destinationFilePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
             string finalPath = destinationFilePath.Replace("wwwroot", "");
 
-            return finalPath;
+            tipoArquivo fileType = fileExtension == ".jpeg" || fileExtension == ".jpg" || fileExtension == ".png" ? tipoArquivo.imagem : tipoArquivo.pdf;
+
+            return (finalPath, fileType);
         }
 
 

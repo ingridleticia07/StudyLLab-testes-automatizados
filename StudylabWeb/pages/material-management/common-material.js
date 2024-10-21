@@ -1,6 +1,6 @@
 import {getUserInfo} from "../../assets/js/lib/services/user.js";
 import {deleteRespostaMaterial,changeRespostaMaterial} from "../../assets/js/lib/services/material.js";
-import {getMaterialByDisciplinaOrTopico,createRespostaMaterial} from "../../assets/js/lib/services/material.js";
+import {getMaterialByDisciplinaOrTopico,saveMaterial} from "../../assets/js/lib/services/material.js";
 
 const modalEditarRespostaMaterial = document.querySelector("#modal-editar-resposta-forum");
 const btnSaveChanges = modalEditarRespostaMaterial.querySelector("#button-submit");
@@ -75,13 +75,13 @@ export const excluirIcon = () => {
     return excluirIcon;
 };
 
-export async function registerRespostaMaterial(respostaMaterialDTO) {
+export async function createMaterial(materialDTO) {
     try {
+      console.log(materialDTO)
+      await saveMaterial(materialDTO);
       
-      await createRespostaMaterial(respostaMaterialDTO);
-      
-      getMaterialByDisciplinaAndTopico(actualPage,itemsPerPageValue,0,0);
-      closeModal(modalResponderMaterial);
+      /*getMaterialByDisciplinaAndTopico(actualPage,itemsPerPageValue,0,0);
+      closeModal(modalResponderMaterial);*/
     } catch (error) {
       console.error("Error fetching user info:", error);
     }

@@ -1,12 +1,12 @@
 import {getUserInfo} from "../../assets/js/lib/services/user.js";
 import {copulateTopicoFilter, copulateDisciplinaFilter,copulateTopicoFilterByDisciplina} from "./material-repository.js";
-import {closeModal,openModal,showModal,getMaterialByDisciplinaAndTopico, registerRespostaMaterial} from "./common-material.js";
+import {closeModal,openModal,showModal,getMaterialByDisciplinaAndTopico, createMaterial} from "./common-material.js";
 
 const btnResponderMaterial = document.querySelector("#cadastrar-forum-btn");
-const modalResponderMaterial = document.querySelector("#modal-responder-forum");
+const modalCadastrarMaterial = document.querySelector("#modal-cadastrar-documento");
 const modalErroEditarTopico = document.querySelector("#modalErroAoEditarTopico");
 const btnBuscarMaterialBtn = document.querySelector("#btn-buscar-forum");
-const btnCadastrarResposta = document.querySelector("#button-submit");
+const btnCadastrarMaterial = document.querySelector("#button-submit");
 const itemsPerPageValue = 5;
 var actualPage = 1;
 var usuario = null;
@@ -75,30 +75,24 @@ btnResponderMaterial.addEventListener('click',async function(){
     copulateTopicoFilterByDisciplina(disciplinaSelected.value);
   }
 
-  openModal(modalResponderMaterial);
+  openModal(modalCadastrarMaterial);
 });
 
-btnCadastrarResposta.addEventListener('click',async function(){
+btnCadastrarMaterial.addEventListener('click',async function(){
 
-  const html = $("#editor-1").find('.editorAria').html();
-
-  const currentDate = new Date();
-  const year = currentDate.getFullYear();
-  const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-  const day = String(currentDate.getDate()).padStart(2, '0');
-  const dateNow = `${year}-${month}-${day}`;
-  const topicoFilterModal = document.querySelector("#topico-filter-modal");
+  const categoriaMaterial = document.querySelector(".form-inputs #categoria").value;
+  const material = document.querySelector(".form-inputs #material").files[0];
+  const topico = document.querySelector(".form-inputs #topico-filter-modal").value;
 
   usuario = await getUserInfo();
 
-  const respostaMaterialDTO = {
-    resposta:html,
-    dataResposta:dateNow,
-    topicoDiscussao:topicoFilterModal.value,
-    usuario:usuario.id
+  const materialDTO = {
+    Idtopico:topico,
+    TipoMaterial:categoriaMaterial,
+    File:material,
+    IdUsuario:usuario.id
   };
-  
-  registerRespostaMaterial(respostaMaterialDTO);
+  createMaterial(materialDTO);
 
 });
 
