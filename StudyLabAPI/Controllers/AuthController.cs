@@ -153,7 +153,7 @@ public class AuthController : IAuthController
     /// Regras: <seealso cref="UserLoginRequestModelValidator"/>.</exception>
     /// <exception cref="UsuarioNotFoundException"></exception>
     /// <exception cref="InvalidLoginPasswordException"></exception>
-    public async Task<(UserReadModel, string, string)> LoginUser(UserLoginRequestModel userLoginRequestModel, HttpContext? httpContext = null)
+    public async Task<(UserReadModel, string, string, string)> LoginUser(UserLoginRequestModel userLoginRequestModel, HttpContext? httpContext = null)
     {
         logger.Information("Validando campos da requisição de login para Email[{UserEmail}]",
             userLoginRequestModel.email);
@@ -199,16 +199,16 @@ public class AuthController : IAuthController
         var tokens = _antiforgery.GetAndStoreTokens(httpContext);
 
         httpContext.Response.Cookies.Append(
-            ".AspNetCore.Antiforgery.KeSRHT2WmJs", // Cookie name
-            tokens.RequestToken, // Cookie value
+            ".AspNetCore.Antiforgery.KeSRHT2WmJs",
+            tokens.RequestToken,
             new CookieOptions
             {
-                HttpOnly = false, // Set to true if you don't want JS access
-                Secure = httpContext.Request.IsHttps, // Only send over HTTPS
-                SameSite = SameSiteMode.Strict // Set SameSite mode
+                HttpOnly = false,
+                Secure = httpContext.Request.IsHttps,
+                SameSite = SameSiteMode.Strict
             });
 
-        return (userReadModel, jwtUser, tokens.RequestToken);
+        return (userReadModel, jwtUser, tokens.RequestToken, tokens.CookieToken);
     }
 
     /// <summary>

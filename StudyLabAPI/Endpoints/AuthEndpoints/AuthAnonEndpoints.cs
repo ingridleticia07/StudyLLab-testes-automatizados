@@ -69,9 +69,10 @@ public static class AuthAnonEndpoints
     {
         string jwtUser;
         string antiFogeryToken;
+        string antiFogeryTokenCookie;
         try
         {
-            (UserReadModel _, jwtUser, antiFogeryToken) = await controller.LoginUser(loginRequestModel, _httpContext);
+            (UserReadModel _, jwtUser, antiFogeryToken, antiFogeryTokenCookie) = await controller.LoginUser(loginRequestModel, _httpContext);
         }
         catch (UsuarioNotFoundException e)
         {
@@ -85,8 +86,15 @@ public static class AuthAnonEndpoints
         {
             return Results.BadRequest(e.Message);
         }
-        
-        return Results.Content(jwtUser);
+
+        object retorno = new
+        {
+            tokenJwt = jwtUser,
+            tokenAntifogery = antiFogeryToken,
+            tokenAntifogeryCookie = antiFogeryTokenCookie
+        };
+
+        return Results.Json(retorno);
     }
     
     #endregion

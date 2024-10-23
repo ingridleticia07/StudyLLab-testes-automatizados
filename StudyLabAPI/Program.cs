@@ -1,8 +1,6 @@
 using Serilog;
 using StudyLabAPI.Endpoints;
 using StudyLabAPI.Endpoints.AuthEndpoints;
-using StudyLabAPI.Middlewares.Antiforgery;
-using StudyLabAPI.Middlewares.Auth;
 using StudyLabAPI.Middlewares.Cors;
 using StudyLabAPI.Middlewares.Filters;
 using StudyLabAPI.Services;
