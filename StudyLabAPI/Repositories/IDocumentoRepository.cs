@@ -15,6 +15,8 @@ namespace StudyLabAPI.Repositories
         public Task<List<DocumentoModel?>> GetAllDocumentos();
 
         public Task<List<DocumentoModel?>> GetDocumentoByTopico(TopicoDiscussaoModel topico);
+
+        public Task<DocumentoModel?> GetDocumentoById(int idDocumento);
         public Task DeleteDocumento(int idDocumento);
         public Task Flush();
     }

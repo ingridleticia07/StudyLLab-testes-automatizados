@@ -13,6 +13,8 @@ namespace StudyLabAPI.Endpoints
                 .WithOpenApi(MaterialSummaries.CreateDocumento);
             builder.MapGet("ListarDocumentosWithPagination", ListarDocumentosWithPagination)
                 .WithOpenApi(MaterialSummaries.CreateDocumento);
+            builder.MapDelete("DeleteDocumento", DeleteDocumento)
+                .WithOpenApi(MaterialSummaries.CreateDocumento);
             return builder;
         }
 
@@ -52,6 +54,22 @@ namespace StudyLabAPI.Endpoints
             }
 
             return Results.Ok(result);
+        }
+
+        private static async Task<IResult> DeleteDocumento(HttpContext context,
+        [FromQuery] int idDocumento,
+        [FromServices] IDocumentoController controller)
+        {
+            try
+            {
+                await controller.DeleteDocumento(idDocumento);
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+
+            return Results.Ok(idDocumento);
         }
     }
 }

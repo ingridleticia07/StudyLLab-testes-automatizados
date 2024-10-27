@@ -102,9 +102,18 @@ namespace StudyLabAPI.Controllers
         }
 
 
-        public async Task DeleteDocumento(RegisteredDocumentoModel documento)
+        public async Task DeleteDocumento(int idDocumento)
         {
-            await documentoRepository.DeleteDocumento(documento.idDocumento);
+            DocumentoModel documento = await documentoRepository.GetDocumentoById(idDocumento);
+
+            string rootDirectory = "wwwroot";
+            
+            string fullPath = string.Concat(rootDirectory, documento.diretorioMaterial);
+
+            if (File.Exists(fullPath))
+                File.Delete(fullPath);
+
+            await documentoRepository.DeleteDocumento(idDocumento);
 
             await documentoRepository.Flush();
         }

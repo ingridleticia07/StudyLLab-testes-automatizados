@@ -48,6 +48,12 @@ namespace StudyLabAPI.Repositories
             return documentoModel;
         }
 
+        public async Task<DocumentoModel?> GetDocumentoById(int idDocumento)
+        {
+            DocumentoModel documentoModel = await dbContext.documento.FindAsync(idDocumento);
+
+            return documentoModel;
+        }
 
         public async Task UpdateDocumento(DocumentoModel documentoUpdate)
         {

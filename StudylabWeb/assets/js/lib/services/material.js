@@ -39,7 +39,7 @@ export async function saveMaterial(respostaMaterialDTO) {
             MATERIAL_ENDPOINT + "/cadastrarDocumento",
             formData,
             {
-                headers: {
+                headers: { 
                     'X-CSRF-TOKEN': csrfToken, // CSRF token header
                     'Content-Type': 'multipart/form-data', // Important for sending FormData
                 },
@@ -121,9 +121,9 @@ export async function deleteTopicoDisciplina(idTopico) {
   return response.data;
 }
 
-export async function deleteRespostaMaterial(idResposta) {
+export async function deleteDocumento(idDocumento) {
   
-  let response = await instance.delete(FORUM_ENDPOINT+"/DeletarRespostaMaterial?idRespostaMaterial="+idResposta);
+  let response = await instance.delete(MATERIAL_ENDPOINT+"/DeleteDocumento?idDocumento="+idDocumento);
 
   if (response.status !== 200) {
     return null;

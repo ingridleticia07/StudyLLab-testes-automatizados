@@ -1,12 +1,12 @@
 import {getUserInfo} from "../../assets/js/lib/services/user.js";
-import {deleteRespostaMaterial,changeRespostaMaterial} from "../../assets/js/lib/services/material.js";
+import {deleteDocumento,changeRespostaMaterial} from "../../assets/js/lib/services/material.js";
 import {getMaterialByDisciplinaOrTopico,saveMaterial} from "../../assets/js/lib/services/material.js";
 
 const modalEditarRespostaMaterial = document.querySelector("#modal-editar-resposta-forum");
 const btnSaveChanges = modalEditarRespostaMaterial.querySelector("#button-submit");
 const modalRespostaMaterial = document.querySelector("#modal-resposta-forum");
-const modalExcluirResposta = document.querySelector("#modal-excluir-resposta");
-const confirmDeleteButton = document.querySelector("#modal-excluir-resposta .confirmar");
+const modalExcluirResposta = document.querySelector("#modal-excluir-forum");
+const confirmDeleteButton = document.querySelector("#modal-excluir-forum .confirmar");
 const tableBody = document.querySelector("#disciplina-table tbody");
 const modalResponderMaterial = document.querySelector("#modal-responder-forum");
 
@@ -34,7 +34,7 @@ export function showModal(modalElement) {
     }, 3000);
 }
 
-export function openDeleteModal(idResposta,page,idDisciplina,idTopico) {
+export function openDeleteModal(idDocumento,page,idDisciplina,idTopico) {
     openModal(modalExcluirResposta);
     
     confirmDeleteButton.onclick = async function() {
@@ -42,11 +42,11 @@ export function openDeleteModal(idResposta,page,idDisciplina,idTopico) {
         closeModal(modalExcluirResposta);
     
         try{
-            await deleteRespostaMaterial(idResposta);
+            await deleteDocumento(idDocumento);
     
             getMaterialByDisciplinaAndTopico(actualPage,itemsPerPageValue,0,0);
         }catch(e){
-            showModal(modalExcluirTopicoWarning);
+            console.log(e)
         }
     };
 };
@@ -77,7 +77,7 @@ export const excluirIcon = () => {
 
 export async function createMaterial(materialDTO) {
     try {
-      console.log(materialDTO)
+      
       await saveMaterial(materialDTO);
       
       /*getMaterialByDisciplinaAndTopico(actualPage,itemsPerPageValue,0,0);
@@ -95,7 +95,7 @@ export async function getMaterialByDisciplinaAndTopico(page,pageSize,idDisciplin
       const material = await getMaterialByDisciplinaOrTopico(page, pageSize,idDisciplina,idTopico);
 
       const { pageCount: countInPage, maxPage } = material;
-      console.log(material)
+      
       populateTable(material.documentos,page,usuario);
       addButtonsPagination(maxPage,itemsPerPageValue,idDisciplina,idTopico);
     } catch (error) {
@@ -231,7 +231,7 @@ export function createMaterialRow(documento,page,usuario) {
       excluirMaterialBtn.classList.add("bloquear");
       
       excluirMaterialBtn.addEventListener('click',async function(e){
-        openDeleteModal(forum.idResposta, page, documento.topico.disciplina.idDisciplina,documento.topico.idTopico);
+        openDeleteModal(documento.idDocumento, page, documento.topico.disciplina.idDisciplina,documento.topico.idTopico);
       });
       
       actionColumn.appendChild(editarMaterialBtn);
