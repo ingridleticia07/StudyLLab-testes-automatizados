@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
+import Sidebar from './components/Sidebar/Sidebar';
 import Home from './pages/Home';
 import Subjects from './pages/Subjects';
 import Users from './pages/Users';
@@ -9,6 +10,7 @@ import Help from './pages/Help';
 function App() {
     return (
         <div className='bg-slate-200 min-h-screen font-inter'>
+            <Sidebar />
             <main>
                 <Routes>
                     <Route path='/' element={<Home />} />
