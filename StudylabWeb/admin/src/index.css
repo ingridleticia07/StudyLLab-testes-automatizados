@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    padding: 0;
+    border: none;
+    margin: 0;
+    outline: none;
+    font-family: 'Roboto', sans-serif;
+}
