@@ -1,4 +1,4 @@
-import TableFoot from './TableFoot';
+import TableFoot from '../TableFoot/TableFoot';
 import TableHead from './TableHead';
 import TableRow from './TableRow';
 
@@ -72,7 +72,7 @@ const TableSubjects = () => {
                         alunos={40}
                     />
                 </tbody>
-                <TableFoot />
+                <TableFoot cols={5}/>
             </table>
         </div>
     );

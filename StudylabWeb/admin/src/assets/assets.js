@@ -1,8 +1,8 @@
 import at from './svg/at.svg';
 import arrowLeft from './svg/arrowLeft.svg';
 import arrowRight from './svg/arrowRight.svg';
+import block from './svg/block.svg';
 import book from './svg/book.svg';
-import check from './svg/check.svg';
 import deleteIcon from './svg/delete.svg';
 import edit from './svg/edit.svg';
 import eyeClose from './svg/eyeClose.svg';
@@ -12,7 +12,6 @@ import folder from './svg/folder.svg';
 import help from './svg/help.svg';
 import home from './svg/home.svg';
 import info from './svg/info.svg';
-import lock from './svg/lock.svg';
 import notification from './svg/notification.svg';
 import padlock from './svg/padlock.svg';
 import pencil from './svg/pencil.svg';
@@ -28,7 +27,7 @@ export const icons = {
     arrowLeft,
     arrowRight,
     book,
-    check,
+    block,
     deleteIcon,
     edit,
     eyeClose,
@@ -38,7 +37,6 @@ export const icons = {
     help,
     home,
     info,
-    lock,
     notification,
     padlock,
     pencil,

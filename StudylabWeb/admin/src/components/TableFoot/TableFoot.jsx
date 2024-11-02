@@ -1,11 +1,11 @@
 import { icons } from '../../assets/assets';
 
-const TableFoot = () => {
+const TableFoot = ({cols}) => {
     return (
         <tfoot className='bg-gray-100 border-t-2'>
             <tr>
-                <td colSpan='5'></td>
-                <td className='text-gray-700 font-medium'>1 - 3</td>
+                <td colSpan={cols}></td>
+                <td className='text-gray-700 font-medium text-end'>1 - 3</td>
                 <td className='flex items-center justify-center'>
                     <button
                         className='flex items-center justify-center h-5 w-5 rounded-full border border-gray-400 hover:bg-gray-300'
