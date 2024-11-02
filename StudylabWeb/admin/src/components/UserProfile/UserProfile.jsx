@@ -2,7 +2,7 @@ import { icons } from '../../assets/assets';
 
 const UserProfile = ({ userImg, notifications = false }) => {
     return (
-        <div className='flex items-center gap-6'>
+        <div className='flex items-center gap-6 select-none'>
             <button className='relative' aria-label='notificações'>
                 <img
                     src={icons.notification}

@@ -10,7 +10,7 @@ const SidebarItem = ({
         <li>
             <Link
                 to={link}
-                className={`flex items-center justify-center w-14 h-14 rounded-lg cursor-pointer transition duration-300 ease-in-out ${
+                className={`flex items-center justify-center w-14 h-14 rounded-lg cursor-pointer select-none transition duration-300 ease-in-out ${
                     selected
                         ? 'bg-americanOrange-500'
                         : 'hover:bg-americanOrange-200'
