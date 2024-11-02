@@ -10,12 +10,12 @@ import Help from './pages/Help';
 
 function App() {
     return (
-        <div className=' flex bg-slate-200 min-h-screen font-inter'>
+        <div className=' flex min-h-screen bg-slate-200'>
             <div>
                 <Menu />
                 <Sidebar />
             </div>
-            <main className='w-full mt-28 ml-4'>
+            <main className='w-full mt-28 mx-4'>
                 <Routes>
                     <Route path='/' element={<Home />} />
                     <Route path='/disciplinas' element={<Subjects />} />
