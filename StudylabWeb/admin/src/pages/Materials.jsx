@@ -1,6 +1,7 @@
 import { icons } from '../assets/assets';
 import Breadcrumb from '../components/Breadcrumb/Breadcrumb';
 import Loading from '../components/Loading/Loading';
+import StatusTag from '../components/StatusTag/StatusTag';
 import TableFoot from '../components/TableFoot/TableFoot';
 import TableHead from '../components/TableHead/TableHead';
 import TableRow from '../components/TableRow/TableRow';
@@ -48,18 +49,31 @@ const Materials = () => {
                                         <TableRow content='Lógica para computação' />
                                         <TableRow content='Alicia Santos' />
                                         <TableRow content='Lista' />
-                                        <TableRow content='Aprovado' />
                                         <TableRow
                                             content={
-                                                <div className='flex gap-2'>
-                                                    <img
-                                                        src={icons.eyeOpen}
-                                                        alt='Visualizar'
-                                                    />
-                                                    <img
-                                                        src={icons.deleteIcon}
-                                                        alt='Excluir'
-                                                    />
+                                                <StatusTag
+                                                    text={'aprovado'}
+                                                    status={'red'}
+                                                />
+                                            }
+                                        />
+                                        <TableRow
+                                            content={
+                                                <div className='flex gap-5'>
+                                                    <button aria-label='visualizar'>
+                                                        <img
+                                                            src={icons.eyeOpen}
+                                                            alt='Visualizar'
+                                                        />
+                                                    </button>
+                                                    <button aria-label='excluir'>
+                                                        <img
+                                                            src={
+                                                                icons.deleteIcon
+                                                            }
+                                                            alt='Excluir'
+                                                        />
+                                                    </button>
                                                 </div>
                                             }
                                         />
