@@ -4,6 +4,7 @@ import TableRow from './TableRow';
 
 const TableSubjects = () => {
     return (
+        // componentizar todas as tabelas em uma tabela
         <div className='overflow-y-auto max-h-[350px]'>
             <table className='min-w-full border-separate border-spacing-y-4 table-auto'>
                 <TableHead />
@@ -72,7 +73,7 @@ const TableSubjects = () => {
                         alunos={40}
                     />
                 </tbody>
-                <TableFoot cols={5}/>
+                <TableFoot cols={5} />
             </table>
         </div>
     );

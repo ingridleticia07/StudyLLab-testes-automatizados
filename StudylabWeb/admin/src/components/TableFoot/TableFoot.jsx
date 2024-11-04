@@ -1,12 +1,13 @@
 import { icons } from '../../assets/assets';
 
-const TableFoot = ({cols}) => {
+const TableFoot = ({ cols }) => {
     return (
-        <tfoot className='bg-gray-100 border-t-2'>
+        <tfoot className='sticky bottom-0 bg-gray-100 shadow-md'>
             <tr>
-                <td colSpan={cols}></td>
-                <td className='text-gray-700 font-medium text-end'>1 - 3</td>
-                <td className='flex items-center justify-center'>
+                <td colSpan={cols - 1} className='px-4 py-2 text-gray-700 font-medium text-end border-t'>
+                    1 - 3
+                </td>
+                <td className='py-2 flex items-center justify-center border-t'>
                     <button
                         className='flex items-center justify-center h-5 w-5 rounded-full border border-gray-400 hover:bg-gray-300'
                         aria-label='Passar para proxima pagina'
