@@ -1,7 +1,11 @@
-const Help = () => {
-  return (
-    <div>Help</div>
-  )
-}
+import PopUp from '../components/PopUp/PopUp';
 
-export default Help
+const Help = () => {
+    return (
+        <div>
+            <PopUp />
+        </div>
+    );
+};
+
+export default Help;

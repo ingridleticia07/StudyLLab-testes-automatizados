@@ -2,6 +2,8 @@ import { icons } from '../../assets/assets';
 import TableFoot from './TableFoot';
 import TableHead from './TableHead';
 import Loading from '../Loading/Loading';
+import { useState } from 'react';
+import PopUp from '../PopUp/PopUp';
 
 const TableUsers = ({ data }) => {
     const headersColumns = [
@@ -12,6 +14,14 @@ const TableUsers = ({ data }) => {
         'email',
         'ações',
     ];
+
+    const [showPopUp, setShowPopUp] = useState(false);
+    const [selectedItem, setSelectedItem] = useState('');
+
+    const handleDeleteClick = (item) => {
+        setSelectedItem(item);
+        setShowPopUp(true);
+    };
 
     return (
         <div className='h-full max-h-[350px] overflow-y-scroll rounded-md'>
@@ -44,7 +54,14 @@ const TableUsers = ({ data }) => {
                                                 alt='bloqueio'
                                             />
                                         </button>
-                                        <button aria-label='excluir aluno'>
+                                        <button
+                                            aria-label='excluir aluno'
+                                            onClick={() =>
+                                                handleDeleteClick(
+                                                    d.aluno
+                                                )
+                                            }
+                                        >
                                             <img
                                                 src={icons.deleteIcon}
                                                 alt='lixeira'
@@ -60,6 +77,13 @@ const TableUsers = ({ data }) => {
                 )}
                 <TableFoot cols={headersColumns.length} />
             </table>
+
+            {showPopUp && (
+                <PopUp
+                    itemDelete={selectedItem}
+                    onClose={() => setShowPopUp(false)}
+                />
+            )}
         </div>
     );
 };

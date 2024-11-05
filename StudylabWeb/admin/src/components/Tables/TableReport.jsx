@@ -4,6 +4,8 @@ import TableHead from './TableHead';
 import TableFoot from './TableFoot';
 import StatusTag from '../StatusTag/StatusTag';
 import Loading from '../Loading/Loading';
+import PopUp from '../PopUp/PopUp';
+import { useState } from 'react';
 
 const TableReport = ({ data }) => {
     const headersColumns = [
@@ -15,6 +17,14 @@ const TableReport = ({ data }) => {
         'status',
         'ações',
     ];
+
+    const [showPopUp, setShowPopUp] = useState(false);
+    const [selectedItem, setSelectedItem] = useState('');
+
+    const handleDeleteClick = (item) => {
+        setSelectedItem(item);
+        setShowPopUp(true);
+    };
 
     return (
         <div className='h-full max-h-[350px] overflow-y-scroll rounded-md'>
@@ -54,7 +64,12 @@ const TableReport = ({ data }) => {
                                                 alt='bloquear'
                                             />
                                         </button>
-                                        <button aria-label='excluir'>
+                                        <button
+                                            aria-label='excluir'
+                                            onClick={() =>
+                                                handleDeleteClick(d.titulo)
+                                            }
+                                        >
                                             <img
                                                 src={icons.deleteIcon}
                                                 alt='Excluir'
@@ -70,6 +85,13 @@ const TableReport = ({ data }) => {
                 )}
                 <TableFoot cols={headersColumns.length} />
             </table>
+
+            {showPopUp && (
+                <PopUp
+                    itemDelete={selectedItem}
+                    onClose={() => setShowPopUp(false)}
+                />
+            )}
         </div>
     );
 };

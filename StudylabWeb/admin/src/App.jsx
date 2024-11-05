@@ -7,7 +7,6 @@ import Users from './pages/Users';
 import Materials from './pages/Materials';
 import Report from './pages/Report';
 import Help from './pages/Help';
-import DeletePopUp from './components/DeletePopUp/DeletePopUp';
 
 function App() {
     return (
@@ -15,9 +14,6 @@ function App() {
             <div>
                 <Menu />
                 <Sidebar />
-            </div>
-            <div className='absolute top-1/2 left-1/2 z-50 transform -translate-x-1/2 -translate-y-1/2'>
-                <DeletePopUp />
             </div>
 
             <main className='w-full mt-28 mx-4'>

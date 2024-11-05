@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { icons } from '../../assets/assets';
 import Loading from '../Loading/Loading';
 import TableFoot from './TableFoot';
 import TableHead from './TableHead';
+import PopUp from '../PopUp/PopUp';
 
 const TableSubjects = ({ data }) => {
     const headersColumns = [
@@ -13,6 +15,14 @@ const TableSubjects = ({ data }) => {
         'aluno',
         'ações',
     ];
+
+    const [showPopUp, setShowPopUp] = useState(false);
+    const [selectedItem, setSelectedItem] = useState('');
+
+    const handleDeleteClick = (item) => {
+        setSelectedItem(item);
+        setShowPopUp(true);
+    };
 
     return (
         <div className='h-full max-h-[350px] overflow-y-scroll rounded-md'>
@@ -48,7 +58,10 @@ const TableSubjects = ({ data }) => {
                                                 alt='lapis'
                                             />
                                         </button>
-                                        <button aria-label='deletar disciplina'>
+                                        <button
+                                            aria-label='deletar disciplina'
+                                            onClick={() => handleDeleteClick(d.nomeDisciplina)}
+                                        >
                                             <img
                                                 src={icons.deleteIcon}
                                                 alt='lixeira'
@@ -64,6 +77,13 @@ const TableSubjects = ({ data }) => {
                 )}
                 <TableFoot cols={headersColumns.length} />
             </table>
+
+            {showPopUp && (
+                <PopUp
+                    itemDelete={selectedItem}
+                    onClose={() => setShowPopUp(false)}
+                />
+            )}
         </div>
     );
 };

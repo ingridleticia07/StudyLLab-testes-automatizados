@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { icons } from '../../assets/assets';
 import Loading from '../Loading/Loading';
+import PopUp from '../PopUp/PopUp';
 import StatusTag from '../StatusTag/StatusTag';
 import TableFoot from './TableFoot';
 import TableHead from './TableHead';
@@ -14,6 +16,14 @@ const TableMaterials = ({ data }) => {
         'status',
         'ações',
     ];
+
+    const [showPopUp, setShowPopUp] = useState(false);
+    const [selectedItem, setSelectedItem] = useState('');
+
+    const handleDeleteClick = (item) => {
+        setSelectedItem(item);
+        setShowPopUp(true);
+    };
 
     return (
         <div className='h-full max-h-[350px] overflow-y-scroll rounded-md'>
@@ -47,7 +57,12 @@ const TableMaterials = ({ data }) => {
                                                 alt='Visualizar'
                                             />
                                         </button>
-                                        <button aria-label='excluir'>
+                                        <button
+                                            aria-label='excluir'
+                                            onClick={() =>
+                                                handleDeleteClick(d.titulo)
+                                            }
+                                        >
                                             <img
                                                 src={icons.deleteIcon}
                                                 alt='Excluir'
@@ -63,6 +78,13 @@ const TableMaterials = ({ data }) => {
                 )}
                 <TableFoot cols={headersColumns.length} />
             </table>
+
+            {showPopUp && (
+                <PopUp
+                    itemDelete={selectedItem}
+                    onClose={() => setShowPopUp(false)}
+                />
+            )}
         </div>
     );
 };
