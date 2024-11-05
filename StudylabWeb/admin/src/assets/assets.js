@@ -3,6 +3,7 @@ import arrowLeft from './svg/arrowLeft.svg';
 import arrowRight from './svg/arrowRight.svg';
 import block from './svg/block.svg';
 import book from './svg/book.svg';
+import cross from './svg/cross.svg';
 import deleteIcon from './svg/delete.svg';
 import edit from './svg/edit.svg';
 import eyeClose from './svg/eyeClose.svg';
@@ -28,6 +29,7 @@ export const icons = {
     arrowRight,
     book,
     block,
+    cross,
     deleteIcon,
     edit,
     eyeClose,
