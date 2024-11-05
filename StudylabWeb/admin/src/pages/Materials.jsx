@@ -35,7 +35,7 @@ const Materials = () => {
                         Filtro
                     </button>
                 </div>
-                <div className='relative overflow-y-scroll h-full max-h-[350px] rounded-md'>
+                <div className='overflow-y-scroll h-full max-h-[350px] rounded-md'>
                     <table className='min-w-full h-full text-left border-separate border-spacing-0'>
                         <TableHead cols={tableColumns} />
                         {data ? (
