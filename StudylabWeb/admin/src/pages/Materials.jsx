@@ -1,31 +1,31 @@
+import { useEffect, useState } from 'react';
 import { icons } from '../assets/assets';
 import Breadcrumb from '../components/Breadcrumb/Breadcrumb';
-import Loading from '../components/Loading/Loading';
-import StatusTag from '../components/StatusTag/StatusTag';
-import TableFoot from '../components/TableFoot/TableFoot';
-import TableHead from '../components/TableHead/TableHead';
-import TableRow from '../components/TableRow/TableRow';
+import TableMaterials from '../components/Tables/TableMaterials';
+
+// dados fakes para teste
+import { conteudos } from '../data/dataFake';
 
 const Materials = () => {
-    const tableColumns = [
-        '#',
-        'título',
-        'disciplina',
-        'autor',
-        'tipo',
-        'status',
-        'ações',
-    ];
+    // time para carregamento dos dados na tabela
+    const [data, setData] = useState(null);
 
-    const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    // const data = false
+    const loadDenucias = () => {
+        setTimeout(() => {
+            setData(conteudos);
+        }, 300);
+    };
+
+    useEffect(() => {
+        loadDenucias();
+    });
 
     return (
         <div className='flex flex-col h-full'>
             <Breadcrumb page='Conteúdos' />
-            <section className='bg-white flex flex-col rounded-lg h-full mb-4 min-h-[450px] px-3'>
+            <section className='flex flex-col h-full min-h-[450px] px-3 mb-4 bg-white rounded-lg '>
                 <div className='flex items-center gap-x-10'>
-                    <h1 className='text-3xl font-bold py-8'>Conteúdos</h1>
+                    <h1 className='py-8 text-3xl font-bold'>Conteúdos</h1>
                     <button
                         disabled={!data}
                         aria-label='filtro'
@@ -35,57 +35,7 @@ const Materials = () => {
                         Filtro
                     </button>
                 </div>
-                <div className='overflow-y-scroll h-full max-h-[350px] rounded-md'>
-                    <table className='min-w-full h-full text-left border-separate border-spacing-0'>
-                        <TableHead cols={tableColumns} />
-                        {data ? (
-                            <tbody>
-                                {data.map((c, i) => (
-                                    <tr key={i}>
-                                        <TableRow
-                                            content={<input type='checkbox' />}
-                                        />
-                                        <TableRow content='Lista 2 de lógica' />
-                                        <TableRow content='Lógica para computação' />
-                                        <TableRow content='Alicia Santos' />
-                                        <TableRow content='Lista' />
-                                        <TableRow
-                                            content={
-                                                <StatusTag
-                                                    text={'aprovado'}
-                                                    status={'red'}
-                                                />
-                                            }
-                                        />
-                                        <TableRow
-                                            content={
-                                                <div className='flex gap-5'>
-                                                    <button aria-label='visualizar'>
-                                                        <img
-                                                            src={icons.eyeOpen}
-                                                            alt='Visualizar'
-                                                        />
-                                                    </button>
-                                                    <button aria-label='excluir'>
-                                                        <img
-                                                            src={
-                                                                icons.deleteIcon
-                                                            }
-                                                            alt='Excluir'
-                                                        />
-                                                    </button>
-                                                </div>
-                                            }
-                                        />
-                                    </tr>
-                                ))}
-                            </tbody>
-                        ) : (
-                            <Loading />
-                        )}
-                        <TableFoot cols={7} />
-                    </table>
-                </div>
+                <TableMaterials data={data} />
             </section>
         </div>
     );

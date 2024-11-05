@@ -1,8 +1,25 @@
+import { useEffect, useState } from 'react';
 import Breadcrumb from '../components/Breadcrumb/Breadcrumb';
 import Button from '../components/Buttons/Button';
-import TableSubjects from '../components/TableSubjects/TableSubjects';
+import TableSubjects from '../components/Tables/TableSubjects';
+
+// dados fakes para teste
+import { disciplinas } from '../data/dataFake';
 
 const Subjects = () => {
+    // time para carregamento dos dados na tabela
+    const [data, setData] = useState(null);
+
+    const loadDenucias = () => {
+        setTimeout(() => {
+            setData(disciplinas);
+        }, 300);
+    };
+
+    useEffect(() => {
+        loadDenucias();
+    });
+
     return (
         <div>
             <Breadcrumb page='Disciplina' />
@@ -11,7 +28,7 @@ const Subjects = () => {
                     <h1 className='text-3xl font-bold'>Disciplinas</h1>
                     <Button text={'Cadastrar Disciplina'} />
                 </div>
-                <TableSubjects />
+                <TableSubjects data={data} />
             </section>
         </div>
     );
