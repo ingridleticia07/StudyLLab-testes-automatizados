@@ -1,11 +1,5 @@
-import PopUp from '../components/PopUp/PopUp';
-
 const Help = () => {
-    return (
-        <div>
-            <PopUp />
-        </div>
-    );
+    return <div>Help</div>;
 };
 
 export default Help;
