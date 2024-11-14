@@ -1,6 +1,9 @@
-const Button = ({ text }) => {
+const Button = ({ text, handleClick }) => {
     return (
-        <button className='px-5 py-4 text-lg font-medium tracking-wider rounded-lg bg-americanOrange-500 text-white hover:bg-americanOrange-600'>
+        <button
+            onClick={handleClick}
+            className='px-5 py-4 text-lg font-medium tracking-wider rounded-lg bg-americanOrange-500 text-white hover:bg-americanOrange-600'
+        >
             {text}
         </button>
     );

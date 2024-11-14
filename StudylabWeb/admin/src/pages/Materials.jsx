@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { icons } from '../assets/assets';
+
 import Breadcrumb from '../components/Breadcrumb/Breadcrumb';
 import TableMaterials from '../components/Tables/TableMaterials';
+import Filter from '../components/Filter/Filter';
 
 // dados fakes para teste
 import { conteudos } from '../data/dataFake';
@@ -26,14 +27,7 @@ const Materials = () => {
             <section className='flex flex-col h-full min-h-[450px] px-3 mb-4 bg-white rounded-lg '>
                 <div className='flex items-center gap-x-10'>
                     <h1 className='py-8 text-3xl font-bold'>Conteúdos</h1>
-                    <button
-                        disabled={!data}
-                        aria-label='filtro'
-                        className='flex h-12 items-center gap-4 font-bold text-gray-800 text-xl border-2 rounded-lg px-4 py-6 shadow-md disabled:bg-gray-200 disabled:opacity-90'
-                    >
-                        <img src={icons.filter} alt='Filtro' />
-                        Filtro
-                    </button>
+                    <Filter data={data}/>
                 </div>
                 <TableMaterials data={data} />
             </section>
