@@ -36,7 +36,7 @@ const TableMaterials = ({ data, handleDelete }) => {
         <div className='h-full max-h-[350px] overflow-y-scroll rounded-md'>
             <table className='h-full min-w-full text-left border-separate border-spacing-0'>
                 <TableHead headers={headersColumns} />
-                {data ? (
+                {data && data.length > 0 ? (
                     <tbody>
                         {data.map((d, index) => (
                             <tr key={index} className='capitalize'>
