@@ -1,6 +1,16 @@
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { icons } from '../../assets/assets';
 
 const PopUp = ({ itemDelete, handleClose, handleDeleteConfirmation }) => {
+    const notifyDelete = () => {
+        toast.success('Item Deletado', {
+            theme: 'colored',
+            position: 'top-center',
+            autoClose: 1300,
+        });
+    };
+
     return (
         <div className='fixed inset-0 flex items-center justify-center z-50 bg-opacity-30 bg-gray-300'>
             <div className='bg-white flex flex-col tracking-wide rounded-lg shadow-lg px-8 py-7 gap-7 w-[400px]'>
@@ -30,6 +40,7 @@ const PopUp = ({ itemDelete, handleClose, handleDeleteConfirmation }) => {
                     </button>
                     <button
                         onClick={() => {
+                            notifyDelete();
                             handleDeleteConfirmation(
                                 itemDelete.id,
                                 itemDelete.key

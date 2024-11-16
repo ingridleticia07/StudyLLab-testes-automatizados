@@ -5,6 +5,9 @@ import TableFoot from './TableFoot';
 import TableHead from './TableHead';
 import PopUp from '../PopUp/PopUp';
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const TableSubjects = ({ data, handleDelete }) => {
     const headersColumns = [
         '#',
@@ -91,6 +94,7 @@ const TableSubjects = ({ data, handleDelete }) => {
                     handleDeleteConfirmation={handleDelete}
                 />
             )}
+            <ToastContainer className='capitalize'/>
         </div>
     );
 };

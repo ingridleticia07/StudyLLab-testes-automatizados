@@ -7,6 +7,9 @@ import Loading from '../Loading/Loading';
 import PopUp from '../PopUp/PopUp';
 import { useState } from 'react';
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const TableReport = ({ data, handleDelete }) => {
     const headersColumns = [
         '#',
@@ -103,6 +106,7 @@ const TableReport = ({ data, handleDelete }) => {
                     handleDeleteConfirmation={handleDelete}
                 />
             )}
+            <ToastContainer className='capitalize'/>
         </div>
     );
 };

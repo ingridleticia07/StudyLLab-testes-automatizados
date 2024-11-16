@@ -6,6 +6,9 @@ import StatusTag from '../StatusTag/StatusTag';
 import TableFoot from './TableFoot';
 import TableHead from './TableHead';
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const TableMaterials = ({ data, handleDelete }) => {
     const headersColumns = [
         '#',
@@ -94,6 +97,7 @@ const TableMaterials = ({ data, handleDelete }) => {
                     handleDeleteConfirmation={handleDelete}
                 />
             )}
+            <ToastContainer className='capitalize'/>
         </div>
     );
 };
