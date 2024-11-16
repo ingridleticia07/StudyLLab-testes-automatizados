@@ -17,11 +17,11 @@ const Filter = ({data}) => {
             {showOptions && (
                 <div className='flex flex-col absolute z-50 left-full w-36 p-2 font-medium  bg-white text-gray-600 text-lg border-2 rounded-lg'>
                     <button className='flex items-center justify-between'>
-                        <p>Conteudo</p>
+                        <p>Topicos</p>
                         <img src={icons.arrowRight} alt="" />
                     </button>
                     <button className='flex items-center justify-between'>
-                        <p>Data</p>
+                        <p>Disciplina</p>
                         <img src={icons.arrowRight} alt="" />
                     </button>
                     <button className='flex items-center justify-between'>

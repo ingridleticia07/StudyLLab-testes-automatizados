@@ -1,27 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
+import { StudylabContext } from '../context/StudylabContext';
+
 import Breadcrumb from '../components/Breadcrumb/Breadcrumb';
 import Button from '../components/Buttons/Button';
 import TableSubjects from '../components/Tables/TableSubjects';
-
-// dados fakes para teste
-import { disciplinas } from '../data/dataFake';
 import RegisterSubject from '../components/RegisterSubject/RegisterSubject';
 
 const Subjects = () => {
-    // time para carregamento dos dados na tabela
-    const [data, setData] = useState(null);
-
     const [showRegister, setShowRegister] = useState(false);
-
-    const loadDenucias = () => {
-        setTimeout(() => {
-            setData(disciplinas);
-        }, 300);
-    };
-
-    useEffect(() => {
-        loadDenucias();
-    });
+    const { data, removeItem } = useContext(StudylabContext);
 
     return (
         <div>
@@ -34,9 +21,11 @@ const Subjects = () => {
                         handleClick={() => setShowRegister(true)}
                     />
                 </div>
-                <TableSubjects data={data} />
+                <TableSubjects data={data.disciplinas} handleDelete={removeItem} />
             </section>
-            {showRegister && <RegisterSubject handleCancel={() => setShowRegister(false)}/>}
+            {showRegister && (
+                <RegisterSubject handleCancel={() => setShowRegister(false)} />
+            )}
         </div>
     );
 };

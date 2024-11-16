@@ -5,7 +5,7 @@ import TableFoot from './TableFoot';
 import TableHead from './TableHead';
 import PopUp from '../PopUp/PopUp';
 
-const TableSubjects = ({ data }) => {
+const TableSubjects = ({ data, handleDelete }) => {
     const headersColumns = [
         '#',
         'código',
@@ -17,11 +17,15 @@ const TableSubjects = ({ data }) => {
     ];
 
     const [showPopUp, setShowPopUp] = useState(false);
-    const [selectedItem, setSelectedItem] = useState('');
+    const [selectedItem, setSelectedItem] = useState();
 
-    const handleDeleteClick = (item) => {
-        setSelectedItem(item);
+    const onDelete = (id, key, name) => {
         setShowPopUp(true);
+        setSelectedItem({
+            id,
+            key,
+            name,
+        });
     };
 
     return (
@@ -60,7 +64,9 @@ const TableSubjects = ({ data }) => {
                                         </button>
                                         <button
                                             aria-label='deletar disciplina'
-                                            onClick={() => handleDeleteClick(d.nomeDisciplina)}
+                                            onClick={() =>
+                                                onDelete(d.id, 'disciplinas', d.nomeDisciplina)
+                                            }
                                         >
                                             <img
                                                 src={icons.deleteIcon}
@@ -81,7 +87,8 @@ const TableSubjects = ({ data }) => {
             {showPopUp && (
                 <PopUp
                     itemDelete={selectedItem}
-                    onClose={() => setShowPopUp(false)}
+                    handleClose={() => setShowPopUp(false)}
+                    handleDeleteConfirmation={handleDelete}
                 />
             )}
         </div>

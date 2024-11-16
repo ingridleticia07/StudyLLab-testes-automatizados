@@ -5,7 +5,7 @@ import Loading from '../Loading/Loading';
 import { useState } from 'react';
 import PopUp from '../PopUp/PopUp';
 
-const TableUsers = ({ data }) => {
+const TableUsers = ({ data, handleDelete }) => {
     const headersColumns = [
         '#',
         'matricula',
@@ -16,10 +16,14 @@ const TableUsers = ({ data }) => {
     ];
 
     const [showPopUp, setShowPopUp] = useState(false);
-    const [selectedItem, setSelectedItem] = useState('');
+    const [selectedItem, setSelectedItem] = useState();
 
-    const handleDeleteClick = (item) => {
-        setSelectedItem(item);
+    const onDelete = (id, key, name) => {
+        setSelectedItem({
+            id,
+            key,
+            name,
+        });
         setShowPopUp(true);
     };
 
@@ -57,9 +61,7 @@ const TableUsers = ({ data }) => {
                                         <button
                                             aria-label='excluir aluno'
                                             onClick={() =>
-                                                handleDeleteClick(
-                                                    d.aluno
-                                                )
+                                                onDelete(d.id, 'usuarios', d.aluno)
                                             }
                                         >
                                             <img
@@ -81,7 +83,8 @@ const TableUsers = ({ data }) => {
             {showPopUp && (
                 <PopUp
                     itemDelete={selectedItem}
-                    onClose={() => setShowPopUp(false)}
+                    handleClose={() => setShowPopUp(false)}
+                    handleDeleteConfirmation={handleDelete}
                 />
             )}
         </div>

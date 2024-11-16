@@ -9,7 +9,7 @@ const Menu = () => {
                 <span className='font-bold'>Lab</span>
             </h1>
             <SearchInput />
-            <UserProfile userImg={null} notifications />
+            <UserProfile />
         </header>
     );
 };

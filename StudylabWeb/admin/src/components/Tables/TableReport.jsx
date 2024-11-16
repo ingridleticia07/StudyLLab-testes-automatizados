@@ -7,7 +7,7 @@ import Loading from '../Loading/Loading';
 import PopUp from '../PopUp/PopUp';
 import { useState } from 'react';
 
-const TableReport = ({ data }) => {
+const TableReport = ({ data, handleDelete }) => {
     const headersColumns = [
         '#',
         'título',
@@ -21,8 +21,12 @@ const TableReport = ({ data }) => {
     const [showPopUp, setShowPopUp] = useState(false);
     const [selectedItem, setSelectedItem] = useState('');
 
-    const handleDeleteClick = (item) => {
-        setSelectedItem(item);
+    const onDelete = (id, key, name) => {
+        setSelectedItem({
+            id,
+            key,
+            name,
+        });
         setShowPopUp(true);
     };
 
@@ -46,7 +50,9 @@ const TableReport = ({ data }) => {
                                 <td className='px-4 py-2 border-b'>
                                     {d.autor}
                                 </td>
-                                <td className='px-2 py-2 border-b'>{d.data}</td>
+                                <td className='px-2 py-2 border-b whitespace-nowrap'>
+                                    {d.data}
+                                </td>
                                 <td className='px-4 py-2 border-b'>
                                     <StatusTag status={d.status} />
                                 </td>
@@ -67,7 +73,11 @@ const TableReport = ({ data }) => {
                                         <button
                                             aria-label='excluir'
                                             onClick={() =>
-                                                handleDeleteClick(d.titulo)
+                                                onDelete(
+                                                    d.id,
+                                                    'denuncias',
+                                                    d.titulo
+                                                )
                                             }
                                         >
                                             <img
@@ -89,7 +99,8 @@ const TableReport = ({ data }) => {
             {showPopUp && (
                 <PopUp
                     itemDelete={selectedItem}
-                    onClose={() => setShowPopUp(false)}
+                    handleClose={() => setShowPopUp(false)}
+                    handleDeleteConfirmation={handleDelete}
                 />
             )}
         </div>

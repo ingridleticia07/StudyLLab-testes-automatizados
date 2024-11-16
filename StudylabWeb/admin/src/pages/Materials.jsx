@@ -1,25 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useContext } from 'react';
+import { StudylabContext } from '../context/StudylabContext';
 
 import Breadcrumb from '../components/Breadcrumb/Breadcrumb';
 import TableMaterials from '../components/Tables/TableMaterials';
 import Filter from '../components/Filter/Filter';
 
-// dados fakes para teste
-import { conteudos } from '../data/dataFake';
-
 const Materials = () => {
-    // time para carregamento dos dados na tabela
-    const [data, setData] = useState(null);
-
-    const loadDenucias = () => {
-        setTimeout(() => {
-            setData(conteudos);
-        }, 300);
-    };
-
-    useEffect(() => {
-        loadDenucias();
-    });
+    const { data, removeItem } = useContext(StudylabContext);
 
     return (
         <div className='flex flex-col h-full'>
@@ -27,9 +14,9 @@ const Materials = () => {
             <section className='flex flex-col h-full min-h-[450px] px-3 mb-4 bg-white rounded-lg '>
                 <div className='flex items-center gap-x-10'>
                     <h1 className='py-8 text-3xl font-bold'>Conteúdos</h1>
-                    <Filter data={data}/>
+                    <Filter data={data.conteudos} />
                 </div>
-                <TableMaterials data={data} />
+                <TableMaterials data={data.conteudos} handleDelete={removeItem} />
             </section>
         </div>
     );

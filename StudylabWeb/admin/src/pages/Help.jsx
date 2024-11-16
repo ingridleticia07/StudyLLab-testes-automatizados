@@ -1,11 +1,5 @@
-import Filter from '../components/Filter/Filter';
-
 const Help = () => {
-    return (
-        <div>
-            <Filter />
-        </div>
-    );
+    return <div>Help</div>;
 };
 
 export default Help;

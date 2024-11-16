@@ -1,5 +1,6 @@
 export const disciplinas = [
     {
+        id: 'C101',
         codigo: 'C101',
         nomeDisciplina: 'Programação I',
         professor: 'Dr. Marcos Silva',
@@ -7,6 +8,7 @@ export const disciplinas = [
         quantidadeAlunos: 35,
     },
     {
+        id: 'C102',
         codigo: 'C102',
         nomeDisciplina: 'Estruturas de Dados',
         professor: 'Dra. Ana Souza',
@@ -14,6 +16,7 @@ export const disciplinas = [
         quantidadeAlunos: 40,
     },
     {
+        id: 'C103',
         codigo: 'C103',
         nomeDisciplina: 'Cálculo Diferencial',
         professor: 'Dr. João Almeida',
@@ -21,6 +24,7 @@ export const disciplinas = [
         quantidadeAlunos: 50,
     },
     {
+        id: 'C104',
         codigo: 'C104',
         nomeDisciplina: 'Física I',
         professor: 'Dra. Carla Mendes',
@@ -28,6 +32,7 @@ export const disciplinas = [
         quantidadeAlunos: 45,
     },
     {
+        id: 'C105',
         codigo: 'C105',
         nomeDisciplina: 'Química Geral',
         professor: 'Dr. Fernando Lima',
@@ -35,6 +40,7 @@ export const disciplinas = [
         quantidadeAlunos: 30,
     },
     {
+        id: 'C106',
         codigo: 'C106',
         nomeDisciplina: 'Introdução à Filosofia',
         professor: 'Dra. Renata Campos',
@@ -42,6 +48,7 @@ export const disciplinas = [
         quantidadeAlunos: 25,
     },
     {
+        id: 'C107',
         codigo: 'C107',
         nomeDisciplina: 'Redes de Computadores',
         professor: 'Dr. Eduardo Gonçalves',
@@ -49,6 +56,7 @@ export const disciplinas = [
         quantidadeAlunos: 42,
     },
     {
+        id: 'C108',
         codigo: 'C108',
         nomeDisciplina: 'Microeconomia',
         professor: 'Dra. Júlia Rodrigues',
@@ -59,48 +67,56 @@ export const disciplinas = [
 
 export const usuarios = [
     {
+        id: '20211001',
         matricula: '20211001',
         aluno: 'Lucas Almeida',
         curso: 'Ciência da Computação',
         email: 'lucas.almeida@exemplo.com',
     },
     {
+        id: '20211002',
         matricula: '20211002',
         aluno: 'Mariana Costa',
         curso: 'Engenharia Elétrica',
         email: 'mariana.costa@exemplo.com',
     },
     {
+        id: '20211003',
         matricula: '20211003',
         aluno: 'Pedro Silva',
         curso: 'Matemática',
         email: 'pedro.silva@exemplo.com',
     },
     {
+        id: '20211004',
         matricula: '20211004',
         aluno: 'Ana Paula Souza',
         curso: 'Engenharia Civil',
         email: 'ana.souza@exemplo.com',
     },
     {
+        id: '20211005',
         matricula: '20211005',
         aluno: 'Fernanda Santos',
         curso: 'Administração',
         email: 'fernanda.santos@exemplo.com',
     },
     {
+        id: '20211006',
         matricula: '20211006',
         aluno: 'Carlos Pereira',
         curso: 'Química',
         email: 'carlos.pereira@exemplo.com',
     },
     {
+        id: '20211007',
         matricula: '20211007',
         aluno: 'Juliana Rodrigues',
         curso: 'Física',
         email: 'juliana.rodrigues@exemplo.com',
     },
     {
+        id: '20211008',
         matricula: '20211008',
         aluno: 'Gabriel Martins',
         curso: 'Engenharia Mecânica',
@@ -110,6 +126,7 @@ export const usuarios = [
 
 export const conteudos = [
     {
+        id: 1,
         titulo: 'Introdução à Programação',
         disciplina: 'Programação I',
         autor: 'Prof. Marcos Silva',
@@ -117,6 +134,7 @@ export const conteudos = [
         status: 'aprovado',
     },
     {
+        id: 2,
         titulo: 'Estruturas de Dados - Lista 1',
         disciplina: 'Estruturas de Dados',
         autor: 'Prof. Ana Souza',
@@ -124,6 +142,7 @@ export const conteudos = [
         status: 'pendente',
     },
     {
+        id: 3,
         titulo: 'Prova de Cálculo Diferencial',
         disciplina: 'Cálculo Diferencial',
         autor: 'Prof. João Almeida',
@@ -131,6 +150,7 @@ export const conteudos = [
         status: 'aprovado',
     },
     {
+        id: 4,
         titulo: 'Atividade sobre Leis da Física',
         disciplina: 'Física I',
         autor: 'Prof. Carla Mendes',
@@ -138,6 +158,7 @@ export const conteudos = [
         status: 'rejeitado',
     },
     {
+        id: 5,
         titulo: 'Trabalho sobre Compostos Químicos',
         disciplina: 'Química Geral',
         autor: 'Prof. Fernando Lima',
@@ -145,6 +166,7 @@ export const conteudos = [
         status: 'pendente',
     },
     {
+        id: 6,
         titulo: 'Lista de Exercícios de Filosofia',
         disciplina: 'Introdução à Filosofia',
         autor: 'Prof. Renata Campos',
@@ -152,6 +174,7 @@ export const conteudos = [
         status: 'aprovado',
     },
     {
+        id: 7,
         titulo: 'Prova de Redes de Computadores',
         disciplina: 'Redes de Computadores',
         autor: 'Prof. Eduardo Gonçalves',
@@ -159,6 +182,7 @@ export const conteudos = [
         status: 'aprovado',
     },
     {
+        id: 8,
         titulo: 'Slide sobre Economia de Mercado',
         disciplina: 'Microeconomia',
         autor: 'Prof. Júlia Rodrigues',
@@ -169,6 +193,7 @@ export const conteudos = [
 
 export const denuncias = [
     {
+        id: 1,
         titulo: 'Conteúdo inadequado no material de estudo',
         disciplina: 'Programação I',
         autor: 'Lucas Almeida',
@@ -176,13 +201,15 @@ export const denuncias = [
         status: 'em análise',
     },
     {
+        id: 2,
         titulo: 'Erro nas questões da lista de exercícios',
         disciplina: 'Cálculo Diferencial',
         autor: 'Mariana Costa',
         data: '2024-09-25',
-        status: 'resolvido',
+        status: 'bloqueado',
     },
     {
+        id: 3,
         titulo: 'Material desatualizado',
         disciplina: 'Redes de Computadores',
         autor: 'Pedro Silva',
@@ -190,13 +217,15 @@ export const denuncias = [
         status: 'em análise',
     },
     {
+        id: 4,
         titulo: 'Conteúdo ofensivo em comentário',
         disciplina: 'Introdução à Filosofia',
         autor: 'Ana Paula Souza',
         data: '2024-10-10',
-        status: 'resolvido',
+        status: 'bloqueado',
     },
     {
+        id: 5,
         titulo: 'Exercícios não corrigidos corretamente',
         disciplina: 'Física I',
         autor: 'Fernanda Santos',
@@ -204,13 +233,15 @@ export const denuncias = [
         status: 'em análise',
     },
     {
+        id: 6,
         titulo: 'Erro de digitação nas instruções de prova',
         disciplina: 'Química Geral',
         autor: 'Carlos Pereira',
         data: '2024-09-22',
-        status: 'resolvido',
+        status: 'bloqueado',
     },
     {
+        id: 7,
         titulo: 'Falha de conexão durante a avaliação',
         disciplina: 'Microeconomia',
         autor: 'Juliana Rodrigues',
@@ -218,10 +249,11 @@ export const denuncias = [
         status: 'em análise',
     },
     {
+        id: 8,
         titulo: 'Conteúdo não segue o plano de ensino',
         disciplina: 'Engenharia Mecânica',
         autor: 'Gabriel Martins',
         data: '2024-10-05',
-        status: 'resolvido',
+        status: 'bloqueado',
     },
 ];

@@ -6,7 +6,7 @@ import StatusTag from '../StatusTag/StatusTag';
 import TableFoot from './TableFoot';
 import TableHead from './TableHead';
 
-const TableMaterials = ({ data }) => {
+const TableMaterials = ({ data, handleDelete }) => {
     const headersColumns = [
         '#',
         'título',
@@ -20,8 +20,12 @@ const TableMaterials = ({ data }) => {
     const [showPopUp, setShowPopUp] = useState(false);
     const [selectedItem, setSelectedItem] = useState('');
 
-    const handleDeleteClick = (item) => {
-        setSelectedItem(item);
+    const onDelete = (id, key, name) => {
+        setSelectedItem({
+            id,
+            key,
+            name,
+        });
         setShowPopUp(true);
     };
 
@@ -60,7 +64,11 @@ const TableMaterials = ({ data }) => {
                                         <button
                                             aria-label='excluir'
                                             onClick={() =>
-                                                handleDeleteClick(d.titulo)
+                                                onDelete(
+                                                    d.id,
+                                                    'conteudos',
+                                                    d.titulo
+                                                )
                                             }
                                         >
                                             <img
@@ -82,7 +90,8 @@ const TableMaterials = ({ data }) => {
             {showPopUp && (
                 <PopUp
                     itemDelete={selectedItem}
-                    onClose={() => setShowPopUp(false)}
+                    handleClose={() => setShowPopUp(false)}
+                    handleDeleteConfirmation={handleDelete}
                 />
             )}
         </div>
