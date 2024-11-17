@@ -4,7 +4,7 @@ import Register from './pages/Register';
 
 function App() {
     return (
-        <div className='flex min-h-screen bg-americanOrange-500'>
+        <div className='flex justify-center items-center min-h-screen bg-americanOrange-500'>
             <Routes>
                 <Route path='/' element={<Login />} />
                 <Route path='/cadastro' element={<Register />} />
