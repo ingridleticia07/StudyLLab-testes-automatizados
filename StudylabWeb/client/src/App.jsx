@@ -10,12 +10,17 @@ function App() {
     return (
         <div className='flex justify-center items-center min-h-screen bg-americanOrange-500'>
             <Routes>
+                {/* Rotas da tela de cadastro */}
                 <Route path='/' element={<Login />} />
                 <Route path='/cadastro' element={<Register />} />
                 <Route path='/recuperar' element={<PassowordEmail />} />
                 <Route path='/verificacao' element={<VerificationCode />} />
                 <Route path='/senha' element={<ResetPassword />} />
                 <Route path='/termos' element={<Terms />} />
+
+                {/* <Route path='/incio' element={} />
+                <Route path='/contato' element={} />
+                <Route path='/sobre' element={} /> */}
             </Routes>
         </div>
     );
