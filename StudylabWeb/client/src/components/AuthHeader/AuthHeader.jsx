@@ -5,7 +5,7 @@ const AuthHeader = ({ infoText }) => {
                 Study
                 <span className='font-bold'>Lab</span>
             </h1>
-            <h2 className='text-xl font-bold text-center text-gray-800 my-6'>
+            <h2 className='text-lg font-bold text-center text-gray-600 my-6'>
                 {infoText}
             </h2>
         </header>

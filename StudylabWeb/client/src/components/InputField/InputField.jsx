@@ -13,7 +13,7 @@ const InputField = ({
     const invalid = false;
 
     return (
-        <div className='mb-4 w-96'>
+        <div className='mb-4 w-full min-w-96'>
             <label
                 htmlFor={id}
                 className='block text-sm font-medium text-gray-700'
