@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Terms from './pages/Terms';
 
 function App() {
     return (
@@ -8,7 +9,7 @@ function App() {
             <Routes>
                 <Route path='/' element={<Login />} />
                 <Route path='/cadastro' element={<Register />} />
-                <Route />
+                <Route path='/termos' element={<Terms />} />
                 <Route />
                 <Route />
                 <Route />

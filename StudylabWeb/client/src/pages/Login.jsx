@@ -1,6 +1,11 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { icons } from '../assets/assets';
 import InputField from '../components/InputField/InputField';
+import VisibilityButton from '../components/Buttons/VisibilityButton';
+import Button from '../components/Buttons/Button';
+import AuthHeader from '../components/AuthHeader/AuthHeader';
+import AuthFooter from '../components/AuthFooter/AuthFooter';
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -12,73 +17,50 @@ const Login = () => {
 
     return (
         <div className='flex flex-col justify-center items-center rounded-lg px-10 py-6 bg-white'>
-            <div className='max-w-md w-full'>
-                <h1 className='text-americanOrange-500 text-center text-4xl font-urbanist '>
-                    Study
-                    <span className='font-bold'>Lab</span>
-                </h1>
-                <h2 className='text-lg font-bold text-center text-gray-800 my-6'>
-                    Entrar na sua conta
-                </h2>
-                <form action='#' className='space-y-6'>
-                    <InputField
-                        type='email'
-                        id='email'
-                        label='E-mail institucional'
-                        placeholder='Seu email'
-                        icon={icons.at}
-                    />
-                    <InputField
-                        type={showPassword ? 'text' : 'password'}
-                        id='senha'
-                        label='Senha'
-                        placeholder='Sua senha'
-                        icon={icons.padlock}
-                        rightElement={
-                            <button
-                                onClick={togglePasswordVisibility}
-                                className='ml-2'
-                                aria-label='Alternar visibilidade da senha'
-                            >
-                                <img
-                                    src={
-                                        showPassword
-                                            ? icons.eyeClose
-                                            : icons.eyeOpen
-                                    }
-                                    alt=''
-                                />
-                            </button>
-                        }
-                    />
-                    <button
-                        type='submit'
-                        className='w-full bg-americanOrange-500 text-white py-2 rounded-md hover:bg-americanOrange-600'
-                    >
-                        Entrar
-                    </button>
-                </form>
-                <div className='text-center mt-4 text-sm'>
-                    Não tem uma conta?{' '}
-                    <a href='#' className='text-blue-500 hover:underline'>
-                        Cadastre-se
-                    </a>
-                </div>
-                <div className='text-center mt-2 text-sm'>
-                    <a href='#' className='text-blue-500 hover:underline'>
-                        Esqueceu a senha? Recuperar
-                    </a>
-                </div>
+            <AuthHeader infoText={'Entrar na sua conta'} />
+            <form action='#' className='space-y-6'>
+                <InputField
+                    type='email'
+                    id='email'
+                    label='E-mail institucional'
+                    placeholder='Seu email'
+                    icon={icons.at}
+                    invalidText={'Email invalido'}
+                />
+                <InputField
+                    type={showPassword ? 'text' : 'password'}
+                    id='senha'
+                    label='Senha'
+                    placeholder='Sua senha'
+                    icon={icons.padlock}
+                    invalidText={'senha invalida'}
+                    rightElement={
+                        <VisibilityButton
+                            handleClick={togglePasswordVisibility}
+                            showPassword={showPassword}
+                        />
+                    }
+                />
+                <Button text='Entrar' />
+            </form>
+            <div className='text-center mt-4 text-sm'>
+                Não tem uma conta?{' '}
+                <Link
+                    to={'/cadastro'}
+                    className='text-blue-500 hover:underline'
+                >
+                    Cadastre-se
+                </Link>
             </div>
-            <div className='mt-6 text-sm text-center'>
-                <a href='#' className='text-gray-600 hover:underline'>
-                    Voltar para a página inicial
-                </a>
-                <br />
-                <a href='#' className='text-gray-600 hover:underline'>
-                    Termos de Serviço e Políticas de Privacidade
-                </a>
+            <div className='text-center mt-4 text-sm'>
+                <Link
+                    to={'/cadastro'}
+                    className='text-blue-500 hover:underline'
+                >
+                    Esqueceu a senha? Recuperar
+                </Link>
             </div>
+            <AuthFooter />
         </div>
     );
 };
