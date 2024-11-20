@@ -27,6 +27,7 @@ const InputField = ({
                     id={id}
                     placeholder={placeholder}
                     className='flex-1 outline-none'
+                    required
                 />
                 {rightElement}
             </div>

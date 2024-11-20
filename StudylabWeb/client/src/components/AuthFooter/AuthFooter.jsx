@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 const AuthFooter = () => {
     return (
         <footer className='mt-6 text-sm text-center'>
-            <Link to={'#'} className='text-gray-600 hover:underline'>
+            <Link to={'/'} className='text-gray-600 hover:underline'>
                 Voltar para a página inicial
             </Link>
             <br />

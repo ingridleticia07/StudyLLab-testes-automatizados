@@ -54,7 +54,7 @@ const Login = () => {
             </div>
             <div className='text-center mt-4 text-sm'>
                 <Link
-                    to={'/cadastro'}
+                    to={'/recuperar'}
                     className='text-blue-500 hover:underline'
                 >
                     Esqueceu a senha? Recuperar

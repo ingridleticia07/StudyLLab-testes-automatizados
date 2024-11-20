@@ -2,6 +2,9 @@ import { Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Terms from './pages/Terms';
+import PassowordEmail from './pages/PassowordEmail';
+import VerificationCode from './pages/VerificationCode';
+import ResetPassword from './pages/ResetPassword';
 
 function App() {
     return (
@@ -9,11 +12,10 @@ function App() {
             <Routes>
                 <Route path='/' element={<Login />} />
                 <Route path='/cadastro' element={<Register />} />
+                <Route path='/recuperar' element={<PassowordEmail />} />
+                <Route path='/verificacao' element={<VerificationCode />} />
+                <Route path='/senha' element={<ResetPassword />} />
                 <Route path='/termos' element={<Terms />} />
-                <Route />
-                <Route />
-                <Route />
-                <Route />
             </Routes>
         </div>
     );
