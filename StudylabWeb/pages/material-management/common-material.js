@@ -95,7 +95,7 @@ export async function getMaterialByDisciplinaAndTopico(page,pageSize,idDisciplin
       const material = await getMaterialByDisciplinaOrTopico(page, pageSize,idDisciplina,idTopico);
 
       const { pageCount: countInPage, maxPage } = material;
-      
+      console.log(material)
       populateTable(material.documentos,page,usuario);
       addButtonsPagination(maxPage,itemsPerPageValue,idDisciplina,idTopico);
     } catch (error) {

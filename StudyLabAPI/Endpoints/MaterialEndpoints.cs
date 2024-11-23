@@ -40,13 +40,14 @@ namespace StudyLabAPI.Endpoints
             [FromQuery] int pageSize,
             [FromQuery] int idDisciplina,
             [FromQuery] int idTopico,
+            [FromQuery] bool isAnyStatus,
             [FromServices] IDocumentoController controller)
         {
 
             DocumentoListResponse? result;
             try
             {
-                result = await controller.GetAllDocumentosByDisciplinaOrTopico(page, pageSize, idDisciplina, idTopico);
+                result = await controller.GetAllDocumentosByDisciplinaOrTopico(page, pageSize, idDisciplina, idTopico, isAnyStatus);
             }
             catch (Exception e)
             {

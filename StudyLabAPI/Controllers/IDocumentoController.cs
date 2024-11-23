@@ -4,7 +4,7 @@ namespace StudyLabAPI.Controllers
 {
     public interface IDocumentoController
     {
-        public Task<DocumentoListResponse?> GetAllDocumentosByDisciplinaOrTopico(int page, int pageSize, int? idDisciplina, int? idTopico);
+        public Task<DocumentoListResponse?> GetAllDocumentosByDisciplinaOrTopico(int page, int pageSize, int? idDisciplina, int? idTopico, bool isAnyStatus);
 
         public Task<DocumentoModel?> CreateDocumento(RegisteredDocumentoModel documento, IFormFile file);
 

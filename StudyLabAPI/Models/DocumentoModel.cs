@@ -21,6 +21,9 @@ namespace StudyLabAPI.Models
         [Column("tipo_material")]
         public tipoMaterialEnum tipoMaterial { get; set; }
 
+        [Column("status")]
+        public statusDocumentoEnum status { get; set; }
+
         [ForeignKey("fk_topico")]
 
         public TopicoDiscussaoModel topico { get; set; }

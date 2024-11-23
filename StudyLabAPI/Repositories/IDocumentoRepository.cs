@@ -4,9 +4,9 @@ namespace StudyLabAPI.Repositories
 {
     public interface IDocumentoRepository
     {
-        public Task<IList<DocumentoModel>> GetAllDocumentos(int page, int pageSize, int? idDisciplina, int? idTopico);
+        public Task<IList<DocumentoModel>> GetAllDocumentos(int page, int pageSize, int? idDisciplina, int? idTopico, bool isAnyStatus);
 
-        public Task<(IList<DocumentoModel>, int, int)> GetDocumentosAndCount(int page, int pageSize, int? idDisciplina, int? idTopico);
+        public Task<(IList<DocumentoModel>, int, int)> GetDocumentosAndCount(int page, int pageSize, int? idDisciplina, int? idTopico, bool isAnyStatus);
 
         public Task CreateDocumento(DocumentoModel documento);
 

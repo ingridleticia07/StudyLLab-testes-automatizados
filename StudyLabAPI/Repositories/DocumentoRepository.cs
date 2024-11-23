@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudyLabAPI.Context;
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.Enums;
 
 namespace StudyLabAPI.Repositories
 {
-    public class DocumentoRepository :  IDocumentoRepository
+    public class DocumentoRepository : IDocumentoRepository
     {
 
         private AppDbContext dbContext { get; }
@@ -70,50 +71,96 @@ namespace StudyLabAPI.Repositories
             documentoForUpdate.tipoMaterial = documentoUpdate.tipoMaterial;
         }
 
-        public Task<IList<DocumentoModel>> GetAllDocumentos(int page, int pageSize, int? idDisciplina, int? idTopico) =>
-                GetAllDocumentos(dbContext, page, pageSize, idDisciplina, idTopico);
-        public async Task<IList<DocumentoModel>> GetAllDocumentos(AppDbContext inDbContext, int page, int pageSize, int? idDisciplina, int? idTopico)
+        public Task<IList<DocumentoModel>> GetAllDocumentos(int page, int pageSize, int? idDisciplina, int? idTopico, bool isAnyStatus) =>
+                GetAllDocumentos(dbContext, page, pageSize, idDisciplina, idTopico, isAnyStatus);
+        public async Task<IList<DocumentoModel>> GetAllDocumentos(AppDbContext inDbContext, int page, int pageSize, int? idDisciplina, int? idTopico, bool isAnyStatus)
         {
             var result = new List<DocumentoModel>();
 
-            if (idDisciplina != 0 && idTopico != 0)
+            if (!isAnyStatus)
             {
-                result = await inDbContext.documento
-                .AsNoTracking()
-                .Where(f => f.topico.idTopico == idTopico && f.topico.disciplina.idDisciplina == idDisciplina)
-                .OrderByDescending(f => f.idDocumento)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .Include(f => f.topico)
-                .ThenInclude(td => td.disciplina)
-                .Include(f => f.usuario)
-                .ToListAsync();
-            }
-            else if (idDisciplina != 0 || idTopico != 0)
-            {
-                result = await inDbContext.documento
-                .AsNoTracking()
-                .Where(f => f.topico.idTopico == idTopico || f.topico.disciplina.idDisciplina == idDisciplina)
-                .OrderByDescending(f => f.idDocumento)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .Include(f => f.topico)
-                .ThenInclude(td => td.disciplina)
-                .Include(f => f.usuario)
-                .ToListAsync();
+                if (idDisciplina != 0 && idTopico != 0)
+                {
+                    result = await inDbContext.documento
+                    .AsNoTracking()
+                    .Where(f => f.topico.idTopico == idTopico && f.topico.disciplina.idDisciplina == idDisciplina)
+                    .OrderByDescending(f => f.idDocumento)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .Include(f => f.topico)
+                    .ThenInclude(td => td.disciplina)
+                    .Include(f => f.usuario)
+                    .ToListAsync();
+                }
+                else if (idDisciplina != 0 || idTopico != 0)
+                {
+                    result = await inDbContext.documento
+                    .AsNoTracking()
+                    .Where(f => f.topico.idTopico == idTopico || f.topico.disciplina.idDisciplina == idDisciplina)
+                    .OrderByDescending(f => f.idDocumento)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .Include(f => f.topico)
+                    .ThenInclude(td => td.disciplina)
+                    .Include(f => f.usuario)
+                    .ToListAsync();
 
+                }
+                else
+                {
+                    result = await inDbContext.documento
+                    .AsNoTracking()
+                    .Where(f => f.status == statusDocumentoEnum.aprovado)
+                    .OrderByDescending(f => f.idDocumento)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .Include(f => f.topico)
+                    .ThenInclude(td => td.disciplina)
+                    .Include(f => f.usuario)
+                    .ToListAsync();
+                }
             }
             else
             {
-                result = await inDbContext.documento
-                .AsNoTracking()
-                .OrderByDescending(f => f.idDocumento)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .Include(f => f.topico)
-                .ThenInclude(td => td.disciplina)
-                .Include(f => f.usuario)
-                .ToListAsync();
+                if (idDisciplina != 0 && idTopico != 0)
+                {
+                    result = await inDbContext.documento
+                    .AsNoTracking()
+                    .Where(f => f.topico.idTopico == idTopico && f.topico.disciplina.idDisciplina == idDisciplina && f.status == statusDocumentoEnum.aprovado)
+                    .OrderByDescending(f => f.idDocumento)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .Include(f => f.topico)
+                    .ThenInclude(td => td.disciplina)
+                    .Include(f => f.usuario)
+                    .ToListAsync();
+                }
+                else if (idDisciplina != 0 || idTopico != 0)
+                {
+                    result = await inDbContext.documento
+                    .AsNoTracking()
+                    .Where(f => f.topico.idTopico == idTopico || f.topico.disciplina.idDisciplina == idDisciplina && f.status == statusDocumentoEnum.aprovado)
+                    .OrderByDescending(f => f.idDocumento)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .Include(f => f.topico)
+                    .ThenInclude(td => td.disciplina)
+                    .Include(f => f.usuario)
+                    .ToListAsync();
+
+                }
+                else
+                {
+                    result = await inDbContext.documento
+                    .AsNoTracking()
+                    .OrderByDescending(f => f.idDocumento)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .Include(f => f.topico)
+                    .ThenInclude(td => td.disciplina)
+                    .Include(f => f.usuario)
+                    .ToListAsync();
+                }
             }
 
             return result.Select(resposta => new DocumentoModel
@@ -121,6 +168,7 @@ namespace StudyLabAPI.Repositories
                 idDocumento = resposta.idDocumento,
                 diretorioMaterial = resposta.diretorioMaterial,
                 tipoArquivo = resposta.tipoArquivo,
+                status = resposta.status,
                 tipoMaterial = resposta.tipoMaterial,
                 dataCadastro = resposta.dataCadastro,
                 topico = resposta.topico,
@@ -140,45 +188,58 @@ namespace StudyLabAPI.Repositories
             }).ToList();
         }
 
-        private async Task<IList<DocumentoModel>> GetDocumentosWFactory(int page, int pageSize, int? idDisciplina, int? idTopico)
+        private async Task<IList<DocumentoModel>> GetDocumentosWFactory(int page, int pageSize, int? idDisciplina, int? idTopico, bool isAnyStatus)
         {
             await using AppDbContext? inDbContext = await _dbContextFactory.CreateDbContextAsync();
 
             if (inDbContext is null)
                 throw new("Was not possible to instanciaite a new DbContext");
 
-            return await GetAllDocumentos(inDbContext, page, pageSize, idDisciplina, idTopico);
+            return await GetAllDocumentos(inDbContext, page, pageSize, idDisciplina, idTopico, isAnyStatus);
         }
 
-        private async Task<int> GetDocumentoForumCountWFactory(int? idTopico, int? idDisciplina)
+        private async Task<int> GetDocumentoForumCountWFactory(int? idTopico, int? idDisciplina, bool isAnyStatus)
         {
             await using AppDbContext? inDbContext = await _dbContextFactory.CreateDbContextAsync();
 
             if (inDbContext is null)
                 throw new("Was not possible to instanciaite a new DbContext");
 
-            return await GetDocumentosAndCount(inDbContext, idTopico, idDisciplina);
+            return await GetDocumentosAndCount(inDbContext, idTopico, idDisciplina, isAnyStatus);
         }
 
-        private async Task<int> GetDocumentosAndCount(AppDbContext inDbContext, int? idTopico, int? idDisciplina)
+        private async Task<int> GetDocumentosAndCount(AppDbContext inDbContext, int? idTopico, int? idDisciplina, bool isAnyStatus)
         {
             int count = 0;
 
-            if (idTopico != 0 || idDisciplina != 0)
-                count = await inDbContext.documento.Where(f => f.topico.idTopico == idTopico || f.topico.disciplina.idDisciplina == idDisciplina).CountAsync();
+            if (!isAnyStatus)
+            {
+                if (idTopico != 0 || idDisciplina != 0)
+                    count = await inDbContext.documento.Where(f => f.topico.idTopico == idTopico || f.topico.disciplina.idDisciplina == idDisciplina && f.status == statusDocumentoEnum.aprovado).CountAsync();
 
-            else if (idTopico != 0 && idDisciplina != 0)
-                count = await inDbContext.documento.Where(f => f.topico.idTopico == idTopico && f.topico.disciplina.idDisciplina == idDisciplina).CountAsync();
+                else if (idTopico != 0 && idDisciplina != 0)
+                    count = await inDbContext.documento.Where(f => f.topico.idTopico == idTopico && f.topico.disciplina.idDisciplina == idDisciplina && f.status == statusDocumentoEnum.aprovado).CountAsync();
+                else
+                    count = await inDbContext.documento.Where(f => f.status == statusDocumentoEnum.aprovado).CountAsync();
+            }
             else
-                count = await inDbContext.documento.CountAsync();
+            {
+                if (idTopico != 0 || idDisciplina != 0)
+                    count = await inDbContext.documento.Where(f => f.topico.idTopico == idTopico || f.topico.disciplina.idDisciplina == idDisciplina).CountAsync();
+
+                else if (idTopico != 0 && idDisciplina != 0)
+                    count = await inDbContext.documento.Where(f => f.topico.idTopico == idTopico && f.topico.disciplina.idDisciplina == idDisciplina).CountAsync();
+                else
+                    count = await inDbContext.documento.CountAsync();
+            }
 
             return count;
         }
 
-        public async Task<(IList<DocumentoModel>, int, int)> GetDocumentosAndCount(int page, int pageSize, int? idDisciplina, int? idTopico)
+        public async Task<(IList<DocumentoModel>, int, int)> GetDocumentosAndCount(int page, int pageSize, int? idDisciplina, int? idTopico, bool isAnyStatus)
         {
-            var respostasTask = GetDocumentosWFactory(page, pageSize, idDisciplina, idTopico);
-            var respostasCountTask = GetDocumentoForumCountWFactory(idTopico, idDisciplina);
+            var respostasTask = GetDocumentosWFactory(page, pageSize, idDisciplina, idTopico, isAnyStatus);
+            var respostasCountTask = GetDocumentoForumCountWFactory(idTopico, idDisciplina, isAnyStatus);
             await Task.WhenAll(respostasTask, respostasCountTask);
 
             var result = respostasTask.Result;

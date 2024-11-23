@@ -5,7 +5,7 @@ const MATERIAL_ENDPOINT = "/material";
 export async function getMaterialByDisciplinaOrTopico(page, pageSize, idDisciplina, idTopico) {
     let response = await instance.get(MATERIAL_ENDPOINT+
       "/ListarDocumentosWithPagination?page="+page+
-      "&pageSize="+pageSize+"&idDisciplina="+idDisciplina+"&idTopico="+idTopico+"");
+      "&pageSize="+pageSize+"&idDisciplina="+idDisciplina+"&idTopico="+idTopico+"&isAnyStatus=true");
         
     if (response.status !== 200) {
       return null;

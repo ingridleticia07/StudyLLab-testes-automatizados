@@ -61,6 +61,7 @@ namespace StudyLabAPI.Controllers
                 diretorioMaterial = diretorio,
                 tipoMaterial = documento.TipoMaterial,
                 topico = relatedTopico,
+                status = statusDocumentoEnum.pendente,
                 tipoArquivo = tipoArquivo,
                 usuario = relatedUsuario
             };
@@ -158,7 +159,7 @@ namespace StudyLabAPI.Controllers
             return (documentoUpdateObj);
         }
 
-        public async Task<DocumentoListResponse> GetAllDocumentosByDisciplinaOrTopico(int page, int pageSize, int? idDisciplina, int? idTopico)
+        public async Task<DocumentoListResponse> GetAllDocumentosByDisciplinaOrTopico(int page, int pageSize, int? idDisciplina, int? idTopico, bool isAnyStatus)
         {
             logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
             page, pageSize);
@@ -176,7 +177,7 @@ namespace StudyLabAPI.Controllers
                 page, pageSize);
 
             (var result, int resultCount, int documentoCount) = await documentoRepository
-            .GetDocumentosAndCount(page, pageSize, idDisciplina, idTopico);
+            .GetDocumentosAndCount(page, pageSize, idDisciplina, idTopico,isAnyStatus);
 
             var documentoReadResult = result.Select(_documentoModelMapper.DocumentoModelMapperToDocumentoReadModel)
                 .ToList();

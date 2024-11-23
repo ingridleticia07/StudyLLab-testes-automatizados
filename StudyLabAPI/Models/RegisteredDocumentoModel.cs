@@ -11,6 +11,8 @@ namespace StudyLabAPI.Models
 
         public tipoMaterialEnum TipoMaterial { get; set; }
 
+        public statusDocumentoEnum status { get; set; }
+
         public int Idtopico { get; set; }
 
         public tipoArquivo tipoArquivo { get; set; }
