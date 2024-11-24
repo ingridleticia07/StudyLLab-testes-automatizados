@@ -8,6 +8,8 @@ namespace StudyLabAPI.Controllers
 
         public Task<DocumentoModel?> CreateDocumento(RegisteredDocumentoModel documento, IFormFile file);
 
+        public Task CreateDenuncia(int idDenuncia);
+
         public Task<DocumentoModel?> UpdateDocumento(RegisteredDocumentoModel documentoUpdate);
 
         public Task<List<DocumentoModel?>> GetAllDocumentos();

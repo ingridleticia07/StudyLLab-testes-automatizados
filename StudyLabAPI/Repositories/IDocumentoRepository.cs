@@ -10,6 +10,8 @@ namespace StudyLabAPI.Repositories
 
         public Task CreateDocumento(DocumentoModel documento);
 
+        public Task CreateDenuncia(DenunciaModel denuncia);
+
         public Task UpdateDocumento(DocumentoModel documentoUpdate);
 
         public Task<List<DocumentoModel?>> GetAllDocumentos();

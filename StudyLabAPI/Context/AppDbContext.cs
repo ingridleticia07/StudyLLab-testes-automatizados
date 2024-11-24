@@ -52,6 +52,8 @@ public class AppDbContext : DbContext
     /// </summary>
     public DbSet<DocumentoModel> documento { get; set; } = null!;
 
+    public DbSet<DenunciaModel> denuncia { get; set; } = null!;
+
     public AppDbContext(EnvironmentService environmentService)
     {
         connectionString = environmentService.postgresConnectionString;

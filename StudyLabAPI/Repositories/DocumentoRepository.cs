@@ -20,6 +20,9 @@ namespace StudyLabAPI.Repositories
         public async Task CreateDocumento(DocumentoModel documento) =>
             await dbContext.documento.AddAsync(documento);
 
+        public async Task CreateDenuncia(DenunciaModel denuncia) =>
+            await dbContext.denuncia.AddAsync(denuncia);
+
         public async Task DeleteDocumento(int idDocumento)
         {
             DocumentoModel documentoModel = await dbContext.documento.FindAsync(idDocumento);
@@ -51,7 +54,7 @@ namespace StudyLabAPI.Repositories
 
         public async Task<DocumentoModel?> GetDocumentoById(int idDocumento)
         {
-            DocumentoModel documentoModel = await dbContext.documento.FindAsync(idDocumento);
+            DocumentoModel documentoModel = await dbContext.documento.Include(value => value.usuario).FirstOrDefaultAsync(d => d.idDocumento == idDocumento);
 
             return documentoModel;
         }

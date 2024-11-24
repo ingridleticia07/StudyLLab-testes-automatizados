@@ -27,7 +27,7 @@ namespace StudyLabAPI.Controllers
         private readonly DocumentoModelMapper _documentoModelMapper;
 
         public DocumentoController(DocumentoModelMapper
-            documentoModelMapper,ITopicoDiscussaoRepository topicoDiscussaoRepository,
+            documentoModelMapper, ITopicoDiscussaoRepository topicoDiscussaoRepository,
             IDisciplinaRepository DisciplinaRepository, IUsuarioRepository usuarioRepository,
             IRespostaForumRepository respostaForumRepository, IForumRepository forumRepository,
             IDocumentoRepository documentoRepository, ILogger logger)
@@ -51,9 +51,9 @@ namespace StudyLabAPI.Controllers
             int usuarioId = documento.IdUsuario;
 
             UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId);
-            
 
-             (string diretorio, tipoArquivo tipoArquivo) = await MoveDocumentFileAsync(file);
+
+            (string diretorio, tipoArquivo tipoArquivo) = await MoveDocumentFileAsync(file);
 
             DocumentoModel novoDocumento = new()
             {
@@ -85,22 +85,33 @@ namespace StudyLabAPI.Controllers
             string fileExtension = Path.GetExtension(file.FileName);
             string newFileName = $"document_{Guid.NewGuid()}{fileExtension}";
 
-            string destinationDirectory = Path.Combine("wwwroot", "documents");
+            // Use Path.Combine with the base directory
+            string wwwRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            string destinationDirectory = Path.Combine(wwwRootPath, "documents");
 
+            // Ensure the directory exists
             Directory.CreateDirectory(destinationDirectory);
 
+            // Create the destination file path
             string destinationFilePath = Path.Combine(destinationDirectory, newFileName);
 
+            // Write the file to the destination
             using (var stream = new FileStream(destinationFilePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
-            string finalPath = destinationFilePath.Replace("wwwroot", "");
 
-            tipoArquivo fileType = fileExtension == ".jpeg" || fileExtension == ".jpg" || fileExtension == ".png" ? tipoArquivo.imagem : tipoArquivo.pdf;
+            // Get the relative path for serving files
+            string finalPath = $"/documents/{newFileName}";
+
+            // Determine file type
+            tipoArquivo fileType = fileExtension == ".jpeg" || fileExtension == ".jpg" || fileExtension == ".png"
+                ? tipoArquivo.imagem
+                : tipoArquivo.pdf;
 
             return (finalPath, fileType);
         }
+
 
 
         public async Task DeleteDocumento(int idDocumento)
@@ -108,7 +119,7 @@ namespace StudyLabAPI.Controllers
             DocumentoModel documento = await documentoRepository.GetDocumentoById(idDocumento);
 
             string rootDirectory = "wwwroot";
-            
+
             string fullPath = string.Concat(rootDirectory, documento.diretorioMaterial);
 
             if (File.Exists(fullPath))
@@ -177,7 +188,7 @@ namespace StudyLabAPI.Controllers
                 page, pageSize);
 
             (var result, int resultCount, int documentoCount) = await documentoRepository
-            .GetDocumentosAndCount(page, pageSize, idDisciplina, idTopico,isAnyStatus);
+            .GetDocumentosAndCount(page, pageSize, idDisciplina, idTopico, isAnyStatus);
 
             var documentoReadResult = result.Select(_documentoModelMapper.DocumentoModelMapperToDocumentoReadModel)
                 .ToList();
@@ -197,6 +208,22 @@ namespace StudyLabAPI.Controllers
                 pageCount = resultCount,
                 documentos = documentoReadResult
             };
+        }
+
+        public async Task CreateDenuncia(int idDocumento)
+        {
+            DocumentoModel? relatedDocumento = await documentoRepository.GetDocumentoById(idDocumento);
+
+            DenunciaModel novaDenuncia = new()
+            {
+                usuario = relatedDocumento.usuario,
+                dataDenuncia = DateOnly.FromDateTime(DateTime.Now),
+                statusDenuncia = statusDenunciaEnum.Pendente
+            };
+
+            await documentoRepository.CreateDenuncia(novaDenuncia);
+
+            await documentoRepository.Flush();
         }
     }
 }
