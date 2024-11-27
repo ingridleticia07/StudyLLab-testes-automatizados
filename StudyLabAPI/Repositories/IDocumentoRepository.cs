@@ -20,6 +20,11 @@ namespace StudyLabAPI.Repositories
 
         public Task<DocumentoModel?> GetDocumentoById(int idDocumento);
         public Task DeleteDocumento(int idDocumento);
+
+        public Task<IList<DenunciaModel>> GetAllDenuncias(int page, int pageSize);
+
+        public Task<(IList<DenunciaModel>, int, int)> GetDenunciasAndCount(int page, int pageSize);
+
         public Task Flush();
     }
 }

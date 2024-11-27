@@ -126,6 +126,7 @@ public static class Di
         services.AddTransient<DisciplinaModelMapper>();
         services.AddTransient<TopicoDiscussaoModelMapper>();
         services.AddTransient<DocumentoModelMapper>();
+        services.AddTransient<DenunciaModelMapper>();
         services.AddTransient<RespotaForumModelMapper>();
         services.AddTransient<UsuarioModelMapper>();
         services.AddTransient<RegisterUserRequestModelMapper>();

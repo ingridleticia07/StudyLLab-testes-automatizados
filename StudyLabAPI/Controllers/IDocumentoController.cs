@@ -6,6 +6,8 @@ namespace StudyLabAPI.Controllers
     {
         public Task<DocumentoListResponse?> GetAllDocumentosByDisciplinaOrTopico(int page, int pageSize, int? idDisciplina, int? idTopico, bool isAnyStatus);
 
+        public Task<DenunciaListResponse?> GetAllDenuncias(int page, int pageSize);
+
         public Task<DocumentoModel?> CreateDocumento(RegisteredDocumentoModel documento, IFormFile file);
 
         public Task CreateDenuncia(int idDenuncia);

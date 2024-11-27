@@ -26,13 +26,17 @@ namespace StudyLabAPI.Controllers
 
         private readonly DocumentoModelMapper _documentoModelMapper;
 
+        private readonly DenunciaModelMapper _denunciaModelMapper;
+
         public DocumentoController(DocumentoModelMapper
-            documentoModelMapper, ITopicoDiscussaoRepository topicoDiscussaoRepository,
+            documentoModelMapper, DenunciaModelMapper
+            denunciaModelMapper, ITopicoDiscussaoRepository topicoDiscussaoRepository,
             IDisciplinaRepository DisciplinaRepository, IUsuarioRepository usuarioRepository,
             IRespostaForumRepository respostaForumRepository, IForumRepository forumRepository,
             IDocumentoRepository documentoRepository, ILogger logger)
         {
             this._documentoModelMapper = documentoModelMapper;
+            this._denunciaModelMapper = denunciaModelMapper;
             this.topicoDiscussaoRepository = topicoDiscussaoRepository;
             this.DisciplinaRepository = DisciplinaRepository;
             this.usuarioRepository = usuarioRepository;
@@ -82,36 +86,58 @@ namespace StudyLabAPI.Controllers
                 throw new ArgumentException("No file uploaded.");
             }
 
-            string fileExtension = Path.GetExtension(file.FileName);
-            string newFileName = $"document_{Guid.NewGuid()}{fileExtension}";
+            string fileExtension = Path.GetExtension(file.FileName).ToLower();
 
-            // Use Path.Combine with the base directory
-            string wwwRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-            string destinationDirectory = Path.Combine(wwwRootPath, "documents");
-
-            // Ensure the directory exists
-            Directory.CreateDirectory(destinationDirectory);
-
-            // Create the destination file path
-            string destinationFilePath = Path.Combine(destinationDirectory, newFileName);
-
-            // Write the file to the destination
-            using (var stream = new FileStream(destinationFilePath, FileMode.Create))
+            // Validar tipos suportados
+            var validExtensions = new[] { ".jpeg", ".jpg", ".png", ".pdf" };
+            if (!validExtensions.Contains(fileExtension))
             {
-                await file.CopyToAsync(stream);
+                throw new ArgumentException("Unsupported file type.");
             }
 
-            // Get the relative path for serving files
+            // Gerar novo nome único
+            string newFileName = $"document_{Guid.NewGuid()}{fileExtension}";
+
+            // Configurar diretórios
+            string basePath = Directory.GetCurrentDirectory();
+
+            string wwwRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            string destinationDirectory = Path.Combine(wwwRootPath, "documents");
+            logger.Information("[{basePath}]",
+            basePath);
+            logger.Information("[{wwwRootPath}]",
+            wwwRootPath);
+            Directory.CreateDirectory(destinationDirectory); // Garantir que a pasta existe
+
+            // Caminho do arquivo
+            string destinationFilePath = Path.Combine(destinationDirectory, newFileName);
+
+            try
+            {
+                // Salvar o arquivo
+                using (var stream = new FileStream(destinationFilePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to save file: {ex.Message}");
+            }
+
+            // Caminho relativo para acesso
             string finalPath = $"/documents/{newFileName}";
 
-            // Determine file type
-            tipoArquivo fileType = fileExtension == ".jpeg" || fileExtension == ".jpg" || fileExtension == ".png"
-                ? tipoArquivo.imagem
-                : tipoArquivo.pdf;
+            // Determinar tipo de arquivo
+            tipoArquivo fileType = fileExtension switch
+            {
+                ".jpeg" or ".jpg" or ".png" => tipoArquivo.imagem,
+                ".pdf" => tipoArquivo.pdf,
+                _ => throw new ArgumentException("Unsupported file type.")
+            };
 
             return (finalPath, fileType);
         }
-
 
 
         public async Task DeleteDocumento(int idDocumento)
@@ -207,6 +233,46 @@ namespace StudyLabAPI.Controllers
                 documentoForumCount = documentoCount,
                 pageCount = resultCount,
                 documentos = documentoReadResult
+            };
+        }
+
+        public async Task<DenunciaListResponse> GetAllDenuncias(int page, int pageSize)
+        {
+            logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
+            page, pageSize);
+
+            PageValidator validator = new(page, pageSize);
+
+            if (!validator.isValid)
+            {
+                ValidationException exception = new(["Parâmetros de paginação inválidos"]);
+                logger.Error(exception, "Parâmetros de paginação inválidos");
+                throw exception;
+            }
+
+            logger.Information("Recuperando topicos da página Page[{Page}] PageSize[{PageSize}]",
+                page, pageSize);
+
+            (var result, int resultCount, int denunciaCount) = await documentoRepository
+            .GetDenunciasAndCount(page, pageSize);
+
+            var denunciaReadResult = result.Select(_denunciaModelMapper.UsuarioModelMapperToDenunciaReadModel)
+                .ToList();
+
+            logger.Information("Recuperado {Count} usuários da página Page[{Page}] PageSize[{PageSize}]",
+                denunciaReadResult.Count, page, pageSize);
+            logger.Information("Recuperando informações extras para a resposta");
+
+            int maxPage = denunciaCount / pageSize;
+            if (denunciaCount % pageSize != 0)
+                maxPage++;
+
+            return new()
+            {
+                maxPage = maxPage,
+                denunciaCount = denunciaCount,
+                pageCount = resultCount,
+                denuncias = denunciaReadResult
             };
         }
 

@@ -249,5 +249,64 @@ namespace StudyLabAPI.Repositories
             int topicosCount = respostasCountTask.Result;
             return (result, result.Count, topicosCount);
         }
+
+        public Task<IList<DenunciaModel>> GetAllDenuncias(int page, int pageSize) =>
+                GetAllDenuncias(dbContext, page, pageSize);
+
+        public async Task<IList<DenunciaModel>> GetAllDenuncias(AppDbContext inDbContext, int page, int pageSize)
+        {
+            var result = new List<DenunciaModel>();
+
+            result = await inDbContext.denuncia
+            .AsNoTracking()
+            .OrderByDescending(f => f.idDenuncia)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Include(f => f.usuario)
+            .ThenInclude(td => td.curso)
+            .ToListAsync();
+
+            return result;
+        }
+
+        private async Task<IList<DenunciaModel>> GetDenunciasWFactory(int page, int pageSize)
+        {
+            await using AppDbContext? inDbContext = await _dbContextFactory.CreateDbContextAsync();
+
+            if (inDbContext is null)
+                throw new("Was not possible to instanciaite a new DbContext");
+
+            return await GetAllDenuncias(inDbContext, page, pageSize);
+        }
+
+        private async Task<int> GetDocumentoDenunciasCountWFactory()
+        {
+            await using AppDbContext? inDbContext = await _dbContextFactory.CreateDbContextAsync();
+
+            if (inDbContext is null)
+                throw new("Was not possible to instanciaite a new DbContext");
+
+            return await GetDenunciasAndCount(inDbContext);
+        }
+
+        private async Task<int> GetDenunciasAndCount(AppDbContext inDbContext)
+        {
+            int count = 0;
+
+            count = await inDbContext.denuncia.CountAsync();
+
+            return count;
+        }
+
+        public async Task<(IList<DenunciaModel>, int, int)> GetDenunciasAndCount(int page, int pageSize)
+        {
+            var denunciasTask = GetDenunciasWFactory(page, pageSize);
+            var denunciasCountTask = GetDocumentoDenunciasCountWFactory();
+            await Task.WhenAll(denunciasTask, denunciasCountTask);
+
+            var result = denunciasTask.Result;
+            int denunciasCount = denunciasCountTask.Result;
+            return (result, result.Count, denunciasCount);
+        }
     }
 }

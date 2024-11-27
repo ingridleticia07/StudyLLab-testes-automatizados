@@ -15,6 +15,8 @@ namespace StudyLabAPI.Endpoints
                 .WithOpenApi(MaterialSummaries.CreateDocumento);
             builder.MapGet("ListarDocumentosWithPagination", ListarDocumentosWithPagination)
                 .WithOpenApi(MaterialSummaries.CreateDocumento);
+            builder.MapGet("ListarDenunciasWithPagination", ListarDenunciasWithPagination)
+                .WithOpenApi(MaterialSummaries.CreateDocumento);
             builder.MapDelete("DeleteDocumento", DeleteDocumento)
                 .WithOpenApi(MaterialSummaries.CreateDocumento);
             return builder;
@@ -27,7 +29,7 @@ namespace StudyLabAPI.Endpoints
         {
             try
             {
-                await controller.CreateDocumento(novoDocumento,file);
+                await controller.CreateDocumento(novoDocumento, file);
             }
             catch (Exception e)
             {
@@ -53,7 +55,26 @@ namespace StudyLabAPI.Endpoints
             }
             catch (Exception e)
             {
-                return Results.BadRequest(e.Message);
+                return Results.BadRequest(e);
+            }
+
+            return Results.Ok(result);
+        }
+
+        private static async Task<IResult> ListarDenunciasWithPagination(HttpContext context,
+            [FromQuery] int page,
+            [FromQuery] int pageSize,
+            [FromServices] IDocumentoController controller)
+        {
+
+            DenunciaListResponse? result;
+            try
+            {
+                result = await controller.GetAllDenuncias(page, pageSize);
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e);
             }
 
             return Results.Ok(result);
