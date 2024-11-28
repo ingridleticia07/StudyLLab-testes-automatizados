@@ -8,6 +8,8 @@ namespace StudyLabAPI.Models
 
         public UsuarioModel usuario { get; set; }
 
+        public DocumentoModel documento { get; set; }
+
         public statusDenunciaEnum statusDenuncia { get; set; }
 
         public DateOnly dataDenuncia { get; set; }

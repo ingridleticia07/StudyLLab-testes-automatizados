@@ -13,6 +13,9 @@ namespace StudyLabAPI.Models
         [ForeignKey("fk_usuario")]
         public UsuarioModel usuario { get; set; }
 
+        [ForeignKey("fk_documento")]
+        public DocumentoModel documento { get; set; }
+
         [Column("status_denuncia")]
         [Required]
         public statusDenunciaEnum statusDenuncia { get; set; }

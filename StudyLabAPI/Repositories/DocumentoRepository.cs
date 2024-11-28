@@ -264,6 +264,7 @@ namespace StudyLabAPI.Repositories
             .Take(pageSize)
             .Include(f => f.usuario)
             .ThenInclude(td => td.curso)
+            .Include(td => td.documento)
             .ToListAsync();
 
             return result;

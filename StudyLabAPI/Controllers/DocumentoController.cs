@@ -283,6 +283,7 @@ namespace StudyLabAPI.Controllers
             DenunciaModel novaDenuncia = new()
             {
                 usuario = relatedDocumento.usuario,
+                documento = relatedDocumento,
                 dataDenuncia = DateOnly.FromDateTime(DateTime.Now),
                 statusDenuncia = statusDenunciaEnum.Pendente
             };

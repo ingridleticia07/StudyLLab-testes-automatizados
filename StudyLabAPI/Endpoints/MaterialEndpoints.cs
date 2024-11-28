@@ -97,19 +97,19 @@ namespace StudyLabAPI.Endpoints
         }
 
         private static async Task<IResult> CreateDenuncia(HttpContext context,
-        [FromQuery] int idDocumento,
+        [FromBody] RegisteredDocumentoModel documento,
         [FromServices] IDocumentoController controller)
         {
             try
             {
-                await controller.CreateDenuncia(idDocumento);
+                await controller.CreateDenuncia(documento.idDocumento);
             }
             catch (Exception e)
             {
                 return Results.BadRequest(e.Message);
             }
 
-            return Results.Ok(idDocumento);
+            return Results.Ok(documento.idDocumento);
         }
     }
 }
