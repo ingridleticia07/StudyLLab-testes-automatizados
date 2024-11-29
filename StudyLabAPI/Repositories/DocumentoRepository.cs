@@ -74,6 +74,23 @@ namespace StudyLabAPI.Repositories
             documentoForUpdate.tipoMaterial = documentoUpdate.tipoMaterial;
         }
 
+        public async Task UpdateDenunciaStatus(DenunciaReadModel denuncia)
+        {
+            DenunciaModel denunciaForUpdate = await dbContext.denuncia
+           .Where(value => value.idDenuncia == denuncia.idDenuncia).Include(value => value.documento).FirstOrDefaultAsync();
+
+            if (denunciaForUpdate == null)
+            {
+                return;
+            }
+
+            denunciaForUpdate.statusDenuncia = denuncia.statusDenuncia;
+
+            DocumentoModel documentoForUpdate = await dbContext.documento.FindAsync(denunciaForUpdate.documento.idDocumento);
+
+            documentoForUpdate.status = denuncia.statusDocumento;
+        }
+
         public Task<IList<DocumentoModel>> GetAllDocumentos(int page, int pageSize, int? idDisciplina, int? idTopico, bool isAnyStatus) =>
                 GetAllDocumentos(dbContext, page, pageSize, idDisciplina, idTopico, isAnyStatus);
         public async Task<IList<DocumentoModel>> GetAllDocumentos(AppDbContext inDbContext, int page, int pageSize, int? idDisciplina, int? idTopico, bool isAnyStatus)

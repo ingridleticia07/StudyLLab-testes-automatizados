@@ -13,6 +13,8 @@ namespace StudyLabAPI.Endpoints
                 .WithOpenApi(MaterialSummaries.CreateDocumento);
             builder.MapPost("cadastrarDenuncia", CreateDenuncia)
                 .WithOpenApi(MaterialSummaries.CreateDocumento);
+            builder.MapPut("UpdateDenuncia", UpdateDenunciaStatus)
+                .WithOpenApi(MaterialSummaries.CreateDocumento);
             builder.MapGet("ListarDocumentosWithPagination", ListarDocumentosWithPagination)
                 .WithOpenApi(MaterialSummaries.CreateDocumento);
             builder.MapGet("ListarDenunciasWithPagination", ListarDenunciasWithPagination)
@@ -110,6 +112,22 @@ namespace StudyLabAPI.Endpoints
             }
 
             return Results.Ok(documento.idDocumento);
+        }
+
+        private static async Task<IResult> UpdateDenunciaStatus(HttpContext context,
+        [FromBody] DenunciaReadModel denunciaReadModel,
+        [FromServices] IDocumentoController controller)
+        {
+            try
+            {
+                await controller.UpdateDenunciaStatus(denunciaReadModel);
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+
+            return Results.Ok(denunciaReadModel);
         }
     }
 }

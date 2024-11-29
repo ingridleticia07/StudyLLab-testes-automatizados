@@ -175,6 +175,15 @@ namespace StudyLabAPI.Controllers
             return documentos;
         }
 
+        public async Task<DenunciaReadModel> UpdateDenunciaStatus(DenunciaReadModel denunciaUpdate)
+        {
+            await documentoRepository.UpdateDenunciaStatus(denunciaUpdate);
+
+            await documentoRepository.Flush();
+
+            return (denunciaUpdate);
+        }
+
         public async Task<DocumentoModel?> UpdateDocumento(RegisteredDocumentoModel documentoUpdate)
         {
             int topicoId = documentoUpdate.Idtopico;
@@ -285,7 +294,7 @@ namespace StudyLabAPI.Controllers
                 usuario = relatedDocumento.usuario,
                 documento = relatedDocumento,
                 dataDenuncia = DateOnly.FromDateTime(DateTime.Now),
-                statusDenuncia = statusDenunciaEnum.Pendente
+                statusDenuncia = statusDenunciaEnum.Analise
             };
 
             await documentoRepository.CreateDenuncia(novaDenuncia);

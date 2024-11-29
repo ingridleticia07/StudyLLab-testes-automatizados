@@ -14,6 +14,8 @@ namespace StudyLabAPI.Repositories
 
         public Task UpdateDocumento(DocumentoModel documentoUpdate);
 
+        public Task UpdateDenunciaStatus(DenunciaReadModel denunciaUpdate);
+
         public Task<List<DocumentoModel?>> GetAllDocumentos();
 
         public Task<List<DocumentoModel?>> GetDocumentoByTopico(TopicoDiscussaoModel topico);

@@ -5,8 +5,12 @@ namespace StudyLabAPI.Models
     public class DocumentoReadModel
     {
         public int idDocumento { get; set; }
+
         public DateOnly dataCadastro { get; set; }
+
         public string diretorioMaterial { get; set; }
+
+        public statusDocumentoEnum status { get; set; }
 
         public tipoMaterialEnum tipoMaterial { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using StudyLabAPI.Models;
+using StudyLabAPI.Models.Enums;
 
 namespace StudyLabAPI.Controllers
 {
@@ -11,6 +12,8 @@ namespace StudyLabAPI.Controllers
         public Task<DocumentoModel?> CreateDocumento(RegisteredDocumentoModel documento, IFormFile file);
 
         public Task CreateDenuncia(int idDenuncia);
+
+        public Task<DenunciaReadModel> UpdateDenunciaStatus(DenunciaReadModel denuncia);
 
         public Task<DocumentoModel?> UpdateDocumento(RegisteredDocumentoModel documentoUpdate);
 

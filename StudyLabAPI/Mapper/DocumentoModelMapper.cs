@@ -12,6 +12,7 @@ namespace StudyLabAPI.Mapper
         [MapProperty(nameof(DocumentoModel.idDocumento), nameof(DocumentoReadModel.idDocumento))]
         [MapProperty(nameof(DocumentoModel.topico), nameof(DocumentoReadModel.topico))]
         [MapProperty(nameof(DocumentoModel.tipoArquivo), nameof(DocumentoReadModel.tipoArquivo))]
+        [MapProperty(nameof(DocumentoModel.status), nameof(DocumentoReadModel.status))]
         [MapProperty(nameof(DocumentoModel.tipoMaterial), nameof(DocumentoReadModel.tipoMaterial))]
         [MapProperty(nameof(DocumentoModel.dataCadastro), nameof(DocumentoReadModel.dataCadastro))]
         public partial DocumentoReadModel DocumentoModelMapperToDocumentoReadModel(DocumentoModel model);
