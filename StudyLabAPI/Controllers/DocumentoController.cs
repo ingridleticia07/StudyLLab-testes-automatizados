@@ -285,21 +285,29 @@ namespace StudyLabAPI.Controllers
             };
         }
 
-        public async Task CreateDenuncia(int idDocumento)
+        public async Task CreateDenuncia(int idDocumento, int idUsuario)
         {
             DocumentoModel? relatedDocumento = await documentoRepository.GetDocumentoById(idDocumento);
 
-            DenunciaModel novaDenuncia = new()
+            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(idUsuario);
+
+            bool checkDenunciaAlreadyExists = await documentoRepository.CheckDenunciaAlreadyExists(idDocumento, idUsuario);
+
+            if (!checkDenunciaAlreadyExists)
             {
-                usuario = relatedDocumento.usuario,
-                documento = relatedDocumento,
-                dataDenuncia = DateOnly.FromDateTime(DateTime.Now),
-                statusDenuncia = statusDenunciaEnum.Analise
-            };
+                DenunciaModel novaDenuncia = new()
+                {
+                    usuario = relatedUsuario,
+                    documento = relatedDocumento,
+                    dataDenuncia = DateOnly.FromDateTime(DateTime.Now),
+                    statusDenuncia = statusDenunciaEnum.Analise
+                };
 
-            await documentoRepository.CreateDenuncia(novaDenuncia);
+                await documentoRepository.CreateDenuncia(novaDenuncia);
 
-            await documentoRepository.Flush();
+                await documentoRepository.Flush();
+            }
+
         }
     }
 }

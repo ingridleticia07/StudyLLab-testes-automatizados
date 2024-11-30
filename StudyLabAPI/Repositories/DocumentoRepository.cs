@@ -23,6 +23,17 @@ namespace StudyLabAPI.Repositories
         public async Task CreateDenuncia(DenunciaModel denuncia) =>
             await dbContext.denuncia.AddAsync(denuncia);
 
+        public async Task<bool> CheckDenunciaAlreadyExists(int idDocumento, int idUsuario)
+        {
+            int isDenunciaAlreadyExists = await dbContext.denuncia
+           .Where(value => value.usuario.idUsuario == idUsuario).Include(value => value.documento).CountAsync();
+
+            if (isDenunciaAlreadyExists > 0)
+                return true;
+
+            return false;
+        }
+
         public async Task DeleteDocumento(int idDocumento)
         {
             DocumentoModel documentoModel = await dbContext.documento.FindAsync(idDocumento);

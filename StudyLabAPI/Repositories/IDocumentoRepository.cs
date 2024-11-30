@@ -12,6 +12,8 @@ namespace StudyLabAPI.Repositories
 
         public Task CreateDenuncia(DenunciaModel denuncia);
 
+        public Task<bool> CheckDenunciaAlreadyExists(int idDocumento, int idUsuario);
+
         public Task UpdateDocumento(DocumentoModel documentoUpdate);
 
         public Task UpdateDenunciaStatus(DenunciaReadModel denunciaUpdate);
