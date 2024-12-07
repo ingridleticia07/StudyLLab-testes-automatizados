@@ -82,18 +82,17 @@ namespace StudyLabAPI.Controllers
         private async Task<(string, tipoArquivo)> MoveDocumentFileAsync(IFormFile file)
         {
             if (file == null || file.Length == 0)
-            {
                 throw new ArgumentException("No file uploaded.");
-            }
 
             string fileExtension = Path.GetExtension(file.FileName).ToLower();
 
             // Validar tipos suportados
             var validExtensions = new[] { ".jpeg", ".jpg", ".png", ".pdf" };
             if (!validExtensions.Contains(fileExtension))
-            {
                 throw new ArgumentException("Unsupported file type.");
-            }
+
+            if (file.Length > 2 * 1024 * 1024)
+                throw new ArgumentException("File size exceeds the 2MB limit.");
 
             // Gerar novo nome único
             string newFileName = $"document_{Guid.NewGuid()}{fileExtension}";
@@ -101,12 +100,10 @@ namespace StudyLabAPI.Controllers
             // Configurar diretórios
             string basePath = Directory.GetCurrentDirectory();
 
-            string wwwRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-            string destinationDirectory = Path.Combine(wwwRootPath, "documents");
+            string destinationDirectory = Path.Combine("wwwroot", "documents");
             logger.Information("[{basePath}]",
             basePath);
-            logger.Information("[{wwwRootPath}]",
-            wwwRootPath);
+
             Directory.CreateDirectory(destinationDirectory); // Garantir que a pasta existe
 
             // Caminho do arquivo
