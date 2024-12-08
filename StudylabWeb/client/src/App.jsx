@@ -6,6 +6,7 @@ import PassowordEmail from './pages/PassowordEmail';
 import VerificationCode from './pages/VerificationCode';
 import ResetPassword from './pages/ResetPassword';
 import LandingPage from './pages/LandingPage';
+import Contact from './pages/Contact';
 
 function App() {
     return (
@@ -19,9 +20,8 @@ function App() {
                 <Route path='/senha' element={<ResetPassword />} />
                 <Route path='/termos' element={<Terms />} />
                 <Route path='/inicio' element={<LandingPage />} />
-                
-                {/*<Route path='/contato' element={} />
-                <Route path='/sobre' element={} /> */}
+                <Route path='/contato' element={<Contact />} />
+                {/*<Route path='/sobre' element={} /> */}
             </Routes>
         </div>
     );

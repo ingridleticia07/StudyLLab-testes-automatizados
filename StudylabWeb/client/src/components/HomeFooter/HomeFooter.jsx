@@ -1,6 +1,6 @@
 const HomeFooter = () => {
   return (
-    <footer className="bg-americanOrange-500 text-white py-12 mx-8 flex justify-between w-[1150px] px-12 rounded-t-2xl">
+    <footer className="bg-americanOrange-500 text-white pt-10 pb-8 items-center mx-8 flex justify-between w-[1150px] px-12 rounded-t-2xl">
       <div className="flex items-center">
           <span className="text-sm">Desenvolvido por LearningLab</span>
       </div>
