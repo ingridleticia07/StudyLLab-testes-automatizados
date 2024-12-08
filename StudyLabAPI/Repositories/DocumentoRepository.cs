@@ -80,7 +80,8 @@ namespace StudyLabAPI.Repositories
             }
 
             documentoForUpdate.dataCadastro = documentoUpdate.dataCadastro;
-            documentoForUpdate.diretorioMaterial = documentoUpdate.diretorioMaterial;
+            documentoForUpdate.diretorioMaterial1 = documentoUpdate.diretorioMaterial1;
+            documentoForUpdate.diretorioMaterial2 = documentoUpdate.diretorioMaterial2;
             documentoForUpdate.topico = documentoUpdate.topico;
             documentoForUpdate.tipoMaterial = documentoUpdate.tipoMaterial;
         }
@@ -197,7 +198,8 @@ namespace StudyLabAPI.Repositories
             return result.Select(resposta => new DocumentoModel
             {
                 idDocumento = resposta.idDocumento,
-                diretorioMaterial = resposta.diretorioMaterial,
+                diretorioMaterial1 = resposta.diretorioMaterial1,
+                diretorioMaterial2 = resposta.diretorioMaterial2,
                 tipoArquivo = resposta.tipoArquivo,
                 status = resposta.status,
                 tipoMaterial = resposta.tipoMaterial,

@@ -36,6 +36,7 @@ builder.Services.AddAuth();
 builder.Services.AddAntiforgery(options =>
 {
     options.HeaderName = "X-CSRF-TOKEN";
+    options.Cookie.Name = ".AspNetCore.Antiforgery.KeSRHT2WmJs";
 });
 
 WebApplication app = builder.Build();

@@ -9,7 +9,7 @@ namespace StudyLabAPI.Controllers
 
         public Task<DenunciaListResponse?> GetAllDenuncias(int page, int pageSize);
 
-        public Task<DocumentoModel?> CreateDocumento(RegisteredDocumentoModel documento, IFormFile file);
+        public Task<DocumentoModel?> CreateDocumento(RegisteredDocumentoModel documento, List<IFormFile> file);
 
         public Task CreateDenuncia(int idDocumento, int idUsuario);
 

@@ -8,7 +8,9 @@ namespace StudyLabAPI.Models
 
         public DateOnly dataCadastro { get; set; }
 
-        public string diretorioMaterial { get; set; }
+        public string diretorioMaterial1 { get; set; }
+
+        public string diretorioMaterial2 { get; set; }
 
         public statusDocumentoEnum status { get; set; }
 
