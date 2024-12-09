@@ -99,7 +99,7 @@ export async function getMaterialByDisciplinaAndTopico(page,pageSize,idDisciplin
       populateTable(material.documentos,page,usuario);
       addButtonsPagination(maxPage,itemsPerPageValue,idDisciplina,idTopico);
     } catch (error) {
-      console.error("Error fetching user info:", error);
+      console.error(error);
     }
 }
 
@@ -131,8 +131,17 @@ export function addButtonsPagination(maxRegisterCounts,itemsPerPage,idDisciplina
   }
 
 export function copulateModalRespostaMaterial(data){
-    let textAreaResposta = modalRespostaMaterial.querySelector("#editor-2 .editorAria");
-    textAreaResposta.innerHTML = `<img src="http://localhost:7125/${data.diretorioMaterial}" style="max-height:250px" alt="Description of the image" />`;
+    console.log(data)
+    if(data.tipoArquivo == 1){
+        let textAreaResposta = modalRespostaMaterial.querySelector("#editor-2 .editorAria");
+        textAreaResposta.innerHTML = `<iframe src="http://localhost:5000/${data.diretorioMaterial1}" width="500" height="600" alt="Description of the image" />`;
+    }else{
+        var textAreaResposta = modalRespostaMaterial.querySelector("#editor-2 .editorAria");
+        textAreaResposta.innerHTML = `
+        <img src="http://localhost:5000/${data.diretorioMaterial1}" style="max-height:250px"; max-width:250px; alt="Description of the first image"></img>
+        <img src="http://localhost:5000/${data.diretorioMaterial2}" style="max-height:250px"; max-width:250px; alt="Description of the second image"></img>`;
+    }
+
 }
 
 export function copulateModalAndChangeRespostaMaterial(data){

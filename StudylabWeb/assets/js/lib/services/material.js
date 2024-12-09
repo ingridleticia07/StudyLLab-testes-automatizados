@@ -25,23 +25,33 @@ function getCookieByName(name) {
 
 export async function saveMaterial(respostaMaterialDTO) {
     const formData = new FormData();
-    const cookieName = '.csrf-token';
-    const csrfToken = getCookieByName(cookieName);
-    console.log(csrfToken)
+    const antifogeryToken = '.csrf-token';
+    const antifogeryCookie = '.AspNetCore.Antiforgery.KeSRHT2WmJs';
+    const csrfToken = getCookieByName(antifogeryToken);
+    const cookieToken = getCookieByName(antifogeryCookie);
+    console.log(csrfToken);
+    console.log(cookieToken);
+
+    const files = respostaMaterialDTO.File; // Assuming a file input element
+    for (let i = 0; i < files.length; i++) {
+        formData.append('file', files[i]); // The key 'file' must match the parameter name in your endpoint
+    }
 
     formData.append('Idtopico', respostaMaterialDTO.Idtopico);
     formData.append('TipoMaterial', respostaMaterialDTO.TipoMaterial);
     formData.append('IdUsuario', respostaMaterialDTO.IdUsuario);
-    formData.append('file', respostaMaterialDTO.File);
-    
-    try {
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+  }
+      try {
         const response = await instance.post(
             MATERIAL_ENDPOINT + "/cadastrarDocumento",
             formData,
             {
                 headers: { 
                     'X-CSRF-TOKEN': csrfToken, // CSRF token header
-                    'Content-Type': 'multipart/form-data', // Important for sending FormData
+                    'Content-Type': 'multipart/form-data', // Important for sending FormData,
+                    'accept': 'application/json, text/plain, */*'
                 },
                 withCredentials: true, // Ensures that cookies are sent
             }

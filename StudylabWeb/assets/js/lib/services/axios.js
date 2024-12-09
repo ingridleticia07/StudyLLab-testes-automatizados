@@ -3,7 +3,7 @@ import { updateUserAuthState } from "./auth.js";
 
 let unauthorizedInterceptor = undefined;
 export const instance = axios.create({
-  baseURL: "http://localhost:7125",
+  baseURL: "http://localhost:5000",
   headers: {
     "x-api-key": api_key,
   },
