@@ -147,9 +147,12 @@ namespace StudyLabAPI.Controllers
         }
 
 
-        public async Task DeleteDocumento(int idDocumento)
+        public async Task DeleteDocumento(int idDocumento, int idUsuario)
         {
             DocumentoModel documento = await documentoRepository.GetDocumentoById(idDocumento);
+
+            if(!documento.usuario.tipoUsuario.Equals(UserRole.Admin) && documento.usuario.idUsuario !=idUsuario)
+                throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
 
             string rootDirectory = "wwwroot";
 

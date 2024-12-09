@@ -42,7 +42,8 @@ export function openDeleteModal(idResposta,page,idDisciplina,idTopico) {
         closeModal(modalExcluirResposta);
     
         try{
-            await deleteRespostaForum(idResposta);
+            usuario = await getUserInfo();
+            await deleteRespostaForum(idResposta,usuario);
     
             getForumByDisciplinaAndTopico(actualPage,itemsPerPageValue,0,0);
         }catch(e){

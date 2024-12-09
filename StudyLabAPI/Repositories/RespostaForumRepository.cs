@@ -39,7 +39,7 @@ namespace StudyLabAPI.Repositories
         }
 
         public async Task<RespostaForumModel?> GetRespostaForumById(int id) =>
-            await dbContext.respostaForum.FindAsync(id);
+            await dbContext.respostaForum.Include(value => value.usuario).Where(value=>value.idResposta == id).FirstOrDefaultAsync();
 
         public async Task UpdateRespostaForum(RespostaForumModel respostaForum)
         {

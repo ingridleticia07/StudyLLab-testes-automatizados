@@ -83,12 +83,12 @@ namespace StudyLabAPI.Endpoints
         }
 
         private static async Task<IResult> DeleteDocumento(HttpContext context,
-        [FromQuery] int idDocumento,
+        [FromQuery] int idDocumento,int idUsuario,
         [FromServices] IDocumentoController controller)
         {
             try
             {
-                await controller.DeleteDocumento(idDocumento);
+                await controller.DeleteDocumento(idDocumento, idUsuario);
             }
             catch (Exception e)
             {

@@ -21,6 +21,6 @@ namespace StudyLabAPI.Controllers
 
         public Task<List<DocumentoModel>> GetDocumentoByTopico(RegisteredDocumentoModel topico);
 
-        public Task DeleteDocumento(int idDocumento);
+        public Task DeleteDocumento(int idDocumento, int idUsuario);
     }
 }

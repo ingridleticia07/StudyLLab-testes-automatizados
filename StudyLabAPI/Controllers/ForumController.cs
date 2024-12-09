@@ -1,5 +1,6 @@
 ﻿using StudyLabAPI.Mapper;
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.Enums;
 using StudyLabAPI.Repositories;
 using StudyLabAPI.Validators.CustomValidators.RequestQuery;
 using ILogger = Serilog.ILogger;
@@ -292,8 +293,13 @@ namespace StudyLabAPI.Controllers
             return (NewRespostaForum);
         }
 
-        public async Task DeleteRespostaForum(int idRespostaForum)
+        public async Task DeleteRespostaForum(int idRespostaForum, int idUsuario)
         {
+            RespostaForumModel repostaForum = await respostaforumRepository.GetRespostaForumById(idRespostaForum);
+
+            if (!repostaForum.usuario.tipoUsuario.Equals(UserRole.Admin) && repostaForum.usuario.idUsuario != idUsuario)
+                throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
+
             await respostaforumRepository.DeleteRespostaForum(idRespostaForum);
             await respostaforumRepository.Flush();
         }

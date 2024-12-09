@@ -42,7 +42,8 @@ export function openDeleteModal(idDocumento,page,idDisciplina,idTopico) {
         closeModal(modalExcluirResposta);
     
         try{
-            await deleteDocumento(idDocumento);
+            usuario = await getUserInfo();
+            await deleteDocumento(idDocumento,usuario);
     
             getMaterialByDisciplinaAndTopico(actualPage,itemsPerPageValue,0,0);
         }catch(e){
