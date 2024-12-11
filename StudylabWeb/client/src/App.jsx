@@ -7,6 +7,7 @@ import VerificationCode from './pages/VerificationCode';
 import ResetPassword from './pages/ResetPassword';
 import LandingPage from './pages/LandingPage';
 import Contact from './pages/Contact';
+import About from './pages/about';
 
 function App() {
     return (
@@ -21,7 +22,7 @@ function App() {
                 <Route path='/termos' element={<Terms />} />
                 <Route path='/inicio' element={<LandingPage />} />
                 <Route path='/contato' element={<Contact />} />
-                {/*<Route path='/sobre' element={} /> */}
+                <Route path='/sobre' element={<About />} />
             </Routes>
         </div>
     );

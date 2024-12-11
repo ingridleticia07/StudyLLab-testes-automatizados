@@ -7,6 +7,7 @@ import padlock from './svg/padlock.svg';
 import logo from './img/StudyLab.svg';
 import team from './img/team.svg';
 import laptop from './img/laptop.svg';
+import student from './img/student.svg';
 
 import student0 from './img/Imgstudents/student0.svg';
 import student1 from './img/Imgstudents/student1.svg';
@@ -33,6 +34,7 @@ export const images = {
     logo,
     team,
     laptop,
+    student,
 };
 
 export const studentsImages = {
