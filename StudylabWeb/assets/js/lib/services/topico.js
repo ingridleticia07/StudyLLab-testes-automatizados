@@ -47,8 +47,10 @@ export async function createTopico(topico) {
 }
 
 export async function updateTopico(topico) {
+  console.log(topico)
   let response = await instance.put(FORUM_ENDPOINT+"/editarTopicoDiscussao",{
     idTopico:topico.idTopico,
+    idUsuario:topico.idUsuario,
     nomeTopico:topico.nomeTopico,
     dataTopico:topico.dataTopico,
     disciplina:topico.disciplina

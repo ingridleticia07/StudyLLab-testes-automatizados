@@ -144,17 +144,22 @@ namespace StudyLabAPI.Controllers
 
             DisciplinaModel? relatedDisciplina = await DisciplinaRepository.GetDisciplinaById(disciplinaId);
 
-            TopicoDiscussaoModel NovotopicoDiscussao = new()
+            TopicoDiscussaoModel? topicoDiscussaoForUpdate = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoModel.idTopico);
+
+            if (!topicoDiscussaoForUpdate.usuario.tipoUsuario.Equals(UserRole.Admin) && topicoDiscussaoForUpdate.usuario.idUsuario != topicoDiscussaoModel.idUsuario)
+                throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
+
+            TopicoDiscussaoModel topicoUpdated = new()
             {
                 idTopico = topicoDiscussaoModel.idTopico,
                 nomeTopico = topicoDiscussaoModel.nomeTopico,
                 disciplina = relatedDisciplina,
                 dataTopico = topicoDiscussaoModel.dataTopico
             };
-            await topicoDiscussaoRepository.UpdateTopicoDiscussao(NovotopicoDiscussao);
+            await topicoDiscussaoRepository.UpdateTopicoDiscussao(topicoUpdated);
             await topicoDiscussaoRepository.Flush();
 
-            return (NovotopicoDiscussao);
+            return (topicoUpdated);
         }
 
         public async Task DeleteTopicoDiscussao(int idTopicoDiscussao)
@@ -279,7 +284,10 @@ namespace StudyLabAPI.Controllers
             UsuarioModel? relatedUsuario =
                 await usuarioRepository.GetUsuarioById(UsuarioId);
 
-            RespostaForumModel NewRespostaForum = new()
+            if (!relatedUsuario.tipoUsuario.Equals(UserRole.Admin) && relatedTopicoDiscussao.usuario.idUsuario != respostaForum.usuario)
+                throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
+
+            RespostaForumModel updatedRespostaForum = new()
             {
                 idResposta = respostaForum.idResposta,
                 resposta = respostaForum.resposta,
@@ -287,10 +295,10 @@ namespace StudyLabAPI.Controllers
                 topicoDiscussao = relatedTopicoDiscussao,
                 usuario = relatedUsuario
             };
-            await respostaforumRepository.UpdateRespostaForum(NewRespostaForum);
+            await respostaforumRepository.UpdateRespostaForum(updatedRespostaForum);
             await respostaforumRepository.Flush();
 
-            return (NewRespostaForum);
+            return (updatedRespostaForum);
         }
 
         public async Task DeleteRespostaForum(int idRespostaForum, int idUsuario)
@@ -333,15 +341,12 @@ namespace StudyLabAPI.Controllers
 
         public async Task<ForumModel> UpdateForum(ResgisteredForumModel forum)
         {
-            int respostaForumId = forum.respostaForum;
+            RespostaForumModel? relatedRespostaForum = await respostaforumRepository.GetRespostaForumById(forum.respostaForum);
 
-            int topicoDiscussaoId = forum.topicoDiscussao;
+            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(forum.usuario);
 
-            int usuarioId = forum.usuario;
-
-            RespostaForumModel? relatedRespostaForum = await respostaforumRepository.GetRespostaForumById(respostaForumId);
-
-            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId);
+            if (!relatedRespostaForum.usuario.tipoUsuario.Equals(UserRole.Admin) && relatedRespostaForum.usuario.idUsuario != forum.usuario)
+                throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
 
             ForumModel forumForUpdate = new()
             {
