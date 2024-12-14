@@ -97,7 +97,24 @@ namespace StudyLabAPI.Repositories
             .OrderBy(f => f.idDisciplina)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Include(f => f.curso)
+            .Select(f => new DisciplinaModel
+            {
+                idDisciplina = f.idDisciplina,
+                nomeDisciplina = f.nomeDisciplina,
+                professorDisciplina = f.professorDisciplina,
+                quantidadeAluno = f.quantidadeAluno,
+                codigoDisciplina = f.codigoDisciplina,
+                curso = new CursoModel
+                {
+                    idCurso = f.curso.idCurso,
+                    nomeCurso = f.curso.nomeCurso
+                },
+                professor = new UsuarioModel
+                {
+                    idUsuario = f.professor.idUsuario,
+                    nomeUsuario = f.professor.nomeUsuario
+                }
+            })
             .ToListAsync();
 
             return result;
