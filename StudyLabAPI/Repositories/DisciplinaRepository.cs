@@ -124,17 +124,19 @@ namespace StudyLabAPI.Repositories
 
         public async Task UpdateDisciplina(DisciplinaModel disciplinaModel)
         {
-            DisciplinaModel? disciplinForUpdate = await _dbContext.disciplinas.FindAsync(disciplinaModel.idDisciplina);
+            DisciplinaModel? disciplinaForUpdate = await _dbContext.disciplinas.FindAsync(disciplinaModel.idDisciplina);
 
-            if (disciplinForUpdate == null)
+            if (disciplinaForUpdate == null)
             {
                 return;
             }
-            disciplinForUpdate.nomeDisciplina = disciplinaModel.nomeDisciplina;
-            disciplinForUpdate.professorDisciplina = disciplinaModel.professorDisciplina;
-            disciplinForUpdate.curso = disciplinaModel.curso;
-            disciplinForUpdate.quantidadeAluno = disciplinaModel.quantidadeAluno;
-            disciplinForUpdate.codigoDisciplina = disciplinaModel.codigoDisciplina;
+
+            disciplinaForUpdate.nomeDisciplina = disciplinaModel.nomeDisciplina;
+            disciplinaForUpdate.professorDisciplina = disciplinaModel.professorDisciplina;
+            disciplinaForUpdate.professor = disciplinaModel.professor;
+            disciplinaForUpdate.curso = disciplinaModel.curso;
+            disciplinaForUpdate.quantidadeAluno = disciplinaModel.quantidadeAluno;
+            disciplinaForUpdate.codigoDisciplina = disciplinaModel.codigoDisciplina;
         }
 
         public async Task DeleteDisciplina(int idDisciplina)
