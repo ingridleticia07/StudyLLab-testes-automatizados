@@ -20,7 +20,5 @@ namespace StudyLabAPI.Models
         public tipoArquivo tipoArquivo { get; set; }
 
         public int IdUsuario { get; set; }
-
-        public int IdProfessor{get;set;}
     }
 }

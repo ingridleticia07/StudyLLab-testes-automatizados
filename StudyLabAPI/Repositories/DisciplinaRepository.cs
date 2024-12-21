@@ -40,14 +40,24 @@ namespace StudyLabAPI.Repositories
 
         public async Task<DisciplinaModel?> GetDisciplinaById(int id)
         {
-            var disciplina = await _dbContext.disciplinas.FindAsync(id);
-
-            if (disciplina != null)
+            var disciplina = await _dbContext.disciplinas.Where(v => v.idDisciplina == id).Select(f => new DisciplinaModel
             {
-                await _dbContext.Entry(disciplina)
-                    .Reference(d => d.curso)
-                    .LoadAsync();
-            }
+                idDisciplina = f.idDisciplina,
+                nomeDisciplina = f.nomeDisciplina,
+                professorDisciplina = f.professorDisciplina,
+                quantidadeAluno = f.quantidadeAluno,
+                codigoDisciplina = f.codigoDisciplina,
+                curso = new CursoModel
+                {
+                    idCurso = f.curso.idCurso,
+                    nomeCurso = f.curso.nomeCurso
+                },
+                professor = new UsuarioModel
+                {
+                    idUsuario = f.professor.idUsuario,
+                    nomeUsuario = f.professor.nomeUsuario
+                }
+            }).FirstOrDefaultAsync();
 
             return disciplina;
         }

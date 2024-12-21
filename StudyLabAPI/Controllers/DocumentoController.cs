@@ -56,9 +56,9 @@ namespace StudyLabAPI.Controllers
 
             UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId);
 
-            int professorId = documento.IdProfessor;
+            DisciplinaModel relatedDisciplina = await DisciplinaRepository.GetDisciplinaById(relatedTopico.disciplina.idDisciplina);
 
-            UsuarioModel? relatedProfessor = await usuarioRepository.GetUsuarioById(professorId);
+            UsuarioModel? relatedProfessor = await usuarioRepository.GetUsuarioById(relatedDisciplina.professor.idUsuario);
 
             (string diretorio1, string diretorio2,tipoArquivo tipoArquivo) = await MoveDocumentFileAsync(file);
 
@@ -155,7 +155,12 @@ namespace StudyLabAPI.Controllers
         {
             DocumentoModel documento = await documentoRepository.GetDocumentoById(idDocumento);
 
-            if(!documento.usuario.tipoUsuario.Equals(UserRole.Admin) && documento.usuario.idUsuario !=idUsuario)
+            if(documento.usuario.tipoUsuario.Equals(UserRole.User)
+                && documento.usuario.idUsuario !=idUsuario)
+                throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
+
+            if (documento.usuario.tipoUsuario.Equals(UserRole.Prof)
+                && documento.professor.idUsuario != idUsuario)
                 throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
 
             string rootDirectory = "wwwroot";

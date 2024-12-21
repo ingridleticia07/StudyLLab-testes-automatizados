@@ -87,7 +87,7 @@ namespace StudyLabAPI.Repositories
         }
 
         public async Task<TopicoDiscussaoModel?> GetTopicosDiscussaoById(int id) =>
-            await dbContext.discussao.Where(v => v.idTopico == id).Include(v => v.usuario).FirstOrDefaultAsync();
+            await dbContext.discussao.Where(v => v.idTopico == id).Include(v => v.usuario).Include(v => v.disciplina).FirstOrDefaultAsync();
 
         public async Task<bool> VerifyTopicoDiscussaoExists(TopicoDiscussaoModel topicoDiscussao)
         {

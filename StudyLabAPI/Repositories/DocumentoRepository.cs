@@ -65,7 +65,8 @@ namespace StudyLabAPI.Repositories
 
         public async Task<DocumentoModel?> GetDocumentoById(int idDocumento)
         {
-            DocumentoModel documentoModel = await dbContext.documento.Include(value => value.usuario).FirstOrDefaultAsync(d => d.idDocumento == idDocumento);
+            DocumentoModel documentoModel = await dbContext.documento.Include(value => value.usuario)
+                .Include(value => value.professor).FirstOrDefaultAsync(d => d.idDocumento == idDocumento);
 
             return documentoModel;
         }

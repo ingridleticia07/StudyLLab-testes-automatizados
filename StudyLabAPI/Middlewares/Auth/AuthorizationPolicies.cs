@@ -15,9 +15,9 @@ public static class AuthorizationPolicies
     /// </summary>
     public const string REQUIRE_IDENTIFIER_AND_ADMIN_ROLE = "RequireIdentifierAndAdminRole";
     /// <summary>
-    /// Requer que a requisição esteja autenticada e que o usuário tenha o papel de <see cref="UserRole.Dev"/>.
+    /// Requer que a requisição esteja autenticada e que o usuário tenha o papel de <see cref="UserRole.Prof"/>.
     /// </summary>
-    public const string REQUIRE_IDENTIFIER_AND_DEV_ROLE = "RequireIdentifierAndDevRole";
+    public const string REQUIRE_IDENTIFIER_AND_PROF_ROLE = "RequireIdentifierAndProfRole";
     
     public static void RequireIdentifierAndUserRole(AuthorizationPolicyBuilder builder)
     {
@@ -29,9 +29,9 @@ public static class AuthorizationPolicies
         builder.RequireClaim(ClaimTypes.Name);
         builder.RequireRole(UserRole.Admin.ToString());
     }
-    public static void RequireIdentifierAndDevRole(AuthorizationPolicyBuilder builder)
+    public static void RequireIdentifierAndProfRole(AuthorizationPolicyBuilder builder)
     {
         builder.RequireClaim(ClaimTypes.Name);
-        builder.RequireRole(UserRole.Dev.ToString());
+        builder.RequireRole(UserRole.Prof.ToString());
     }
 }
