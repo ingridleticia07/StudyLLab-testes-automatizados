@@ -81,7 +81,7 @@ btnResponderMaterial.addEventListener('click',async function(){
 btnCadastrarMaterial.addEventListener('click',async function(){
 
   const categoriaMaterial = document.querySelector(".form-inputs #categoria").value;
-  const material = document.querySelector(".form-inputs #material").files[0];
+  const material = document.querySelector(".form-inputs #material").files;
   const topico = document.querySelector(".form-inputs #topico-filter-modal").value;
 
   usuario = await getUserInfo();

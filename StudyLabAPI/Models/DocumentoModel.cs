@@ -15,8 +15,11 @@ namespace StudyLabAPI.Models
         [Column("data_documento")]
         public DateOnly dataCadastro { get; set; }
 
-        [Column("diretorio_material")]
-        public string diretorioMaterial { get; set; }
+        [Column("diretorio_material1")]
+        public string? diretorioMaterial1 { get; set; }
+
+        [Column("diretorio_material2")]
+        public string? diretorioMaterial2 { get; set; }
 
         [Column("tipo_material")]
         public tipoMaterialEnum tipoMaterial { get; set; }

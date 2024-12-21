@@ -9,6 +9,8 @@ namespace StudyLabAPI.Controllers
     public class DisciplinaController : IDisciplinaController
     {
         private IDisciplinaRepository disciplinaRepository { get; }
+
+        private IUsuarioRepository usuarioRepository { get; }
         private ILogger logger { get; }
 
         private ICursoRepository cursoRepository { get; }
@@ -17,13 +19,14 @@ namespace StudyLabAPI.Controllers
 
         public DisciplinaController(IDisciplinaRepository disciplinaRepository, 
             DisciplinaModelMapper disciplinaModelMapper,
-            ICursoRepository cursoRepository,
+            ICursoRepository cursoRepository,IUsuarioRepository usuarioRepository,
             ILogger logger)
         {
             _disciplinaModelMapper = disciplinaModelMapper;
             this.disciplinaRepository = disciplinaRepository;
             this.logger = logger;
             this.cursoRepository = cursoRepository;
+            this.usuarioRepository = usuarioRepository;
         }
         public async Task<DisciplinaReadModel> GetDisciplinaById(int id)
         {
@@ -119,14 +122,18 @@ namespace StudyLabAPI.Controllers
 
             CursoModel? relatedCurso = await cursoRepository.GetCursoById(cursoId);
 
+            UsuarioModel? relatedProfessor = await usuarioRepository.GetUsuarioById((int)disciplinaModel.fk_professor);
+
             DisciplinaModel novaDisciplina = new()
             {
                 nomeDisciplina = disciplinaModel.nomeDisciplina,
                 professorDisciplina = disciplinaModel.professorDisciplina,
                 curso = relatedCurso,
+                professor = relatedProfessor,
                 quantidadeAluno = disciplinaModel.quantidadeAluno,
                 codigoDisciplina = disciplinaModel.codigoDisciplina
             };
+
             await disciplinaRepository.CreateDisciplina(novaDisciplina);
             await disciplinaRepository.Flush();
 
@@ -146,10 +153,13 @@ namespace StudyLabAPI.Controllers
 
             CursoModel? relatedCurso = await cursoRepository.GetCursoById(cursoId);
 
+            UsuarioModel? relatedProfessor = await usuarioRepository.GetUsuarioById((int)disciplinaModel.fk_professor);
+
             DisciplinaModel DisciplinaUpdateObj = new()
             {
                 idDisciplina = disciplinaModel.idDisciplina,
                 nomeDisciplina = disciplinaModel.nomeDisciplina,
+                professor = relatedProfessor,
                 professorDisciplina = disciplinaModel.professorDisciplina,
                 curso = relatedCurso,
                 quantidadeAluno = disciplinaModel.quantidadeAluno,

@@ -46,7 +46,7 @@ namespace StudyLabAPI.Controllers
             this.logger = logger;
         }
 
-        public async Task<DocumentoModel?> CreateDocumento(RegisteredDocumentoModel documento, IFormFile file)
+        public async Task<DocumentoModel?> CreateDocumento(RegisteredDocumentoModel documento, List<IFormFile> file)
         {
             int topicoId = documento.Idtopico;
 
@@ -60,12 +60,13 @@ namespace StudyLabAPI.Controllers
 
             UsuarioModel? relatedProfessor = await usuarioRepository.GetUsuarioById(professorId);
 
-            (string diretorio, tipoArquivo tipoArquivo) = await MoveDocumentFileAsync(file);
+            (string diretorio1, string diretorio2,tipoArquivo tipoArquivo) = await MoveDocumentFileAsync(file);
 
             DocumentoModel novoDocumento = new()
             {
                 dataCadastro = DateOnly.FromDateTime(DateTime.Now),
-                diretorioMaterial = diretorio,
+                diretorioMaterial1 = diretorio1,
+                diretorioMaterial2 = diretorio2,
                 tipoMaterial = documento.TipoMaterial,
                 topico = relatedTopico,
                 status = statusDocumentoEnum.pendente,
@@ -74,8 +75,6 @@ namespace StudyLabAPI.Controllers
                 professor = relatedProfessor
             };
 
-            novoDocumento.diretorioMaterial = diretorio;
-
             await documentoRepository.CreateDocumento(novoDocumento);
 
             await documentoRepository.Flush();
@@ -83,77 +82,92 @@ namespace StudyLabAPI.Controllers
             return (novoDocumento);
         }
 
-        private async Task<(string, tipoArquivo)> MoveDocumentFileAsync(IFormFile file)
+        private async Task<(string Diretorio1, string Diretorio2, tipoArquivo FileType)> MoveDocumentFileAsync(List<IFormFile> files)
         {
-            if (file == null || file.Length == 0)
+            if (files == null || files.Count == 0)
+                throw new ArgumentException("No files uploaded.");
+
+            if (files.Count > 1 && files.Any(f => Path.GetExtension(f.FileName)?.ToLower() == ".pdf"))
+                throw new ArgumentException("Cannot upload multiple files if one is a PDF.");
+
+            if (files.Count > 2)
+                throw new ArgumentException("You can upload up to two image files or one PDF file.");
+
+            var validExtensions = new HashSet<string> { ".jpeg", ".jpg", ".png", ".pdf" };
+
+            foreach (var file in files)
             {
-                throw new ArgumentException("No file uploaded.");
+                if (file == null || file.Length == 0)
+                    throw new ArgumentException("One of the uploaded files is empty.");
+
+                string fileExtension = Path.GetExtension(file.FileName)?.ToLower();
+                if (string.IsNullOrEmpty(fileExtension) || !validExtensions.Contains(fileExtension))
+                    throw new ArgumentException("Unsupported file type.");
+
+                const long maxFileSize = 2 * 1024 * 1024; // 2MB
+                if (file.Length > maxFileSize)
+                    throw new ArgumentException("File size exceeds the 2MB limit.");
             }
 
-            string fileExtension = Path.GetExtension(file.FileName).ToLower();
+            string destinationDirectory = Path.Combine("wwwroot", "documents");
 
-            // Validar tipos suportados
-            var validExtensions = new[] { ".jpeg", ".jpg", ".png", ".pdf" };
-            if (!validExtensions.Contains(fileExtension))
+            Directory.CreateDirectory(destinationDirectory); // Ensure the folder exists
+
+            var results = new List<(string RelativePath, tipoArquivo FileType)>();
+
+            foreach (var file in files)
             {
-                throw new ArgumentException("Unsupported file type.");
-            }
+                string fileExtension = Path.GetExtension(file.FileName)?.ToLower();
+                string newFileName = $"document_{Guid.NewGuid()}{fileExtension}";
+                string destinationFilePath = Path.Combine(destinationDirectory, newFileName);
 
-            // Gerar novo nome único
-            string newFileName = $"document_{Guid.NewGuid()}{fileExtension}";
-
-            // Configurar diretórios
-            string basePath = Directory.GetCurrentDirectory();
-
-            string wwwRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-            string destinationDirectory = Path.Combine(wwwRootPath, "documents");
-            logger.Information("[{basePath}]",
-            basePath);
-            logger.Information("[{wwwRootPath}]",
-            wwwRootPath);
-            Directory.CreateDirectory(destinationDirectory); // Garantir que a pasta existe
-
-            // Caminho do arquivo
-            string destinationFilePath = Path.Combine(destinationDirectory, newFileName);
-
-            try
-            {
-                // Salvar o arquivo
-                using (var stream = new FileStream(destinationFilePath, FileMode.Create))
+                try
                 {
+                    await using var stream = new FileStream(destinationFilePath, FileMode.Create);
                     await file.CopyToAsync(stream);
                 }
+                catch (Exception ex)
+                {
+                    throw new IOException("Failed to save file.", ex);
+                }
+
+                string relativePath = Path.Combine("/documents", newFileName).Replace(Path.DirectorySeparatorChar, '/');
+                
+                tipoArquivo type = fileExtension switch
+                {
+                    ".jpeg" or ".jpg" or ".png" => tipoArquivo.imagem,
+                    ".pdf" => tipoArquivo.pdf,
+                    _ => throw new ArgumentException("Unsupported file type.")
+                };
+
+                results.Add((relativePath, type));
             }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to save file: {ex.Message}");
-            }
 
-            // Caminho relativo para acesso
-            string finalPath = $"/documents/{newFileName}";
+            string diretorio1 = results.Count > 0 ? results[0].RelativePath : null;
+            string diretorio2 = results.Count > 1 ? results[1].RelativePath : null;
+            tipoArquivo fileType = results.Count > 0 ? results[0].FileType : tipoArquivo.imagem;
 
-            // Determinar tipo de arquivo
-            tipoArquivo fileType = fileExtension switch
-            {
-                ".jpeg" or ".jpg" or ".png" => tipoArquivo.imagem,
-                ".pdf" => tipoArquivo.pdf,
-                _ => throw new ArgumentException("Unsupported file type.")
-            };
-
-            return (finalPath, fileType);
+            return (diretorio1, diretorio2, fileType);
         }
 
 
-        public async Task DeleteDocumento(int idDocumento)
+        public async Task DeleteDocumento(int idDocumento, int idUsuario)
         {
             DocumentoModel documento = await documentoRepository.GetDocumentoById(idDocumento);
 
+            if(!documento.usuario.tipoUsuario.Equals(UserRole.Admin) && documento.usuario.idUsuario !=idUsuario)
+                throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
+
             string rootDirectory = "wwwroot";
 
-            string fullPath = string.Concat(rootDirectory, documento.diretorioMaterial);
+            string file1 = string.Concat(rootDirectory, documento.diretorioMaterial1);
+            string file2 = string.Concat(rootDirectory, documento.diretorioMaterial2);
 
-            if (File.Exists(fullPath))
-                File.Delete(fullPath);
+            if (File.Exists(file1))
+                File.Delete(file1);
+
+            if (File.Exists(file2))
+                File.Delete(file2);
 
             await documentoRepository.DeleteDocumento(idDocumento);
 
@@ -198,7 +212,7 @@ namespace StudyLabAPI.Controllers
             {
                 idDocumento = documentoUpdate.idDocumento,
                 dataCadastro = DateOnly.FromDateTime(DateTime.Now),
-                diretorioMaterial = documentoUpdate.diretorioMaterial,
+                diretorioMaterial1 = documentoUpdate.diretorioMaterial1,
                 tipoMaterial = documentoUpdate.TipoMaterial,
                 topico = relatedTopico,
             };

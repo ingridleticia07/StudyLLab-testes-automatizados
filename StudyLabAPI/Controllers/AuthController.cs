@@ -194,8 +194,6 @@ public class AuthController : IAuthController
 
         string jwtUser = jwtService.GenerateJwt(new(userReadModel.id.ToString(), userReadModel.role));
 
-        _antiforgery.GetAndStoreTokens(httpContext);
-
         var tokens = _antiforgery.GetAndStoreTokens(httpContext);
 
         httpContext.Response.Cookies.Append(
@@ -203,9 +201,9 @@ public class AuthController : IAuthController
             tokens.RequestToken,
             new CookieOptions
             {
-                HttpOnly = false,
-                Secure = httpContext.Request.IsHttps,
-                SameSite = SameSiteMode.Strict
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None
             });
 
         return (userReadModel, jwtUser, tokens.RequestToken, tokens.CookieToken);

@@ -84,9 +84,9 @@ export async function deleteTopicoDisciplina(idTopico) {
   return response.data;
 }
 
-export async function deleteRespostaForum(idResposta) {
+export async function deleteRespostaForum(idResposta, usuario) {
   
-  let response = await instance.delete(FORUM_ENDPOINT+"/DeletarRespostaForum?idRespostaForum="+idResposta);
+  let response = await instance.delete(FORUM_ENDPOINT+"/DeletarRespostaForum?idRespostaForum="+idResposta+"&idUsuario="+usuario.id);
 
   if (response.status !== 200) {
     return null;

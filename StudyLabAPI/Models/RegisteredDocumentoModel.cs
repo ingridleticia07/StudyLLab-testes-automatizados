@@ -7,7 +7,9 @@ namespace StudyLabAPI.Models
     {
         public int idDocumento { get; set; }
 
-        public string diretorioMaterial { get; set; }
+        public string diretorioMaterial1 { get; set; }
+
+        public string diretorioMaterial2 { get; set; }
 
         public tipoMaterialEnum TipoMaterial { get; set; }
 
