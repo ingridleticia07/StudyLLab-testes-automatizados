@@ -121,6 +121,7 @@ namespace StudyLabAPI.Repositories
                     .Include(f => f.topico)
                     .ThenInclude(td => td.disciplina)
                     .Include(f => f.usuario)
+                    .Include(f => f.professor)
                     .ToListAsync();
                 }
                 else if (idDisciplina != 0 || idTopico != 0)
@@ -134,6 +135,7 @@ namespace StudyLabAPI.Repositories
                     .Include(f => f.topico)
                     .ThenInclude(td => td.disciplina)
                     .Include(f => f.usuario)
+                    .Include(f => f.professor)
                     .ToListAsync();
 
                 }
@@ -148,6 +150,7 @@ namespace StudyLabAPI.Repositories
                     .Include(f => f.topico)
                     .ThenInclude(td => td.disciplina)
                     .Include(f => f.usuario)
+                    .Include(f => f.professor)
                     .ToListAsync();
                 }
             }
@@ -164,6 +167,7 @@ namespace StudyLabAPI.Repositories
                     .Include(f => f.topico)
                     .ThenInclude(td => td.disciplina)
                     .Include(f => f.usuario)
+                    .Include(f => f.professor)
                     .ToListAsync();
                 }
                 else if (idDisciplina != 0 || idTopico != 0)
@@ -177,6 +181,7 @@ namespace StudyLabAPI.Repositories
                     .Include(f => f.topico)
                     .ThenInclude(td => td.disciplina)
                     .Include(f => f.usuario)
+                    .Include(f => f.professor)
                     .ToListAsync();
 
                 }
@@ -190,6 +195,7 @@ namespace StudyLabAPI.Repositories
                     .Include(f => f.topico)
                     .ThenInclude(td => td.disciplina)
                     .Include(f => f.usuario)
+                    .Include(f => f.professor)
                     .ToListAsync();
                 }
             }
@@ -206,6 +212,18 @@ namespace StudyLabAPI.Repositories
                 usuario = new UsuarioModel
                 {
                     idUsuario = resposta.usuario.idUsuario,
+                    emailUsuario = null,
+                    matricula = null,
+                    senhaUsuario = null,
+                    statusUsuario = false,
+                    tipoUsuario = default,
+                    curso = null,
+                    nomeUsuario = resposta.usuario.nomeUsuario,
+                    dataCadastroUsuario = default,
+                    imagemUsuario = null
+                },
+                professor = new UsuarioModel{
+                    idUsuario = resposta.professor.idUsuario,
                     emailUsuario = null,
                     matricula = null,
                     senhaUsuario = null,

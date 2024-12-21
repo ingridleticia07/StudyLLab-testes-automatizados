@@ -56,6 +56,9 @@ namespace StudyLabAPI.Controllers
 
             UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId);
 
+            int professorId = documento.IdProfessor;
+
+            UsuarioModel? relatedProfessor = await usuarioRepository.GetUsuarioById(professorId);
 
             (string diretorio, tipoArquivo tipoArquivo) = await MoveDocumentFileAsync(file);
 
@@ -67,7 +70,8 @@ namespace StudyLabAPI.Controllers
                 topico = relatedTopico,
                 status = statusDocumentoEnum.pendente,
                 tipoArquivo = tipoArquivo,
-                usuario = relatedUsuario
+                usuario = relatedUsuario,
+                professor = relatedProfessor
             };
 
             novoDocumento.diretorioMaterial = diretorio;

@@ -19,5 +19,7 @@ namespace StudyLabAPI.Models
         public tipoArquivo tipoArquivo { get; set; }
 
         public UsuarioModel usuario { get; set; }
+
+        public UsuarioModel professor {get; set;}
     }
 }
