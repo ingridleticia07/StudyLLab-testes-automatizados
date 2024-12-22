@@ -86,8 +86,15 @@ namespace StudyLabAPI.Repositories
             return (result, result.Count, topicosCount);
         }
 
-        public async Task<TopicoDiscussaoModel?> GetTopicosDiscussaoById(int id) =>
-            await dbContext.discussao.Where(v => v.idTopico == id).Include(v => v.usuario).Include(v => v.disciplina).FirstOrDefaultAsync();
+        public async Task<TopicoDiscussaoModel?> GetTopicosDiscussaoById(int id)
+        {
+            return await dbContext.discussao.AsNoTracking().Where(v => v.idTopico == id).Include(v => v.usuario).Include(v => v.disciplina).FirstOrDefaultAsync();
+        }
+
+        public async Task<TopicoDiscussaoModel?> GetTopicosDiscussaoByIdForCreateForum(int id)
+        {
+            return await dbContext.discussao.FindAsync(id);
+        }
 
         public async Task<bool> VerifyTopicoDiscussaoExists(TopicoDiscussaoModel topicoDiscussao)
         {
@@ -131,6 +138,7 @@ namespace StudyLabAPI.Repositories
             {
                 return;
             }
+
             topicoDiscussaoForUpdate.disciplina = topicoDiscussaoModel.disciplina;
             topicoDiscussaoForUpdate.dataTopico = topicoDiscussaoModel.dataTopico;
             topicoDiscussaoForUpdate.nomeTopico = topicoDiscussaoModel.nomeTopico;

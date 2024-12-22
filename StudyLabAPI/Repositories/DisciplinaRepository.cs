@@ -40,31 +40,37 @@ namespace StudyLabAPI.Repositories
 
         public async Task<DisciplinaModel?> GetDisciplinaById(int id)
         {
-            var disciplina = await _dbContext.disciplinas.Where(v => v.idDisciplina == id).Select(f => new DisciplinaModel
-            {
-                idDisciplina = f.idDisciplina,
-                nomeDisciplina = f.nomeDisciplina,
-                professorDisciplina = f.professorDisciplina,
-                quantidadeAluno = f.quantidadeAluno,
-                codigoDisciplina = f.codigoDisciplina,
-                curso = new CursoModel
+            var disciplina = await _dbContext.disciplinas.AsNoTracking()
+                .Where(v => v.idDisciplina == id).Select(f => new DisciplinaModel
                 {
-                    idCurso = f.curso.idCurso,
-                    nomeCurso = f.curso.nomeCurso
-                },
-                professor = new UsuarioModel
-                {
-                    idUsuario = f.professor.idUsuario,
-                    nomeUsuario = f.professor.nomeUsuario
-                }
-            }).FirstOrDefaultAsync();
+                    idDisciplina = f.idDisciplina,
+                    nomeDisciplina = f.nomeDisciplina,
+                    professorDisciplina = f.professorDisciplina,
+                    quantidadeAluno = f.quantidadeAluno,
+                    codigoDisciplina = f.codigoDisciplina,
+                    curso = new CursoModel
+                    {
+                        idCurso = f.curso.idCurso,
+                        nomeCurso = f.curso.nomeCurso
+                    },
+                    professor = new UsuarioModel
+                    {
+                        idUsuario = f.professor.idUsuario,
+                        nomeUsuario = f.professor.nomeUsuario,
+                    }
+                }).FirstOrDefaultAsync();
 
             return disciplina;
         }
 
+        public async Task<DisciplinaModel?> GetDisciplinaByIdForUpdateTopico(int id)
+        {
+            return await _dbContext.disciplinas.FindAsync(id);
+        }
+
         public async Task<bool> VerifyDisciplinaCreated(DisciplinaModel disciplina)
         {
-            bool existingDisciplina =  await _dbContext.disciplinas
+            bool existingDisciplina = await _dbContext.disciplinas
             .AnyAsync(d =>
             (d.nomeDisciplina == disciplina.nomeDisciplina ||
              d.codigoDisciplina == disciplina.codigoDisciplina) &&

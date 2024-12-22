@@ -25,6 +25,8 @@ public interface ITopicoDiscussaoRepository
     /// <returns>Representa uma tarefa asincrona do banco,
     /// ela retorna o modelo do tópico de discução correspondente ao ID</returns>
     public Task<TopicoDiscussaoModel?> GetTopicosDiscussaoById(int id);
+
+    public Task<TopicoDiscussaoModel?> GetTopicosDiscussaoByIdForCreateForum(int id);
     /// <summary>
     /// Verifica se um tópico de discussão existe
     /// </summary>

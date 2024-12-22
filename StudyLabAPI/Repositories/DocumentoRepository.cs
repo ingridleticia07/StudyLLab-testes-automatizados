@@ -110,7 +110,7 @@ namespace StudyLabAPI.Repositories
         {
             var result = new List<DocumentoModel>();
 
-            if (!isAnyStatus)
+            if (isAnyStatus)
             {
                 if (idDisciplina != 0 && idTopico != 0)
                 {
@@ -145,7 +145,6 @@ namespace StudyLabAPI.Repositories
                 {
                     result = await inDbContext.documento
                     .AsNoTracking()
-                    .Where(f => f.status == statusDocumentoEnum.aprovado)
                     .OrderByDescending(f => f.idDocumento)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
@@ -191,6 +190,7 @@ namespace StudyLabAPI.Repositories
                 {
                     result = await inDbContext.documento
                     .AsNoTracking()
+                    .Where(f => f.status == statusDocumentoEnum.aprovado)
                     .OrderByDescending(f => f.idDocumento)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)

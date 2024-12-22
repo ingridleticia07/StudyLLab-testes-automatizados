@@ -121,7 +121,7 @@ namespace StudyLabAPI.Controllers
             //passar id 
             int disciplinaId = topicoDiscussao.disciplina;
 
-            DisciplinaModel? relatedDisciplina = await DisciplinaRepository.GetDisciplinaById(disciplinaId);
+            DisciplinaModel? relatedDisciplina = await DisciplinaRepository.GetDisciplinaByIdForUpdateTopico(disciplinaId);
             UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(topicoDiscussao.idUsuario);
 
             TopicoDiscussaoModel NovotopicoDiscussao = new()
@@ -142,7 +142,7 @@ namespace StudyLabAPI.Controllers
         {
             int disciplinaId = topicoDiscussaoModel.disciplina;
 
-            DisciplinaModel? relatedDisciplina = await DisciplinaRepository.GetDisciplinaById(disciplinaId);
+            DisciplinaModel? relatedDisciplina = await DisciplinaRepository.GetDisciplinaByIdForUpdateTopico(disciplinaId);
 
             TopicoDiscussaoModel? topicoDiscussaoForUpdate = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoModel.idTopico);
 
@@ -154,6 +154,7 @@ namespace StudyLabAPI.Controllers
                 idTopico = topicoDiscussaoModel.idTopico,
                 nomeTopico = topicoDiscussaoModel.nomeTopico,
                 disciplina = relatedDisciplina,
+                usuario = topicoDiscussaoForUpdate.usuario,
                 dataTopico = topicoDiscussaoModel.dataTopico
             };
             await topicoDiscussaoRepository.UpdateTopicoDiscussao(topicoUpdated);
@@ -253,10 +254,10 @@ namespace StudyLabAPI.Controllers
             int UsuarioId = respostaForum.usuario;
 
             TopicoDiscussaoModel? relatedTopicoDiscussao =
-                await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoId);
+                await topicoDiscussaoRepository.GetTopicosDiscussaoByIdForCreateForum(topicoDiscussaoId);
 
             UsuarioModel? relatedUsuario =
-                await usuarioRepository.GetUsuarioById(UsuarioId);
+                await usuarioRepository.GetUsuarioByIdForCreateForum(UsuarioId);
 
             RespostaForumModel NovoRespostaForum = new()
             {

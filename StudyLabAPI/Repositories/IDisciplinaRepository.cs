@@ -14,6 +14,8 @@ public interface IDisciplinaRepository
     /// <returns>Representa uma tarefa asincrona do banco,
     /// ela retorna o modelo da disciplina encontrada</returns>
     public Task<DisciplinaModel?> GetDisciplinaById(int id);
+
+    public Task<DisciplinaModel?> GetDisciplinaByIdForUpdateTopico(int id);
     /// <summary>
     /// Verifica se uma disciplina existe no banco
     /// </summary>

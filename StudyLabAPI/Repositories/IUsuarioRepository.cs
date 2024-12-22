@@ -14,6 +14,8 @@ public interface IUsuarioRepository
     /// <returns>Representa uma tarefa assíncrona do banco,
     /// ela retorna o resultado da busca ou <c>null</c></returns>
     public Task<UsuarioModel?> GetUsuarioById(int id);
+
+    public Task<UsuarioModel?> GetUsuarioByIdForCreateForum(int id);
     /// <summary>
     /// Encontra um usuário pelo email.
     /// </summary>
