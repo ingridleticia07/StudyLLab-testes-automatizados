@@ -121,8 +121,8 @@ namespace StudyLabAPI.Controllers
             //passar id 
             int disciplinaId = topicoDiscussao.disciplina;
 
-            DisciplinaModel? relatedDisciplina = await DisciplinaRepository.GetDisciplinaByIdForUpdateTopico(disciplinaId);
-            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(topicoDiscussao.idUsuario);
+            DisciplinaModel? relatedDisciplina = await DisciplinaRepository.GetDisciplinaByIdForUpdateTopico(disciplinaId, true);
+            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(topicoDiscussao.idUsuario, true);
 
             TopicoDiscussaoModel NovotopicoDiscussao = new()
             {
@@ -146,7 +146,11 @@ namespace StudyLabAPI.Controllers
 
             TopicoDiscussaoModel? topicoDiscussaoForUpdate = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoModel.idTopico);
 
-            if (!topicoDiscussaoForUpdate.usuario.tipoUsuario.Equals(UserRole.Admin) && topicoDiscussaoForUpdate.usuario.idUsuario != topicoDiscussaoModel.idUsuario)
+            int fkTopicoDiscussaoUser = await topicoDiscussaoRepository.GetFkUsuarioByTopico(topicoDiscussaoForUpdate.idTopico);
+
+            UsuarioModel usuario = await usuarioRepository.GetUsuarioById(fkTopicoDiscussaoUser);
+
+            if (!usuario.tipoUsuario.Equals(UserRole.Admin) && fkTopicoDiscussaoUser != topicoDiscussaoModel.idUsuario)
                 throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
 
             TopicoDiscussaoModel topicoUpdated = new()
@@ -254,10 +258,10 @@ namespace StudyLabAPI.Controllers
             int UsuarioId = respostaForum.usuario;
 
             TopicoDiscussaoModel? relatedTopicoDiscussao =
-                await topicoDiscussaoRepository.GetTopicosDiscussaoByIdForCreateForum(topicoDiscussaoId);
+                await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoId,true);
 
             UsuarioModel? relatedUsuario =
-                await usuarioRepository.GetUsuarioByIdForCreateForum(UsuarioId);
+                await usuarioRepository.GetUsuarioById(UsuarioId, true);
 
             RespostaForumModel NovoRespostaForum = new()
             {

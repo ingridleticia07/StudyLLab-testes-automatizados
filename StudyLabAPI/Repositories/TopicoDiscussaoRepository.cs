@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudyLabAPI.Context;
 using StudyLabAPI.Models;
+using System.Runtime.CompilerServices;
 
 namespace StudyLabAPI.Repositories
 {
@@ -86,16 +87,30 @@ namespace StudyLabAPI.Repositories
             return (result, result.Count, topicosCount);
         }
 
-        public async Task<TopicoDiscussaoModel?> GetTopicosDiscussaoById(int id)
+        public async Task<TopicoDiscussaoModel?> GetTopicosDiscussaoById(int id, bool isAnyAsync = false)
         {
-            return await dbContext.discussao.AsNoTracking().Where(v => v.idTopico == id).Include(v => v.usuario).Include(v => v.disciplina).FirstOrDefaultAsync();
+            TopicoDiscussaoModel? topicoDiscussaoModel = null;
+
+            if (isAnyAsync)
+                topicoDiscussaoModel = await dbContext.discussao.FindAsync(id);
+            else
+                topicoDiscussaoModel = await dbContext.discussao.AsNoTracking().Where(v => v.idTopico == id).Include(v => v.disciplina).ThenInclude(p => p.professor).FirstOrDefaultAsync();
+
+            return topicoDiscussaoModel;
         }
 
-        public async Task<TopicoDiscussaoModel?> GetTopicosDiscussaoByIdForCreateForum(int id)
+        public async Task<int> GetFkUsuarioByTopico(int id)
         {
-            return await dbContext.discussao.FindAsync(id);
-        }
+            var idUsuario = await dbContext.discussao
+            .AsNoTracking()
+            .Where(v => v.idTopico == id)
+            .Include(v => v.disciplina)
+            .ThenInclude(p => p.professor)
+            .Select(v => v.disciplina.professor.idUsuario) // Select the specific id_usuario
+            .FirstOrDefaultAsync();
 
+            return idUsuario; // Returns the id_usuario or null if not found
+        }
         public async Task<bool> VerifyTopicoDiscussaoExists(TopicoDiscussaoModel topicoDiscussao)
         {
             //TODO: Provalvemente seja melhor usa AnyAsync

@@ -63,9 +63,16 @@ namespace StudyLabAPI.Repositories
             return disciplina;
         }
 
-        public async Task<DisciplinaModel?> GetDisciplinaByIdForUpdateTopico(int id)
+        public async Task<DisciplinaModel?> GetDisciplinaByIdForUpdateTopico(int id, bool includeProfessor = false)
         {
-            return await _dbContext.disciplinas.FindAsync(id);
+            DisciplinaModel disciplinaModel = null;
+
+            if (includeProfessor)
+                disciplinaModel = await _dbContext.disciplinas.Include(v => v.professor).Where(v => v.idDisciplina == id).FirstOrDefaultAsync();
+            else
+                disciplinaModel = await _dbContext.disciplinas.FindAsync(id);
+
+            return disciplinaModel;
         }
 
         public async Task<bool> VerifyDisciplinaCreated(DisciplinaModel disciplina)

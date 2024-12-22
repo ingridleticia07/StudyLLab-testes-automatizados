@@ -18,23 +18,18 @@ public class UsuarioRepository : IUsuarioRepository
         _dbContextFactory = dbContextFactory;
     }
 
-    public async Task<UsuarioModel?> GetUsuarioById(int id)
+    public async Task<UsuarioModel?> GetUsuarioById(int id, bool onlyFindAsync)
     {
-        UsuarioModel? userModel = await _dbContext.usuarios
-        .AsNoTracking()
-        .Include(m => m.curso)
-        .FirstOrDefaultAsync(m => m.idUsuario == id);
+        UsuarioModel? usuarioModel = null;
 
-        if (userModel is null) return null;
+        if(onlyFindAsync)
+            usuarioModel = await _dbContext.usuarios.FindAsync(id);
+        else
+            usuarioModel = await _dbContext.usuarios.AsNoTracking().Include(m => m.curso).FirstOrDefaultAsync(m => m.idUsuario == id);
 
-        return userModel;
-    }
+        if (usuarioModel is null) return null;
 
-    public async Task<UsuarioModel?> GetUsuarioByIdForCreateForum(int id)
-    {
-        UsuarioModel? userModel = await _dbContext.usuarios.FindAsync(id);
-
-        return userModel;
+        return usuarioModel;
     }
 
     public async Task<UsuarioModel?> GetUsuarioByEmail(string email)

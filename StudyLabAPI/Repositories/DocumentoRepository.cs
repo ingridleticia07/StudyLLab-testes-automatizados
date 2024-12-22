@@ -66,7 +66,7 @@ namespace StudyLabAPI.Repositories
         public async Task<DocumentoModel?> GetDocumentoById(int idDocumento)
         {
             DocumentoModel documentoModel = await dbContext.documento.Include(value => value.usuario)
-                .Include(value => value.professor).FirstOrDefaultAsync(d => d.idDocumento == idDocumento);
+                .FirstOrDefaultAsync(d => d.idDocumento == idDocumento);
 
             return documentoModel;
         }
@@ -123,7 +123,6 @@ namespace StudyLabAPI.Repositories
                     .Include(f => f.topico)
                     .ThenInclude(td => td.disciplina)
                     .Include(f => f.usuario)
-                    .Include(f => f.professor)
                     .ToListAsync();
                 }
                 else if (idDisciplina != 0 || idTopico != 0)
@@ -137,7 +136,6 @@ namespace StudyLabAPI.Repositories
                     .Include(f => f.topico)
                     .ThenInclude(td => td.disciplina)
                     .Include(f => f.usuario)
-                    .Include(f => f.professor)
                     .ToListAsync();
 
                 }
@@ -151,7 +149,6 @@ namespace StudyLabAPI.Repositories
                     .Include(f => f.topico)
                     .ThenInclude(td => td.disciplina)
                     .Include(f => f.usuario)
-                    .Include(f => f.professor)
                     .ToListAsync();
                 }
             }
@@ -168,7 +165,6 @@ namespace StudyLabAPI.Repositories
                     .Include(f => f.topico)
                     .ThenInclude(td => td.disciplina)
                     .Include(f => f.usuario)
-                    .Include(f => f.professor)
                     .ToListAsync();
                 }
                 else if (idDisciplina != 0 || idTopico != 0)
@@ -182,7 +178,6 @@ namespace StudyLabAPI.Repositories
                     .Include(f => f.topico)
                     .ThenInclude(td => td.disciplina)
                     .Include(f => f.usuario)
-                    .Include(f => f.professor)
                     .ToListAsync();
 
                 }
@@ -197,7 +192,6 @@ namespace StudyLabAPI.Repositories
                     .Include(f => f.topico)
                     .ThenInclude(td => td.disciplina)
                     .Include(f => f.usuario)
-                    .Include(f => f.professor)
                     .ToListAsync();
                 }
             }
@@ -212,21 +206,10 @@ namespace StudyLabAPI.Repositories
                 tipoMaterial = resposta.tipoMaterial,
                 dataCadastro = resposta.dataCadastro,
                 topico = resposta.topico,
+                professor = resposta.professor,
                 usuario = new UsuarioModel
                 {
                     idUsuario = resposta.usuario.idUsuario,
-                    emailUsuario = null,
-                    matricula = null,
-                    senhaUsuario = null,
-                    statusUsuario = false,
-                    tipoUsuario = default,
-                    curso = null,
-                    nomeUsuario = resposta.usuario.nomeUsuario,
-                    dataCadastroUsuario = default,
-                    imagemUsuario = null
-                },
-                professor = new UsuarioModel{
-                    idUsuario = resposta.professor.idUsuario,
                     emailUsuario = null,
                     matricula = null,
                     senhaUsuario = null,

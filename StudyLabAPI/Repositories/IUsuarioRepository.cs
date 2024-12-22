@@ -13,9 +13,7 @@ public interface IUsuarioRepository
     /// <param name="id">ID do usuário</param>
     /// <returns>Representa uma tarefa assíncrona do banco,
     /// ela retorna o resultado da busca ou <c>null</c></returns>
-    public Task<UsuarioModel?> GetUsuarioById(int id);
-
-    public Task<UsuarioModel?> GetUsuarioByIdForCreateForum(int id);
+    public Task<UsuarioModel?> GetUsuarioById(int id, bool onlyFindAsync = false);
     /// <summary>
     /// Encontra um usuário pelo email.
     /// </summary>

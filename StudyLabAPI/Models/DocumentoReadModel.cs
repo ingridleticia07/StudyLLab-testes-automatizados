@@ -22,6 +22,6 @@ namespace StudyLabAPI.Models
 
         public UsuarioModel usuario { get; set; }
 
-        public UsuarioModel professor {get; set;}
+        public int professor {get; set;}
     }
 }

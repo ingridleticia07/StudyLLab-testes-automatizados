@@ -50,15 +50,13 @@ namespace StudyLabAPI.Controllers
         {
             int topicoId = documento.Idtopico;
 
-            TopicoDiscussaoModel? relatedTopico = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoId);
+            TopicoDiscussaoModel? relatedTopico = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoId,true);
 
             int usuarioId = documento.IdUsuario;
 
-            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId);
+            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId, true);
 
-            DisciplinaModel relatedDisciplina = await DisciplinaRepository.GetDisciplinaById(relatedTopico.disciplina.idDisciplina);
-
-            UsuarioModel? relatedProfessor = await usuarioRepository.GetUsuarioById(relatedDisciplina.professor.idUsuario);
+            int fkProfessor = await topicoDiscussaoRepository.GetFkUsuarioByTopico(relatedTopico.idTopico);
 
             (string diretorio1, string diretorio2,tipoArquivo tipoArquivo) = await MoveDocumentFileAsync(file);
 
@@ -72,7 +70,7 @@ namespace StudyLabAPI.Controllers
                 status = statusDocumentoEnum.pendente,
                 tipoArquivo = tipoArquivo,
                 usuario = relatedUsuario,
-                professor = relatedProfessor
+                professor = fkProfessor
             };
 
             await documentoRepository.CreateDocumento(novoDocumento);
@@ -160,7 +158,7 @@ namespace StudyLabAPI.Controllers
                 throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
 
             if (documento.usuario.tipoUsuario.Equals(UserRole.Prof)
-                && documento.professor.idUsuario != idUsuario)
+                && documento.professor != idUsuario)
                 throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
 
             string rootDirectory = "wwwroot";
