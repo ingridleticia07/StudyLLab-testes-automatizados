@@ -112,7 +112,7 @@ public class AuthControllerCrudTests
         CodigoUsuarioModel codigoUsuarioModel = fakeData.fakeEmailConfirmationCodigoUsuarioModel;
         
         usuarioRepositoryMock.Setup(x => 
-            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID))
+            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID, false))
             .ReturnsAsync(usuarioModel);
         codigoUsuarioRepositoryMock.Setup(x => 
             x.GetUserCode(usuarioModel, UserCodeKind.EmailConfirmation))
@@ -164,7 +164,7 @@ public class AuthControllerCrudTests
         usuarioModel.statusUsuario = statusUsuario;
         
         usuarioRepositoryMock.Setup(x =>
-            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID))
+            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID, false))
             .ReturnsAsync(usuarioModel);
         codigoUsuarioRepositoryMock.Setup(x =>
             x.GenerateAndEnsureCode(usuarioModel, UserCodeKind.EmailConfirmation))

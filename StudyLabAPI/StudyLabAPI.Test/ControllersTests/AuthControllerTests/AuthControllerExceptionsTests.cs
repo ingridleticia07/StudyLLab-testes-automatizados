@@ -125,7 +125,7 @@ public class AuthControllerExceptionsTests
         ConfirmUserEmailRequestModel requestModel = fakeData.fakeConfirmUserEmailRequestModel;
         
         usuarioRepositoryMock.Setup(x =>
-            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID))
+            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID, false))
             .ReturnsAsync(() => null);
         
         await Assert.ThrowsAsync<UsuarioNotFoundException>(() => authController
@@ -148,7 +148,7 @@ public class AuthControllerExceptionsTests
         UsuarioModel usuarioModel = fakeData.fakeUsuarioModel;
         
         usuarioRepositoryMock.Setup(x =>
-            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID))
+            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID, false))
             .ReturnsAsync(usuarioModel);
         codigoUsuarioRepositoryMock.Setup(x =>
             x.GetUserCode(usuarioModel, UserCodeKind.EmailConfirmation))
@@ -168,7 +168,7 @@ public class AuthControllerExceptionsTests
         codigoUsuarioModel.codigo = invalidConfirmationCode;
         
         usuarioRepositoryMock.Setup(x =>
-            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID))
+            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID, false))
             .ReturnsAsync(usuarioModel);
         codigoUsuarioRepositoryMock.Setup(x =>
             x.GetUserCode(usuarioModel, UserCodeKind.EmailConfirmation))
@@ -202,7 +202,7 @@ public class AuthControllerExceptionsTests
         ResetUserPasswordRequestModel requestModel = fakeData.fakeResetUserPasswordRequestModel;
         
         usuarioRepositoryMock.Setup(x =>
-            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID))
+            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID, false))
             .ReturnsAsync(() => null);
         
         await Assert.ThrowsAsync<UsuarioNotFoundException>(() => authController
@@ -250,7 +250,7 @@ public class AuthControllerExceptionsTests
     public async Task RequestConfirmationCodeUserNotFoundTest()
     {
         usuarioRepositoryMock.Setup(x =>
-            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID));
+            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID, false));
         
         await Assert.ThrowsAsync<UsuarioNotFoundException>(() => 
             authController.RequestConfirmationCode(AuthControllerFakeData.FAKE_USER_ID));
