@@ -26,6 +26,24 @@ export const StudylabContextProvider = ({ children }) => {
         }, 300);
     }, []);
 
+    const searchSubject = (id) => {
+        return data.disciplinas.filter((item) => item.id === id)[0];
+    };
+
+    const editSubject = (item) => {
+        setData((prevData) => {
+            const updatedDisciplinas = prevData.disciplinas.map((disciplina) =>
+                disciplina.id === item.id
+                    ? { ...disciplina, ...item }
+                    : disciplina
+            );
+            return {
+                ...prevData,
+                disciplinas: updatedDisciplinas,
+            };
+        });
+    };
+
     const removeItem = (id, key) => {
         setData((prev) => ({
             ...prev,
@@ -42,6 +60,8 @@ export const StudylabContextProvider = ({ children }) => {
     const contextValeu = {
         data,
         user,
+        searchSubject,
+        editSubject,
         removeItem,
         removeUsers,
     };

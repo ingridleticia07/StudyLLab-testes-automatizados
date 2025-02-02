@@ -38,6 +38,7 @@ const Register = () => {
                         placeholder='crie sua senha'
                         icon={icons.padlock}
                         invalidText='senha invalido'
+                        maxLength={8}
                         rightElement={
                             <VisibilityButton
                                 handleClick={togglePasswordVisibility}
@@ -52,6 +53,7 @@ const Register = () => {
                         placeholder='Confirme a sua senha'
                         icon={icons.padlock}
                         invalidText='senha invalido'
+                        maxLength={8}
                         rightElement={
                             <VisibilityButton
                                 handleClick={togglePasswordVisibility}
@@ -65,6 +67,7 @@ const Register = () => {
                         label='Matricula'
                         placeholder='Sua Matricula'
                         invalidText='Matricula invalida'
+                        maxLength={6}
                     />
                     <div className='flex gap-2 text-start w-full mb-5'>
                         <input type='checkbox' name='terms' id='terms' />

@@ -1,4 +1,4 @@
-const InputField = ({ id, name, label, placeholder, required = false }) => {
+const InputField = ({ id, name, label, placeholder, required = false, value = '', onChange }) => {
     return (
         <div className='flex flex-col '>
             <label htmlFor={id} className='font-bold text-gray-500'>
@@ -11,6 +11,8 @@ const InputField = ({ id, name, label, placeholder, required = false }) => {
                 name={name}
                 placeholder={placeholder}
                 required={required}
+                value={value} 
+                onChange={onChange}
             />
         </div>
     );

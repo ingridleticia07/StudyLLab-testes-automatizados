@@ -8,6 +8,7 @@ const InputField = ({
     icon,
     rightElement,
     invalidText,
+    maxLength,
 }) => {
     // const [invalid, setInvalid] = useState(false);
     const invalid = false;
@@ -28,6 +29,7 @@ const InputField = ({
                     placeholder={placeholder}
                     className='flex-1 outline-none'
                     required
+                    maxLength={maxLength}
                 />
                 {rightElement}
             </div>

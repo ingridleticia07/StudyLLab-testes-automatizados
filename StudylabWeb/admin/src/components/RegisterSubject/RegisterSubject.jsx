@@ -1,10 +1,9 @@
 import InputField from '../Inputs/InputField';
 import SelectField from '../SelectField/SelectField';
 
-const RegisterSubject = ({ handleCancel}) => {
-    {
-        /* Colocar nos values o ID do curso especifico */
-    }
+const RegisterSubject = ({ handleCancel }) => {
+    /* Colocar nos values o ID do curso especifico */
+
     const cursoOptions = [
         { value: 'computacao', label: 'Ciência da Computação' },
         { value: 'software', label: 'Engenharia de Software' },

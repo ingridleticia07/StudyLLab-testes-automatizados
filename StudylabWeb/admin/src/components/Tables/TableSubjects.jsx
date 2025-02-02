@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { icons } from '../../assets/assets';
 import Loading from '../Loading/Loading';
 import TableFoot from './TableFoot';
@@ -7,6 +7,8 @@ import PopUp from '../PopUp/PopUp';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import EditSubject from '../EditSubject/EditSubject';
+import { StudylabContext } from '../../context/StudylabContext';
 
 const TableSubjects = ({ data, handleDelete }) => {
     const headersColumns = [
@@ -19,11 +21,20 @@ const TableSubjects = ({ data, handleDelete }) => {
         'ações',
     ];
 
-    const [showPopUp, setShowPopUp] = useState(false);
+    const [showPopUpDelete, setShowPopUpDelete] = useState(false);
+    const [showPopUpEdit, setShowPopUpEdit] = useState(false);
     const [selectedItem, setSelectedItem] = useState();
 
+    const { searchSubject } = useContext(StudylabContext);
+
+    const onEdit = (id) => {
+        setShowPopUpEdit(true);
+        const item = searchSubject(id);
+        setSelectedItem(item);
+    };
+
     const onDelete = (id, key, name) => {
-        setShowPopUp(true);
+        setShowPopUpDelete(true);
         setSelectedItem({
             id,
             key,
@@ -63,12 +74,17 @@ const TableSubjects = ({ data, handleDelete }) => {
                                             <img
                                                 src={icons.pencil}
                                                 alt='lapis'
+                                                onClick={() => onEdit(d.id)}
                                             />
                                         </button>
                                         <button
                                             aria-label='deletar disciplina'
                                             onClick={() =>
-                                                onDelete(d.id, 'disciplinas', d.nomeDisciplina)
+                                                onDelete(
+                                                    d.id,
+                                                    'disciplinas',
+                                                    d.nomeDisciplina
+                                                )
                                             }
                                         >
                                             <img
@@ -87,14 +103,20 @@ const TableSubjects = ({ data, handleDelete }) => {
                 <TableFoot cols={headersColumns.length} />
             </table>
 
-            {showPopUp && (
+            {showPopUpDelete && (
                 <PopUp
                     itemDelete={selectedItem}
-                    handleClose={() => setShowPopUp(false)}
+                    handleClose={() => setShowPopUpDelete(false)}
                     handleDeleteConfirmation={handleDelete}
                 />
             )}
-            <ToastContainer className='capitalize'/>
+            {showPopUpEdit && (
+                <EditSubject
+                    handleClose={() => setShowPopUpEdit(false)}
+                    item={selectedItem}
+                />
+            )}
+            <ToastContainer className='capitalize' />
         </div>
     );
 };
