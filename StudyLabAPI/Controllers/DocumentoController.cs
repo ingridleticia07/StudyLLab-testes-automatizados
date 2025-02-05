@@ -286,7 +286,7 @@ namespace StudyLabAPI.Controllers
             (var result, int resultCount, int denunciaCount) = await documentoRepository
             .GetDenunciasAndCount(page, pageSize);
 
-            var denunciaReadResult = result.Select(_denunciaModelMapper.UsuarioModelMapperToDenunciaReadModel)
+            var denunciaReadResult = result.Select(_denunciaModelMapper.DenunciaModelMapperToDenunciaReadModel)
                 .ToList();
 
             logger.Information("Recuperado {Count} usuários da página Page[{Page}] PageSize[{PageSize}]",
@@ -306,11 +306,11 @@ namespace StudyLabAPI.Controllers
             };
         }
 
-        public async Task CreateDenuncia(int idDocumento, int idUsuario)
+        public async Task CreateDenuncia(int idDocumento, int idUsuario, string descricao)
         {
             DocumentoModel? relatedDocumento = await documentoRepository.GetDocumentoById(idDocumento);
 
-            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(idUsuario);
+            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(idUsuario, true);
 
             bool checkDenunciaAlreadyExists = await documentoRepository.CheckDenunciaAlreadyExists(idDocumento, idUsuario);
 
@@ -321,7 +321,8 @@ namespace StudyLabAPI.Controllers
                     usuario = relatedUsuario,
                     documento = relatedDocumento,
                     dataDenuncia = DateOnly.FromDateTime(DateTime.Now),
-                    statusDenuncia = statusDenunciaEnum.Analise
+                    statusDenuncia = statusDenunciaEnum.Analise, 
+                    descricao = descricao
                 };
 
                 await documentoRepository.CreateDenuncia(novaDenuncia);

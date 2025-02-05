@@ -11,7 +11,7 @@ namespace StudyLabAPI.Controllers
 
         public Task<DocumentoModel?> CreateDocumento(RegisteredDocumentoModel documento, List<IFormFile> file);
 
-        public Task CreateDenuncia(int idDocumento, int idUsuario);
+        public Task CreateDenuncia(int idDocumento, int idUsuario, string descricao);
 
         public Task<DenunciaReadModel> UpdateDenunciaStatus(DenunciaReadModel denuncia);
 

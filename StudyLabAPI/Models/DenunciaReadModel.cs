@@ -15,5 +15,7 @@ namespace StudyLabAPI.Models
         public statusDocumentoEnum statusDocumento { get; set; }
 
         public DateOnly dataDenuncia { get; set; }
+
+        public string descricao { get; set; }
     }
 }

@@ -14,6 +14,7 @@ namespace StudyLabAPI.Mapper
         [MapProperty(nameof(DenunciaModel.dataDenuncia), nameof(DenunciaReadModel.dataDenuncia))]
         [MapProperty(nameof(DenunciaModel.usuario), nameof(DenunciaReadModel.usuario))]
         [MapProperty(nameof(DenunciaModel.documento), nameof(DenunciaReadModel.documento))]
-        public partial DenunciaReadModel UsuarioModelMapperToDenunciaReadModel(DenunciaModel model);
+        [MapProperty(nameof(DenunciaModel.descricao), nameof(DenunciaReadModel.descricao))]
+        public partial DenunciaReadModel DenunciaModelMapperToDenunciaReadModel(DenunciaModel model);
     }
 }

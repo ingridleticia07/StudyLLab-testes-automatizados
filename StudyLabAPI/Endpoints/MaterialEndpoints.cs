@@ -104,7 +104,7 @@ namespace StudyLabAPI.Endpoints
         {
             try
             {
-                await controller.CreateDenuncia(documento.idDocumento, documento.IdUsuario);
+                await controller.CreateDenuncia(documento.idDocumento, documento.IdUsuario, documento.descricao);
             }
             catch (Exception e)
             {

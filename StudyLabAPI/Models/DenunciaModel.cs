@@ -23,5 +23,8 @@ namespace StudyLabAPI.Models
         [Column("data_denuncia")]
         [Required]
         public DateOnly dataDenuncia { get; set; }
+        
+        [Column("descricao")]
+        public string descricao { get; set; }
     }
 }
