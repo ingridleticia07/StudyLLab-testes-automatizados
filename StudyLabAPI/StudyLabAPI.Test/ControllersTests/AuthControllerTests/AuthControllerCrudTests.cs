@@ -93,7 +93,7 @@ public class AuthControllerCrudTests
             x.GenerateJwt(It.IsAny<JwtPayload>()))
             .Returns(AuthControllerFakeData.FAKE_JWT);
         
-        (UserReadModel readModel, string jwt, string antifogeryToken, string sntifogeryCookie) = await authController.LoginUser(loginRequestModel);
+        (UserReadModel readModel, string jwt, string antifogeryToken, string sntifogeryCookie, int userId) = await authController.LoginUser(loginRequestModel);
         
         Assert.Equal(usuarioModel.nomeUsuario, readModel.username);
         Assert.Equal(usuarioModel.emailUsuario, readModel.email);

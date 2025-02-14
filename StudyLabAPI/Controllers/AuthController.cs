@@ -153,7 +153,7 @@ public class AuthController : IAuthController
     /// Regras: <seealso cref="UserLoginRequestModelValidator"/>.</exception>
     /// <exception cref="UsuarioNotFoundException"></exception>
     /// <exception cref="InvalidLoginPasswordException"></exception>
-    public async Task<(UserReadModel, string, string, string)> LoginUser(UserLoginRequestModel userLoginRequestModel, HttpContext? httpContext = null)
+    public async Task<(UserReadModel, string, string, string, int)> LoginUser(UserLoginRequestModel userLoginRequestModel, HttpContext? httpContext = null)
     {
         logger.Information("Validando campos da requisição de login para Email[{UserEmail}]",
             userLoginRequestModel.email);
@@ -206,7 +206,7 @@ public class AuthController : IAuthController
                 SameSite = SameSiteMode.None
             });
 
-        return (userReadModel, jwtUser, tokens.RequestToken, tokens.CookieToken);
+        return (userReadModel, jwtUser, tokens.RequestToken, tokens.CookieToken, userReadModel.id);
     }
 
     /// <summary>

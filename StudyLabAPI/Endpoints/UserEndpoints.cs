@@ -140,9 +140,15 @@ public static class UserEndpoints
     /// Política: <see cref="AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE"/></permission>
     [ProducesResponseType(typeof(UserReadModel), 200)]
     private async static Task<IResult> GetUserProfileInfo(HttpContext context,
-        [FromServices] IUsuarioController controller)
+        [FromServices] IUsuarioController controller,
+        [FromQuery] int idUsuario = 0)
     {
-        int userId = int.Parse(context.User.Claims.First(claim => claim.Type == ClaimTypes.Name).Value);
+        int userId = 0;
+
+        if (idUsuario!=0)
+            userId = idUsuario;
+        else
+            userId = int.Parse(context.User.Claims.First(claim => claim.Type == ClaimTypes.Name).Value);
         
         UserReadModel? result;
         try
