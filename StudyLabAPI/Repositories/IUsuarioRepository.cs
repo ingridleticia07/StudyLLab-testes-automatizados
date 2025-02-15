@@ -20,7 +20,7 @@ public interface IUsuarioRepository
     /// <param name="email">Email que será usado para a busca</param>
     /// <returns>Representa uma tarefa assíncrona do banco,
     /// ela retorna o resultado da busca ou <c>null</c></returns>
-    public Task<UsuarioModel?> GetUsuarioByEmail(string email);
+    public Task<UsuarioModel?> GetUsuarioByEmail(string email, bool isUserActive = false);
     /// <summary>
     /// Recupera todos os usuários cadastrados no banco, limitados por paginação.
     /// </summary>

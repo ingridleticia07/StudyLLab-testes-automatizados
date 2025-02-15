@@ -32,10 +32,21 @@ public class UsuarioRepository : IUsuarioRepository
         return usuarioModel;
     }
 
-    public async Task<UsuarioModel?> GetUsuarioByEmail(string email)
+    public async Task<UsuarioModel?> GetUsuarioByEmail(string email, bool isUserActive = false)
     {
-        UsuarioModel? userModel = await _dbContext.usuarios
+        UsuarioModel? userModel = null;
+
+        if (isUserActive)
+        {
+            userModel = await _dbContext.usuarios
+            .FirstOrDefaultAsync(u => u.emailUsuario == email && u.statusUsuario == true);
+        }
+        else
+        {
+            userModel = await _dbContext.usuarios
             .FirstOrDefaultAsync(u => u.emailUsuario == email);
+        }
+
         if (userModel is null) return null;
 
         await _dbContext.Entry(userModel).Reference(m => m.curso).LoadAsync();

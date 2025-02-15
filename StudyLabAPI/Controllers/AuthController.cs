@@ -170,7 +170,7 @@ public class AuthController : IAuthController
         logger.Information("Recuperando usuário com Email[{UserEmail}]",
             userLoginRequestModel.email);
         UsuarioModel? usuarioModel = await usuarioRepository
-            .GetUsuarioByEmail(userLoginRequestModel.email);
+            .GetUsuarioByEmail(userLoginRequestModel.email, true);
         if (usuarioModel is null)
         {
             UsuarioNotFoundException exception = new(nameof(userLoginRequestModel.email), userLoginRequestModel.email);
