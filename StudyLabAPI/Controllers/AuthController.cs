@@ -75,7 +75,7 @@ public class AuthController : IAuthController
     /// Regras: <seealso cref="RegisterUserRequestModelValidator"/>.</exception>
     /// <exception cref="ExistsUserException">Ocorre quando já existe algum usuário com a mesma matrícula ou email.</exception>
     /// <exception cref="CursoNotFoundException">Ocorre quando o curso solicitado para relação não existe.</exception>
-    public async Task<(UserReadModel, string)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel)
+    public async Task<(UserReadModel, string, int)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel)
     {
         logger.Information("Validando campos da requisição de cadastro para Username[{Username}]",
             registerUserRequestModel.username);
@@ -140,7 +140,7 @@ public class AuthController : IAuthController
 
         logger.Information("Usuário ID[{ID}] cadastrado com sucesso",
             usuarioModel.idUsuario);
-        return (userReadModel, jwtUser);
+        return (userReadModel, jwtUser, usuarioModel.idUsuario);
     }
 
     /// <summary>
@@ -239,7 +239,7 @@ public class AuthController : IAuthController
 
         logger.Information("Recuperando usuário com ID[{ID}]",
             userId);
-        UsuarioModel? usuarioModel = await usuarioRepository.GetUsuarioById(userId);
+        UsuarioModel? usuarioModel = await usuarioRepository.GetUsuarioById(userId,true);
         if (usuarioModel is null)
         {
             UsuarioNotFoundException exception = new(nameof(userId), userId.ToString());

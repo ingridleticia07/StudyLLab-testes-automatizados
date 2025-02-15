@@ -17,15 +17,17 @@ WORKDIR /app
 # Copy the output from the build stage
 COPY --from=build /app/out .
 
+# Create and set permissions for wwwroot directory
+RUN mkdir -p /app/wwwroot/documents && \
+    chmod -R 777 /app/wwwroot && \
+    chown -R www-data:www-data /app/wwwroot
+
 # Expose the port for the application
 EXPOSE 80
 
-# Set environment variables (consider using a secrets manager)
+# Set environment variables
 ENV ASPNETCORE_URLS=http://0.0.0.0:80
 ENV ASPNETCORE_ENVIRONMENT=Production
-
-# Use a configuration system for sensitive data
-# (e.g., mounted secrets or environment variables)
 
 # Run the application
 ENTRYPOINT ["dotnet", "StudyLabAPI.dll"]

@@ -67,7 +67,7 @@ public class AuthControllerCrudTests
         emailServiceMock.Setup(x => 
             x.SendEmail(It.IsAny<EmailIntent>()));
         
-        (UserReadModel readModel, string jwt) = await authController.RegisterNewUser(requestModel);
+        (UserReadModel readModel, string jwt, int userId) = await authController.RegisterNewUser(requestModel);
         
         Assert.Equal(requestModel.username, readModel.username);
         Assert.Equal(requestModel.email, readModel.email);

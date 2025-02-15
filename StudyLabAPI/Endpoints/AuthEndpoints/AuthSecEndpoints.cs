@@ -41,9 +41,15 @@ public static class AuthSecEndpoints
     async private static Task<IResult> AuthConfirmEmailHandler(
         HttpContext context,
         [FromBody] ConfirmUserEmailRequestModel confirmUserEmailRequestModel,
-        [FromServices] IAuthController controller)
+        [FromServices] IAuthController controller,
+        [FromQuery] int idUser = 0)
     {
-        int userId = int.Parse(context.User.Claims
+        int userId = 0;
+
+        if (idUser != 0)
+            userId = idUser;
+        else
+            userId = int.Parse(context.User.Claims
             .First(c => c.Type == ClaimTypes.Name).Value);
         
         CodigoUsuarioReadModel codigoUsuarioReadModel;
