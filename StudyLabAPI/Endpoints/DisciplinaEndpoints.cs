@@ -8,8 +8,9 @@ public static class DisciplinaEndpoints
 {
     public static RouteGroupBuilder MapDisciplinaEndpoints(this RouteGroupBuilder builder)
     {
-        builder.MapGet("listarDisciplinas", GetDisciplinas)
+        builder.MapGet("listarDisciplinasWithPagination", GetDisciplinas)
             .WithOpenApi(DisciplinaSummaries.DisciplinaGetDisciplinas);
+        builder.MapGet("listarDisciplinas", GetAllDisciplinas);
         builder.MapGet("listarDisciplina/{idDisciplina:int}", GetDisciplina)
             .WithOpenApi(DisciplinaSummaries.DisciplinaGetDisciplina);
         builder.MapPost("cadastrarDisciplina", CreateDisciplina)
@@ -21,16 +22,36 @@ public static class DisciplinaEndpoints
 
         return builder;
     }
-    
+
     [ProducesResponseType(typeof(List<DisciplinaReadModel>), 200)]
-    private static async Task<IResult> GetDisciplinas(HttpContext context,
+    private static async Task<IResult> GetAllDisciplinas(HttpContext context,
         [FromServices] IDisciplinaController controller)
     {
 
-        List<DisciplinaReadModel>? result;
+        List<DisciplinaModel>? result;
         try
         {
             result = await controller.GetAllDisciplinas();
+        }
+        catch (Exception e)
+        {
+            return Results.BadRequest(e.Message);
+        }
+
+        return Results.Ok(result);
+    }
+
+    [ProducesResponseType(typeof(List<DisciplinaReadModel>), 200)]
+    private static async Task<IResult> GetDisciplinas(HttpContext context,
+        [FromQuery] int page,
+        [FromQuery] int pageSize,
+        [FromServices] IDisciplinaController controller)
+    {
+
+        DisciplinaListResponse? result;
+        try
+        {
+            result = await controller.GetAllDisciplinasWithPagination(page,pageSize);
         }
         catch (Exception e)
         {
@@ -63,7 +84,7 @@ public static class DisciplinaEndpoints
 
         return Results.Ok(result);
     }
-    
+
     [ProducesResponseType(typeof(RegisterDisciplinaRequestModel), 200)]
     private static async Task<IResult> CreateDisciplina(HttpContext context,
         [FromBody] RegisterDisciplinaRequestModel novaDisciplina,
@@ -119,7 +140,7 @@ public static class DisciplinaEndpoints
     
     [ProducesResponseType(typeof(DisciplinaModel), 200)]
     private static async Task<IResult> DeleteDisciplina(HttpContext context,
-        [FromBody] int disciplinaIdentifier, //TODO: Precissa do modelo inteiro para deletar?
+        [FromQuery] int disciplinaIdentifier, //TODO: Precissa do modelo inteiro para deletar?
         [FromServices] IDisciplinaController controller)
     {
         try

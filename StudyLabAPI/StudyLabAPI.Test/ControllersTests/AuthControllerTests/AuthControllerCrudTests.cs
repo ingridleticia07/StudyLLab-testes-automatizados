@@ -41,24 +41,6 @@ public class AuthControllerCrudTests
         IValidator<ConfirmUserEmailRequestModel> confirmUserEmailRequestModelValidator = new ConfirmUserEmailRequestModelValidator();
         IValidator<ResetUserPasswordRequestModel> resetUserPasswordRequestModelValidator = new ResetUserPasswordRequestModelValidator();
         
-        authController = new(
-            usuarioRepositoryMock.Object,
-            cursoRepositoryMock.Object,
-            codigoUsuarioRepositoryMock.Object,
-            usuarioModelMapper,
-            registerUserRequestModelMapper,
-            codigoUsuarioModelMapper,
-            resetUserPasswordRequestModelMapper,
-            jwtServiceMock.Object,
-            emailServiceMock.Object,
-            hashServiceMock.Object,
-            registerUserRequestModelValidator,
-            userLoginRequestModelValidator,
-            resetUserPasswordRequestModelValidator,
-            confirmUserEmailRequestModelValidator,
-            loggerMock.Object
-        );
-        
         fakeData = new();
     }
     
@@ -85,7 +67,7 @@ public class AuthControllerCrudTests
         emailServiceMock.Setup(x => 
             x.SendEmail(It.IsAny<EmailIntent>()));
         
-        (UserReadModel readModel, string jwt) = await authController.RegisterNewUser(requestModel);
+        (UserReadModel readModel, string jwt, int userId) = await authController.RegisterNewUser(requestModel);
         
         Assert.Equal(requestModel.username, readModel.username);
         Assert.Equal(requestModel.email, readModel.email);
@@ -102,7 +84,7 @@ public class AuthControllerCrudTests
         UsuarioModel usuarioModel = fakeData.fakeUsuarioModel;
         
         usuarioRepositoryMock.Setup(x => 
-            x.GetUsuarioByEmail(loginRequestModel.email))
+            x.GetUsuarioByEmail(loginRequestModel.email, false))
             .ReturnsAsync(usuarioModel);
         hashServiceMock.Setup(x => 
             x.Hash(loginRequestModel.password))
@@ -111,7 +93,7 @@ public class AuthControllerCrudTests
             x.GenerateJwt(It.IsAny<JwtPayload>()))
             .Returns(AuthControllerFakeData.FAKE_JWT);
         
-        (UserReadModel readModel, string jwt) = await authController.LoginUser(loginRequestModel);
+        (UserReadModel readModel, string jwt, string antifogeryToken, string sntifogeryCookie, int userId) = await authController.LoginUser(loginRequestModel);
         
         Assert.Equal(usuarioModel.nomeUsuario, readModel.username);
         Assert.Equal(usuarioModel.emailUsuario, readModel.email);
@@ -130,7 +112,7 @@ public class AuthControllerCrudTests
         CodigoUsuarioModel codigoUsuarioModel = fakeData.fakeEmailConfirmationCodigoUsuarioModel;
         
         usuarioRepositoryMock.Setup(x => 
-            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID))
+            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID, false))
             .ReturnsAsync(usuarioModel);
         codigoUsuarioRepositoryMock.Setup(x => 
             x.GetUserCode(usuarioModel, UserCodeKind.EmailConfirmation))
@@ -153,7 +135,7 @@ public class AuthControllerCrudTests
         const string newPasswordHash = "newHash";
         
         usuarioRepositoryMock.Setup(x => 
-            x.GetUsuarioByEmail(AuthControllerFakeData.FAKE_EMAIL))
+            x.GetUsuarioByEmail(AuthControllerFakeData.FAKE_EMAIL,false))
             .ReturnsAsync(usuarioModel);
         codigoUsuarioRepositoryMock.Setup(x => 
             x.GetUserCode(usuarioModel, UserCodeKind.PasswordReset))
@@ -182,7 +164,7 @@ public class AuthControllerCrudTests
         usuarioModel.statusUsuario = statusUsuario;
         
         usuarioRepositoryMock.Setup(x =>
-            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID))
+            x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID, false))
             .ReturnsAsync(usuarioModel);
         codigoUsuarioRepositoryMock.Setup(x =>
             x.GenerateAndEnsureCode(usuarioModel, UserCodeKind.EmailConfirmation))
@@ -201,7 +183,7 @@ public class AuthControllerCrudTests
         CodigoUsuarioModel codigoUsuarioModel = fakeData.fakeResetUserPasswordCodigoUsuarioModel;
         
         usuarioRepositoryMock.Setup(x =>
-                x.GetUsuarioByEmail(AuthControllerFakeData.FAKE_EMAIL))
+                x.GetUsuarioByEmail(AuthControllerFakeData.FAKE_EMAIL, false))
             .ReturnsAsync(usuarioModel);
         codigoUsuarioRepositoryMock.Setup(x =>
                 x.GenerateAndEnsureCode(usuarioModel, UserCodeKind.PasswordReset))

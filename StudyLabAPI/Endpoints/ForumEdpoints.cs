@@ -11,6 +11,11 @@ namespace StudyLabAPI.Endpoints
         {
             builder.MapGet("listarTopicosDiscussao", GetAllTopicosDiscussao)
                 .WithOpenApi(ForumSummaries.ForumGetAllTopicosDiscussao);
+            builder.MapGet("listarTopicosDiscussaoByDisciplina", GetAllTopicosDiscussaoByDisciplina)
+                .WithOpenApi(ForumSummaries.ForumGetAllTopicosDiscussao);
+            builder.MapGet("listarTopicosDiscussaoWithPagination", GetTopicosDiscussaoLimitedByPageAndPageSize)
+                .WithOpenApi(ForumSummaries.ForumGetAllTopicosDiscussao);
+            builder.MapGet("listarRespostasForumByDisciplinaOrTopico", GetRespostaForumByDisciplinaOrTopico);
             builder.MapPost("criarTopicoDiscussao", CreateTopicoDiscussao)
                 .WithOpenApi(ForumSummaries.ForumCreateTopicoDiscussao);
             builder.MapPut("editarTopicoDiscussao", UpdateTopicoDiscussao)
@@ -38,10 +43,52 @@ namespace StudyLabAPI.Endpoints
 
             return builder;
         }
-        
+
+        [ProducesResponseType(typeof(List<RespostaForumModel>), 200)]
+        private static async Task<IResult> GetRespostaForumByDisciplinaOrTopico(HttpContext context,
+            [FromQuery] int page,
+            [FromQuery] int pageSize,
+            [FromQuery] int idDisciplina,
+            [FromQuery] int idTopico,
+            [FromServices] IForumController controller)
+        {
+
+            RespostaForumListResponse? result;
+            try
+            {
+                result = await controller.GetAllRespostasForumByDisciplinaOrTopico(page, pageSize,idDisciplina,idTopico);
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+
+            return Results.Ok(result);
+        }
+
+        [ProducesResponseType(typeof(List<TopicoDiscussaoModel>), 200)]
+        private static async Task<IResult> GetTopicosDiscussaoLimitedByPageAndPageSize(HttpContext context,
+            [FromQuery] int page,
+            [FromQuery] int pageSize,
+            [FromServices] IForumController controller)
+        {
+
+            TopicoDiscussaoListResponse? result;
+            try
+            {
+                result = await controller.GetTopicosDiscussaoLimitedByPageAndPageSize(page,pageSize);
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+
+            return Results.Ok(result);
+        }
+
         [ProducesResponseType(typeof(List<TopicoDiscussaoModel>), 200)]
         private static async Task<IResult> GetAllTopicosDiscussao(HttpContext context,
-        [FromServices] IForumController controller)
+            [FromServices] IForumController controller)
         {
 
             List<TopicoDiscussaoModel>? result;
@@ -56,7 +103,26 @@ namespace StudyLabAPI.Endpoints
 
             return Results.Ok(result);
         }
-        
+
+        [ProducesResponseType(typeof(List<TopicoDiscussaoModel>), 200)]
+        private static async Task<IResult> GetAllTopicosDiscussaoByDisciplina(HttpContext context,
+            [FromQuery] int idDisciplina,
+            [FromServices] IForumController controller)
+        {
+
+            List<TopicoDiscussaoModel>? result;
+            try
+            {
+                result = await controller.GetAllTopicosDiscussaoByDisciplina(idDisciplina);
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
+
+            return Results.Ok(result);
+        }
+
         [ProducesResponseType(typeof(RegisteredTopicoDiscussaoRequestModel), 200)]
         private static async Task<IResult> CreateTopicoDiscussao(HttpContext context,
             [FromBody] RegisteredTopicoDiscussaoRequestModel novoTopico,
@@ -113,20 +179,20 @@ namespace StudyLabAPI.Endpoints
         
         [ProducesResponseType(typeof(TopicoDiscussaoModel), 200)]
         private static async Task<IResult> DeleteTopicoDiscussao(HttpContext context,
-        [FromBody] TopicoDiscussaoModel topicoDiscussaoModel,
+        [FromQuery] int idTopicoDiscussao,
         [FromServices] IForumController controller)
         {
 
             try
             {
-                await controller.DeleteTopicoDiscussao(topicoDiscussaoModel);
+                await controller.DeleteTopicoDiscussao(idTopicoDiscussao);
             }
             catch (Exception e)
             {
                 return Results.BadRequest(e.Message);
             }
 
-            return Results.Ok(topicoDiscussaoModel);
+            return Results.Ok(idTopicoDiscussao);
         }
         
         [ProducesResponseType(typeof(List<RespostaForumModel>), 200)]
@@ -201,19 +267,19 @@ namespace StudyLabAPI.Endpoints
         
         [ProducesResponseType(typeof(RespostaForumModel), 200)]
         private static async Task<IResult> DeleteRespostaForum(HttpContext context,
-        [FromBody] RespostaForumModel respostaForumModel,
+        [FromQuery] int idRespostaForum,int idUsuario,
         [FromServices] IForumController controller)
         {
             try
             {
-                await controller.DeleteRespostaForum(respostaForumModel);
+                await controller.DeleteRespostaForum(idRespostaForum,idUsuario);
             }
             catch (Exception e)
             {
                 return Results.BadRequest(e.Message);
             }
 
-            return Results.Ok(respostaForumModel);
+            return Results.Ok(idRespostaForum);
         }
         
         [ProducesResponseType(typeof(ResgisteredForumModel), 200)]

@@ -17,23 +17,38 @@ public class UsuarioRepository : IUsuarioRepository
         _dbContext = dbContext;
         _dbContextFactory = dbContextFactory;
     }
-    
-    public async Task<UsuarioModel?> GetUsuarioById(int id)
+
+    public async Task<UsuarioModel?> GetUsuarioById(int id, bool onlyFindAsync)
     {
-        UsuarioModel? userModel = await _dbContext.usuarios
-            .FindAsync(id);
-        if (userModel is null) return null;
-        
-        await _dbContext.Entry(userModel).Reference(m => m.curso).LoadAsync();
-        return userModel;
+        UsuarioModel? usuarioModel = null;
+
+        if(onlyFindAsync)
+            usuarioModel = await _dbContext.usuarios.FindAsync(id);
+        else
+            usuarioModel = await _dbContext.usuarios.AsNoTracking().Include(m => m.curso).FirstOrDefaultAsync(m => m.idUsuario == id);
+
+        if (usuarioModel is null) return null;
+
+        return usuarioModel;
     }
 
-    public async Task<UsuarioModel?> GetUsuarioByEmail(string email)
+    public async Task<UsuarioModel?> GetUsuarioByEmail(string email, bool isUserActive = false)
     {
-        UsuarioModel? userModel = await _dbContext.usuarios
+        UsuarioModel? userModel = null;
+
+        if (isUserActive)
+        {
+            userModel = await _dbContext.usuarios
+            .FirstOrDefaultAsync(u => u.emailUsuario == email && u.statusUsuario == true);
+        }
+        else
+        {
+            userModel = await _dbContext.usuarios
             .FirstOrDefaultAsync(u => u.emailUsuario == email);
-        if(userModel is null) return null;
-        
+        }
+
+        if (userModel is null) return null;
+
         await _dbContext.Entry(userModel).Reference(m => m.curso).LoadAsync();
         return userModel;
     }
@@ -47,10 +62,10 @@ public class UsuarioRepository : IUsuarioRepository
 
         if (inDbContext is null)
             throw new("Was not possible to instanciaite a new DbContext");
-        
+
         return await GetUsers(inDbContext, page, pageSize);
     }
-    
+
     private async Task<IList<UsuarioModel>> GetUsers(AppDbContext inDbContext, int page, int pageSize)
     {
         var result = await inDbContext.usuarios
@@ -60,7 +75,7 @@ public class UsuarioRepository : IUsuarioRepository
             .Take(pageSize)
             .Include(f => f.curso)
             .ToListAsync();
-        
+
         return result;
     }
 
@@ -73,28 +88,28 @@ public class UsuarioRepository : IUsuarioRepository
 
         if (inDbContext is null)
             throw new("Was not possible to instanciaite a new DbContext");
-        
+
         return await GetUsersCount(inDbContext);
     }
-        
+
     private async Task<int> GetUsersCount(AppDbContext inDbContext) =>
         await inDbContext.usuarios.CountAsync();
-    
+
     public async Task<(IList<UsuarioModel>, int, int)> GetUsersAndCount(int page, int pageSize)
     {
         var usersTask = GetUsersWFactory(page, pageSize);
         var usersCountTask = GetUsersCountWFactory();
         await Task.WhenAll(usersTask, usersCountTask);
-        
+
         var result = usersTask.Result;
         int usersCount = usersCountTask.Result;
         return (result, result.Count, usersCount);
     }
-    
+
     public async Task<bool> CheckUserByMatriculaAndEmail(string matricula, string email)
     {
         bool exists = await _dbContext.usuarios
-            .AnyAsync(u => u.matricula == matricula || 
+            .AnyAsync(u => u.matricula == matricula ||
                            u.emailUsuario == email);
         return exists;
     }
@@ -104,7 +119,7 @@ public class UsuarioRepository : IUsuarioRepository
 
     public void DeleteUser(UsuarioModel usuario) =>
         _dbContext.usuarios.Remove(usuario);
-    
-    public async Task FlushChanges() => 
+
+    public async Task FlushChanges() =>
         await _dbContext.SaveChangesAsync();
 }

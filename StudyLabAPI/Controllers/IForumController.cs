@@ -4,7 +4,13 @@ namespace StudyLabAPI.Controllers
 {
     public interface IForumController
     {
+        public Task<TopicoDiscussaoListResponse?> GetTopicosDiscussaoLimitedByPageAndPageSize(int page, int pageSize);
+
         public Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussao();
+
+        public Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussaoByDisciplina(int idDisciplina);
+
+        public Task<RespostaForumListResponse?> GetAllRespostasForumByDisciplinaOrTopico(int page, int pageSize, int? idDisciplina, int? idTopico);
 
         public Task<TopicoDiscussaoModel> CreateTopicoDiscussao(RegisteredTopicoDiscussaoRequestModel topicoDiscussao);
 
@@ -14,7 +20,7 @@ namespace StudyLabAPI.Controllers
 
         public Task<bool> VerifyTopicoDiscussaoExistsWithId(RegisteredTopicoDiscussaoRequestModel topicoDiscussao);
 
-        public Task DeleteTopicoDiscussao(TopicoDiscussaoModel idTopicoDiscussao);
+        public Task DeleteTopicoDiscussao(int idTopicoDiscussao);
 
         public Task<List<RespostaForumModel?>> GetAllRespostasForum();
 
@@ -26,7 +32,7 @@ namespace StudyLabAPI.Controllers
 
         public Task<RespostaForumModel> UpdateRespostaForum(RegisteredRespostaForumModel respostaForum);
 
-        public Task DeleteRespostaForum(RespostaForumModel respostaForum);
+        public Task DeleteRespostaForum(int idRespostaForum, int idUsuario);
 
         public Task<ForumModel> CreateForum(ResgisteredForumModel respostaForum);
 

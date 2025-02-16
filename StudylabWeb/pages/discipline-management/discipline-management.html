@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StudyLab</title>
+    <link rel="stylesheet" href="discipline-management.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  </head>
+
+  <body>
+    <div id="pre-loader">
+      <div class="spinner"></div>
+    </div>
+
+    <header class="top-nav">
+      <div class="logo"><img src="../../assets/img/StudyLab.svg" alt="" /></div>
+      <div class="search-bar">
+        <input type="search" placeholder="Procurar..." />
+        <button type="submit">
+          <img src="../../assets/img/icon-lupa.svg" alt="" />
+        </button>
+      </div>
+      <div class="user-controls">
+        <a class="icon-user-control-1" href="#"
+          ><img src="../../assets/img/icon-sino.svg" alt=""
+        /></a>
+        <a class="icon-user-control-2" href="#"
+          ><img src="../../assets/img/icon-user-header.svg" alt=""
+        /></a>
+      </div>
+    </header>
+    <div class="primary">
+      <aside class="sidebar">
+        <nav class="menu">
+          <ul>
+            <li>
+              <a href="../home-admin/home-admin.html"
+                ><img
+                  class="icon-sidebar"
+                  src="../../assets/img/icon-home.svg"
+                  alt=""
+              /></a>
+            </li>
+            <li>
+              <a href="#"
+                ><img
+                  class="icon-sidebar"
+                  src="../../assets/img/icon-book.svg"
+                  alt=""
+              /></a>
+            </li>
+            <li>
+              <a href="../user-managentment/user-managentment.html"
+                ><img
+                  class="icon-sidebar"
+                  src="../../assets/img/icon-user.svg"
+                  alt=""
+              /></a>
+            </li>
+            <li>
+              <a href="../topics-management/topics-management.html"
+                ><img
+                  class="icon-sidebar" 
+                  src="../../assets/img/icon-folder.svg"
+                  alt=""
+              /></a>
+            </li>
+            <li>
+              <a href="../forum-management/forum-management.html"
+                ><img class="icon-sidebar" src="../../assets/img/eye.svg" alt=""
+              /></a>
+            </li>
+            <li>
+              <a href="#"
+                ><img
+                  class="icon-sidebar"
+                  src="../../assets/img/icon-help.svg"
+                  alt=""
+              /></a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+      
+      <div class="externo">
+        <div class="breadcrumbs">
+          <span>Página Inicial > Disciplinas</span>
+        </div>
+        <main class="content">
+          <div class="content-managentment">
+            <div class="content-header">
+            <H1>Disciplinas</H1>
+            <button id="cadastrar-btn">Cadastrar Disciplina</button>
+          </div>
+          <div class="pagination">
+          </div>
+            <div>
+              <br><br>
+              <table class="content-table" id="disciplina-table">
+                <thead>
+                  <tr>
+                    <th><input type="checkbox" name="select-all" id="select-all"></th>
+                    <th>CÓDIGO</th>
+                    <th>NOME DISCIPLINA</th>
+                    <th>PROFESSOR</th>
+                    <th>CURSO</th>
+                    <th>ALUNOS</th>
+                    <th>AÇÕES</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                </tbody>  <!-- Conteúdos -->
+              </table>
+            </div>
+          </div>
+          <div class="pagination">
+            <span>1-1 de 1</span>
+            <button><img src="../../assets/img/Button_Prev.svg" alt="anterior"></button> 1/1 <button><img src="../../assets/img/Button_next.svg" alt="proximo"></button>
+          </div>
+        </main>
+      </div>  
+    </div>
+
+    <div id="modal-cadastrar-disciplina" class="modal-container">
+      <div class="modal-formulario">
+        <header>
+          <h2 class="subtitulo"></h2>
+          <button class="fechar">×</button>
+        </header>
+        <div class="corpo-modal">
+          <div class="disciplina">
+            <div class="form-content">
+              <p class="titulo">Cadastrar disciplina</p>
+              <div id="modalSuccess" style="display: none;">
+                <div class="modal-content">
+                  <p><img class="checkmark" src="../../assets/img/icon-check.svg">  Disciplina cadastrada com sucesso!</p>
+                </div>  
+              </div>
+              <div id="modalWarning" style="display: none;">
+                <div class="modal-content" style="background-color: rgb(255, 136, 0)!important">
+                  <p> Erro ao cadastrar disciplina. Tente novamente mais tarde!</p>
+                </div>
+              </div>
+              <div class="form">
+                <form class="form-inputs">
+                  <div class="disciplina-container">
+                      <label>Disciplina</label>
+                      <input
+                        type="email"
+                        name="email"
+                        id="disciplina"
+                        placeholder="Disciplina"
+                      />
+                  </div>
+                  <div class="nome-professor-container">
+                    <label>Professor</label>
+                    <input
+                      type="text"
+                      name="professor"
+                      id="nome-professor"
+                      placeholder="nome do professor"
+                    />
+                  </div>
+                  <div class="curso-container">
+                    <label>Curso</label>
+                    <select id="curso">
+                      <option value="0" selected disabled>Selecione um curso</option>
+                      <option value="1">Eng. software</option>
+                      <option value="2">Ciência da computação</option>
+                      <option value="3">Eng. Prod</option>
+                      <option value="4">Eng. Civil</option>
+                      <option value="5">Eng. Mecanica</option>
+                    </select>
+                  </div>
+                  <div class="numero-alunos-container">
+                    <label>Número de alunos</label>
+                    <input
+                      type="number"
+                      name="num_alunos"
+                      id="numero-alunos"
+                      placeholder="número de alunos"
+                      min="1"
+                      max="100"
+                    />
+                  </div>
+                  <div class="codigo-disciplina-container">
+                    <label>Código disciplina</label>
+                    <input
+                      type="text"
+                      name="codigo_disciplina"
+                      id="codigo-disciplina"
+                      placeholder="código da disciplina"
+                    />
+                  </div>
+                </div>
+              </form>
+              <button id="button-submit">Cadastrar</button>
+            </div>
+          </div>  
+        </div>
+      </div>
+    </div>
+
+    <!--Editar disciplina-->
+    <div id="modal-editar-disciplina" class="modal-container">
+      <div class="modal-formulario">
+        <header>
+          <h2 class="subtitulo"></h2>
+          <button class="fechar">×</button>
+        </header>
+        <div class="corpo-modal">
+          <div class="disciplina">
+            <div class="form-content">
+              <p class="titulo">Editar disciplina</p>
+              <div id="modalSuccess" style="display: none;">
+                <div class="modal-content">
+                  <p><img class="checkmark" src="../../assets/img/icon-check.svg">  Disciplina Editada com sucesso!</p>
+                </div>
+              </div>
+              <div id="modalWarning" style="display: none;">
+                <div class="modal-content" style="background-color: rgb(255, 136, 0)!important">
+                  <p> Erro ao editar disciplina. Tente novamente mais tarde!</p>
+                </div>
+              </div>
+              <div class="form">
+                <form class="form-inputs">
+                  <input
+                      type="hidden"
+                      name="idDisciplina"
+                      id="id-disciplina"
+                      value=""
+                    />
+                  <div class="disciplina-container">
+                      <label>Disciplina</label>
+                      <input
+                        type="email"
+                        name="email"
+                        id="disciplina"
+                        placeholder="seu email"
+                      />
+                  </div>
+                  <div class="nome-professor-container">
+                    <label>Professor</label>
+                    <input
+                      type="text"
+                      name="professor"
+                      id="nome-professor"
+                      placeholder="nome do professor"
+                    />
+                  </div>
+                  <div class="curso-container">
+                    <label>Curso</label>
+                    <select id="curso">
+                      <option value="0" selected disabled>Selecione um curso</option>
+                      <option value="1">Eng. software</option>
+                      <option value="2">Ciência da computação</option>
+                      <option value="3">Eng. Civil</option>
+                      <option value="4">Eng. Prod</option>
+                      <option value="5">Eng. Mecanica</option>
+                    </select>
+                  </div>
+                  <div class="numero-alunos-container">
+                    <label>Número de alunos</label>
+                    <input
+                      type="number"
+                      name="num_alunos"
+                      id="numero-alunos"
+                      placeholder="número de alunos"
+                      min="1"
+                      max="100"
+                    />
+                  </div>
+                  <div class="codigo-disciplina-container">
+                    <label>Código disciplina</label>
+                    <input
+                      type="text"
+                      name="codigo_disciplina"
+                      id="codigo-disciplina"
+                      placeholder="código da disciplina"
+                    />
+                  </div>
+                </div>
+              </form>
+              <button id="button-submit">Salvar</button>
+            </div>
+          </div>  
+        </div>
+      </div>
+    </div>
+
+    <div id="modal-excluir-disciplina" class="modal-container">
+      <div class="modal">
+        <header>
+          <h2 class="subtitulo">Confirmar exclusão</h2>
+          <button class="fechar">×</button>
+        </header>
+        <div class="corpo-modal">
+          <p>Tem certeza de que deseja excluir essa disiplina? <br>    
+            Esta ação é irreversível. </p> <br>
+        </div>
+        <footer>
+          <button class="btn cancelar">Cancelar</button>
+          <button class="btn confirmar">Excluir</button>
+        </footer>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" src="discipline-management.js"></script>
+  </body>
+</html>

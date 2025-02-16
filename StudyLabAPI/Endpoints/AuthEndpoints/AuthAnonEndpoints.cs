@@ -40,9 +40,11 @@ public static class AuthAnonEndpoints
         [FromServices] IAuthController controller)
     {
         string jwtNewUser;
+        int userId = 0;
+
         try
         {
-            (UserReadModel _, jwtNewUser) = await controller.RegisterNewUser(registerUserRequest);
+            (UserReadModel _, jwtNewUser, userId) = await controller.RegisterNewUser(registerUserRequest);
         }
         catch(CursoNotFoundException ex)
         {
@@ -52,8 +54,15 @@ public static class AuthAnonEndpoints
         {
             return Results.BadRequest(e.Message);
         }
-                
-        return Results.Content(jwtNewUser, statusCode: StatusCodes.Status201Created);
+
+        object retorno = new
+        {
+            tokenJwt = jwtNewUser,
+            statusCode = StatusCodes.Status201Created,
+            userId = userId
+        };
+
+        return Results.Json(retorno);
     }
     /// <summary>
     /// Trata requisição de <c>/auth/login</c>
@@ -63,14 +72,18 @@ public static class AuthAnonEndpoints
     /// <returns>Resposta da requisição.</returns>
     /// <permission cref="AuthorizationPolicies">Requisições não autenticadas são autorizadas.</permission>
     async private static Task<IResult> AuthLoginEndpointHandler(
-        HttpContext _,
+        HttpContext _httpContext,
         [FromBody] UserLoginRequestModel loginRequestModel,
         [FromServices] IAuthController controller)
     {
         string jwtUser;
+        string antiFogeryToken;
+        string antiFogeryTokenCookie;
+        int userId = 0;
+
         try
         {
-            (UserReadModel _, jwtUser) = await controller.LoginUser(loginRequestModel);
+            (UserReadModel _, jwtUser, antiFogeryToken, antiFogeryTokenCookie, userId) = await controller.LoginUser(loginRequestModel, _httpContext);
         }
         catch (UsuarioNotFoundException e)
         {
@@ -84,8 +97,16 @@ public static class AuthAnonEndpoints
         {
             return Results.BadRequest(e.Message);
         }
-        
-        return Results.Content(jwtUser);
+
+        object retorno = new
+        {
+            tokenJwt = jwtUser,
+            tokenAntifogery = antiFogeryToken,
+            tokenAntifogeryCookie = antiFogeryTokenCookie,
+            idUsuario = userId
+        };
+
+        return Results.Json(retorno);
     }
     
     #endregion

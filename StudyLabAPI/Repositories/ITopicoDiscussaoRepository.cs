@@ -7,19 +7,26 @@ namespace StudyLabAPI.Repositories;
 /// </summary>
 public interface ITopicoDiscussaoRepository
 {
+    public Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussaoByDisciplina(int idDisciplina);
+
+    public Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussao();
     /// <summary>
     /// Recupera todos os topicos de discussão cadastrados
     /// </summary>
     /// <returns>Representa uma tarefa asincrona do banco,
     /// ela retorna uma <see cref="List{T}"/> com todos os topicos de discussão</returns>
-    public Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussao();
+    public Task<IList<TopicoDiscussaoModel>> GetTopicosDiscussaoLimitedByPageAndPageSize(int page, int pageSize);
+
+    public Task<(IList<TopicoDiscussaoModel>, int, int)> GetTopicosAndCount(int page, int pageSize);
     /// <summary>
     /// Recupera um tópico de discussão pelo ID
     /// </summary>
     /// <param name="id">ID do tópico de discução</param>
     /// <returns>Representa uma tarefa asincrona do banco,
     /// ela retorna o modelo do tópico de discução correspondente ao ID</returns>
-    public Task<TopicoDiscussaoModel?> GetTopicosDiscussaoById(int id);
+    public Task<TopicoDiscussaoModel?> GetTopicosDiscussaoById(int id, bool isAnyAsync = false);
+
+    public Task<int> GetFkUsuarioByTopico(int id);
     /// <summary>
     /// Verifica se um tópico de discussão existe
     /// </summary>

@@ -1,6 +1,10 @@
-﻿using StudyLabAPI.Models;
-using ILogger = Serilog.ILogger;
+﻿using StudyLabAPI.Mapper;
+using StudyLabAPI.Models;
+using StudyLabAPI.Models.Enums;
 using StudyLabAPI.Repositories;
+using StudyLabAPI.Validators.CustomValidators.RequestQuery;
+using ILogger = Serilog.ILogger;
+using ValidationException = StudyLabAPI.Exceptions.ValidationException;
 
 namespace StudyLabAPI.Controllers
 {
@@ -17,10 +21,17 @@ namespace StudyLabAPI.Controllers
 
         private IForumRepository forumRepository { get; }
 
-        public ForumController(ITopicoDiscussaoRepository topicoDiscussaoRepository, 
+        private readonly TopicoDiscussaoModelMapper _topicoModelMapper;
+
+        private readonly RespotaForumModelMapper _respostaForumModelMapper;
+
+        public ForumController(TopicoDiscussaoModelMapper topicoDiscussaoModelMapper, RespotaForumModelMapper
+            respostaForumModelMapper, ITopicoDiscussaoRepository topicoDiscussaoRepository,
             IDisciplinaRepository DisciplinaRepository, IUsuarioRepository usuarioRepository,
-            IRespostaForumRepository respostaForumRepository,IForumRepository forumRepository, ILogger logger)
+            IRespostaForumRepository respostaForumRepository, IForumRepository forumRepository, ILogger logger)
         {
+            this._topicoModelMapper = topicoDiscussaoModelMapper;
+            this._respostaForumModelMapper = respostaForumModelMapper;
             this.topicoDiscussaoRepository = topicoDiscussaoRepository;
             this.DisciplinaRepository = DisciplinaRepository;
             this.usuarioRepository = usuarioRepository;
@@ -28,16 +39,59 @@ namespace StudyLabAPI.Controllers
             this.forumRepository = forumRepository;
             this.logger = logger;
         }
-        public async Task<List<TopicoDiscussaoModel>> GetAllTopicosDiscussao()
+        public async Task<TopicoDiscussaoListResponse> GetTopicosDiscussaoLimitedByPageAndPageSize(int page, int pageSize)
         {
-            // Implement your logic to get all DisciplinaModel objects
-            // You can use your repository to fetch the data
-            List<TopicoDiscussaoModel> topicosDiscussaoListado = await topicoDiscussaoRepository.GetAllTopicosDiscussao();
-            // You should map DisciplinaModel to DisciplinaReadModel and return the list
+            logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
+            page, pageSize);
 
-            return topicosDiscussaoListado;
+            PageValidator validator = new(page, pageSize);
+
+            if (!validator.isValid)
+            {
+                ValidationException exception = new(["Parâmetros de paginação inválidos"]);
+                logger.Error(exception, "Parâmetros de paginação inválidos");
+                throw exception;
+            }
+
+            logger.Information("Recuperando topicos da página Page[{Page}] PageSize[{PageSize}]",
+                page, pageSize);
+
+            (var result, int resultCount, int topicosCount) = await topicoDiscussaoRepository
+            .GetTopicosAndCount(page, pageSize);
+
+            var topicosReadResult = result.Select(_topicoModelMapper.TopicoDiscussaoModelToDiscussaoReadModel)
+                .ToList();
+
+            logger.Information("Recuperado {Count} usuários da página Page[{Page}] PageSize[{PageSize}]",
+                topicosReadResult.Count, page, pageSize);
+            logger.Information("Recuperando informações extras para a resposta");
+
+            int maxPage = topicosCount / pageSize;
+            if (topicosCount % pageSize != 0)
+                maxPage++;
+
+            return new()
+            {
+                maxPage = maxPage,
+                topicoCount = topicosCount,
+                pageCount = resultCount,
+                topicos = topicosReadResult
+            };
         }
 
+        public async Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussao()
+        {
+            List<TopicoDiscussaoModel?> topicosDiscussao = await topicoDiscussaoRepository.GetAllTopicosDiscussao();
+
+            return topicosDiscussao;
+        }
+
+        public async Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussaoByDisciplina(int idDisciplina)
+        {
+            List<TopicoDiscussaoModel?> topicosDiscussao = await topicoDiscussaoRepository.GetAllTopicosDiscussaoByDisciplina(idDisciplina);
+
+            return topicosDiscussao;
+        }
 
         public async Task<bool> VerifyTopicoDiscussaoExists(RegisteredTopicoDiscussaoRequestModel topicoDiscussao)
         {
@@ -67,13 +121,15 @@ namespace StudyLabAPI.Controllers
             //passar id 
             int disciplinaId = topicoDiscussao.disciplina;
 
-            DisciplinaModel? relatedDisciplina = await DisciplinaRepository.GetDisciplinaById(disciplinaId);
+            DisciplinaModel? relatedDisciplina = await DisciplinaRepository.GetDisciplinaByIdForUpdateTopico(disciplinaId, true);
+            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(topicoDiscussao.idUsuario, true);
 
             TopicoDiscussaoModel NovotopicoDiscussao = new()
             {
                 nomeTopico = topicoDiscussao.nomeTopico,
                 dataTopico = topicoDiscussao.dataTopico,
-                disciplina = relatedDisciplina
+                disciplina = relatedDisciplina,
+                usuario = relatedUsuario
             };
             await topicoDiscussaoRepository.CreateTopicoDiscussao(NovotopicoDiscussao);
 
@@ -86,34 +142,84 @@ namespace StudyLabAPI.Controllers
         {
             int disciplinaId = topicoDiscussaoModel.disciplina;
 
-            DisciplinaModel? relatedDisciplina = await DisciplinaRepository.GetDisciplinaById(disciplinaId);
+            DisciplinaModel? relatedDisciplina = await DisciplinaRepository.GetDisciplinaByIdForUpdateTopico(disciplinaId);
 
-            TopicoDiscussaoModel NovotopicoDiscussao = new()
+            TopicoDiscussaoModel? topicoDiscussaoForUpdate = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoModel.idTopico);
+
+            int fkTopicoDiscussaoUser = await topicoDiscussaoRepository.GetFkUsuarioByTopico(topicoDiscussaoForUpdate.idTopico);
+
+            UsuarioModel usuario = await usuarioRepository.GetUsuarioById(fkTopicoDiscussaoUser);
+
+            if (!usuario.tipoUsuario.Equals(UserRole.Admin) && fkTopicoDiscussaoUser != topicoDiscussaoModel.idUsuario)
+                throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
+
+            TopicoDiscussaoModel topicoUpdated = new()
             {
                 idTopico = topicoDiscussaoModel.idTopico,
                 nomeTopico = topicoDiscussaoModel.nomeTopico,
+                disciplina = relatedDisciplina,
+                usuario = topicoDiscussaoForUpdate.usuario,
                 dataTopico = topicoDiscussaoModel.dataTopico
             };
-            await topicoDiscussaoRepository.UpdateTopicoDiscussao(NovotopicoDiscussao);
+            await topicoDiscussaoRepository.UpdateTopicoDiscussao(topicoUpdated);
             await topicoDiscussaoRepository.Flush();
 
-            return (NovotopicoDiscussao);
+            return (topicoUpdated);
         }
 
-        public async Task DeleteTopicoDiscussao(TopicoDiscussaoModel topicoDiscussao)
+        public async Task DeleteTopicoDiscussao(int idTopicoDiscussao)
         {
             //verificar se disciplina existe, por meio do buscar disciplina
             //para em caso de exstir, excluir a mesma
-            await topicoDiscussaoRepository.DeleteTopicoDiscussao(topicoDiscussao.idTopico);
+            await topicoDiscussaoRepository.DeleteTopicoDiscussao(idTopicoDiscussao);
             await topicoDiscussaoRepository.Flush();
         }
 
         public async Task<List<RespostaForumModel?>> GetAllRespostasForum()
         {
             List<RespostaForumModel> RespostaForumListado = await respostaforumRepository.GetAllRespostasForum();
-            // You should map DisciplinaModel to DisciplinaReadModel and return the list
 
             return RespostaForumListado;
+        }
+
+        public async Task<RespostaForumListResponse> GetAllRespostasForumByDisciplinaOrTopico(int page, int pageSize, int? idDisciplina, int? idTopico)
+        {
+            logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
+            page, pageSize);
+
+            PageValidator validator = new(page, pageSize);
+
+            if (!validator.isValid)
+            {
+                ValidationException exception = new(["Parâmetros de paginação inválidos"]);
+                logger.Error(exception, "Parâmetros de paginação inválidos");
+                throw exception;
+            }
+
+            logger.Information("Recuperando topicos da página Page[{Page}] PageSize[{PageSize}]",
+                page, pageSize);
+
+            (var result, int resultCount, int respostaForumCount) = await respostaforumRepository
+            .GetRespostaForumAndCount(page, pageSize, idDisciplina, idTopico);
+
+            var respostaForumReadResult = result.Select(_respostaForumModelMapper.RespotaForumModelMapperToRespostaForumReadModel)
+                .ToList();
+
+            logger.Information("Recuperado {Count} usuários da página Page[{Page}] PageSize[{PageSize}]",
+                respostaForumReadResult.Count, page, pageSize);
+            logger.Information("Recuperando informações extras para a resposta");
+
+            int maxPage = respostaForumCount / pageSize;
+            if (respostaForumCount % pageSize != 0)
+                maxPage++;
+
+            return new()
+            {
+                maxPage = maxPage,
+                respostaForumCount = respostaForumCount,
+                pageCount = resultCount,
+                respostasForum = respostaForumReadResult
+            };
         }
 
         public async Task<bool> VerifyRespostaForumExists(RegisteredRespostaForumModel respostaForum)
@@ -151,11 +257,11 @@ namespace StudyLabAPI.Controllers
 
             int UsuarioId = respostaForum.usuario;
 
-            TopicoDiscussaoModel? relatedTopicoDiscussao = 
-                await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoId);
+            TopicoDiscussaoModel? relatedTopicoDiscussao =
+                await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoId,true);
 
             UsuarioModel? relatedUsuario =
-                await usuarioRepository.GetUsuarioById(UsuarioId);
+                await usuarioRepository.GetUsuarioById(UsuarioId, true);
 
             RespostaForumModel NovoRespostaForum = new()
             {
@@ -183,7 +289,10 @@ namespace StudyLabAPI.Controllers
             UsuarioModel? relatedUsuario =
                 await usuarioRepository.GetUsuarioById(UsuarioId);
 
-            RespostaForumModel NewRespostaForum = new()
+            if (!relatedUsuario.tipoUsuario.Equals(UserRole.Admin) && relatedTopicoDiscussao.usuario.idUsuario != respostaForum.usuario)
+                throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
+
+            RespostaForumModel updatedRespostaForum = new()
             {
                 idResposta = respostaForum.idResposta,
                 resposta = respostaForum.resposta,
@@ -191,15 +300,20 @@ namespace StudyLabAPI.Controllers
                 topicoDiscussao = relatedTopicoDiscussao,
                 usuario = relatedUsuario
             };
-            await respostaforumRepository.UpdateRespostaForum(NewRespostaForum);
+            await respostaforumRepository.UpdateRespostaForum(updatedRespostaForum);
             await respostaforumRepository.Flush();
 
-            return (NewRespostaForum);
+            return (updatedRespostaForum);
         }
 
-        public async Task DeleteRespostaForum(RespostaForumModel respostaForum)
+        public async Task DeleteRespostaForum(int idRespostaForum, int idUsuario)
         {
-            await respostaforumRepository.DeleteRespostaForum(respostaForum.idResposta);
+            RespostaForumModel repostaForum = await respostaforumRepository.GetRespostaForumById(idRespostaForum);
+
+            if (!repostaForum.usuario.tipoUsuario.Equals(UserRole.Admin) && repostaForum.usuario.idUsuario != idUsuario)
+                throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
+
+            await respostaforumRepository.DeleteRespostaForum(idRespostaForum);
             await respostaforumRepository.Flush();
         }
 
@@ -211,7 +325,7 @@ namespace StudyLabAPI.Controllers
             int topicoDiscussaoId = forum.topicoDiscussao;
 
             int usuarioId = forum.usuario;
-            
+
             RespostaForumModel? relatedRespostaForum = await respostaforumRepository.GetRespostaForumById(respostaForumId);
 
             TopicoDiscussaoModel? relatedTopicoDiscussao = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoId);
@@ -232,15 +346,12 @@ namespace StudyLabAPI.Controllers
 
         public async Task<ForumModel> UpdateForum(ResgisteredForumModel forum)
         {
-            int respostaForumId = forum.respostaForum;
+            RespostaForumModel? relatedRespostaForum = await respostaforumRepository.GetRespostaForumById(forum.respostaForum);
 
-            int topicoDiscussaoId = forum.topicoDiscussao;
+            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(forum.usuario);
 
-            int usuarioId = forum.usuario;
-
-            RespostaForumModel? relatedRespostaForum = await respostaforumRepository.GetRespostaForumById(respostaForumId);
-
-            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId);
+            if (!relatedRespostaForum.usuario.tipoUsuario.Equals(UserRole.Admin) && relatedRespostaForum.usuario.idUsuario != forum.usuario)
+                throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
 
             ForumModel forumForUpdate = new()
             {

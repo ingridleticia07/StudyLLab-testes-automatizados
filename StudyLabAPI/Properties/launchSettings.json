@@ -16,12 +16,12 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "API_KEY": "e24dd2210803b4737a9bd9e3163a4ca807b63201c3bc32b68fb122ca52efff36",
-        "POSTGRES_CONNECTION_STRING": "User ID=admin;Password=admin;Host=localhost;Port=5432;Database=study;",
+        "POSTGRES_CONNECTION_STRING": "User ID=postgres;Password=study2025;Host=localhost;Port=5432;Database=study;",
         "JWT_KEY": "4102b844edd0474bb0038057956e393d55672d4da5844ece125d43a73250900b",
         "SMTP_SERVER": "smtp.gmail.com",
         "SMTP_PORT": "587",
-        "SMTP_EMAIL": "email",
-        "SMTP_PASSWORD": "password",
+        "SMTP_EMAIL": "studylabproject@gmail.com",
+        "SMTP_PASSWORD": "wgat snfx qcnq ydfb",
         "PASSWORD_SALT": "e47204df44254059b86dd41b5ba9eceae0"
       }
     },
@@ -31,7 +31,15 @@
       "launchBrowser": false,
       "applicationUrl": "https://localhost:7126",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Production"
+        "ASPNETCORE_ENVIRONMENT": "Production",
+        "API_KEY": "e24dd2210803b4737a9bd9e3163a4ca807b63201c3bc32b68fb122ca52efff36",
+        "POSTGRES_CONNECTION_STRING": "User ID=postgres;Password=180293;Host=localhost;Port=5433;Database=study;",
+        "JWT_KEY": "4102b844edd0474bb0038057956e393d55672d4da5844ece125d43a73250900b",
+        "SMTP_SERVER": "smtp.gmail.com",
+        "SMTP_PORT": "587",
+        "SMTP_EMAIL": "email",
+        "SMTP_PASSWORD": "password",
+        "PASSWORD_SALT": "e47204df44254059b86dd41b5ba9eceae0"
       }
     }
   }

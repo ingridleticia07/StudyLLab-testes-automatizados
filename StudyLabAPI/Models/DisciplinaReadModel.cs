@@ -10,6 +10,8 @@
 
         public CursoModel curso { get; init; }
 
+        public UsuarioModel professor { get; init; }
+
         public int ?quantidadeAluno { get; set; }
         public string codigoDisciplina { get; set; }
     }

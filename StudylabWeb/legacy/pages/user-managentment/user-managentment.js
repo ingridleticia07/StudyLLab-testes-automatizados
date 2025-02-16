@@ -1,13 +1,15 @@
-import { getAllUsersInfo } from "../../assets/js/lib/services/user.js";
+import { getAllUsersInfo,deleteUser,changeUserStatus } from "../../assets/js/lib/services/user.js";
 import { updateUserAuthState } from "../../assets/js/lib/services/auth.js";
 
 updateUserAuthState();
 
 const modalExc = document.getElementById("modal-excluir");
-const modalBan = document.getElementById("modal-banir");
+const modalBloquear = document.getElementById("modal-bloquear");
 const banButtons = document.querySelectorAll(".banir");
 const confirmDeleteButton = document.querySelector("#modal-excluir .confirmar");
-const confirmBanButton = document.querySelector("#modal-banir .confirmar");
+const confirmBlockButton = document.querySelector("#modal-bloquear .confirmar");
+const tableBody = document.querySelector("#user-table tbody");
+const itemsPerPageValue = 5;
 
 function openModal(elemento) {
   elemento.style.display = "flex";
@@ -19,19 +21,83 @@ function closeModal(elemento) {
 
 function openDeleteModal(userId) {
   openModal(modalExc);
-  confirmDeleteButton.addEventListener("click", function () {
+  
+  confirmDeleteButton.onclick = async function() {
     closeModal(modalExc);
-    showModal(document.getElementById("modalConfirmacaoExcluir"));
-  });
+    
+    let userDeletedSuccessfully = false;
+    let rowToRemove = tableBody.querySelector(`tr[id='${userId}']`);
+    
+    try{
+      await deleteUser(userId)
+
+      userDeletedSuccessfully = true;
+
+      showModal(document.getElementById("modalConfirmacaoExcluir"));
+    }catch(e){
+      showModal(document.getElementById("modalErroAoExcluir"));
+    }
+    
+    if(userDeletedSuccessfully)
+      tableBody.removeChild(rowToRemove);
+  };
 }
 
 function openBanModal(userId) {
-  openModal(modalBan);
-  confirmBanButton.addEventListener("click", function () {
-    closeModal(modalBan);
-    showModal(document.getElementById("modalConfirmacaoBanir"));
-  });
-}
+  openModal(modalBloquear);
+
+  let userBlockedSuccessfully = false;
+  let rowToBlock = tableBody.querySelector(`tr[id='${userId}']`);
+  let iconElement = rowToBlock.querySelector(`#ban-u-${userId} img`);
+  let tituloElement = modalBloquear.querySelector('header .subtitulo');
+  let textoElement = modalBloquear.querySelector('div #texto');
+  let currentUserStatus = rowToBlock.children[5];
+  let btnConfirmElement = modalBloquear.querySelector('.btn.confirmar');
+  let tituloModal = "";
+  let textoModal = "";
+  let btnModal = "";
+  if(currentUserStatus.textContent == "true"){
+    tituloModal = "Confirmar bloqueio de usuário";
+    textoModal = "Deseja bloquear esse usuário?";
+    btnModal = "Bloquear";
+  }else{
+    tituloModal = "Confirmar desbloqueio de usuário";
+    textoModal = "Deseja desbloquear esse usuário?";
+    btnModal = "Desbloquear";
+  }
+  
+  tituloElement.textContent = tituloModal;
+  textoElement.textContent = textoModal;
+  btnConfirmElement.textContent = btnModal;
+  confirmBlockButton.onclick = async function() {
+
+    try{
+
+      let newStatus;
+      
+      if(currentUserStatus.textContent == "true"){
+        newStatus = false;
+        iconElement.src = "../../assets/img/icon-unblock.png";
+        iconElement.alt = "Desbloquear";
+      }else{
+        newStatus = true;
+        iconElement.src = "../../assets/img/icon-edit.svg";
+        iconElement.alt = "Bloquear";
+      }
+      currentUserStatus.textContent = newStatus;
+
+      closeModal(modalBloquear);
+
+      await changeUserStatus(userId,newStatus)
+
+      showModal(document.getElementById("modalConfirmacaoBloqueioUsuario"));
+    }catch(e){
+      console.log(e);
+      showModal(document.getElementById("modalErroAoBloquearUsuario"));
+    }
+
+  };
+};
 
 document.querySelectorAll(".fechar").forEach(function (botao) {
   botao.addEventListener("click", function () {
@@ -70,23 +136,46 @@ function showModal(modal) {
   }, 5000);
 }
 
-document.addEventListener("DOMContentLoaded", async function () {
+async function getUsers(page,pageSize) {
   try {
-    const page = 1;
-    const pageSize = 10;
+
     const data = await getAllUsersInfo(page, pageSize);
 
-    const users = data.users;
-    const countInPage = data.pageCount;
-    const totalRecords = data.usersCount;
-    const maxPage = data.maxPage
-
-    updatePageCount(totalRecords, countInPage, page, pageSize, maxPage)
+    const { users, pageCount: countInPage, usersCount: totalRecords, maxPage } = data;
+    
+    updatePageCount(totalRecords, countInPage, page, pageSize, maxPage);
     populateTable(users);
+    addButtonsPagination(maxPage,countInPage);
   } catch (error) {
     console.error("Error fetching user info:", error);
   }
+}
+
+function addButtonsPagination(maxRegisterCounts,itemsPerPage){
+    const paginationContainer = document.querySelector('body .pagination');
+
+    paginationContainer.innerHTML = ''; // Clear previous buttons
+
+    for (let i = 1; i <= maxRegisterCounts; i++) {
+        const button = document.createElement('button');
+        button.textContent = i;
+        button.addEventListener('click', function() {
+            document.querySelectorAll('.pagination button').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            getUsers(i, itemsPerPage);
+        });
+        paginationContainer.appendChild(button);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", async() => {
+  let preloaderDiv = document.getElementById("pre-loader");
+
+  await getUsers(1,itemsPerPageValue);
+
+  preloaderDiv.style.display = "none";
 });
+
 
 const blockIcon = () => {
   const blockIcon = document.createElement("img");
@@ -104,13 +193,20 @@ const deleteIcon = () => {
   return deleteIcon;
 };
 
+const unblockIcon = () => {
+  const unblockIcon = document.createElement("img");
+  unblockIcon.src = "../../assets/img/icon-unblock.png";
+  unblockIcon.alt = "Desbloquear";
+
+  return unblockIcon;
+};
+
 function updatePageCount(recordsCount, countInPage, currentPageIndex, pageSize, maxPage) {
   //TODO: Implement pagination and update informations
-  console.log(recordsCount, countInPage, currentPageIndex, pageSize, maxPage);
+  //console.log(recordsCount, countInPage, currentPageIndex, pageSize, maxPage);
 }
 
 const populateTable = (users) => {
-  const tableBody = document.querySelector("#user-table tbody");
   tableBody.innerHTML = ""; // Clear existing rows
 
   users.forEach((user) => {
@@ -122,6 +218,7 @@ const populateTable = (users) => {
 function createUserRow(user) {
   //User informations
   const row = document.createElement("tr");
+  row.id = user.id;
   const inputColumn = document.createElement("td");
   inputColumn.innerHTML = `<input type="checkbox" name="user">`;
 
@@ -137,12 +234,15 @@ function createUserRow(user) {
   const emailColumn = document.createElement("td");
   emailColumn.textContent = user.email;
 
+  const statusColumn = document.createElement("td");
+  statusColumn.textContent = user.active;
+
   row.appendChild(inputColumn);
   row.appendChild(idColumn);
   row.appendChild(usernameColumn);
   row.appendChild(cursoColumn);
   row.appendChild(emailColumn);
-
+  row.appendChild(statusColumn);
   //Action buttons
   const actionColumn = document.createElement("td");
 
@@ -158,8 +258,12 @@ function createUserRow(user) {
   const banButton = document.createElement("button");
   banButton.id = `ban-u-${user.id}`;
   banButton.classList.add("action-button");
-  banButton.classList.add("banir");
-  banButton.appendChild(blockIcon());
+  banButton.classList.add("bloquear");
+
+  if(user.active)
+    banButton.appendChild(blockIcon());
+  else
+    banButton.appendChild(unblockIcon());
   banButton.addEventListener("click", () => {
     openBanModal(user.id);
   });
