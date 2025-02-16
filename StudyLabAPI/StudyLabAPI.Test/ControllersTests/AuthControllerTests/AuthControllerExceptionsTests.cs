@@ -96,7 +96,7 @@ public class AuthControllerExceptionsTests
         UserLoginRequestModel requestModel = fakeData.fakeLoginRequestModel;
         
         usuarioRepositoryMock.Setup(x =>
-            x.GetUsuarioByEmail(requestModel.email))
+            x.GetUsuarioByEmail(requestModel.email, false))
             .ReturnsAsync(() => null);
         
         await Assert.ThrowsAsync<UsuarioNotFoundException>(() => authController.LoginUser(requestModel));
@@ -110,7 +110,7 @@ public class AuthControllerExceptionsTests
         const string invalidPasswordHash = "invalidHash";
         
         usuarioRepositoryMock.Setup(x =>
-            x.GetUsuarioByEmail(requestModel.email))
+            x.GetUsuarioByEmail(requestModel.email, false))
             .ReturnsAsync(usuarioModel);
         hashServiceMock.Setup(x =>
             x.Hash(requestModel.password))
@@ -216,7 +216,7 @@ public class AuthControllerExceptionsTests
         UsuarioModel usuarioModel = fakeData.fakeUsuarioModel;
         
         usuarioRepositoryMock.Setup(x =>
-            x.GetUsuarioByEmail(AuthControllerFakeData.FAKE_EMAIL))
+            x.GetUsuarioByEmail(AuthControllerFakeData.FAKE_EMAIL, false))
             .ReturnsAsync(usuarioModel);
         codigoUsuarioRepositoryMock.Setup(x =>
             x.GetUserCode(usuarioModel, UserCodeKind.PasswordReset))
@@ -236,7 +236,7 @@ public class AuthControllerExceptionsTests
         codigoUsuarioModel.codigo = invalidConfirmationCode;
         
         usuarioRepositoryMock.Setup(x =>
-            x.GetUsuarioByEmail(AuthControllerFakeData.FAKE_EMAIL))
+            x.GetUsuarioByEmail(AuthControllerFakeData.FAKE_EMAIL, false))
             .ReturnsAsync(usuarioModel);
         codigoUsuarioRepositoryMock.Setup(x =>
             x.GetUserCode(usuarioModel, UserCodeKind.PasswordReset))
@@ -263,7 +263,7 @@ public class AuthControllerExceptionsTests
             fakeData.fakeResetPasswordEmailRequestModel;
         
         usuarioRepositoryMock.Setup(x =>
-            x.GetUsuarioByEmail(AuthControllerFakeData.FAKE_EMAIL));
+            x.GetUsuarioByEmail(AuthControllerFakeData.FAKE_EMAIL, false));
         
         await Assert.ThrowsAsync<UsuarioNotFoundException>(() => 
             authController.RequestPasswordResetCode(requestResetPasswordEmailRequestModel));

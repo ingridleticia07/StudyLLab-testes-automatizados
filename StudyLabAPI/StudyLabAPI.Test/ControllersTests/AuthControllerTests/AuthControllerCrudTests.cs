@@ -84,7 +84,7 @@ public class AuthControllerCrudTests
         UsuarioModel usuarioModel = fakeData.fakeUsuarioModel;
         
         usuarioRepositoryMock.Setup(x => 
-            x.GetUsuarioByEmail(loginRequestModel.email))
+            x.GetUsuarioByEmail(loginRequestModel.email, false))
             .ReturnsAsync(usuarioModel);
         hashServiceMock.Setup(x => 
             x.Hash(loginRequestModel.password))
@@ -135,7 +135,7 @@ public class AuthControllerCrudTests
         const string newPasswordHash = "newHash";
         
         usuarioRepositoryMock.Setup(x => 
-            x.GetUsuarioByEmail(AuthControllerFakeData.FAKE_EMAIL))
+            x.GetUsuarioByEmail(AuthControllerFakeData.FAKE_EMAIL,false))
             .ReturnsAsync(usuarioModel);
         codigoUsuarioRepositoryMock.Setup(x => 
             x.GetUserCode(usuarioModel, UserCodeKind.PasswordReset))
@@ -183,7 +183,7 @@ public class AuthControllerCrudTests
         CodigoUsuarioModel codigoUsuarioModel = fakeData.fakeResetUserPasswordCodigoUsuarioModel;
         
         usuarioRepositoryMock.Setup(x =>
-                x.GetUsuarioByEmail(AuthControllerFakeData.FAKE_EMAIL))
+                x.GetUsuarioByEmail(AuthControllerFakeData.FAKE_EMAIL, false))
             .ReturnsAsync(usuarioModel);
         codigoUsuarioRepositoryMock.Setup(x =>
                 x.GenerateAndEnsureCode(usuarioModel, UserCodeKind.PasswordReset))
