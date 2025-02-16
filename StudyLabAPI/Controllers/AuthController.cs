@@ -451,6 +451,7 @@ public class AuthController : IAuthController
         {
             logger.Warning("Não foi possível enviar o email de boas vindas para o usuário Email[{UserEmail}]",
                 usuarioModel.emailUsuario);
+            throw new Exception($"Não foi possível enviar o email para[{usuarioModel.emailUsuario}]. Verifique seu email e tente novamente.");
         }
         return emailSended;
     }
