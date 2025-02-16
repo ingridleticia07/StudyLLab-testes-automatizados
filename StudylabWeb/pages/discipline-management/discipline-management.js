@@ -40,9 +40,12 @@ function copulateModalDisciplina(data){
   let codigoDisciplina = modalEditarDisciplina.querySelector("#codigo-disciplina");
   codigoDisciplina.value = data.codigoDisciplina;
 
+  let IdProfessor = modalEditarDisciplina.querySelector("#id-professor");
+  IdProfessor.value = data.professor.idUsuario
 }
 
 function copulateModalAndChangeDisciplina(data,page) {
+  
   copulateModalDisciplina(data);
 
   let editarDisciplinaSubmitBtn = modalEditarDisciplina.querySelector("#button-submit");
@@ -50,6 +53,8 @@ function copulateModalAndChangeDisciplina(data,page) {
   editarDisciplinaSubmitBtn.onclick = async function() {
     
     let IdDisciplina = modalEditarDisciplina.querySelector("#id-disciplina").value;
+
+    let IdProfessor = modalEditarDisciplina.querySelector("#id-professor").value;
 
     let disciplina = modalEditarDisciplina.querySelector("#disciplina").value;
 
@@ -65,6 +70,7 @@ function copulateModalAndChangeDisciplina(data,page) {
       idDisciplina:IdDisciplina,
       nomeDisciplina:disciplina,
       professorDisciplina:professor,
+      fkProfesor:IdProfessor,
       curso:curso,
       quantidadeAluno:numeroAlunos,
       codigoDisciplina:codigoDisciplina
