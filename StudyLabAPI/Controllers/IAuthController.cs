@@ -29,7 +29,7 @@ public interface IAuthController
     /// e um JWT válido para o usuário.</returns>
     /// <exception cref="CursoNotFoundException"><c>codeCurso</c> de <paramref name="registerUserRequestModel"/>
     /// não pertence a nenhum curso.</exception>
-    public Task<(UserReadModel, string, int)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel);
+    public Task<(UserReadModel, string, int)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel, bool isProfessor = false);
     /// <summary>
     /// Realiza o login de um usuário já cadastrado no sistema.
     /// Os campos recebidos em &lt;paramref name="registerUserRequestModel"/&gt; são validados de acordo com <see cref="UserLoginRequestModelValidator"/>

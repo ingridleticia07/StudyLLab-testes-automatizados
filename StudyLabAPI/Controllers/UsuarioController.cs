@@ -35,7 +35,7 @@ public class UsuarioController : IUsuarioController
         this.logger = logger;
     }
 
-    public async Task<UsersListResponse> GetUsers(int page, int pageSize)
+    public async Task<UsersListResponse> GetUsers(int page, int pageSize, bool onlyProfessor = false)
     {
         logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
             page, pageSize);
@@ -51,7 +51,7 @@ public class UsuarioController : IUsuarioController
             page, pageSize);
 
         (var result, int resultCount, int usersCount) = await _userRepository
-            .GetUsersAndCount(page, pageSize);
+            .GetUsersAndCount(page, pageSize, onlyProfessor);
 
         var userReadResult = result
             .Select(_usuarioModelMapper.UsuarioModelToUserReadModel)

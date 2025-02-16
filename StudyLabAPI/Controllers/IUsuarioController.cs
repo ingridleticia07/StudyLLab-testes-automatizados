@@ -22,7 +22,7 @@ public interface IUsuarioController
     /// <returns>Representa uma tarefa assíncrona,
     /// ela retorna os usuários cadastrados
     /// em uma lista do comprimento de <see cref="pageSize"/> ou menor</returns>
-    public Task<UsersListResponse> GetUsers(int page, int pageSize);
+    public Task<UsersListResponse> GetUsers(int page, int pageSize, bool onlyProfessor = false);
     /// <summary>
     /// Procura por um usuário pelo ID.
     /// </summary>

@@ -45,7 +45,7 @@ public interface IUsuarioRepository
     /// ela retornar uma tupla contendo: (<see cref="IList{T}"/> de usuários, 
     /// <see cref="int"/> quantidade de usuários na página,
     /// <see cref="int"/> quantidade de usuários cadastrados)</returns>
-    public Task<(IList<UsuarioModel>, int, int)> GetUsersAndCount(int page, int pageSize);
+    public Task<(IList<UsuarioModel>, int, int)> GetUsersAndCount(int page, int pageSize, bool onlyProfessor = false);
     /// <summary>
     /// Verifica se há um usuario com o <paramref name="matricula"/> ou <paramref name="email"/>
     /// já cadastrado no banco.
