@@ -35,7 +35,7 @@ public class UsuarioController : IUsuarioController
         this.logger = logger;
     }
 
-    public async Task<UsersListResponse> GetUsers(int page, int pageSize)
+    public async Task<UsersListResponse> GetUsers(int page, int pageSize, bool onlyProfessor = false)
     {
         logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
             page, pageSize);
@@ -51,7 +51,7 @@ public class UsuarioController : IUsuarioController
             page, pageSize);
 
         (var result, int resultCount, int usersCount) = await _userRepository
-            .GetUsersAndCount(page, pageSize);
+            .GetUsersAndCount(page, pageSize, onlyProfessor);
 
         var userReadResult = result
             .Select(_usuarioModelMapper.UsuarioModelToUserReadModel)
@@ -112,7 +112,7 @@ public class UsuarioController : IUsuarioController
         }
         
         logger.Information("Recuperando usuário com ID[{ID}]", userId);
-        UsuarioModel? user = await _userRepository.GetUsuarioById(userId);
+        UsuarioModel? user = await _userRepository.GetUsuarioById(userId, true);
         if (user is null)
         {
             UsuarioNotFoundException usuarioNotFoundException = new(nameof(userId), userId.ToString());
@@ -127,6 +127,7 @@ public class UsuarioController : IUsuarioController
         else logger.Warning("Nenhuma informação foi atualizada para o usuário ID[{ID}]", userId);
         
         logger.Information("Usuário ID[{ID}] atualizado", userId);
+        user.curso = new CursoModel();
         UserReadModel userRead = _usuarioModelMapper.UsuarioModelToUserReadModel(user);
         return userRead;
     }
@@ -142,14 +143,14 @@ public class UsuarioController : IUsuarioController
         }
         
         logger.Information("Recuperando usuário com ID[{ID}]", userId);
-        UsuarioModel? user = await _userRepository.GetUsuarioById(userId);
+        UsuarioModel? user = await _userRepository.GetUsuarioById(userId, true);
         if (user is null)
         {
             UsuarioNotFoundException usuarioNotFoundException = new(nameof(userId), userId.ToString());
             logger.Error(usuarioNotFoundException, "Usuário não encontrado");
             throw usuarioNotFoundException;
         }
-
+        
         await _codigoUsuarioRepository.DeleteAllUsersCodes(user);
         _userRepository.DeleteUser(user);
         await _userRepository.FlushChanges();

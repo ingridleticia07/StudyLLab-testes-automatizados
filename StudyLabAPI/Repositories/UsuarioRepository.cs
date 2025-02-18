@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using StudyLabAPI.Context;
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.Enums;
 
 namespace StudyLabAPI.Repositories;
 
@@ -56,25 +57,41 @@ public class UsuarioRepository : IUsuarioRepository
     public Task<IList<UsuarioModel>> GetUsers(int page, int pageSize) =>
         GetUsers(_dbContext, page, pageSize);
 
-    private async Task<IList<UsuarioModel>> GetUsersWFactory(int page, int pageSize)
+    private async Task<IList<UsuarioModel>> GetUsersWFactory(int page, int pageSize, bool onlyProfessor = false)
     {
         await using AppDbContext? inDbContext = await _dbContextFactory.CreateDbContextAsync();
 
         if (inDbContext is null)
             throw new("Was not possible to instanciaite a new DbContext");
 
-        return await GetUsers(inDbContext, page, pageSize);
+        return await GetUsers(inDbContext, page, pageSize, onlyProfessor);
     }
 
-    private async Task<IList<UsuarioModel>> GetUsers(AppDbContext inDbContext, int page, int pageSize)
+    private async Task<IList<UsuarioModel>> GetUsers(AppDbContext inDbContext, int page, int pageSize, bool onlyProfessor = false)
     {
-        var result = await inDbContext.usuarios
+        var result = new List<UsuarioModel>();
+
+        if (!onlyProfessor)
+        {
+            result = await inDbContext.usuarios
             .AsNoTracking()
             .OrderBy(f => f.idUsuario)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Include(f => f.curso)
             .ToListAsync();
+        }
+        else
+        {
+            result = await inDbContext.usuarios
+            .AsNoTracking()
+            .OrderBy(f => f.idUsuario)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Include(f => f.curso)
+            .Where(f => f.tipoUsuario == UserRole.Prof)
+            .ToListAsync();
+        }
 
         return result;
     }
@@ -95,9 +112,9 @@ public class UsuarioRepository : IUsuarioRepository
     private async Task<int> GetUsersCount(AppDbContext inDbContext) =>
         await inDbContext.usuarios.CountAsync();
 
-    public async Task<(IList<UsuarioModel>, int, int)> GetUsersAndCount(int page, int pageSize)
+    public async Task<(IList<UsuarioModel>, int, int)> GetUsersAndCount(int page, int pageSize, bool onlyProfessor = false)
     {
-        var usersTask = GetUsersWFactory(page, pageSize);
+        var usersTask = GetUsersWFactory(page, pageSize, onlyProfessor);
         var usersCountTask = GetUsersCountWFactory();
         await Task.WhenAll(usersTask, usersCountTask);
 

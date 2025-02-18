@@ -24,9 +24,9 @@ public static class AuthAnonEndpoints
 
         return builder;
     }
-    
+
     #region Register/Login
-    
+
     /// <summary>
     /// Trata requisição de <c>/auth/register</c>
     /// </summary>
@@ -37,20 +37,21 @@ public static class AuthAnonEndpoints
     async private static Task<IResult> AuthRegisterEndpointHandler(
         HttpContext _,
         [FromBody] RegisterUserRequestModel registerUserRequest,
-        [FromServices] IAuthController controller)
+        [FromServices] IAuthController controller,
+        [FromQuery] bool isProfessor = false)
     {
         string jwtNewUser;
         int userId = 0;
 
         try
         {
-            (UserReadModel _, jwtNewUser, userId) = await controller.RegisterNewUser(registerUserRequest);
+            (UserReadModel _, jwtNewUser, userId) = await controller.RegisterNewUser(registerUserRequest, isProfessor);
         }
-        catch(CursoNotFoundException ex)
+        catch (CursoNotFoundException ex)
         {
             return Results.NotFound(ex.Message);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             return Results.BadRequest(e.Message);
         }
@@ -93,7 +94,7 @@ public static class AuthAnonEndpoints
         {
             return Results.Unauthorized();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             return Results.BadRequest(e.Message);
         }
@@ -108,9 +109,9 @@ public static class AuthAnonEndpoints
 
         return Results.Json(retorno);
     }
-    
+
     #endregion
-    
+
     #region PasswordReset
 
     /// <summary>
@@ -138,11 +139,11 @@ public static class AuthAnonEndpoints
         {
             return Results.NotFound(e.Message);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             return Results.BadRequest(e.Message);
         }
-        
+
         return Results.Ok(resetUserPasswordReadModel);
     }
     /// <summary>
@@ -163,12 +164,12 @@ public static class AuthAnonEndpoints
         {
             sended = await controller.RequestPasswordResetCode(request);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             return Results.BadRequest(e.Message);
         }
-        
-        return sended ? Results.Ok() : 
+
+        return sended ? Results.Ok() :
             Results.Problem("Não foi possível enviar o email de recuperação de senha.",
                 statusCode: StatusCodes.Status503ServiceUnavailable);
     }

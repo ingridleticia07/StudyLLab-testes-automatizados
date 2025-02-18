@@ -75,7 +75,7 @@ public class AuthController : IAuthController
     /// Regras: <seealso cref="RegisterUserRequestModelValidator"/>.</exception>
     /// <exception cref="ExistsUserException">Ocorre quando já existe algum usuário com a mesma matrícula ou email.</exception>
     /// <exception cref="CursoNotFoundException">Ocorre quando o curso solicitado para relação não existe.</exception>
-    public async Task<(UserReadModel, string, int)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel)
+    public async Task<(UserReadModel, string, int)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel, bool isProfessor = false)
     {
         logger.Information("Validando campos da requisição de cadastro para Username[{Username}]",
             registerUserRequestModel.username);
@@ -123,20 +123,28 @@ public class AuthController : IAuthController
         UsuarioModel usuarioModel = registerUserRequestModelMapper
             .RegisterUserRequestModelToUsuarioModel(registerUserRequestModel);
         usuarioModel.curso = relatedCurso;
-        usuarioModel.statusUsuario = false;
+        usuarioModel.statusUsuario = isProfessor ? true : false;
         usuarioModel.dataCadastroUsuario = new(registerDate.Year, registerDate.Month, registerDate.Day);
         usuarioModel.senhaUsuario = hashService.Hash(rawUserPassword);
+
+        if (isProfessor)
+            usuarioModel.tipoUsuario = UserRole.Prof;
 
         logger.Information("Cadastrando usuário Username[{Username}]",
             registerUserRequestModel.username);
         await usuarioRepository.CreateUser(usuarioModel);
-        await GenerateAndSendConfirmationEmail(usuarioModel);
+
+        if (!isProfessor)
+            await GenerateAndSendConfirmationEmail(usuarioModel);
         await usuarioRepository.FlushChanges();
 
         logger.Information("Gerando token de autenticação para ID[{ID}]",
             usuarioModel.idUsuario);
         UserReadModel userReadModel = usuarioModelMapper.UsuarioModelToUserReadModel(usuarioModel);
-        string jwtUser = jwtService.GenerateJwt(new(userReadModel.id.ToString(), userReadModel.role));
+
+        string jwtUser = null;
+        if (!isProfessor)
+            jwtUser = jwtService.GenerateJwt(new(userReadModel.id.ToString(), userReadModel.role));
 
         logger.Information("Usuário ID[{ID}] cadastrado com sucesso",
             usuarioModel.idUsuario);
@@ -443,6 +451,7 @@ public class AuthController : IAuthController
         {
             logger.Warning("Não foi possível enviar o email de boas vindas para o usuário Email[{UserEmail}]",
                 usuarioModel.emailUsuario);
+            throw new Exception($"Não foi possível enviar o email para[{usuarioModel.emailUsuario}]. Verifique seu email e tente novamente.");
         }
         return emailSended;
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StudyLabAPI.Controllers;
+using StudyLabAPI.Middlewares.Auth;
 using StudyLabAPI.Models;
 using StudyLabAPI.Summaries;
 
@@ -10,16 +11,22 @@ namespace StudyLabAPI.Endpoints
         public static RouteGroupBuilder MapMaterialEndpoints(this RouteGroupBuilder builder)
         {
             builder.MapPost("cadastrarDocumento", CreateDocumento)
+                .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE)
                 .WithOpenApi(MaterialSummaries.CreateDocumento);
             builder.MapPost("cadastrarDenuncia", CreateDenuncia)
+                .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE)
                 .WithOpenApi(MaterialSummaries.CreateDocumento);
             builder.MapPut("UpdateDenuncia", UpdateDenunciaStatus)
+                .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE)
                 .WithOpenApi(MaterialSummaries.CreateDocumento);
             builder.MapGet("ListarDocumentosWithPagination", ListarDocumentosWithPagination)
+                .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE)
                 .WithOpenApi(MaterialSummaries.CreateDocumento);
             builder.MapGet("ListarDenunciasWithPagination", ListarDenunciasWithPagination)
+                .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE)
                 .WithOpenApi(MaterialSummaries.CreateDocumento);
             builder.MapDelete("DeleteDocumento", DeleteDocumento)
+                .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE)
                 .WithOpenApi(MaterialSummaries.CreateDocumento);
             return builder;
         }

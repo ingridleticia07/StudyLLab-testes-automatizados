@@ -43,6 +43,7 @@ export async function editarDisciplina(disciplina) {
     idDisciplina:disciplina.idDisciplina,
     nomeDisciplina:disciplina.nomeDisciplina,
     professorDisciplina:disciplina.professorDisciplina,
+    fkProfessor:disciplina.fkProfesor,
     curso:disciplina.curso,
     quantidadeAluno:disciplina.quantidadeAluno,
     codigoDisciplina:disciplina.codigoDisciplina
