@@ -1,18 +1,17 @@
-// import { useState } from 'react';
-
 const InputField = ({
     type,
     id,
+    name,
     label,
     placeholder,
     icon,
     rightElement,
     invalidText,
     maxLength,
+    value,
+    onChange,
+    needValidation
 }) => {
-    // const [invalid, setInvalid] = useState(false);
-    const invalid = false;
-
     return (
         <div className='mb-4 w-full min-w-96'>
             <label
@@ -26,14 +25,16 @@ const InputField = ({
                 <input
                     type={type}
                     id={id}
+                    name={name}
                     placeholder={placeholder}
                     className='flex-1 outline-none'
-                    required
                     maxLength={maxLength}
+                    value={value}
+                    onChange={onChange}
                 />
                 {rightElement}
             </div>
-            {invalid && <p className='text-sm text-red-500'>{invalidText}</p>}
+            {needValidation && invalidText && <p className='text-sm text-red-500'>{invalidText}</p>}
         </div>
     );
 };
