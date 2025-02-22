@@ -1,4 +1,4 @@
-import { login } from "../../platform/repository/auth.js";
+import { login,authTokenIsValid } from "../../platform/repository/auth.js";
 import {isEmptyString} from "../../common/services/validation";
 
 
@@ -13,7 +13,9 @@ export function validateLoginFields(setValidateField,field) {
 
 export function handleLogin(email, password) {
   try {
-    login(email, password);
+    if(!authTokenIsValid){
+      login(email, password);
+    }
   } catch (error) {
     console.log(error);
   }

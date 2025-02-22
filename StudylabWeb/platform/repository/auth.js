@@ -88,7 +88,7 @@ export function updateUserAuthState() {
 }
 
 function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifogeryCookie, idUser) {
-  // Check if the anti-forgery token exists before saving it
+  
   if (tokenAntifogery) {
     document.cookie = `.AspNetCore.Antiforgery.KeSRHT2WmJs=${tokenAntifogeryCookie}; path=/;`;
     document.cookie = `.csrf-token=${tokenAntifogery}; path=/;`;
