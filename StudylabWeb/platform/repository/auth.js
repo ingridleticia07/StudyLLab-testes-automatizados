@@ -7,6 +7,7 @@ import { getCursoCodeByName } from "../utils/curso_matcher.js";
 import { getUserInfo, cleanUserInfo } from "./user.js";
 
 const AUTH_TOKEN = "authToken";
+const AUTH_VARIABLE = "idUser";
 const AUTH_ENDPOINT = "/auth";
 
 export function login(email, password, thenCallback) {
@@ -16,11 +17,11 @@ export function login(email, password, thenCallback) {
       password: password,
     })
     .then(function (res) {
-      saveUserCredentials(res.data.tokenJwt, res.data.tokenAntifogery,res.data.tokenAntifogeryCookie);
+      saveUserCredentials(res.data.tokenJwt, res.data.tokenAntifogery,res.data.tokenAntifogeryCookie, res.data.idUsuario);
       thenCallback();
     })
     .catch(function (e) {
-      console.log(e);
+      
     });
 }
 
@@ -86,7 +87,7 @@ export function updateUserAuthState() {
   }
 }
 
-function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifogeryCookie) {
+function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifogeryCookie, idUser) {
   // Check if the anti-forgery token exists before saving it
   if (tokenAntifogery) {
     document.cookie = `.AspNetCore.Antiforgery.KeSRHT2WmJs=${tokenAntifogeryCookie}; path=/;`;
@@ -99,8 +100,8 @@ function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifogeryCo
 
   // Save the JWT token in session storage
   sessionStorage.setItem(AUTH_TOKEN, tokenJwt);
-
+  sessionStorage.setItem(AUTH_VARIABLE, idUser);
   // Optionally call a function to get user info
-  getUserInfo();
+  getUserInfo(idUser);
 }
 

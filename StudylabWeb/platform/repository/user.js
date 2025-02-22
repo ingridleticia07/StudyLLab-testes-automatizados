@@ -4,12 +4,12 @@ import User from "../../common/models/user_model.js";
 const USER_ENDPOINT = "/user";
 const USER_INFO_STORAGE_KEY = "user";
 
-export async function getUserInfo() {
+export async function getUserInfo(idUser) {
   let cachedUserInfo = getUserInfoCached();
   if(cachedUserInfo !== null) {
     return cachedUserInfo
   }
-  let response = await instance.get(USER_ENDPOINT + "/profile");
+  let response = await instance.get(USER_ENDPOINT + "/profile?idUsuario="+idUser);
   if (response.status !== 200) {
     return null;
   }

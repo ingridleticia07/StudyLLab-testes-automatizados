@@ -6,12 +6,12 @@ import VisibilityButton from '../components/Buttons/VisibilityButton';
 import Button from '../components/Buttons/Button';
 import AuthHeader from '../components/AuthHeader/AuthHeader';
 import AuthFooter from '../components/AuthFooter/AuthFooter';
-import {handleLogin} from "../../../platform/business/login";
+import {handleLogin, validateLoginFields} from "../../../platform/business/login";
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
-    const [isEmailValid, setIsEmailValid] = useState(false);
-    const [isPaswordValid, setIsPaswordValid] = useState(false);
+    const [isEmailInvalid, setIsEmailInvalid] = useState(false);
+    const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -22,7 +22,12 @@ const Login = () => {
 
     const logar = (e) => {
         e.preventDefault();
-        handleLogin(email,password);
+
+        validateLoginFields(setIsEmailInvalid,email);
+        validateLoginFields(setIsPasswordInvalid,password);
+        
+        if(!(isEmailInvalid || isPasswordInvalid))
+            handleLogin(email,password);
     };
 
     return (
@@ -35,7 +40,7 @@ const Login = () => {
                     name='email' // O nome agora é fixo como string
                     label='E-mail institucional'
                     placeholder='Seu email'
-                    needValidation={isEmailValid}
+                    needValidation={isEmailInvalid}
                     icon={icons.at}
                     invalidText={'Email inválido'}
                     value={email} // Valor controlado pelo estado
@@ -47,7 +52,7 @@ const Login = () => {
                     name='password' // O nome agora é fixo como string
                     label='Senha'
                     placeholder='Sua senha'
-                    needValidation={isPaswordValid}
+                    needValidation={isPasswordInvalid}
                     icon={icons.padlock}
                     invalidText={'Senha inválida'}
                     value={password} // Valor controlado pelo estado
