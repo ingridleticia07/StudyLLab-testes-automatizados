@@ -1,6 +1,6 @@
 import { login,authTokenIsValid } from "../../platform/repository/auth.js";
 import {isEmptyString} from "../../common/services/validation";
-
+import {getUserInfo } from "../../platform/repository/user.js";
 
 export function validateLoginFields(setValidateField,field) {
   var fielNeedValidation = false;
@@ -11,12 +11,21 @@ export function validateLoginFields(setValidateField,field) {
   setValidateField(fielNeedValidation);
 }
 
-export function handleLogin(email, password) {
+async function checkAuth() {
+  const isValid = await authTokenIsValid();
+  return isValid;
+}
+
+export async function handleLogin(email, password) {
   try {
-    if(!authTokenIsValid){
-      login(email, password);
+    const isAuthenticated = await checkAuth();
+
+    if (!isAuthenticated) {
+      await login(email, password);
+    }else{
+      alert("Você já está logado!");
     }
   } catch (error) {
-    console.log(error);
+    console.error("Error during login process:", error);
   }
 }

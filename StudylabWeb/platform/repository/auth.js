@@ -76,9 +76,12 @@ export async function authTokenIsValid() {
     return false;
   }
 
-  const response = await instance.get("/utils/authenticated");
-
-  return response.status === 200;
+  try {
+    const response = await instance.get("/utils/authenticated");
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export function updateUserAuthState() {
