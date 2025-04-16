@@ -10,19 +10,23 @@ const AUTH_TOKEN = "authToken";
 const AUTH_VARIABLE = "idUser";
 const AUTH_ENDPOINT = "/auth";
 
-export function login(email, password, thenCallback) {
-  instance
-    .post(AUTH_ENDPOINT + "/login", {
-      email: email,
-      password: password,
-    })
-    .then(function (res) {
-      saveUserCredentials(res.data.tokenJwt, res.data.tokenAntifogery,res.data.tokenAntifogeryCookie, res.data.idUsuario);
-      thenCallback();
-    })
-    .catch(function (e) {
-      
+export async function login(email, password) {
+  try {
+    const res = await instance.post(AUTH_ENDPOINT + "/login", {
+      email,
+      password,
     });
+
+    saveUserCredentials(
+      res.data.tokenJwt,
+      res.data.tokenAntifogery,
+      res.data.tokenAntifogeryCookie,
+      res.data.idUsuario
+    );
+
+  } catch (e) {
+    throw e;
+  }
 }
 
 export function register(
