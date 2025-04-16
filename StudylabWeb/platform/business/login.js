@@ -19,11 +19,19 @@ async function checkAuth() {
 export async function handleLogin(email, password) {
   try {
     const isAuthenticated = await checkAuth();
+    const user = JSON.parse(localStorage.getItem("user"));
 
     if (!isAuthenticated) {
       await login(email, password);
+
+      if(user.role == 1)
+        window.location.href='http://localhost:5174';
+
     }else{
       alert("Você já está logado!");
+
+      if(user.role == 1)
+        window.location.href='http://localhost:5174';
     }
   } catch (error) {
     console.error("Error during login process:", error);
