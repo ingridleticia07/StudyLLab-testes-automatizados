@@ -99,7 +99,8 @@ function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifogeryCo
   if (tokenAntifogery) {
     document.cookie = `.AspNetCore.Antiforgery.KeSRHT2WmJs=${tokenAntifogeryCookie}; path=/;`;
     document.cookie = `.csrf-token=${tokenAntifogery}; path=/;`;
-
+    document.cookie = `id-user=${idUser}; path=/;`;
+    document.cookie = `${AUTH_TOKEN}=${tokenJwt}; path=/;`;
     console.log("Anti-forgery token saved.");
   } else {
     console.log("No anti-forgery token provided.");
@@ -110,5 +111,18 @@ function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifogeryCo
   sessionStorage.setItem(AUTH_VARIABLE, idUser);
   // Optionally call a function to get user info
   getUserInfo(idUser);
+}
+
+function getCookie(name) {
+  const cookies = document.cookie.split('; ');
+  const cookie = cookies.find(row => row.startsWith(`${name}=`));
+  return cookie ? cookie.split('=')[1] : null;
+}
+
+export function saveDashboardSessionInfos(tokenJwt, idUser) {
+  if (!sessionStorage.getItem(AUTH_TOKEN)) {
+    sessionStorage.setItem(AUTH_TOKEN, getCookie(AUTH_TOKEN));
+    getUserInfo(getCookie('id-user'));
+  }
 }
 
