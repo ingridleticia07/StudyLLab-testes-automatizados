@@ -6,7 +6,7 @@ import {
 import { getCursoCodeByName } from "../utils/curso_matcher.js";
 import { getUserInfo, cleanUserInfo } from "./user.js";
 
-const AUTH_TOKEN = "authToken";
+export const AUTH_TOKEN = "authToken";
 const AUTH_VARIABLE = "idUser";
 const AUTH_ENDPOINT = "/auth";
 
@@ -113,7 +113,7 @@ function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifogeryCo
   getUserInfo(idUser);
 }
 
-function getCookie(name) {
+export function getCookie(name) {
   const cookies = document.cookie.split('; ');
   const cookie = cookies.find(row => row.startsWith(`${name}=`));
   return cookie ? cookie.split('=')[1] : null;

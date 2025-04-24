@@ -13,14 +13,15 @@ import Help from './pages/Help';
 import { authTokenIsValid, saveDashboardSessionInfos,logoutSession } from "../../platform/repository/auth.js";
 
 function App() {
-    const [authStatus, setAuthStatus] = useState(false);
+    const [authStatus, setAuthStatus] = useState(null);
+    const [hasAlerted, setHasAlerted] = useState(false);
 
     useEffect(() => {
         saveDashboardSessionInfos();
         const verifyAuth = async () => {
             try {
-                await authTokenIsValid();
-                setAuthStatus(true);
+                const isAuthenticated = await authTokenIsValid();
+                setAuthStatus(isAuthenticated);
             } catch (error) {
                 setAuthStatus(false);
             }
@@ -29,7 +30,8 @@ function App() {
     }, []);
 
     useEffect(() => {
-        if (authStatus === false) {
+        if (authStatus === false && !hasAlerted) {
+            setHasAlerted(true);
             alert("Sua sessão expirou. Logue novamanete!");
             logoutSession();
             window.location.href = "http://localhost:5174/";
