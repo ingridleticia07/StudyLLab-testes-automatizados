@@ -126,3 +126,12 @@ export function saveDashboardSessionInfos(tokenJwt, idUser) {
   }
 }
 
+export function logoutSession() {
+  document.cookie.split(';').forEach(cookie => {
+    const [name] = cookie.trim().split('=');
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  });
+
+  sessionStorage.clear();
+}
+

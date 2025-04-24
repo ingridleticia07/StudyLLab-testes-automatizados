@@ -10,7 +10,7 @@ import Materials from './pages/Materials';
 import Report from './pages/Report';
 import Help from './pages/Help';
 
-import { authTokenIsValid, saveDashboardSessionInfos } from "../../platform/repository/auth.js";
+import { authTokenIsValid, saveDashboardSessionInfos,logoutSession } from "../../platform/repository/auth.js";
 
 function App() {
     const [authStatus, setAuthStatus] = useState(false);
@@ -30,13 +30,11 @@ function App() {
 
     useEffect(() => {
         if (authStatus === false) {
+            alert("Sua sessão expirou. Logue novamanete!");
+            logoutSession();
             window.location.href = "http://localhost:5174/";
         }
     }, [authStatus]);
-
-    if (authStatus === null) {
-        return <div className="w-full h-screen flex items-center justify-center">Verificando autenticação...</div>;
-    }
 
     return (
         <div className='flex min-h-screen bg-slate-200'>
