@@ -36,5 +36,6 @@ export async function handleLogin(email, password) {
     }
   } catch (error) {
     console.error("Error during login process:", error);
+    alert("Usuário e/ou senha inválido(s)!");
   }
 }
