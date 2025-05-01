@@ -1,15 +1,29 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { StudylabContext } from '../context/StudylabContext';
 
 import Breadcrumb from '../components/Breadcrumb/Breadcrumb';
 import Button from '../components/Buttons/Button';
 import TableSubjects from '../components/Tables/TableSubjects';
 import RegisterSubject from '../components/RegisterSubject/RegisterSubject';
+import { getAllDisciplinasWithPagination } from "../../../platform/repository/disciplina";
 
 const Subjects = () => {
     const [showRegister, setShowRegister] = useState(false);
-    const { data, removeItem } = useContext(StudylabContext);
+    const { data, removeItem } = useState();
+    const [disciplinas, setDisciplinas] = useState([]); 
 
+    useEffect(() => {
+        const getDataDisciplinas = async () => {
+            try {
+                let disciplinas = await getAllDisciplinasWithPagination(1,10);
+                setDisciplinas(disciplinas);
+            } catch (error) {
+                console.log(error);            
+            }
+        }
+        getDataDisciplinas();
+    }, []);
+    
     return (
         <div>
             <Breadcrumb page='Disciplina' />
@@ -21,7 +35,7 @@ const Subjects = () => {
                         handleClick={() => setShowRegister(true)}
                     />
                 </div>
-                <TableSubjects data={data.disciplinas} handleDelete={removeItem} />
+                <TableSubjects data={disciplinas} handleDelete={removeItem} />
             </section>
             {showRegister && (
                 <RegisterSubject handleCancel={() => setShowRegister(false)} />
