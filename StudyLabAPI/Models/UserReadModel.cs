@@ -11,4 +11,5 @@ public class UserReadModel
     public required bool active { get; init; }
     public required CursoReadModel curso { get; init; }
     public string? imagem { get; init; }
+    public string? matricula { get; init; }
 }

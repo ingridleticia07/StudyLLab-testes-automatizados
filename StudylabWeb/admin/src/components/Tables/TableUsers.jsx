@@ -29,14 +29,14 @@ const TableUsers = ({ data, handleDelete }) => {
         });
         setShowPopUp(true);
     };
-
+    
     return (
         <div className='h-full max-h-[350px] overflow-y-scroll rounded-md'>
             <table className='h-full min-w-full text-left border-separate border-spacing-0'>
                 <TableHead headers={headersColumns} />
-                {data && data.length > 0 ? (
+                {data.users && data.users.length > 0 ? (
                     <tbody>
-                        {data.map((d, index) => (
+                        {data.users.map((d, index) => (
                             <tr key={index} className='capitalize'>
                                 <td className='px-4 py-2 border-b'>
                                     <input type='checkbox' />
@@ -45,10 +45,10 @@ const TableUsers = ({ data, handleDelete }) => {
                                     {d.matricula}
                                 </td>
                                 <td className='px-4 py-2 border-b'>
-                                    {d.aluno}
+                                    {d.username}
                                 </td>
                                 <td className='px-4 py-2 border-b'>
-                                    {d.curso}
+                                    {d.curso.nome}
                                 </td>
                                 <td className='px-4 py-2 border-b'>
                                     {d.email}
