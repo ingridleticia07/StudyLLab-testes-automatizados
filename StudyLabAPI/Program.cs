@@ -48,13 +48,13 @@ if(app.Environment.IsDevelopment())
         .UseSwaggerUI();
 }
 
+app.UseAntiforgery();
+
 app.MapPrometheusScrapingEndpoint();
 app
     .UseCors()
     .UseAuthentication()
     .UseAuthorization();
-
-app.UseAntiforgery();
 
 app.UseStaticFiles();
 
