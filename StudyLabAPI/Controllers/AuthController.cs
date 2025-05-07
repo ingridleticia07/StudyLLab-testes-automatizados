@@ -12,6 +12,7 @@ using StudyLabAPI.Services.Email.Models.Template;
 using StudyLabAPI.Services.Hash;
 using StudyLabAPI.Services.Jwt;
 using StudyLabAPI.Validators;
+using System.Security.Claims;
 using ILogger = Serilog.ILogger;
 using ValidationException = StudyLabAPI.Exceptions.ValidationException;
 
@@ -200,7 +201,9 @@ public class AuthController : IAuthController
             usuarioModel.idUsuario);
         UserReadModel userReadModel = usuarioModelMapper.UsuarioModelToUserReadModel(usuarioModel);
 
-        string jwtUser = jwtService.GenerateJwt(new(userReadModel.id.ToString(), userReadModel.role));
+        var (jwtUser, identity) = jwtService.GenerateJwtAndReturnClaims(new(userReadModel.id.ToString(), userReadModel.role));
+
+        httpContext.User = new ClaimsPrincipal(identity);
 
         var tokens = _antiforgery.GetAndStoreTokens(httpContext);
 
