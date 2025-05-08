@@ -35,7 +35,6 @@ export async function handleLogin(email, password) {
         window.location.href='http://localhost:5173';
     }
   } catch (error) {
-    console.error("Error during login process:", error);
-    alert("Usuário e/ou senha inválido(s)!");
+    throw error;
   }
 }

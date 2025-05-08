@@ -7,6 +7,7 @@ import Button from '../components/Buttons/Button';
 import AuthHeader from '../components/AuthHeader/AuthHeader';
 import AuthFooter from '../components/AuthFooter/AuthFooter';
 import {handleLogin, validateLoginFields} from "../../../platform/business/login";
+import AlertError from "./../components/Alerts/AlertErro";
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -14,26 +15,32 @@ const Login = () => {
     const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showError, setShowError] = useState(false);
 
     const togglePasswordVisibility = (e) => {
         e.preventDefault();
         setShowPassword((prev) => !prev);
     };
 
-    const logar = (e) => {
+    const logar = async (e) => {
         e.preventDefault();
 
         validateLoginFields(setIsEmailInvalid,email);
         validateLoginFields(setIsPasswordInvalid,password);
         
         if(!(isEmailInvalid || isPasswordInvalid))
-            handleLogin(email,password);
+            try {
+                await handleLogin(email,password)   
+            } catch (error) {
+                setShowError(true);   
+            }
     };
 
     return (
         <div className='flex flex-col justify-center items-center rounded-lg px-10 py-6 bg-white'>
             <AuthHeader infoText={'Entrar na sua conta'} />
             <form className='space-y-6' onSubmit={logar}>
+                {showError && <AlertError onHide={() => setShowError(false)} />}
                 <InputField
                     type='email'
                     id='email'

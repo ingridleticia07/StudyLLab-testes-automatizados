@@ -18,10 +18,10 @@ const RegisterMaterial = ({ handleCancel }) => {
         }
 
         const materialDTO = {
-            Idtopico:1,
-            TipoMaterial:1,
+            Idtopico:16,
+            TipoMaterial:3,
             File:selectedFiles,
-            IdUsuario:1
+            IdUsuario:38
           };
         try {
             await saveMaterial(materialDTO);

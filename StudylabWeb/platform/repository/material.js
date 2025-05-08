@@ -29,8 +29,6 @@ export async function saveMaterial(respostaMaterialDTO) {
     const antifogeryCookie = '.AspNetCore.Antiforgery.KeSRHT2WmJs';
     const csrfToken = getCookieByName(antifogeryToken);
     const cookieToken = getCookieByName(antifogeryCookie);
-    console.log(csrfToken);
-    console.log(cookieToken);
 
     const files = respostaMaterialDTO.File; // Assuming a file input element
     for (let i = 0; i < files.length; i++) {
