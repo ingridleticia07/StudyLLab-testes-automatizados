@@ -37,52 +37,56 @@ const Login = () => {
     };
 
     return (
-        <div className='flex flex-col justify-center items-center rounded-lg px-10 py-6 bg-white'>
-            <AuthHeader infoText={'Entrar na sua conta'} />
-            <form className='space-y-6' onSubmit={logar}>
-                {showError && <AlertError onHide={() => setShowError(false)} />}
-                <InputField
-                    type='email'
-                    id='email'
-                    name='email' // O nome agora é fixo como string
-                    label='E-mail institucional'
-                    placeholder='Seu email'
-                    needValidation={isEmailInvalid}
-                    icon={icons.at}
-                    invalidText={'Email inválido'}
-                    value={email} // Valor controlado pelo estado
-                    onChange={(e) => setEmail(e.target.value)} // Atualiza o estado quando o usuário digita
-                />
-                <InputField
-                    type={showPassword ? 'text' : 'password'}
-                    id='senha'
-                    name='password' // O nome agora é fixo como string
-                    label='Senha'
-                    placeholder='Sua senha'
-                    needValidation={isPasswordInvalid}
-                    icon={icons.padlock}
-                    invalidText={'Senha inválida'}
-                    value={password} // Valor controlado pelo estado
-                    onChange={(e) => setPassword(e.target.value)} // Atualiza o estado quando o usuário digita
-                    rightElement={
-                        <VisibilityButton
-                            handleClick={togglePasswordVisibility}
-                            showPassword={showPassword}
-                        />
-                    }
-                />
-                <Button text='Entrar' type="submit" />
-            </form>
-            <div className='text-center mt-4 text-sm'>
-                Não tem uma conta?{' '}
-                <Link to={'/cadastro'} className='text-blue-500 hover:underline'>
-                    Cadastre-se
-                </Link>
-            </div>
-            <div className='text-center mt-4 text-sm'>
-                <Link to={'/recuperar'} className='text-blue-500 hover:underline'>
-                    Esqueceu a senha? Recuperar
-                </Link>
+        <div>
+            <div className='flex flex-col justify-center items-center rounded-xl px-10 py-6 bg-white'>
+                <AuthHeader infoText={'Entrar na sua conta'} />
+                <form className='space-y-6' onSubmit={logar}>
+                    {showError && <AlertError onHide={() => setShowError(false)} />}
+                    <InputField
+                        type='email'
+                        id='email'
+                        label='E-mail institucional'
+                        placeholder='Seu e-mail institucional'
+                        icon={icons.at}
+                        invalidText={'Email invalido'}
+                        value={email} 
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <InputField
+                        type={showPassword ? 'text' : 'password'}
+                        id='senha'
+                        label='Senha'
+                        placeholder='Sua senha'
+                        icon={icons.padlock}
+                        invalidText={'senha invalida'}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        rightElement={
+                            <VisibilityButton
+                                handleClick={togglePasswordVisibility}
+                                showPassword={showPassword}
+                            />
+                        }
+                    />
+                    <Button text='Entrar' type="submit"/>
+                </form>
+                <div className='text-center mt-8 text-sm text-americanOrange-500'>
+                    Não tem uma conta?{' '}
+                    <Link
+                        to={'/cadastro'}
+                        className='text-americanOrange-500 hover:underline'
+                    >
+                        Cadastre-se
+                    </Link>
+                </div>
+                <div className='text-center mt-8 text-sm'>
+                    <Link
+                        to={'/recuperar'}
+                        className='text-blue-500 hover:underline'
+                    >
+                        Esqueceu a senha? Recuperar
+                    </Link>
+                </div>
             </div>
             <AuthFooter />
         </div>

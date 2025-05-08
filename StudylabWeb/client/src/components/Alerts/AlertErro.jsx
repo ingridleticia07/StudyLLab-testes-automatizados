@@ -4,7 +4,7 @@ export default function AlertError({ onHide }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       onHide();
-    }, 8000);
+    }, 6000);
     return () => clearTimeout(timer);
   }, [onHide]);
 
