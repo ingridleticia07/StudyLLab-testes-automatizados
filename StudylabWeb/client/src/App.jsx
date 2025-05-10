@@ -7,7 +7,7 @@ import VerificationCode from './pages/VerificationCode';
 import ResetPassword from './pages/ResetPassword';
 import LandingPage from './pages/LandingPage';
 import Contact from './pages/Contact';
-import About from './pages/about';
+import About from './pages/About';
 
 function App() {
     return (
