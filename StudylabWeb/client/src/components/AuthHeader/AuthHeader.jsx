@@ -1,7 +1,7 @@
-const AuthHeader = ({ infoText }) => {
+const AuthHeader = ({ infoText, color= 'text-americanOrange-500' }) => {
     return (
         <header className='text-center'>
-            <h1 className='text-americanOrange-500 text-center text-4xl font-urbanist '>
+            <h1 className={`text-center text-4xl font-urbanist ${color}`}>
                 Study
                 <span className='font-bold'>Lab</span>
             </h1>

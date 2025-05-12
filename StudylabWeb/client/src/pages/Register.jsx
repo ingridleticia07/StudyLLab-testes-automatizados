@@ -3,11 +3,26 @@ import { icons } from '../assets/assets';
 import AuthHeader from '../components/AuthHeader/AuthHeader';
 import VisibilityButton from '../components/Buttons/VisibilityButton';
 import InputField from '../components/InputField/InputField';
-import Button from '../components/Buttons/Button';
+import PasswordValidation from '../components/PasswordValidation/PasswordValidation';
 import { Link } from 'react-router-dom';
+import ButtonActivate from '../components/Buttons/ButtonActivate';
+import AuthFooter from '../components/AuthFooter/AuthFooter';
 
 const Register = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [termsAccepted, setTermsAccepted] = useState(false);
+
+    const isEmailValid = email.endsWith('@alu.ufc.br') || email.endsWith('@ufc.br');
+    const isPasswordStrong = password.length >= 8 &&
+        /[A-Z]/.test(password) &&
+        /[a-z]/.test(password) &&
+        /[0-9]/.test(password);
+    const isConfirmMatch = password === confirmPassword;
+
+    const isFormValid = isEmailValid && isPasswordStrong && isConfirmMatch && termsAccepted;
 
     const togglePasswordVisibility = (e) => {
         e.preventDefault();
@@ -16,76 +31,92 @@ const Register = () => {
 
     return (
         <div>
-            <div className='bg-white rounded-lg px-10 py-5 text-gray-800'>
-                <AuthHeader
-                    infoText={
-                        'O cadastro deve ser feito com um e-mail institucional'
-                    }
-                />
-                <form className='flex flex-col items-center '>
+            <AuthHeader color='text-white' />
+            <div className='bg-white rounded-xl px-10 py-5 text-gray-800'>
+                <form className='flex flex-col items-center'>
+
                     <InputField
                         type='email'
                         id='email'
                         label='Seu e-mail institucional'
                         placeholder='meuemail@alu.ufc.br'
                         icon={icons.at}
-                        invalidText='e-mail invalido'
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
+
                     <InputField
                         type={showPassword ? 'text' : 'password'}
                         id='senha'
                         label='Senha'
-                        placeholder='crie sua senha'
+                        placeholder='Crie sua senha'
                         icon={icons.padlock}
-                        invalidText='senha invalido'
-                        maxLength={8}
+                        maxLength={32}
                         rightElement={
                             <VisibilityButton
                                 handleClick={togglePasswordVisibility}
                                 showPassword={showPassword}
                             />
                         }
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
+
+
                     <InputField
                         type={showPassword ? 'text' : 'password'}
-                        id='senha'
+                        id='confirmar-senha'
                         label='Confirmar Senha'
                         placeholder='Confirme a sua senha'
                         icon={icons.padlock}
-                        invalidText='senha invalido'
-                        maxLength={8}
+                        maxLength={32}
                         rightElement={
                             <VisibilityButton
-                                handleClick={togglePasswordVisibility}
-                                showPassword={showPassword}
+                            handleClick={togglePasswordVisibility}
+                            showPassword={showPassword}
                             />
                         }
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                     />
-                    <InputField
-                        type='text'
-                        id='matricula'
-                        label='Matricula'
-                        placeholder='Sua Matricula'
-                        invalidText='Matricula invalida'
-                        maxLength={6}
-                    />
-                    <div className='flex gap-2 text-start w-full mb-5'>
-                        <input type='checkbox' name='terms' id='terms' />
-                        <p>
+
+                    <PasswordValidation password={password} />
+
+                    <ButtonActivate text='Continuar meu cadastro' link={'/'} type='submit' disabled={!isFormValid} />
+
+                    <p
+                    className={`text-sm text-red-500 mt-3 transition-opacity duration-200 ${
+                        isFormValid ? 'invisible' : 'visible'
+                    }`}
+                    >
+                    A senha não corresponde ao requisito da diretiva de senha ou algum<br /> campo está vazio.
+                    </p>
+                    <div className='flex gap-2 text-start w-full mt-3'>
+                        <input
+                            type='checkbox'
+                            id='terms'
+                            checked={termsAccepted}
+                            onChange={() => setTermsAccepted(!termsAccepted)}
+                        />
+                        <label htmlFor='terms'>
                             Eu aceito os{' '}
-                            <Link to={'/termos'} className='underline font-medium hover:text-black'>
-                                Termos de serviço e Política de privacidade{' '}
+                            <Link to='/termos' className='underline font-medium hover:text-black'>
+                                Termos de serviço e Política de privacidade
                             </Link>
-                        </p>
+                        </label>
                     </div>
-                    <Button text='Concluir meu cadastro' />
                 </form>
+
                 <div className='w-full text-center mt-5'>
                     <p>
-                        Ja tem uma conta? <Link to={'/'} className='text-blue-500 hover:underline'>Entre aqui</Link>
+                        Já tem uma conta?{' '}
+                        <Link to='/' className='text-americanOrange-500 hover:underline'>
+                            Entre aqui
+                        </Link>
                     </p>
                 </div>
             </div>
+            <AuthFooter showSecondLink={false} />
         </div>
     );
 };
