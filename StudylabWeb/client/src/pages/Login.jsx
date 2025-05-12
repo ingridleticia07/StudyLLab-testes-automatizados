@@ -27,6 +27,7 @@ const Login = () => {
                         placeholder='Seu e-mail institucional'
                         icon={icons.at}
                         invalidText={'Email invalido'}
+                        isEmail={true}
                     />
                     <InputField
                         type={showPassword ? 'text' : 'password'}

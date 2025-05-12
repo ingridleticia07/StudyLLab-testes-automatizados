@@ -8,6 +8,7 @@ import ResetPassword from './pages/ResetPassword';
 import LandingPage from './pages/LandingPage';
 import Contact from './pages/Contact';
 import About from './pages/about';
+import Register2 from './pages/Register2';
 
 function App() {
     return (
@@ -16,6 +17,7 @@ function App() {
                 {/* Rotas da tela de cadastro */}
                 <Route path='/' element={<Login />} />
                 <Route path='/cadastro' element={<Register />} />
+                <Route path='/cadastro2' element={<Register2 />} />
                 <Route path='/recuperar' element={<PassowordEmail />} />
                 <Route path='/verificacao' element={<VerificationCode />} />
                 <Route path='/senha' element={<ResetPassword />} />

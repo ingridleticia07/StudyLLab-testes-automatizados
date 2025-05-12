@@ -15,7 +15,7 @@ const Register = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [termsAccepted, setTermsAccepted] = useState(false);
 
-    const isEmailValid = email.endsWith('@alu.ufc.br') || email.endsWith('@ufc.br');
+    const isEmailValid = email.length > 0 && (email.endsWith('@alu.ufc.br') || email.endsWith('@ufc.br'));
     const isPasswordStrong = password.length >= 8 &&
         /[A-Z]/.test(password) &&
         /[a-z]/.test(password) &&
@@ -43,6 +43,8 @@ const Register = () => {
                         icon={icons.at}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        isEmail={true}
+                        isValid={email.length === 0 ? null : isEmailValid}
                     />
 
                     <InputField
@@ -82,7 +84,7 @@ const Register = () => {
 
                     <PasswordValidation password={password} />
 
-                    <ButtonActivate text='Continuar meu cadastro' link={'/'} type='submit' disabled={!isFormValid} />
+                    <ButtonActivate text='Continuar meu cadastro' link={'/cadastro2'} type='submit' disabled={!isFormValid} />
 
                     <p
                     className={`text-sm text-red-500 mt-3 transition-opacity duration-200 ${
