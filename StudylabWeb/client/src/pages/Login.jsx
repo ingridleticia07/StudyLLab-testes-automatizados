@@ -9,6 +9,8 @@ import AuthFooter from '../components/AuthFooter/AuthFooter';
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
+    const [email, setEmail] = useState('');
+    const isEmailValid = email.length > 0 && (email.endsWith('@alu.ufc.br') || email.endsWith('@ufc.br'));
 
     const togglePasswordVisibility = (e) => {
         e.preventDefault();
@@ -25,9 +27,10 @@ const Login = () => {
                         id='email'
                         label='E-mail institucional'
                         placeholder='Seu e-mail institucional'
-                        icon={icons.at}
-                        invalidText={'Email invalido'}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         isEmail={true}
+                        isValid={email.length === 0 ? null : isEmailValid}
                     />
                     <InputField
                         type={showPassword ? 'text' : 'password'}

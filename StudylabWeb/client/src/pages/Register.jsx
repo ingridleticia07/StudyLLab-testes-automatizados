@@ -40,7 +40,6 @@ const Register = () => {
                         id='email'
                         label='Seu e-mail institucional'
                         placeholder='meuemail@alu.ufc.br'
-                        icon={icons.at}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         isEmail={true}

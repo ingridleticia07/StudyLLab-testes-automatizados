@@ -14,7 +14,6 @@ const Register = () => {
     const [selectedCurso, setSelectedCurso] = useState('');
 
     const cursos = [
-    { value: 'si', label: 'Sistemas de Informação' },
     { value: 'cc', label: 'Ciência da Computação' },
     { value: 'ec', label: 'Engenharia da Computação' },
     ];
