@@ -10,11 +10,9 @@ const InputField = ({
     rightElement,
     invalidText,
     maxLength,
-    value,
-    onChange,
-    needValidation
     onChange,
     value,
+    needValidation,
     isEmail = false,
     isValid = null,
 }) => {

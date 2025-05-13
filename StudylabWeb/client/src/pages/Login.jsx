@@ -16,7 +16,8 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showError, setShowError] = useState(false);
-
+    const isEmailValid = email.length > 0 && (email.endsWith('@alu.ufc.br') || email.endsWith('@ufc.br'));
+    
     const togglePasswordVisibility = (e) => {
         e.preventDefault();
         setShowPassword((prev) => !prev);
