@@ -19,7 +19,7 @@ const Login = () => {
 
     return (
         <div>
-            <div className='flex flex-col justify-center items-center rounded-xl px-10 py-6 bg-white'>
+            <div className='flex flex-col justify-center items-center rounded-xl px-10 py-10 bg-white'>
                 <AuthHeader infoText={'Entrar na sua conta'} />
                 <form action='#' className='space-y-6'>
                     <InputField

@@ -29,7 +29,7 @@ const Register = () => {
     return (
         <div>
             <AuthHeader color='text-white' />
-            <div className='bg-white rounded-xl px-10 py-5 text-gray-800'>
+            <div className='bg-white rounded-xl px-10 py-10 text-gray-800'>
                 <form className='flex flex-col items-center'>
 
                     <InputField
