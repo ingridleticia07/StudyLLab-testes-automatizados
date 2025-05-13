@@ -55,10 +55,10 @@ const InputField = ({
                                 : "border border-[#EB0000]"
                         }`}
                     />
-                    {invalidText && isValid === false && (
-                        <p className="text-sm text-[#EB0000] mt-1">{invalidText}</p>
-                    )}
                 </div>
+                {invalidText && isValid === false && (
+                    <p className="text-sm text-[#EB0000] mt-1">{invalidText}</p>
+                )}
             </div>
         );
     };

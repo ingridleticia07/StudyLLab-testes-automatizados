@@ -16,6 +16,8 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showError, setShowError] = useState(false);
+    const [canTry,setCanTry] = useState(true);
+
     const isEmailValid = email.length > 0 && (email.endsWith('@alu.ufc.br') || email.endsWith('@ufc.br'));
     
     const togglePasswordVisibility = (e) => {
@@ -26,6 +28,10 @@ const Login = () => {
     const logar = async (e) => {
         e.preventDefault();
 
+        setCanTry(false);
+
+        if (!canTry) return;
+
         validateLoginFields(setIsEmailInvalid,email);
         validateLoginFields(setIsPasswordInvalid,password);
         
@@ -35,6 +41,7 @@ const Login = () => {
             } catch (error) {
                 setShowError(true);   
             }
+        setCanTry(true);
     };
 
     return (
@@ -48,6 +55,7 @@ const Login = () => {
                         id='email'
                         label='E-mail institucional'
                         placeholder='Seu e-mail institucional'
+                        invalidText={'E-mail institucional inválido!'}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         isEmail={true}
