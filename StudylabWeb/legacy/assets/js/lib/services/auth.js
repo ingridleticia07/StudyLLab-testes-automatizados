@@ -16,7 +16,7 @@ export function login(email, password, thenCallback, catchCallback) {
       password: password,
     })
     .then(function (res) {
-      saveUserCredentials(res.data);
+      saveUserCredentials(res.data.tokenJwt, res.data.tokenAntifogery,res.data.tokenAntifogeryCookie);
       thenCallback();
     })
     .catch(function () {
@@ -86,7 +86,21 @@ export function updateUserAuthState() {
   }
 }
 
-function saveUserCredentials(token) {
-  sessionStorage.setItem(AUTH_TOKEN, token);
+function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifogeryCookie) {
+  // Check if the anti-forgery token exists before saving it
+  if (tokenAntifogery) {
+    document.cookie = `.AspNetCore.Antiforgery.KeSRHT2WmJs=${tokenAntifogeryCookie}; path=/;`;
+    document.cookie = `.csrf-token=${tokenAntifogery}; path=/;`;
+
+    console.log("Anti-forgery token saved.");
+  } else {
+    console.log("No anti-forgery token provided.");
+  }
+
+  // Save the JWT token in session storage
+  sessionStorage.setItem(AUTH_TOKEN, tokenJwt);
+
+  // Optionally call a function to get user info
   getUserInfo();
 }
+

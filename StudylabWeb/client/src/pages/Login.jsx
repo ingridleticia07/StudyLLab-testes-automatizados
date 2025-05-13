@@ -6,22 +6,42 @@ import VisibilityButton from '../components/Buttons/VisibilityButton';
 import Button from '../components/Buttons/Button';
 import AuthHeader from '../components/AuthHeader/AuthHeader';
 import AuthFooter from '../components/AuthFooter/AuthFooter';
+import {handleLogin, validateLoginFields} from "../../../platform/business/login";
+import AlertError from "./../components/Alerts/AlertErro";
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
-    const [email, setEmail] = useState('');
-    const isEmailValid = email.length > 0 && (email.endsWith('@alu.ufc.br') || email.endsWith('@ufc.br'));
+    const [isEmailInvalid, setIsEmailInvalid] = useState(false);
+    const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [showError, setShowError] = useState(false);
 
     const togglePasswordVisibility = (e) => {
         e.preventDefault();
         setShowPassword((prev) => !prev);
     };
 
+    const logar = async (e) => {
+        e.preventDefault();
+
+        validateLoginFields(setIsEmailInvalid,email);
+        validateLoginFields(setIsPasswordInvalid,password);
+        
+        if(!(isEmailInvalid || isPasswordInvalid))
+            try {
+                await handleLogin(email,password)   
+            } catch (error) {
+                setShowError(true);   
+            }
+    };
+
     return (
         <div>
             <div className='flex flex-col justify-center items-center rounded-xl px-10 py-10 bg-white'>
                 <AuthHeader infoText={'Entrar na sua conta'} />
-                <form action='#' className='space-y-6'>
+                <form className='space-y-6' onSubmit={logar}>
+                    {showError && <AlertError onHide={() => setShowError(false)} />}
                     <InputField
                         type='email'
                         id='email'
@@ -39,6 +59,8 @@ const Login = () => {
                         placeholder='Sua senha'
                         icon={icons.padlock}
                         invalidText={'senha invalida'}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         rightElement={
                             <VisibilityButton
                                 handleClick={togglePasswordVisibility}
@@ -46,7 +68,7 @@ const Login = () => {
                             />
                         }
                     />
-                    <Button text='Entrar' />
+                    <Button text='Entrar' type="submit"/>
                 </form>
                 <div className='text-center mt-8 text-sm text-americanOrange-500'>
                     Não tem uma conta?{' '}

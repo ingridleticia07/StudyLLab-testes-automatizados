@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -50,5 +51,24 @@ public class JwtService : IJwtService
         });
         
         return tokenHandler.WriteToken(securityToken);
+    }
+
+    public (string payload, ClaimsIdentity claims) GenerateJwtAndReturnClaims(JwtPayload payload)
+    {
+        var identity = payload.CreateClaimsIdentity();
+
+        JwtSecurityTokenHandler tokenHandler = new();
+        SecurityToken securityToken = tokenHandler.CreateToken(new()
+        {
+            SigningCredentials = credentials,
+            Issuer = _options.issuer,
+            IssuedAt = DateTime.Now,
+            Expires = DateTime.Now.AddSeconds(_options.expirationTime),
+            Audience = _options.audience,
+            Subject = identity
+        });
+
+        string token = tokenHandler.WriteToken(securityToken);
+        return (token, identity);
     }
 }

@@ -7,9 +7,13 @@ namespace StudyLabAPI.Repositories
     public class RespostaForumRepository : IRespostaForumRepository
     {
         private AppDbContext dbContext { get; }
-        public RespostaForumRepository(AppDbContext dbContext)
+
+        private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
+
+        public RespostaForumRepository(AppDbContext dbContext, IDbContextFactory<AppDbContext> dbContextFactory)
         {
             this.dbContext = dbContext;
+            _dbContextFactory = dbContextFactory;
         }
         public async Task CreateRespostaForum(RespostaForumModel respostaForum)
         {
@@ -35,7 +39,7 @@ namespace StudyLabAPI.Repositories
         }
 
         public async Task<RespostaForumModel?> GetRespostaForumById(int id) =>
-            await dbContext.respostaForum.FindAsync(id);
+            await dbContext.respostaForum.Include(value => value.usuario).Where(value=>value.idResposta == id).FirstOrDefaultAsync();
 
         public async Task UpdateRespostaForum(RespostaForumModel respostaForum)
         {
@@ -69,6 +73,122 @@ namespace StudyLabAPI.Repositories
 
             return existingRespostaForum;       
         }
+
+        private async Task<IList<RespostaForumModel>> GetRespostaForumWFactory(int page, int pageSize, int? idDisciplina, int? idTopico)
+        {
+            await using AppDbContext? inDbContext = await _dbContextFactory.CreateDbContextAsync();
+
+            if (inDbContext is null)
+                throw new("Was not possible to instanciaite a new DbContext");
+
+            return await GetAllRespostaForumDiscussao(inDbContext, page, pageSize,idDisciplina, idTopico);
+        }
+
+        private async Task<int> GetRespostaForumCountWFactory(int? idTopico, int? idDisciplina)
+        {
+            await using AppDbContext? inDbContext = await _dbContextFactory.CreateDbContextAsync();
+
+            if (inDbContext is null)
+                throw new("Was not possible to instanciaite a new DbContext");
+
+            return await GetRespostaForumAndCount(inDbContext, idTopico, idDisciplina);
+        }
+
+        private async Task<int> GetRespostaForumAndCount(AppDbContext inDbContext, int ?idTopico, int? idDisciplina)
+        {
+            int count = 0;
+
+            if(idTopico!=0 || idDisciplina != 0)
+                count = await inDbContext.respostaForum.Where(f => f.topicoDiscussao.idTopico == idTopico || f.topicoDiscussao.disciplina.idDisciplina == idDisciplina).CountAsync();
+
+            else if(idTopico!=0 && idDisciplina!=0)
+                count = await inDbContext.respostaForum.Where(f => f.topicoDiscussao.idTopico == idTopico && f.topicoDiscussao.disciplina.idDisciplina == idDisciplina).CountAsync();
+            else
+                count = await inDbContext.respostaForum.CountAsync();
+
+            return count;
+        }
+
+        public Task<IList<RespostaForumModel>> GetAllRespostaForumDiscussao(int page, int pageSize, int? idDisciplina, int? idTopico) =>
+                GetAllRespostaForumDiscussao(dbContext, page, pageSize,idDisciplina,idTopico);
+        public async Task<IList<RespostaForumModel>> GetAllRespostaForumDiscussao(AppDbContext inDbContext,int page, int pageSize, int? idDisciplina, int? idTopico)
+        {
+            var result = new List<RespostaForumModel>();
+
+            if (idDisciplina !=0 && idTopico != 0)
+            {
+                result = await inDbContext.respostaForum
+                .AsNoTracking()
+                .Where(f => f.topicoDiscussao.idTopico == idTopico && f.topicoDiscussao.disciplina.idDisciplina == idDisciplina)
+                .OrderByDescending(f => f.idResposta)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Include(f => f.topicoDiscussao)
+                .ThenInclude(td => td.disciplina)
+                .Include(f => f.usuario)
+                .ToListAsync();
+            }
+            else if(idDisciplina != 0 || idTopico != 0)
+            {
+                result = await inDbContext.respostaForum
+                .AsNoTracking()
+                .Where(f => f.topicoDiscussao.idTopico == idTopico || f.topicoDiscussao.disciplina.idDisciplina == idDisciplina)
+                .OrderByDescending(f => f.idResposta)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Include(f => f.topicoDiscussao)
+                .ThenInclude(td => td.disciplina)
+                .Include(f => f.usuario)
+                .ToListAsync();
+
+            }
+            else
+            {
+                result = await inDbContext.respostaForum
+                .AsNoTracking()
+                .OrderByDescending(f => f.idResposta)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Include(f => f.topicoDiscussao)
+                .ThenInclude(td => td.disciplina)
+                .Include(f => f.usuario)
+                .ToListAsync();
+            }
+
+            return result.Select(resposta => new RespostaForumModel
+            {
+                idResposta = resposta.idResposta,
+                resposta = resposta.resposta,
+                dataResposta = resposta.dataResposta,
+                topicoDiscussao = resposta.topicoDiscussao,
+                usuario = new UsuarioModel
+                {
+                    idUsuario = resposta.usuario.idUsuario,
+                    emailUsuario = null,
+                    matricula = null,
+                    senhaUsuario = null,
+                    statusUsuario = false,
+                    tipoUsuario = default,
+                    curso = null,
+                    nomeUsuario = null,
+                    dataCadastroUsuario = default,
+                    imagemUsuario = null
+                }
+                // Include other properties from RespostaForumModel as needed
+            }).ToList();
+        }
+
+        public async Task<(IList<RespostaForumModel>, int, int)> GetRespostaForumAndCount(int page, int pageSize, int? idDisciplina, int? idTopico)
+        {
+            var respostasTask = GetRespostaForumWFactory(page, pageSize,idDisciplina, idTopico);
+            var respostasCountTask = GetRespostaForumCountWFactory(idTopico, idDisciplina);
+            await Task.WhenAll(respostasTask, respostasCountTask);
+
+            var result = respostasTask.Result;
+            int topicosCount = respostasCountTask.Result;
+            return (result, result.Count, topicosCount);
+        }
+
         public async Task Flush() =>
            await dbContext.SaveChangesAsync();
     }

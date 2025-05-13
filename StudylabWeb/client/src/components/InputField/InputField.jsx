@@ -1,14 +1,18 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 
 const InputField = ({
     type,
     id,
+    name,
     label,
     placeholder,
     icon,
     rightElement,
     invalidText,
     maxLength,
+    value,
+    onChange,
+    needValidation
     onChange,
     value,
     isEmail = false,
@@ -73,16 +77,16 @@ const InputField = ({
                 <input
                     type={type}
                     id={id}
+                    name={name}
                     placeholder={placeholder}
                     className='flex-1 outline-none'
-                    required
                     maxLength={maxLength}
                     onChange={onChange}
                     value={value}
                 />
                 {rightElement}
             </div>
-            {invalid && <p className='text-sm text-red-500'>{invalidText}</p>}
+            {needValidation && invalidText && <p className='text-sm text-red-500'>{invalidText}</p>}
         </div>
     );
 };

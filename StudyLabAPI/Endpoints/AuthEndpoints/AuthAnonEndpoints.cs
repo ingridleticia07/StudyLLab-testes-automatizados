@@ -24,9 +24,9 @@ public static class AuthAnonEndpoints
 
         return builder;
     }
-    
+
     #region Register/Login
-    
+
     /// <summary>
     /// Trata requisição de <c>/auth/register</c>
     /// </summary>
@@ -37,23 +37,33 @@ public static class AuthAnonEndpoints
     async private static Task<IResult> AuthRegisterEndpointHandler(
         HttpContext _,
         [FromBody] RegisterUserRequestModel registerUserRequest,
-        [FromServices] IAuthController controller)
+        [FromServices] IAuthController controller,
+        [FromQuery] bool isProfessor = false)
     {
         string jwtNewUser;
+        int userId = 0;
+
         try
         {
-            (UserReadModel _, jwtNewUser) = await controller.RegisterNewUser(registerUserRequest);
+            (UserReadModel _, jwtNewUser, userId) = await controller.RegisterNewUser(registerUserRequest, isProfessor);
         }
-        catch(CursoNotFoundException ex)
+        catch (CursoNotFoundException ex)
         {
             return Results.NotFound(ex.Message);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             return Results.BadRequest(e.Message);
         }
-                
-        return Results.Content(jwtNewUser, statusCode: StatusCodes.Status201Created);
+
+        object retorno = new
+        {
+            tokenJwt = jwtNewUser,
+            statusCode = StatusCodes.Status201Created,
+            userId = userId
+        };
+
+        return Results.Json(retorno);
     }
     /// <summary>
     /// Trata requisição de <c>/auth/login</c>
@@ -63,14 +73,18 @@ public static class AuthAnonEndpoints
     /// <returns>Resposta da requisição.</returns>
     /// <permission cref="AuthorizationPolicies">Requisições não autenticadas são autorizadas.</permission>
     async private static Task<IResult> AuthLoginEndpointHandler(
-        HttpContext _,
+        HttpContext _httpContext,
         [FromBody] UserLoginRequestModel loginRequestModel,
         [FromServices] IAuthController controller)
     {
         string jwtUser;
+        string antiFogeryToken;
+        string antiFogeryTokenCookie;
+        int userId = 0;
+
         try
         {
-            (UserReadModel _, jwtUser) = await controller.LoginUser(loginRequestModel);
+            (UserReadModel _, jwtUser, antiFogeryToken, antiFogeryTokenCookie, userId) = await controller.LoginUser(loginRequestModel, _httpContext);
         }
         catch (UsuarioNotFoundException e)
         {
@@ -80,16 +94,24 @@ public static class AuthAnonEndpoints
         {
             return Results.Unauthorized();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             return Results.BadRequest(e.Message);
         }
-        
-        return Results.Content(jwtUser);
+
+        object retorno = new
+        {
+            tokenJwt = jwtUser,
+            tokenAntifogery = antiFogeryToken,
+            tokenAntifogeryCookie = antiFogeryTokenCookie,
+            idUsuario = userId
+        };
+
+        return Results.Json(retorno);
     }
-    
+
     #endregion
-    
+
     #region PasswordReset
 
     /// <summary>
@@ -117,11 +139,11 @@ public static class AuthAnonEndpoints
         {
             return Results.NotFound(e.Message);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             return Results.BadRequest(e.Message);
         }
-        
+
         return Results.Ok(resetUserPasswordReadModel);
     }
     /// <summary>
@@ -142,12 +164,12 @@ public static class AuthAnonEndpoints
         {
             sended = await controller.RequestPasswordResetCode(request);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             return Results.BadRequest(e.Message);
         }
-        
-        return sended ? Results.Ok() : 
+
+        return sended ? Results.Ok() :
             Results.Problem("Não foi possível enviar o email de recuperação de senha.",
                 statusCode: StatusCodes.Status503ServiceUnavailable);
     }

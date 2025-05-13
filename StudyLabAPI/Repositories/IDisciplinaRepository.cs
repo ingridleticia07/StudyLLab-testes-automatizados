@@ -14,6 +14,8 @@ public interface IDisciplinaRepository
     /// <returns>Representa uma tarefa asincrona do banco,
     /// ela retorna o modelo da disciplina encontrada</returns>
     public Task<DisciplinaModel?> GetDisciplinaById(int id);
+
+    public Task<DisciplinaModel?> GetDisciplinaByIdForUpdateTopico(int id, bool includeProfessor = false);
     /// <summary>
     /// Verifica se uma disciplina existe no banco
     /// </summary>
@@ -31,16 +33,25 @@ public interface IDisciplinaRepository
     /// caso contrário, retorna <c>false</c></returns>
     public Task<bool> VerifyDisciplinaCreatedWithId(int disciplinaId);
     /// <summary>
+    /// Recupera as disciplinas no banco com paginação.
+    /// </summary>
+    /// <returns>Representa uma tarefa asincrona do banco,
+    /// ela retorna uma <see cref="List{T}"/> contendo todas as disciplinas</returns>
+    public Task<IList<DisciplinaModel>> GetAllDisciplinasWithPagination(int page, int pageSize);
+    /// <summary>
     /// Recupera todas as disciplinas no banco.
     /// </summary>
     /// <returns>Representa uma tarefa asincrona do banco,
     /// ela retorna uma <see cref="List{T}"/> contendo todas as disciplinas</returns>
-    public Task<List<DisciplinaModel?>> GetAllDisciplinas();
+    public Task<List<DisciplinaModel>> GetAllDisciplinas();
     /// <summary>
     /// Cadastra uma nova disciplina
     /// </summary>
     /// <param name="disciplinaModel">Modelo da nova disciplina</param>
     /// <returns>Representa uma tarefa asincrona do banco</returns>
+    /// 
+    public Task<(IList<DisciplinaModel>, int, int)> GetDisciplinasAndCount(int page, int pageSize);
+
     public Task CreateDisciplina(DisciplinaModel disciplinaModel);
     /// <summary>
     /// Atualiza uma disciplina existente com novas informações

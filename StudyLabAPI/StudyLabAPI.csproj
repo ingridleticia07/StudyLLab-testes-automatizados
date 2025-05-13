@@ -64,4 +64,9 @@
 		<_ContentIncludedByDefault Remove="StudyLabAPI.Test\obj\StudyLabAPI.Test.csproj.nuget.dgspec.json" />
 	</ItemGroup>
 
+
+	<ItemGroup>
+	  <Folder Include="wwwroot\documents\" />
+	</ItemGroup>
+
 </Project>

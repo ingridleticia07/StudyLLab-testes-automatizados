@@ -1,7 +1,6 @@
 using Serilog;
 using StudyLabAPI.Endpoints;
 using StudyLabAPI.Endpoints.AuthEndpoints;
-using StudyLabAPI.Middlewares.Auth;
 using StudyLabAPI.Middlewares.Cors;
 using StudyLabAPI.Middlewares.Filters;
 using StudyLabAPI.Services;
@@ -23,7 +22,7 @@ builder.Services
     .AddServicesConfiguration(builder.Configuration)
     .ConfigureServices()
     .AddOtMetrics()
-    .AddCustomCors();
+    .AddCustomCors(builder.Configuration);
 
 builder.Services.AddStorageServices()
     .AddLocalServices()
@@ -34,6 +33,12 @@ builder.Services.AddStorageServices()
 
 builder.Services.AddAuth();
 
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "X-CSRF-TOKEN";
+    options.Cookie.Name = ".AspNetCore.Antiforgery.KeSRHT2WmJs";
+});
+
 WebApplication app = builder.Build();
 
 if(app.Environment.IsDevelopment())
@@ -43,11 +48,15 @@ if(app.Environment.IsDevelopment())
         .UseSwaggerUI();
 }
 
+app.UseAntiforgery();
+
 app.MapPrometheusScrapingEndpoint();
 app
     .UseCors()
     .UseAuthentication()
     .UseAuthorization();
+
+app.UseStaticFiles();
 
 RouteGroupBuilder authGroup = app.MapGroup("auth")
     .AddEndpointFilter<ApiKeyFilter>()

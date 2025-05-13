@@ -1,0 +1,3 @@
+//TODO: Save in a secure place
+
+export const api_key = "e24dd2210803b4737a9bd9e3163a4ca807b63201c3bc32b68fb122ca52efff36"

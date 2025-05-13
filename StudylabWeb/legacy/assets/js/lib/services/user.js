@@ -22,7 +22,7 @@ export async function getUserInfo() {
     response.data.active,
     response.data.curso
   );
-console.log(userInfo);
+
   saveUserInfo(userInfo);
   return userInfo;
 }
@@ -36,10 +36,22 @@ export async function getAllUsersInfo(page, pageSize) {
   return response.data;
 }
 
-export function deleteUser(id) {
-  let response = instance.delete(USER_ENDPOINT + "/" + id);
+export async function deleteUser(id) {
+  let response = await instance.delete(USER_ENDPOINT + "/" + id);
 
   return response.status !== 200
+}
+
+export async function changeUserStatus(id,status) {
+  let response = await instance.put(USER_ENDPOINT + "/" + id,{
+    active:status
+  })
+  .then(function(res){
+
+  }).catch(function(error){
+    console.log(error);
+  });
+
 }
 
 function getUserInfoCached() {

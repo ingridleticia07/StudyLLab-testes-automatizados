@@ -19,9 +19,10 @@ const TableMaterials = ({ data, handleDelete }) => {
         'status',
         'ações',
     ];
-
+    
     const [showPopUp, setShowPopUp] = useState(false);
     const [selectedItem, setSelectedItem] = useState('');
+    const [tipoMaterial] = useState(['prova','Trabalho','pdf','Artigo','atividade']);
 
     const onDelete = (id, key, name) => {
         setSelectedItem({
@@ -36,23 +37,24 @@ const TableMaterials = ({ data, handleDelete }) => {
         <div className='h-full max-h-[350px] overflow-y-scroll rounded-md'>
             <table className='h-full min-w-full text-left border-separate border-spacing-0'>
                 <TableHead headers={headersColumns} />
-                {data && data.length > 0 ? (
+                {data.documentos && data.documentos.length > 0 ? (
                     <tbody>
-                        {data.map((d, index) => (
+                        {data.documentos.map((d, index) => (
                             <tr key={index} className='capitalize'>
                                 <td className='px-4 py-2 border-b'>
                                     <input type='checkbox' />
                                 </td>
                                 <td className='px-4 py-2 border-b'>
-                                    {d.titulo}
+                                    {d.topico.nomeTopico
+                                    }
                                 </td>
                                 <td className='px-4 py-2 border-b'>
-                                    {d.disciplina}
+                                    {d.topico.disciplina.nomeDisciplina}
                                 </td>
                                 <td className='px-4 py-2 border-b'>
-                                    {d.autor}
+                                    {d.usuario.nomeUsuario}
                                 </td>
-                                <td className='px-4 py-2 border-b'>{d.tipo}</td>
+                                <td className='px-4 py-2 border-b'>{tipoMaterial[d.tipoMaterial]}</td>
                                 <td className='px-4 py-2 border-b'>
                                     <StatusTag status={d.status} />
                                 </td>

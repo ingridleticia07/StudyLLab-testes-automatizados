@@ -123,11 +123,16 @@ public static class Di
     /// <returns><see cref="IServiceCollection"/> para que outras chamadas possam ser encadeadas.</returns>
     public static IServiceCollection AddMappers(this IServiceCollection services)
     {
+        services.AddTransient<DisciplinaModelMapper>();
+        services.AddTransient<TopicoDiscussaoModelMapper>();
+        services.AddTransient<DocumentoModelMapper>();
+        services.AddTransient<DenunciaModelMapper>();
+        services.AddTransient<RespotaForumModelMapper>();
         services.AddTransient<UsuarioModelMapper>();
         services.AddTransient<RegisterUserRequestModelMapper>();
         services.AddTransient<CodigoUsuarioModelMapper>();
         services.AddTransient<ResetUserPasswordRequestModelMapper>();
-        
+
         return services;
     }
     /// <summary>
@@ -156,8 +161,8 @@ public static class Di
                 AuthorizationPolicies.RequireIdentifierAndUserRole);
             options.AddPolicy(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_ADMIN_ROLE,
                 AuthorizationPolicies.RequireIdentifierAndAdminRole);
-            options.AddPolicy(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_DEV_ROLE,
-                AuthorizationPolicies.RequireIdentifierAndDevRole);
+            options.AddPolicy(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_PROF_ROLE,
+                AuthorizationPolicies.RequireIdentifierAndProfRole);
         });
         
         services.AddAuthentication(options =>
