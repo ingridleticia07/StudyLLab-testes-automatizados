@@ -32,7 +32,7 @@ function App() {
     useEffect(() => {
         if (authStatus === false && !hasAlerted) {
             setHasAlerted(true);
-            alert("Sua sessão expirou. Logue novamanete!");
+            alert("Sua sessão expirou. Logue novamente!");
             logoutSession();
             window.location.href = "http://localhost:5174/";
         }
