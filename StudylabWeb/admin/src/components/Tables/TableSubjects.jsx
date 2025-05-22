@@ -10,7 +10,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import EditSubject from '../EditSubject/EditSubject';
 import { StudylabContext } from '../../context/StudylabContext';
 
-const TableSubjects = ({ data, handleDelete }) => {
+const TableSubjects = ({ data, currentPage, setCurrentPage, handleDelete }) => {
+    
     const headersColumns = [
         '#',
         'código',
@@ -24,9 +25,9 @@ const TableSubjects = ({ data, handleDelete }) => {
     const [showPopUpDelete, setShowPopUpDelete] = useState(false);
     const [showPopUpEdit, setShowPopUpEdit] = useState(false);
     const [selectedItem, setSelectedItem] = useState();
-
     const { searchSubject } = useContext(StudylabContext);
-
+    const maxPage = data.maxPage;
+    
     const onEdit = (id) => {
         setShowPopUpEdit(true);
         const item = searchSubject(id);
@@ -42,6 +43,12 @@ const TableSubjects = ({ data, handleDelete }) => {
         });
     };
     
+    const handlePageChange = (newPage) => {
+        if (newPage >= 1 && newPage <= maxPage) {
+            setCurrentPage(newPage);
+        }
+    };
+
     return (
         <div className='h-full max-h-[350px] overflow-y-scroll rounded-md'>
             <table className='h-full min-w-full text-left border-separate border-spacing-0'>
@@ -98,10 +105,31 @@ const TableSubjects = ({ data, handleDelete }) => {
                         ))}
                     </tbody>
                 ) : (
-                    <Loading />
+                    <tr key={data.pageCount}>
+                        <td>
+                            <div className="flex justify-center gap-1 mt-4 pb-4">
+                                <h2>Nenhuma disciplina cadastrada para a página {currentPage}!</h2>
+                            </div>
+                        </td>
+                    </tr>
                 )}
-                <TableFoot cols={headersColumns.length} />
             </table>
+            
+            {maxPage > 1 && (
+                <div className="flex justify-end gap-1 mt-4 pb-4">
+                    {Array.from({ length: maxPage }, (_, i) => (
+                    <button
+                        key={i+1}
+                        onClick={() => handlePageChange(i+1)}
+                        className={`w-8 h-8 rounded-full ${
+                        currentPage === i+1 ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'
+                        }`}
+                    >
+                        {i+1}
+                    </button>
+                    ))}
+                </div>
+            )}
 
             {showPopUpDelete && (
                 <PopUp

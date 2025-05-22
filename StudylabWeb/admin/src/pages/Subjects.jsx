@@ -11,18 +11,19 @@ const Subjects = () => {
     const [showRegister, setShowRegister] = useState(false);
     const { data, removeItem } = useState();
     const [disciplinas, setDisciplinas] = useState([]); 
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         const getDataDisciplinas = async () => {
             try {
-                let disciplinas = await getAllDisciplinasWithPagination(1,10);
+                let disciplinas = await getAllDisciplinasWithPagination(currentPage,10);
                 setDisciplinas(disciplinas);
             } catch (error) {
                 console.log(error);            
             }
         }
         getDataDisciplinas();
-    }, []);
+    }, [currentPage]);
     
     return (
         <div>
@@ -35,7 +36,8 @@ const Subjects = () => {
                         handleClick={() => setShowRegister(true)}
                     />
                 </div>
-                <TableSubjects data={disciplinas} handleDelete={removeItem} />
+                <TableSubjects data={disciplinas} currentPage={currentPage}
+                setCurrentPage={setCurrentPage} handleDelete={removeItem} />
             </section>
             {showRegister && (
                 <RegisterSubject handleCancel={() => setShowRegister(false)} />
