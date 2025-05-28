@@ -4,7 +4,6 @@ import AuthFooter from '../components/AuthFooter/AuthFooter';
 import { useState } from 'react';
 import InputField from '../components/InputField/InputField';
 import SelectField from '../components/SelectField/SelectField';
-import Button from '../components/Buttons/Button';
 import ButtonActivate from '../components/Buttons/ButtonActivate';
 
 const Register = () => {
@@ -83,7 +82,7 @@ const Register = () => {
                 <div className='w-full text-center mt-5'>
                     <p>
                         Já tem uma conta?{' '}
-                        <Link to='/' className='text-americanOrange-500 hover:underline'>
+                        <Link to='/LoginVerification' className='text-americanOrange-500 hover:underline'>
                             Entre aqui
                         </Link>
                     </p>

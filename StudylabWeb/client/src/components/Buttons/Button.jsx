@@ -14,7 +14,7 @@ const Button = ({ text, link }) => {
     return (
         <button
             type='submit'
-            className='min-w-[30rem] w-full bg-americanOrange-500 text-white py-2 rounded-full hover:bg-americanOrange-600'
+            className='min-w-[30rem] w-full bg-americanOrange-500 text-white py-2 rounded-lg hover:bg-americanOrange-600'
         >
             {text}
         </button>

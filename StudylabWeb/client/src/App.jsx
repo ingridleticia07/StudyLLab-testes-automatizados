@@ -9,6 +9,7 @@ import LandingPage from './pages/LandingPage';
 import Contact from './pages/Contact';
 import About from './pages/About';
 import Register2 from './pages/Register2';
+import LoginVerification from './pages/LoginVerification';
 
 function App() {
     return (
@@ -25,6 +26,10 @@ function App() {
                 <Route path='/inicio' element={<LandingPage />} />
                 <Route path='/contato' element={<Contact />} />
                 <Route path='/sobre' element={<About />} />
+                <Route
+                    path='/LoginVerification'
+                    element={<LoginVerification />}
+                />
             </Routes>
         </div>
     );
