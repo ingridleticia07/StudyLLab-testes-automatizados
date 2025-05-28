@@ -505,8 +505,20 @@ public class AuthController : IAuthController
         UsuarioModel? usuarioModel = await usuarioRepository
             .GetUsuarioById(userId);
 
+        if (usuarioModel is null)
+        {
+            UsuarioNotFoundException exception = new(nameof(userId), userId.ToString());
+            logger.Error(exception, "Usuário não encontrado");
+            throw exception;
+        }
+
         CodigoUsuarioModel? confirmationCode = await codigoUsuarioRepository
             .GetUserCode(usuarioModel, UserCodeKind.EmailConfirmation);
+
+        if (confirmationCode is null)
+        {
+            throw new Exception($"Código de confirmação de email não encontrado para o usuário:[{userId}].");
+        }
 
         bool emailSended = await SendRegisterEmail(usuarioModel, confirmationCode);
 
