@@ -39,6 +39,17 @@ public interface IAuthController
     /// <param name="userLoginRequestModel">Informações de um usuário já cadastrado.</param>
     /// <returns>Representa uma tarefa assíncrona, ela retorna uma tupla com as informações referentes ao usuário
     /// e um JWT válido</returns>
+    /// 
+    public Task<int> ResendVerificationCode(int userId);
+    /// <summary>
+    /// Realiza o reenvio do código de ativação do usuário, para o email do mesmo.
+    /// Os campos recebidos em &lt;paramref name="registerUserRequestModel"/&gt; são validados de acordo com <see cref="UserLoginRequestModelValidator"/>
+    /// Nenhuma mudança no banco é feita, apenas resgata as informações do usuário, faz verificações de segurança
+    /// </summary>
+    /// <param name="userLoginRequestModel">Informações de um usuário já cadastrado.</param>
+    /// <returns>Representa uma tarefa assíncrona, ela um inteiro com a informação referente ao Id do usuário</returns>
+    /// 
+
     public Task<(UserReadModel, string, string, string, int)> LoginUser(UserLoginRequestModel userLoginRequestModel, HttpContext? httpContext);
     /// <summary>
     /// Usa o código de confirmação em <paramref name="confirmUserEmailRequestModel"/> para confirmar o email,

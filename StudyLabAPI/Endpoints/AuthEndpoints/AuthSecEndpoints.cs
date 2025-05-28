@@ -17,10 +17,8 @@ public static class AuthSecEndpoints
     public static RouteGroupBuilder MapAuthSecEndpoints(this RouteGroupBuilder builder)
     {
         builder.MapPut("confirmEmail", AuthConfirmEmailHandler)
-            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE)
             .WithOpenApi(AuthSummaries.AuthConfirmEmailSpecification);
         builder.MapPost("resendConfirmationEmail", AuthResendConfirmationEmail)
-            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE)
             .WithOpenApi(AuthSummaries.AuthResendConfirmationEmailSpecification);
         
         return builder;

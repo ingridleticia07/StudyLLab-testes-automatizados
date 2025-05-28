@@ -499,4 +499,29 @@ public class AuthController : IAuthController
         catch (Exception) { return false; }
         return true;
     }
+
+    public async Task<int> ResendVerificationCode(int userId)
+    {
+        UsuarioModel? usuarioModel = await usuarioRepository
+            .GetUsuarioById(userId);
+
+        CodigoUsuarioModel? confirmationCode = await codigoUsuarioRepository
+            .GetUserCode(usuarioModel, UserCodeKind.EmailConfirmation);
+
+        bool emailSended = await SendRegisterEmail(usuarioModel, confirmationCode);
+
+        if (emailSended)
+        {
+            logger.Information("Email de confirmação enviado com sucesso para usuário Email[{UserEmail}]",
+                 usuarioModel.emailUsuario);
+        }
+        else
+        {
+            logger.Warning("Não foi possível enviar o email de boas vindas para o usuário Email[{UserEmail}]",
+                usuarioModel.emailUsuario);
+            throw new Exception($"Não foi possível enviar o email para[{usuarioModel.emailUsuario}]. Verifique seu email e tente novamente.");
+        }
+
+        return userId;
+    }
 }

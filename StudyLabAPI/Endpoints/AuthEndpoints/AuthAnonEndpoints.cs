@@ -19,6 +19,8 @@ public static class AuthAnonEndpoints
             .WithOpenApi(AuthSummaries.AuthRequesResetPasswordSpecification);
         builder.MapPost("register", AuthRegisterEndpointHandler)
             .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
+        builder.MapPut("resendVerificationCode", AuthResendVerificationCodeHandler)
+            .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
         builder.MapPost("login", AuthLoginEndpointHandler)
             .WithOpenApi(AuthSummaries.AuthLoginSpecification);
 
@@ -59,6 +61,33 @@ public static class AuthAnonEndpoints
         object retorno = new
         {
             tokenJwt = jwtNewUser,
+            statusCode = StatusCodes.Status201Created,
+            userId = userId
+        };
+
+        return Results.Json(retorno);
+    }
+
+    async private static Task<IResult> AuthResendVerificationCodeHandler(
+        HttpContext _,
+        [FromQuery] int userId,
+        [FromServices] IAuthController controller)
+    {
+        try
+        {
+            await controller.ResendVerificationCode(userId);
+        }
+        catch (CursoNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+        catch (Exception e)
+        {
+            return Results.BadRequest(e.Message);
+        }
+
+        object retorno = new
+        {
             statusCode = StatusCodes.Status201Created,
             userId = userId
         };
