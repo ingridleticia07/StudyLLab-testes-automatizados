@@ -40,7 +40,8 @@ export function register(
 ) {
   const cursoCode = getCursoCodeByName(cursoName);
 
-  instance
+  try {
+    instance
     .post(AUTH_ENDPOINT + "/register", {
       username: username,
       email: email,
@@ -48,14 +49,11 @@ export function register(
       matricula: matricula,
       role: 0,
       codeCurso: cursoCode,
-    })
-    .then(function (res) {
-      saveUserCredentials(res.data);
-      thenCallback();
-    })
-    .catch(function () {
-      catchCallback();
     });
+    
+  } catch (error) {
+    throw error;
+  }
 }
 
 export function logout() {

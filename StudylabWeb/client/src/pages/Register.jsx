@@ -7,13 +7,27 @@ import PasswordValidation from '../components/PasswordValidation/PasswordValidat
 import { Link } from 'react-router-dom';
 import ButtonActivate from '../components/Buttons/ButtonActivate';
 import AuthFooter from '../components/AuthFooter/AuthFooter';
+import SelectField from '../components/SelectField/SelectField';
+import {register} from "../../../platform/repository/auth";
+import Button from '../components/Buttons/Button';
 
 const Register = () => {
     const [email, setEmail] = useState('');
+    const [nome, setNome] = useState('');
+    const [matricula, setMatricula] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [termsAccepted, setTermsAccepted] = useState(false);
+    const [selectedCurso, setSelectedCurso] = useState('');
+
+    const cursos = [
+        { value: 'CC', label: 'Ciência da Computação' },
+        { value: 'ES', label: 'Engenharia de software' },
+        { value: 2, label: 'Engenharia da Mecânica' },
+        { value: 3, label: 'Engenharia de produção' },
+        { value: 4, label: 'Engenharia civil' },
+    ];
 
     const isEmailValid = email.length > 0 && (email.endsWith('@alu.ufc.br') || email.endsWith('@ufc.br'));
     const isPasswordStrong = password.length >= 8 &&
@@ -21,19 +35,62 @@ const Register = () => {
         /[a-z]/.test(password) &&
         /[0-9]/.test(password);
     const isConfirmMatch = password === confirmPassword;
+    const isNameValid = nome.length > 0;
+    const isMatriculaValid = matricula.length > 0;
+    const isCurseValid = selectedCurso.length > 0;
 
-    const isFormValid = isEmailValid && isPasswordStrong && isConfirmMatch && termsAccepted;
+    const isFormValid = isEmailValid && isPasswordStrong && isConfirmMatch 
+    && isNameValid && isCurseValid && isMatriculaValid && termsAccepted;
 
     const togglePasswordVisibility = (e) => {
         e.preventDefault();
         setShowPassword((prev) => !prev);
     };
 
+    const registerUser = async (e) => {
+        e.preventDefault();
+        console.log(nome,email,password, matricula,selectedCurso)
+
+        try {
+            await register(nome,email,password,matricula,selectedCurso)   
+        } catch (error) {
+            setShowError(true);   
+        }
+    };
     return (
         <div>
             <AuthHeader color='text-white' />
             <div className='bg-white rounded-xl px-10 py-10 text-gray-800'>
-                <form className='flex flex-col items-center'>
+                <form className='flex flex-col items-center' onSubmit={registerUser}>
+                    <InputField
+                        type='text'
+                        id='nome'
+                        label='Nome Completo'
+                        placeholder='Digite seu nome completo'
+                        value={nome}
+                        onChange={(e) => setNome(e.target.value)}
+                        invalidText='Nome inválido'
+                    />
+
+                    <SelectField
+                        id="curso"
+                        label="Seu curso"
+                        Placeholder='Selecione seu curso'
+                        options={cursos}
+                        value={selectedCurso}
+                        onChange={(e) => setSelectedCurso(e.target.value)}
+                    />
+
+                    <InputField
+                        type='text'
+                        id='matricula'
+                        label='Matrícula'
+                        placeholder='Sua matrícula'
+                        value={matricula}
+                        onChange={(e) => setMatricula(e.target.value)}
+                        maxLength={6}
+                        invalidText='Matrícula inválida'
+                    />
 
                     <InputField
                         type='email'
@@ -83,7 +140,7 @@ const Register = () => {
 
                     <PasswordValidation password={password} />
 
-                    <ButtonActivate text='Continuar meu cadastro' link={'/cadastro2'} type='submit' disabled={!isFormValid} />
+                    <Button text='Continuar meu cadastro' type='submit' disabled={!isFormValid} />
 
                     <p
                     className={`text-sm text-red-500 mt-3 transition-opacity duration-200 ${
