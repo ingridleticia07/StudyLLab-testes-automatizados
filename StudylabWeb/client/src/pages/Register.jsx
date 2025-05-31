@@ -5,7 +5,6 @@ import VisibilityButton from '../components/Buttons/VisibilityButton';
 import InputField from '../components/InputField/InputField';
 import PasswordValidation from '../components/PasswordValidation/PasswordValidation';
 import { Link, useNavigate } from 'react-router-dom';
-import ButtonActivate from '../components/Buttons/ButtonActivate';
 import AuthFooter from '../components/AuthFooter/AuthFooter';
 import SelectField from '../components/SelectField/SelectField';
 import {register} from "../../../platform/repository/auth";
@@ -57,7 +56,7 @@ const Register = () => {
             navigate('/LoginVerification');
 
         } catch (error) {
-            setShowError(true);   
+            console.log(error)
         }
     };
     return (

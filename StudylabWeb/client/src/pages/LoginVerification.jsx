@@ -5,6 +5,7 @@ import InputField from '../components/InputField/InputField';
 import ButtonActivate from '../components/Buttons/ButtonActivate';
 import { useNavigate } from 'react-router-dom';
 import { icons } from '../assets/assets';
+import {activateUserWithCode} from "../../../platform/repository/auth";
 
 const LoginVerification = () => {
     const [code, setCode] = useState('');
@@ -12,11 +13,6 @@ const LoginVerification = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [storedCode, setStoredCode] = useState('');
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const savedCode = localStorage.getItem('verificationCode');
-        setStoredCode(savedCode);
-    }, []);
 
     const isValidCode = (inputCode) => {
         return inputCode === storedCode;
@@ -26,23 +22,24 @@ const LoginVerification = () => {
         e.preventDefault();
         setIsLoading(true);
         setErrorMessage('');
+        
+        try {
+            await activateUserWithCode(code);
 
-
-        await new Promise(resolve => setTimeout(resolve, 1500));
-
-        if (isValidCode(code)) {
-            navigate('/dashboard');
-        } else {
+            if (isValidCode(code)) {
+                navigate('/dashboard');
+            }
+        } catch (error) {
             setErrorMessage('Código de verificação inválido');
         }
         setIsLoading(false);
     };
 
     const handleCodeChange = (value) => {
-        const numericValue = value.replace(/\D/g, '').slice(0, 6);
+        const numericValue = value.replace(/\D/g, '').slice(0, 4);
         setCode(numericValue);
         
-        if (numericValue.length === 6) {
+        if (numericValue.length === 4) {
             handleSubmit(new Event('submit'));
         }
     };
@@ -58,13 +55,13 @@ const LoginVerification = () => {
                         type="text"
                         id="verificationCode"
                         label="Código de Verificação"
-                        placeholder="Digite o código de 6 dígitos"
+                        placeholder="Digite o código de 4 dígitos"
                         icon={icons.shield}
                         value={code}
                         onChange={(e) => handleCodeChange(e.target.value)}
-                        maxLength={6}
+                        maxLength={4}
                         inputMode="numeric"
-                        pattern="\d{6}"
+                        pattern="\d{4}"
                         autoFocus
                         isValid={code.length === 0 ? null : isValidCode(code)}
                         errorMessage={errorMessage}
@@ -74,7 +71,7 @@ const LoginVerification = () => {
                         <ButtonActivate
                             text="Continuar"
                             type="submit"
-                            disabled={code.length !== 6 || isLoading}
+                            disabled={code.length !== 4 || isLoading}
                             isLoading={isLoading}
                         />
                     </div>

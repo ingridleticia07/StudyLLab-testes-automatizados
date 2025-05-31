@@ -29,14 +29,30 @@ export async function login(email, password) {
   }
 }
 
+export async function activateUserWithCode(code) {
+  var idUser = getCookie('id-user');
+  
+  try {
+    getUserInfo(idUser);
+
+    const user = JSON.parse(localStorage.getItem("user"));
+    const res = await instance.put(AUTH_ENDPOINT + "/sec/confirmEmail?idUser="+idUser, {
+      confirmationCode:code
+    });
+
+    return user.role;
+
+  } catch (e) {
+    throw e;
+  }
+}
+
 export async function register(
   username,
   email,
   password,
   matricula,
-  cursoName,
-  thenCallback,
-  catchCallback
+  cursoName
 ) {
   const cursoCode = getCursoCodeByName(cursoName);
 
@@ -102,10 +118,17 @@ export function updateUserAuthState() {
 function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifogeryCookie, idUser) {
   
   if (tokenAntifogery) {
-    document.cookie = `.AspNetCore.Antiforgery.KeSRHT2WmJs=${tokenAntifogeryCookie}; path=/;`;
-    document.cookie = `.csrf-token=${tokenAntifogery}; path=/;`;
-    document.cookie = `id-user=${idUser}; path=/;`;
-    document.cookie = `${AUTH_TOKEN}=${tokenJwt}; path=/;`;
+
+    const expireDate = new Date();
+    expireDate.setDate(expireDate.getDate() + 7);
+    const expires = `expires=${expireDate.toUTCString()}`;
+
+    document.cookie = `.AspNetCore.Antiforgery.KeSRHT2WmJs=${tokenAntifogeryCookie}; path=/; ${expires};`;
+    document.cookie = `.csrf-token=${tokenAntifogery}; path=/; ${expires};`;
+    document.cookie = `id-user=${idUser}; path=/; ${expires};`;
+    document.cookie = `${AUTH_TOKEN}=${tokenJwt}; path=/; ${expires};`;
+    saveDashboardSessionInfos(tokenJwt, idUser);
+
     console.log("Anti-forgery token saved.");
   } else {
     console.log("No anti-forgery token provided.");
