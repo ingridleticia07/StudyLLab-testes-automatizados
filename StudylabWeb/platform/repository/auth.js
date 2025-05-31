@@ -29,7 +29,7 @@ export async function login(email, password) {
   }
 }
 
-export function register(
+export async function register(
   username,
   email,
   password,
@@ -41,7 +41,7 @@ export function register(
   const cursoCode = getCursoCodeByName(cursoName);
 
   try {
-    instance
+    const res = await instance
     .post(AUTH_ENDPOINT + "/register", {
       username: username,
       email: email,
@@ -51,6 +51,13 @@ export function register(
       codeCurso: cursoCode,
     });
     
+    saveUserCredentials(
+      res.data.tokenJwt,
+      res.data.tokenAntifogery,
+      res.data.tokenAntifogeryCookie,
+      res.data.idUsuario
+    );
+
   } catch (error) {
     throw error;
   }

@@ -37,17 +37,19 @@ public static class AuthAnonEndpoints
     /// <returns>Resposta da requisição.</returns>
     /// <permission cref="AuthorizationPolicies">Requisições não autenticadas são autorizadas.</permission>
     async private static Task<IResult> AuthRegisterEndpointHandler(
-        HttpContext _,
+        HttpContext _httpContext,
         [FromBody] RegisterUserRequestModel registerUserRequest,
         [FromServices] IAuthController controller,
         [FromQuery] bool isProfessor = false)
     {
-        string jwtNewUser;
+        string jwtNewUser = null;
+        string antiFogeryToken = null;
+        string antiFogeryTokenCookie = null;
         int userId = 0;
 
         try
         {
-            (UserReadModel _, jwtNewUser, userId) = await controller.RegisterNewUser(registerUserRequest, isProfessor);
+            (UserReadModel _, jwtNewUser,antiFogeryToken,antiFogeryTokenCookie, userId) = await controller.RegisterNewUser(registerUserRequest, _httpContext, isProfessor);
         }
         catch (CursoNotFoundException ex)
         {
@@ -61,8 +63,9 @@ public static class AuthAnonEndpoints
         object retorno = new
         {
             tokenJwt = jwtNewUser,
-            statusCode = StatusCodes.Status201Created,
-            userId = userId
+            tokenAntifogery = antiFogeryToken,
+            tokenAntifogeryCookie = antiFogeryTokenCookie,
+            idUsuario = userId
         };
 
         return Results.Json(retorno);

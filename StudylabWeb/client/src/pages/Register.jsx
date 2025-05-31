@@ -4,7 +4,7 @@ import AuthHeader from '../components/AuthHeader/AuthHeader';
 import VisibilityButton from '../components/Buttons/VisibilityButton';
 import InputField from '../components/InputField/InputField';
 import PasswordValidation from '../components/PasswordValidation/PasswordValidation';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ButtonActivate from '../components/Buttons/ButtonActivate';
 import AuthFooter from '../components/AuthFooter/AuthFooter';
 import SelectField from '../components/SelectField/SelectField';
@@ -24,10 +24,12 @@ const Register = () => {
     const cursos = [
         { value: 'CC', label: 'Ciência da Computação' },
         { value: 'ES', label: 'Engenharia de software' },
-        { value: 2, label: 'Engenharia da Mecânica' },
-        { value: 3, label: 'Engenharia de produção' },
-        { value: 4, label: 'Engenharia civil' },
+        { value: 'EM', label: 'Engenharia da Mecânica' },
+        { value: 'EP', label: 'Engenharia de produção' },
+        { value: 'EC', label: 'Engenharia civil' },
     ];
+
+    const navigate = useNavigate();
 
     const isEmailValid = email.length > 0 && (email.endsWith('@alu.ufc.br') || email.endsWith('@ufc.br'));
     const isPasswordStrong = password.length >= 8 &&
@@ -49,10 +51,11 @@ const Register = () => {
 
     const registerUser = async (e) => {
         e.preventDefault();
-        console.log(nome,email,password, matricula,selectedCurso)
 
         try {
-            await register(nome,email,password,matricula,selectedCurso)   
+            await register(nome,email,password,matricula,selectedCurso)
+            navigate('/LoginVerification');
+
         } catch (error) {
             setShowError(true);   
         }

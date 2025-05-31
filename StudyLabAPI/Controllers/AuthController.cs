@@ -76,7 +76,7 @@ public class AuthController : IAuthController
     /// Regras: <seealso cref="RegisterUserRequestModelValidator"/>.</exception>
     /// <exception cref="ExistsUserException">Ocorre quando já existe algum usuário com a mesma matrícula ou email.</exception>
     /// <exception cref="CursoNotFoundException">Ocorre quando o curso solicitado para relação não existe.</exception>
-    public async Task<(UserReadModel, string, int)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel, bool isProfessor = false)
+    public async Task<(UserReadModel, string, string, string, int)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel, HttpContext? httpContext = null, bool isProfessor = false)
     {
         logger.Information("Validando campos da requisição de cadastro para Username[{Username}]",
             registerUserRequestModel.username);
@@ -143,13 +143,37 @@ public class AuthController : IAuthController
             usuarioModel.idUsuario);
         UserReadModel userReadModel = usuarioModelMapper.UsuarioModelToUserReadModel(usuarioModel);
 
-        string jwtUser = null;
-        if (!isProfessor)
-            jwtUser = jwtService.GenerateJwt(new(userReadModel.id.ToString(), userReadModel.role));
-
         logger.Information("Usuário ID[{ID}] cadastrado com sucesso",
-            usuarioModel.idUsuario);
-        return (userReadModel, jwtUser, usuarioModel.idUsuario);
+        usuarioModel.idUsuario);
+
+        string jwtToken = null;
+        string requestToken = null;
+        string cookieToken = null;
+
+        if (!isProfessor)
+        {
+            var (jwtUser, identity) = jwtService.GenerateJwtAndReturnClaims(new(userReadModel.id.ToString(), userReadModel.role));
+
+            httpContext.User = new ClaimsPrincipal(identity);
+
+            var tokens = _antiforgery.GetAndStoreTokens(httpContext);
+
+            httpContext.Response.Cookies.Append(
+                ".AspNetCore.Antiforgery.KeSRHT2WmJs",
+                tokens.RequestToken,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None
+                });
+            jwtToken = jwtUser;
+            requestToken = tokens.RequestToken;
+            cookieToken = tokens.CookieToken;
+        }
+
+        return (userReadModel, jwtToken, requestToken, cookieToken, userReadModel.id);
+
     }
 
     /// <summary>
