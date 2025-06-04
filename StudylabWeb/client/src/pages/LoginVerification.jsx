@@ -20,17 +20,20 @@ const LoginVerification = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsLoading(true);
+        setIsLoading(false);
         setErrorMessage('');
         
-        try {
-            await activateUserWithCode(code);
+        if(!isLoading){
+            try {
+                setIsLoading(true);
+                await activateUserWithCode(code);
 
-            if (isValidCode(code)) {
-                navigate('/dashboard');
+                if (isValidCode(code))
+                    navigate('/dashboard');
+                    //alterar a rota de navegação, para a dashboard de usuário, quando a mesma for criada.
+            } catch (error) {
+                setErrorMessage('Código de verificação inválido');
             }
-        } catch (error) {
-            setErrorMessage('Código de verificação inválido');
         }
         setIsLoading(false);
     };

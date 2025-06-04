@@ -40,7 +40,7 @@ const Register = () => {
     const isMatriculaValid = matricula.length > 0;
     const isCurseValid = selectedCurso.length > 0;
 
-    const isFormValid = isEmailValid && isPasswordStrong && isConfirmMatch 
+    var isFormValid = isEmailValid && isPasswordStrong && isConfirmMatch 
     && isNameValid && isCurseValid && isMatriculaValid && termsAccepted;
 
     const togglePasswordVisibility = (e) => {
@@ -50,14 +50,20 @@ const Register = () => {
 
     const registerUser = async (e) => {
         e.preventDefault();
+        let isFormValidAux = isFormValid;
 
-        try {
-            await register(nome,email,password,matricula,selectedCurso)
-            navigate('/LoginVerification');
+        isFormValid = false;
 
-        } catch (error) {
-            console.log(error)
-        }
+        if(isFormValidAux){
+            try {
+                await register(nome,email,password,matricula,selectedCurso)
+                navigate('/LoginVerification');
+
+            } catch (error) {
+                console.log(error)
+            }
+            }
+        isFormValid = isFormValidAux;
     };
     return (
         <div>
