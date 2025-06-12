@@ -4,16 +4,28 @@ import AuthHeader from '../components/AuthHeader/AuthHeader';
 import InputField from '../components/InputField/InputField';
 import { useState } from 'react';
 import Button from '../components/Buttons/Button';
+import {requestResetPasswordUser} from "../../../platform/repository/auth";
 
 const PassowordEmail = () => {
     const [email, setEmail] = useState('');
     const isEmailValid = email.length > 0 && (email.endsWith('@alu.ufc.br') || email.endsWith('@ufc.br'));
+    const requestResetPassword = async(e) => {
+        e.preventDefault();
+        
+        if(isEmailValid){
+            try {
+                await requestResetPasswordUser(email)
 
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
     return (
         <div>
             <div className='flex flex-col justify-center items-center rounded-xl py-10 px-10 bg-white'>
                 <AuthHeader infoText='Recuperar senha' />
-                <form className='mb-5' onSubmit={(e) => e.preventDefault()}>
+                <form className='mb-5' onSubmit={requestResetPassword}>
                     <InputField
                         type='email'
                         id='email'
@@ -25,7 +37,7 @@ const PassowordEmail = () => {
                         isValid={email.length === 0 ? null : isEmailValid}
                     />
                     
-                    <Button text='Continuar' link='/verificacao' />
+                    <Button text='Continuar' type='submit' />
                     
                 </form>
                 <div className='text-center mb-3 mt-3 text-sm text-americanOrange-500'>

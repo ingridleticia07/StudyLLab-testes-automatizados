@@ -79,6 +79,21 @@ export async function register(
   }
 }
 
+export async function requestResetPasswordUser(
+  userEmail
+) {
+
+  try {
+    const res = await instance
+    .post(AUTH_ENDPOINT + "/requestResetPassword", {
+      userEmail: userEmail
+    });
+
+  } catch (error) {
+    throw error;
+  }
+}
+
 export function logout() {
   if (hasCredentialsSave()) {
     sessionStorage.removeItem(AUTH_TOKEN);

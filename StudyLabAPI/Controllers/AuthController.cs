@@ -440,22 +440,37 @@ public class AuthController : IAuthController
 
     async private Task<bool> GenerateAndSendResetUserPassword(UsuarioModel usuarioModel)
     {
+        bool emailSended = false;
+
         logger.Information("Gerando código de recuperação de senha para usuário Email[{UserEmail}]",
             usuarioModel.emailUsuario);
-        CodigoUsuarioModel resetCode = await codigoUsuarioRepository
-            .GenerateAndEnsureCode(usuarioModel, UserCodeKind.PasswordReset);
-        bool emailSended = await SendResetPasswordEmail(usuarioModel, resetCode);
+        CodigoUsuarioModel requestAlreadyExists = await codigoUsuarioRepository
+            .GetUserCode(usuarioModel, UserCodeKind.PasswordReset);
 
-        if (emailSended)
+        if (requestAlreadyExists == null)
         {
-            logger.Information("Email de recuperação de senha enviado com sucesso para usuário Email[{UserEmail}]",
-                usuarioModel.emailUsuario);
+            CodigoUsuarioModel resetCode = await codigoUsuarioRepository
+            .GenerateAndEnsureCode(usuarioModel, UserCodeKind.PasswordReset);
+            bool emailSendedAux = await SendResetPasswordEmail(usuarioModel, resetCode);
+
+            if (emailSendedAux)
+            {
+                logger.Information("Email de recuperação de senha enviado com sucesso para usuário Email[{UserEmail}]",
+                    usuarioModel.emailUsuario);
+            }
+            else
+            {
+                logger.Warning("Não foi possível enviar o email de recuperação de senha para o usuário Email[{UserEmail}]",
+                    usuarioModel.emailUsuario);
+            }
+
+            emailSended = emailSendedAux;
         }
         else
         {
-            logger.Warning("Não foi possível enviar o email de recuperação de senha para o usuário Email[{UserEmail}]",
-                usuarioModel.emailUsuario);
+            emailSended = true;
         }
+
         return emailSended;
     }
 
