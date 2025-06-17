@@ -6,19 +6,30 @@ import Button from '../components/Buttons/Button';
 import { icons } from '../assets/assets';
 import { Link } from 'react-router-dom';
 import VisibilityButton from '../components/Buttons/VisibilityButton';
+import {resetPasswordUser, getCookie} from "../../../platform/repository/auth";
 
 const ResetPassword = () => {
     const [a, setA] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [passwordAux, setPasswordAux] = useState('');
+    const [password, setPassword] = useState('');
 
     const togglePasswordVisibility = (e) => {
         e.preventDefault();
         setShowPassword((prev) => !prev);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
         setA(true);
+        let emailCookie = getCookie('emailForReset');
+        let codeCookie = getCookie('codeForReset');
+
+        try {
+            await resetPasswordUser(emailCookie,codeCookie,password);
+        } catch (error) {
+            console.log(error)
+        }
     };
 
     return (
@@ -34,6 +45,8 @@ const ResetPassword = () => {
                         <InputField
                             type={showPassword ? 'text' : 'password'}
                             id='senha'
+                            value={passwordAux}
+                            onChange={(e) => setPasswordAux(e.target.value)}
                             label='Senha'
                             placeholder='Sua Senha'
                             icon={icons.padlock}
@@ -49,6 +62,8 @@ const ResetPassword = () => {
                             type={showPassword ? 'text' : 'password'}
                             id='confSenha'
                             label='Confirma sua Senha'
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             placeholder='Sua Senha'
                             icon={icons.padlock}
                             invalidText={'senha invalida'}
@@ -59,7 +74,7 @@ const ResetPassword = () => {
                                 />
                             }
                         />
-                        <Button text='Recuperar Acesso' />
+                        <Button text='Recuperar Acesso' type="submit"/>
                     </form>
                 ) : (
                     <div className='w-full'>

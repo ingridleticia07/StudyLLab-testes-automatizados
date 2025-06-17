@@ -3,6 +3,7 @@ import AuthFooter from '../components/AuthFooter/AuthFooter';
 import AuthHeader from '../components/AuthHeader/AuthHeader';
 import Button from '../components/Buttons/Button';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const VerificationCode = () => {
     const email = 'testetestando123@alu.ufc.com';
@@ -16,6 +17,7 @@ const VerificationCode = () => {
 
     const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
     const [code, setCode] = useState(['', '', '', '']);
+    const navigate = useNavigate();
 
     const handleChange = (e, index) => {
         const value = e.target.value.toUpperCase(); // força maiúscula
@@ -30,9 +32,17 @@ const VerificationCode = () => {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
         const finalCode = code.join('');
+        if(finalCode.length > 0){
+            const expireDate = new Date();
+            expireDate.setDate(expireDate.getDate() + 1);
+            const expires = `expires=${expireDate.toUTCString()}`;
+
+            document.cookie = `codeForReset=${finalCode}; path=/; ${expires};`;
+            navigate('/senha')
+        }
     };
 
     return (
@@ -60,7 +70,7 @@ const VerificationCode = () => {
                                 />
                             ))}
                         </div>
-                        <Button link='/senha' text='continuar' type='submit' />
+                        <Button text='continuar' type='submit' />
                     </form>
                 </div>
                 <div className='text-center mb-8 mt-6 text-sm text-americanOrange-500'>

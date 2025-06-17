@@ -88,6 +88,30 @@ export async function requestResetPasswordUser(
     .post(AUTH_ENDPOINT + "/requestResetPassword", {
       userEmail: userEmail
     });
+    const expireDate = new Date();
+    expireDate.setDate(expireDate.getDate() + 1);
+    const expires = `expires=${expireDate.toUTCString()}`;
+
+    document.cookie = `emailForReset=${userEmail}; path=/; ${expires};`;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function resetPasswordUser(
+  userEmail,
+  resetCode,
+  newPassword
+) {
+
+  try {
+    const res = await instance
+    .put(AUTH_ENDPOINT + "/resetPassword", {
+      userEmail: userEmail,
+      resetCode:resetCode,
+      newPassword:newPassword
+    });
+
 
   } catch (error) {
     throw error;

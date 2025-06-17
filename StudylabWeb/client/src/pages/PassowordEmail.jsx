@@ -4,18 +4,20 @@ import AuthHeader from '../components/AuthHeader/AuthHeader';
 import InputField from '../components/InputField/InputField';
 import { useState } from 'react';
 import Button from '../components/Buttons/Button';
+import { useNavigate } from 'react-router-dom';
 import {requestResetPasswordUser} from "../../../platform/repository/auth";
 
 const PassowordEmail = () => {
     const [email, setEmail] = useState('');
     const isEmailValid = email.length > 0 && (email.endsWith('@alu.ufc.br') || email.endsWith('@ufc.br'));
+    const navigate = useNavigate();
     const requestResetPassword = async(e) => {
         e.preventDefault();
         
         if(isEmailValid){
             try {
                 await requestResetPasswordUser(email)
-
+                navigate('/verificacao')
             } catch (error) {
                 console.log(error)
             }
