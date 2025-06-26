@@ -53,11 +53,11 @@ public static class AuthAnonEndpoints
         }
         catch (CursoNotFoundException ex)
         {
-            return Results.NotFound(ex.Message);
+            return Results.NotFound(new { message = ex.Message, tipo = 1 });
         }
         catch (Exception e)
         {
-            return Results.BadRequest(e.Message);
+            return Results.BadRequest(new { message = e.Message, tipo = 2 });
         }
 
         object retorno = new

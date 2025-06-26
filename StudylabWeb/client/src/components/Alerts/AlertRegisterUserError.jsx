@@ -10,7 +10,7 @@ export default function AlertRegisterUserError({ onHide, text }) {
 
   return (
     <div className="bg-red-500 text-white px-4 py-2 rounded-md shadow-md text-center">
-      {text}!
+      {text}
     </div>
   );
 }

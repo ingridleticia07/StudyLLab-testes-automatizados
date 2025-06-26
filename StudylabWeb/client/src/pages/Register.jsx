@@ -50,7 +50,7 @@ const Register = () => {
         e.preventDefault();
         setShowPassword((prev) => !prev);
     };
-
+    
     const registerUser = async (e) => {
         e.preventDefault();
         let isFormValidAux = isFormValid;
@@ -65,7 +65,11 @@ const Register = () => {
             } catch (error) {
                 console.log(error)
                 setShowError(true);
-                setExceptionText(error.response.data)
+                if(error.response.data.tipo == 2)
+                    setExceptionText("já existe um usuário com esta matrícula ou email!")
+                else
+                    setExceptionText("Curso não encontrado!")
+
             }
         }
         isFormValid = isFormValidAux;
