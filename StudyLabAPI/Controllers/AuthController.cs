@@ -97,11 +97,10 @@ public class AuthController : IAuthController
                 registerUserRequestModel.email);
         if (invalidExists)
         {
-            ExistsUserException exception = new(new List<string>
-            {
-                nameof(registerUserRequestModel.matricula),
-                nameof(registerUserRequestModel.email)
-            });
+            ExistsUserException exception = new(
+                registerUserRequestModel.matricula,
+                registerUserRequestModel.email
+            );
             logger.Error(exception, "Um usuário com o mesmo {NomeUsuario} ou {Email} já existe",
                 nameof(registerUserRequestModel.username), nameof(registerUserRequestModel.email));
             throw exception;

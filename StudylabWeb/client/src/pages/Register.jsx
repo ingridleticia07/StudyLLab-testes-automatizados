@@ -9,6 +9,7 @@ import AuthFooter from '../components/AuthFooter/AuthFooter';
 import SelectField from '../components/SelectField/SelectField';
 import {register} from "../../../platform/repository/auth";
 import Button from '../components/Buttons/Button';
+import AlertRegisterUserError from '../components/Alerts/AlertRegisterUserError';
 
 const Register = () => {
     const [email, setEmail] = useState('');
@@ -19,6 +20,8 @@ const Register = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [termsAccepted, setTermsAccepted] = useState(false);
     const [selectedCurso, setSelectedCurso] = useState('');
+    const [exceptionText, setExceptionText] = useState('');
+    const [showError, setShowError] = useState(false);
 
     const cursos = [
         { value: 'CC', label: 'Ciência da Computação' },
@@ -61,14 +64,17 @@ const Register = () => {
 
             } catch (error) {
                 console.log(error)
+                setShowError(true);
+                setExceptionText(error.response.data)
             }
-            }
+        }
         isFormValid = isFormValidAux;
     };
     return (
         <div>
             <AuthHeader color='text-white' />
             <div className='bg-white rounded-xl px-10 py-10 text-gray-800'>
+                {showError && <AlertRegisterUserError onHide={() => setShowError(false)} text={exceptionText}/>}
                 <form className='flex flex-col items-center' onSubmit={registerUser}>
                     <InputField
                         type='text'

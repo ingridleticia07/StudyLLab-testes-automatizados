@@ -4,8 +4,9 @@ namespace StudyLabAPI.Exceptions;
 
 public class ExistsUserException : Exception
 {
-    private const string MESSAGE = "There's already a user registered with the same: {0}";
+    private const string MESSAGE = "Já existe um usuário com a mesma matrícula: [{0}] ou email: [{1}]";
 
-    public ExistsUserException(IEnumerable<string> invalidFields) : 
-        base(string.Format(MESSAGE, invalidFields.ToSeparatedString())) { }
+    public ExistsUserException(string matricula, string email)
+    : base(string.Format(MESSAGE, matricula, email)) { }
+
 }
