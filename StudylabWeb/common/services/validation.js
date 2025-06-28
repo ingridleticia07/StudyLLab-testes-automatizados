@@ -1,3 +1,3 @@
 export function isEmptyString(input) {
-    return typeof input === "string" && input.trim() === "";
+    return !input || (typeof input === "string" && input.trim() === "");
 }

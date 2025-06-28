@@ -7,7 +7,6 @@ export function validateLoginFields(setValidateField,field) {
 
   if(isEmptyString(field))
     fielNeedValidation = true;
-
   setValidateField(fielNeedValidation);
 }
 
@@ -21,8 +20,9 @@ export async function handleLogin(email, password) {
     const isAuthenticated = await checkAuth();
     const user = JSON.parse(localStorage.getItem("user"));
     const cookieLoginToken = getCookie(AUTH_TOKEN);
-
-    if (!isAuthenticated || !cookieLoginToken) {
+    const isCookieLoginTokenValid = cookieLoginToken == sessionStorage.getItem(AUTH_TOKEN) ? 1 : 0;
+    
+    if (!isAuthenticated || isCookieLoginTokenValid == 0) {
       await login(email, password);
 
       if(user.role == 1)

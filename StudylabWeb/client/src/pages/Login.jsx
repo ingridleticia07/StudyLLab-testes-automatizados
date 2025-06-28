@@ -8,10 +8,12 @@ import AuthHeader from '../components/AuthHeader/AuthHeader';
 import AuthFooter from '../components/AuthFooter/AuthFooter';
 import {handleLogin, validateLoginFields} from "../../../platform/business/login";
 import AlertError from "./../components/Alerts/AlertErro";
+import {isEmptyString} from "../../../common/services/validation";
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [isEmailInvalid, setIsEmailInvalid] = useState(false);
+    const [AlertText, setAlertText] = useState("");
     const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -29,18 +31,24 @@ const Login = () => {
         e.preventDefault();
 
         setCanTry(false);
-
+        setShowError(false);
+        
         if (!canTry) return;
 
-        validateLoginFields(setIsEmailInvalid,email);
-        validateLoginFields(setIsPasswordInvalid,password);
-        
-        if(!(isEmailInvalid || isPasswordInvalid))
+        const InvalidEmail = isEmptyString(email);
+        const InvalidPassword = isEmptyString(password);
+
+        if(!(InvalidEmail || InvalidPassword)){
             try {
                 await handleLogin(email,password)   
             } catch (error) {
-                setShowError(true);   
+                setShowError(true);  
+                setAlertText("Email e/ou senha incorreto(s)!"); 
             }
+        }else{
+            setShowError(true);
+            setAlertText("Preencha os campos email e senha!");
+        }
         setCanTry(true);
     };
 
@@ -49,7 +57,7 @@ const Login = () => {
             <div className='flex flex-col justify-center items-center rounded-xl px-10 py-10 bg-white'>
                 <AuthHeader infoText={'Entrar na sua conta'} />
                 <form className='space-y-6' onSubmit={logar}>
-                    {showError && <AlertError onHide={() => setShowError(false)} />}
+                    {showError && <AlertError onHide={() => setShowError(false)} text={AlertText} />}
                     <InputField
                         type='email'
                         id='email'
@@ -69,6 +77,7 @@ const Login = () => {
                         icon={icons.padlock}
                         invalidText={'senha invalida'}
                         value={password}
+                        isValid={password.length === 0 ? null : isPasswordInvalid}
                         onChange={(e) => setPassword(e.target.value)}
                         rightElement={
                             <VisibilityButton

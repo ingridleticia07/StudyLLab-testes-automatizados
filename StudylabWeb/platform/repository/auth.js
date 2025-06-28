@@ -16,7 +16,7 @@ export async function login(email, password) {
       email,
       password,
     });
-
+    
     saveUserCredentials(
       res.data.tokenJwt,
       res.data.tokenAntifogery,
@@ -159,7 +159,7 @@ function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifogeryCo
   if (tokenAntifogery) {
 
     const expireDate = new Date();
-    expireDate.setDate(expireDate.getDate() + 7);
+    expireDate.setDate(expireDate.getDate() + 1);
     const expires = `expires=${expireDate.toUTCString()}`;
 
     document.cookie = `.AspNetCore.Antiforgery.KeSRHT2WmJs=${tokenAntifogeryCookie}; path=/; ${expires};`;
