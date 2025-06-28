@@ -38,7 +38,7 @@ const Login = () => {
         const InvalidEmail = isEmptyString(email);
         const InvalidPassword = isEmptyString(password);
 
-        if(!(InvalidEmail || InvalidPassword)){
+        if(!(InvalidEmail || InvalidPassword) && isEmailValid){
             try {
                 await handleLogin(email,password)   
             } catch (error) {
@@ -47,7 +47,7 @@ const Login = () => {
             }
         }else{
             setShowError(true);
-            setAlertText("Preencha os campos email e senha!");
+            setAlertText("Preencha os campos email e senha corretamente!");
         }
         setCanTry(true);
     };
