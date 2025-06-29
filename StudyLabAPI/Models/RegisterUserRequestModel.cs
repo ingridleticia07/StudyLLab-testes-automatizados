@@ -11,4 +11,6 @@ public class RegisterUserRequestModel
     public UserRole role { get; set; }
     public int codeCurso { get; set; }
     public string? imagem { get; set; }
+
+    public int? fkDisciplina { get; set; }
 }

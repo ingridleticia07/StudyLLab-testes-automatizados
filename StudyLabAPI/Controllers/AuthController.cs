@@ -126,9 +126,13 @@ public class AuthController : IAuthController
         usuarioModel.statusUsuario = isProfessor ? true : false;
         usuarioModel.dataCadastroUsuario = new(registerDate.Year, registerDate.Month, registerDate.Day);
         usuarioModel.senhaUsuario = hashService.Hash(rawUserPassword);
+        usuarioModel.fkDisciplina = null;
 
         if (isProfessor)
+        {
             usuarioModel.tipoUsuario = UserRole.Prof;
+            usuarioModel.fkDisciplina = registerUserRequestModel.fkDisciplina ?? registerUserRequestModel.fkDisciplina;
+        }
 
         logger.Information("Cadastrando usuário Username[{Username}]",
             registerUserRequestModel.username);
