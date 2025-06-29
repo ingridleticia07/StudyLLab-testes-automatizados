@@ -1,10 +1,21 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import SidebarItem from '../SidebarItem/SidebarItem';
 import { icons } from '../../assets/assets';
+import { logoutSession } from '../../../../platform/repository/auth';
 
 const Sidebar = () => {
     const location = useLocation();
 
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        const confirmed = window.confirm('Tem certeza que deseja sair?');
+        if (confirmed) {
+            logoutSession();
+            window.location.href = 'http://localhost:5174'
+        }
+    };
+    
     return (
         <nav className='bg-white h-full w-28 pt-32 shadow-sm'>
             <ul className='flex flex-col items-center gap-4'>
@@ -44,6 +55,14 @@ const Sidebar = () => {
                     alt='item sidebar ajuda'
                     selected={location.pathname === '/ajuda'}
                 />
+                <SidebarItem
+                    link='Sair'
+                    icon={icons.arrowRight}
+                    alt='item sidebar logout'
+                    onClick={handleLogout}
+                    selected={false}
+                />
+
             </ul>
         </nav>
     );

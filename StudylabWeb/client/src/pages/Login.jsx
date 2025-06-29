@@ -9,6 +9,7 @@ import AuthFooter from '../components/AuthFooter/AuthFooter';
 import {handleLogin, validateLoginFields} from "../../../platform/business/login";
 import AlertError from "./../components/Alerts/AlertErro";
 import {isEmptyString} from "../../../common/services/validation";
+import {saveDashboardSessionInfos,AUTH_TOKEN, getCookie } from "../../../platform/repository/auth.js";
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -40,8 +41,10 @@ const Login = () => {
 
         if(!(InvalidEmail || InvalidPassword) && isEmailValid){
             try {
+                if(getCookie(AUTH_TOKEN) != null)
+                    saveDashboardSessionInfos()
                 await handleLogin(email,password)   
-            } catch (error) {
+            } catch (error) {   
                 setShowError(true);  
                 setAlertText("Email e/ou senha incorreto(s)!"); 
             }
