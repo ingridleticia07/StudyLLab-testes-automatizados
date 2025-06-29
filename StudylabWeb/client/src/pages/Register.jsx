@@ -22,6 +22,7 @@ const Register = () => {
     const [selectedCurso, setSelectedCurso] = useState('');
     const [exceptionText, setExceptionText] = useState('');
     const [showError, setShowError] = useState(false);
+    const [isFormSubmited, setIsFormSubmited] = useState(false);
 
     const cursos = [
         { value: 'CC', label: 'Ciência da Computação' },
@@ -52,6 +53,7 @@ const Register = () => {
     };
     
     const registerUser = async (e) => {
+        setIsFormSubmited(true);
         e.preventDefault();
         let isFormValidAux = isFormValid;
 
@@ -89,6 +91,11 @@ const Register = () => {
                         onChange={(e) => setNome(e.target.value)}
                         invalidText='Nome inválido'
                     />
+                    {nome.length <= 0 && isFormSubmited && (
+                        <h5 style={{ color: 'red' }} className="self-start">
+                            *Insira o nome do aluno
+                        </h5>
+                    )}
 
                     <SelectField
                         id="curso"
@@ -98,6 +105,11 @@ const Register = () => {
                         value={selectedCurso}
                         onChange={(e) => setSelectedCurso(e.target.value)}
                     />
+                    {selectedCurso.length <= 0 && isFormSubmited && (
+                        <h5 style={{ color: 'red' }} className="self-start">
+                            *Insira o curso do aluno
+                        </h5>
+                    )}
 
                     <InputField
                         type='text'
@@ -109,7 +121,11 @@ const Register = () => {
                         maxLength={6}
                         invalidText='Matrícula inválida'
                     />
-
+                    {matricula.length <= 0 && isFormSubmited && (
+                        <h5 style={{ color: 'red' }} className="self-start">
+                            *Insira a matrícula do aluno
+                        </h5>
+                    )}
                     <InputField
                         type='email'
                         id='email'
@@ -120,7 +136,11 @@ const Register = () => {
                         isEmail={true}
                         isValid={email.length === 0 ? null : isEmailValid}
                     />
-
+                    {email.length <= 0 && isFormSubmited && (
+                        <h5 style={{ color: 'red' }} className="self-start">
+                            *Insira o email institucional do aluno corretamente.
+                        </h5>
+                    )}
                     <InputField
                         type={showPassword ? 'text' : 'password'}
                         id='senha'
@@ -137,7 +157,11 @@ const Register = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-
+                    {password.length <= 0 && isFormSubmited && (
+                        <h5 style={{ color: 'red' }} className="self-start">
+                            *Insira a senha do aluno
+                        </h5>
+                    )}
 
                     <InputField
                         type={showPassword ? 'text' : 'password'}
@@ -155,7 +179,11 @@ const Register = () => {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                     />
-
+                    {confirmPassword.length <= 0 && isFormSubmited && (
+                        <h5 style={{ color: 'red' }} className="self-start">
+                            *Confirme a senha do aluno
+                        </h5>
+                    )}
                     <PasswordValidation password={password} />
 
                     <Button text='Continuar meu cadastro' type='submit' disabled={!isFormValid} />

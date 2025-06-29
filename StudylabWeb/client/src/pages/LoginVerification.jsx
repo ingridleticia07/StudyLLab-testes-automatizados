@@ -27,12 +27,11 @@ const LoginVerification = () => {
             try {
                 setIsLoading(true);
                 await activateUserWithCode(code);
-
                 if (isValidCode(code))
                     navigate('/dashboard');
                     //alterar a rota de navegação, para a dashboard de usuário, quando a mesma for criada.
             } catch (error) {
-                setErrorMessage('Código de verificação inválido');
+                setErrorMessage('Código de verificação inválido!');
             }
         }
         setIsLoading(false);
@@ -53,7 +52,6 @@ const LoginVerification = () => {
             <div className="bg-white rounded-xl px-10 py-10 text-gray-800 max-w-md mx-auto">
                 <form className="flex flex-col items-center" onSubmit={handleSubmit}>
                     <h2 className="text-2xl font-bold mb-6">Verificação de Login</h2>
-                    
                     <InputField
                         type="text"
                         id="verificationCode"
@@ -69,7 +67,11 @@ const LoginVerification = () => {
                         isValid={code.length === 0 ? null : isValidCode(code)}
                         errorMessage={errorMessage}
                     />
-
+                    {errorMessage.length > 0 && (
+                        <h5 style={{ color: 'red' }}>
+                            {errorMessage}
+                        </h5>
+                    )}
                     <div className="w-full mt-4">
                         <ButtonActivate
                             text="Continuar"
