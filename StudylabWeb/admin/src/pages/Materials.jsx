@@ -12,18 +12,19 @@ const Materials = () => {
     const [showRegister, setShowRegister] = useState(false);
     const { data, removeItem } = useState();
     const [conteudo, setConteudo] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
-            const getAllConteudos = async () => {
-                try {
-                    let conteudoList = await getMaterialByDisciplinaOrTopico(1,10, 0,0);
-                    setConteudo(conteudoList);                    
-                } catch (error) {
-                    console.log(error);            
-                }
+        const getAllConteudos = async () => {
+            try {
+                let conteudoList = await getMaterialByDisciplinaOrTopico(currentPage,10, 0,0);
+                setConteudo(conteudoList);                    
+            } catch (error) {
+                console.log(error);            
             }
-            getAllConteudos();
-        }, []);
+        }
+        getAllConteudos();
+    }, [currentPage]);
 
     return (
         <div className='flex flex-col h-full'>
@@ -42,7 +43,8 @@ const Materials = () => {
                     <h1 className='py-8 text-3xl font-bold'>Conteúdos</h1>
                     <Filter data={conteudo.documentos} />
                 </div>
-                <TableMaterials data={conteudo} handleDelete={removeItem} />
+                <TableMaterials data={conteudo} currentPage={currentPage}
+                setCurrentPage={setCurrentPage} handleDelete={removeItem} />
             </section>
             {showRegister && (
                 <RegisterMaterial handleCancel={() => setShowRegister(false)} />

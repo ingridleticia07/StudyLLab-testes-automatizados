@@ -1,4 +1,4 @@
-import { useState, useEffect} from 'react';
+import { useState} from 'react';
 import AuthHeader from '../components/AuthHeader/AuthHeader';
 import AuthFooter from '../components/AuthFooter/AuthFooter';
 import InputField from '../components/InputField/InputField';
@@ -6,12 +6,15 @@ import ButtonActivate from '../components/Buttons/ButtonActivate';
 import { useNavigate } from 'react-router-dom';
 import { icons } from '../assets/assets';
 import {activateUserWithCode} from "../../../platform/repository/auth";
+import AlertRegisterUserError from '../components/Alerts/AlertRegisterUserError';
 
 const LoginVerification = () => {
     const [code, setCode] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [storedCode, setStoredCode] = useState('');
+    const [showError, setShowError] = useState(false);
+
     const navigate = useNavigate();
 
     const isValidCode = (inputCode) => {
@@ -32,6 +35,7 @@ const LoginVerification = () => {
                     //alterar a rota de navegação, para a dashboard de usuário, quando a mesma for criada.
             } catch (error) {
                 setErrorMessage('Código de verificação inválido!');
+                setShowError(true);
             }
         }
         setIsLoading(false);
@@ -49,7 +53,9 @@ const LoginVerification = () => {
     return (
         <div>
             <AuthHeader color="text-white" />
+
             <div className="bg-white rounded-xl px-10 py-10 text-gray-800 max-w-md mx-auto">
+                {showError && <AlertRegisterUserError onHide={() => setShowError(false)} text={errorMessage}/>}
                 <form className="flex flex-col items-center" onSubmit={handleSubmit}>
                     <h2 className="text-2xl font-bold mb-6">Verificação de Login</h2>
                     <InputField
@@ -67,11 +73,7 @@ const LoginVerification = () => {
                         isValid={code.length === 0 ? null : isValidCode(code)}
                         errorMessage={errorMessage}
                     />
-                    {errorMessage.length > 0 && (
-                        <h5 style={{ color: 'red' }}>
-                            {errorMessage}
-                        </h5>
-                    )}
+
                     <div className="w-full mt-4">
                         <ButtonActivate
                             text="Continuar"

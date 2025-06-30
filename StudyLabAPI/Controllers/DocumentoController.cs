@@ -67,8 +67,7 @@ namespace StudyLabAPI.Controllers
                 topico = relatedTopico,
                 status = statusDocumentoEnum.pendente,
                 tipoArquivo = tipoArquivo,
-                usuario = relatedUsuario,
-                fkDisciplina = documento.fkDisciplina
+                usuario = relatedUsuario
             };
 
             await documentoRepository.CreateDocumento(novoDocumento);

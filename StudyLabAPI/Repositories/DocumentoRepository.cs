@@ -117,7 +117,7 @@ namespace StudyLabAPI.Repositories
                     result = await inDbContext.documento
                     .AsNoTracking()
                     .Where(f => f.topico.idTopico == idTopico && f.topico.disciplina.idDisciplina == idDisciplina)
-                    .OrderByDescending(f => f.idDocumento)
+                    .OrderBy(f => f.idDocumento)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .Include(f => f.topico)
@@ -130,7 +130,7 @@ namespace StudyLabAPI.Repositories
                     result = await inDbContext.documento
                     .AsNoTracking()
                     .Where(f => f.topico.idTopico == idTopico || f.topico.disciplina.idDisciplina == idDisciplina)
-                    .OrderByDescending(f => f.idDocumento)
+                    .OrderBy(f => f.idDocumento)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .Include(f => f.topico)
@@ -143,7 +143,7 @@ namespace StudyLabAPI.Repositories
                 {
                     result = await inDbContext.documento
                     .AsNoTracking()
-                    .OrderByDescending(f => f.idDocumento)
+                    .OrderBy(f => f.idDocumento)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .Include(f => f.topico)
@@ -159,7 +159,7 @@ namespace StudyLabAPI.Repositories
                     result = await inDbContext.documento
                     .AsNoTracking()
                     .Where(f => f.topico.idTopico == idTopico && f.topico.disciplina.idDisciplina == idDisciplina && f.status == statusDocumentoEnum.aprovado)
-                    .OrderByDescending(f => f.idDocumento)
+                    .OrderBy(f => f.idDocumento)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .Include(f => f.topico)
@@ -172,7 +172,7 @@ namespace StudyLabAPI.Repositories
                     result = await inDbContext.documento
                     .AsNoTracking()
                     .Where(f => f.topico.idTopico == idTopico || f.topico.disciplina.idDisciplina == idDisciplina && f.status == statusDocumentoEnum.aprovado)
-                    .OrderByDescending(f => f.idDocumento)
+                    .OrderBy(f => f.idDocumento)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .Include(f => f.topico)
@@ -186,7 +186,7 @@ namespace StudyLabAPI.Repositories
                     result = await inDbContext.documento
                     .AsNoTracking()
                     .Where(f => f.status == statusDocumentoEnum.aprovado)
-                    .OrderByDescending(f => f.idDocumento)
+                    .OrderBy(f => f.idDocumento)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .Include(f => f.topico)

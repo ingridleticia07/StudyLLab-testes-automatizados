@@ -9,7 +9,7 @@ import TableHead from './TableHead';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const TableMaterials = ({ data, handleDelete }) => {
+const TableMaterials = ({ data, currentPage, setCurrentPage, handleDelete }) => {
     const headersColumns = [
         '#',
         'título',
@@ -23,6 +23,7 @@ const TableMaterials = ({ data, handleDelete }) => {
     const [showPopUp, setShowPopUp] = useState(false);
     const [selectedItem, setSelectedItem] = useState('');
     const [tipoMaterial] = useState(['prova','Trabalho','pdf','Artigo','atividade']);
+    const maxPage = data.maxPage;
 
     const onDelete = (id, key, name) => {
         setSelectedItem({
@@ -31,6 +32,12 @@ const TableMaterials = ({ data, handleDelete }) => {
             name,
         });
         setShowPopUp(true);
+    };
+
+    const handlePageChange = (newPage) => {
+        if (newPage >= 1 && newPage <= maxPage) {
+            setCurrentPage(newPage);
+        }
     };
 
     return (
@@ -89,7 +96,26 @@ const TableMaterials = ({ data, handleDelete }) => {
                 ) : (
                     <Loading />
                 )}
-                <TableFoot cols={headersColumns.length} />
+                <tfoot>
+                    {maxPage > 1 && (
+                        <tr>
+                        <td colSpan={headersColumns.length} className="px-4 py-2 sticky bottom-0 bg-gray-100 shadow-md text-center">
+                            {Array.from({ length: maxPage }, (_, i) => (
+                            <button
+                                key={i + 1}
+                                onClick={() => handlePageChange(i + 1)}
+                                className={`w-8 h-8 rounded-full mx-1 ${
+                                currentPage === i + 1 ? 'bg-blue-500 text-white' : 'hover:bg-gray-200'
+                                }`}
+                            >
+                                {i + 1}
+                            </button>
+                            ))}
+                        </td>
+                        </tr>
+                    )}
+                    </tfoot>
+
             </table>
 
             {showPopUp && (
@@ -99,7 +125,6 @@ const TableMaterials = ({ data, handleDelete }) => {
                     handleDeleteConfirmation={handleDelete}
                 />
             )}
-            <ToastContainer className='capitalize'/>
         </div>
     );
 };

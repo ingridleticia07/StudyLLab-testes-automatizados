@@ -48,7 +48,4 @@ public class UsuarioModel
     [Column("imagem")]
     [MaxLength(45)]
     public string? imagemUsuario { get; set; }
-
-    [Column("fk_disciplina")]
-    public int? fkDisciplina { get; set; }
 }

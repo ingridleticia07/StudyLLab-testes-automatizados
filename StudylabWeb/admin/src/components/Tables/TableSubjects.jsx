@@ -1,7 +1,6 @@
 import { useContext, useState } from 'react';
 import { icons } from '../../assets/assets';
 import Loading from '../Loading/Loading';
-import TableFoot from './TableFoot';
 import TableHead from './TableHead';
 import PopUp from '../PopUp/PopUp';
 
@@ -67,7 +66,7 @@ const TableSubjects = ({ data, currentPage, setCurrentPage, handleDelete }) => {
                                     {d.nomeDisciplina}
                                 </td>
                                 <td className='px-4 py-2 border-b'>
-                                    {d.professor.nomeUsuario}
+                                    {d.professorDisciplina}
                                 </td>
                                 <td className='px-4 py-2 border-b'>
                                     {d.curso.nomeCurso}
@@ -114,22 +113,25 @@ const TableSubjects = ({ data, currentPage, setCurrentPage, handleDelete }) => {
                     </tr>
                 )}
             </table>
-            
-            {maxPage > 1 && (
-                <div className="flex justify-end gap-1 mt-4 pb-4">
-                    {Array.from({ length: maxPage }, (_, i) => (
-                    <button
-                        key={i+1}
-                        onClick={() => handlePageChange(i+1)}
-                        className={`w-8 h-8 rounded-full ${
-                        currentPage === i+1 ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'
-                        }`}
-                    >
-                        {i+1}
-                    </button>
-                    ))}
-                </div>
-            )}
+            <tfoot>
+                {maxPage > 1 && (
+                    <tr>
+                    <td colSpan={headersColumns.length} className="px-4 py-2 sticky bottom-0 bg-gray-100 shadow-md text-center">
+                        {Array.from({ length: maxPage }, (_, i) => (
+                        <button
+                            key={i + 1}
+                            onClick={() => handlePageChange(i + 1)}
+                            className={`w-8 h-8 rounded-full mx-1 ${
+                            currentPage === i + 1 ? 'bg-blue-500 text-white' : 'hover:bg-gray-200'
+                            }`}
+                        >
+                            {i + 1}
+                        </button>
+                        ))}
+                    </td>
+                    </tr>
+                )}
+            </tfoot>
 
             {showPopUpDelete && (
                 <PopUp
