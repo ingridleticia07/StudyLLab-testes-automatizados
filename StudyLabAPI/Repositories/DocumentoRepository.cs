@@ -206,7 +206,6 @@ namespace StudyLabAPI.Repositories
                 tipoMaterial = resposta.tipoMaterial,
                 dataCadastro = resposta.dataCadastro,
                 topico = resposta.topico,
-                professor = resposta.professor,
                 usuario = new UsuarioModel
                 {
                     idUsuario = resposta.usuario.idUsuario,

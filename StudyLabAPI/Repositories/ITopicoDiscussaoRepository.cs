@@ -26,13 +26,6 @@ public interface ITopicoDiscussaoRepository
     /// ela retorna o modelo do tópico de discução correspondente ao ID</returns>
     public Task<TopicoDiscussaoModel?> GetTopicosDiscussaoById(int id, bool isAnyAsync = false);
 
-    public Task<int> GetFkUsuarioByTopico(int id);
-    /// <summary>
-    /// Verifica se um tópico de discussão existe
-    /// </summary>
-    /// <param name="topicoDiscussao">Modelo do tópico de discussão</param>
-    /// <returns>Representa uma tarefa asincrona do banco,
-    /// ela retorna <c>true</c> se existir, caso contrário, retorna <c>false</c></returns>
     public Task<bool> VerifyTopicoDiscussaoExists(TopicoDiscussaoModel topicoDiscussao);
     /// <summary>
     /// Verifica se um tópico de discussão existe pelo ID

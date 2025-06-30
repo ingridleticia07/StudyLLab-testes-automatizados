@@ -129,7 +129,6 @@ namespace StudyLabAPI.Controllers
                 nomeDisciplina = disciplinaModel.nomeDisciplina,
                 professorDisciplina = disciplinaModel.professorDisciplina,
                 curso = relatedCurso,
-                professor = relatedProfessor,
                 quantidadeAluno = disciplinaModel.quantidadeAluno,
                 codigoDisciplina = disciplinaModel.codigoDisciplina
             };
@@ -159,7 +158,6 @@ namespace StudyLabAPI.Controllers
             {
                 idDisciplina = disciplinaModel.idDisciplina,
                 nomeDisciplina = disciplinaModel.nomeDisciplina,
-                professor = relatedProfessor,
                 professorDisciplina = disciplinaModel.professorDisciplina,
                 curso = relatedCurso,
                 quantidadeAluno = disciplinaModel.quantidadeAluno,

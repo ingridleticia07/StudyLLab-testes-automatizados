@@ -94,23 +94,11 @@ namespace StudyLabAPI.Repositories
             if (isAnyAsync)
                 topicoDiscussaoModel = await dbContext.discussao.FindAsync(id);
             else
-                topicoDiscussaoModel = await dbContext.discussao.AsNoTracking().Where(v => v.idTopico == id).Include(v => v.disciplina).ThenInclude(p => p.professor).FirstOrDefaultAsync();
+                topicoDiscussaoModel = await dbContext.discussao.AsNoTracking().Where(v => v.idTopico == id).Include(v => v.disciplina).FirstOrDefaultAsync();
 
             return topicoDiscussaoModel;
         }
 
-        public async Task<int> GetFkUsuarioByTopico(int id)
-        {
-            var idUsuario = await dbContext.discussao
-            .AsNoTracking()
-            .Where(v => v.idTopico == id)
-            .Include(v => v.disciplina)
-            .ThenInclude(p => p.professor)
-            .Select(v => v.disciplina.professor.idUsuario) // Select the specific id_usuario
-            .FirstOrDefaultAsync();
-
-            return idUsuario; // Returns the id_usuario or null if not found
-        }
         public async Task<bool> VerifyTopicoDiscussaoExists(TopicoDiscussaoModel topicoDiscussao)
         {
             //TODO: Provalvemente seja melhor usa AnyAsync

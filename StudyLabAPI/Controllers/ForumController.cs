@@ -146,11 +146,9 @@ namespace StudyLabAPI.Controllers
 
             TopicoDiscussaoModel? topicoDiscussaoForUpdate = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoModel.idTopico);
 
-            int fkTopicoDiscussaoUser = await topicoDiscussaoRepository.GetFkUsuarioByTopico(topicoDiscussaoForUpdate.idTopico);
+            UsuarioModel usuario = await usuarioRepository.GetUsuarioById(topicoDiscussaoModel.idUsuario);
 
-            UsuarioModel usuario = await usuarioRepository.GetUsuarioById(fkTopicoDiscussaoUser);
-
-            if (!usuario.tipoUsuario.Equals(UserRole.Admin) && fkTopicoDiscussaoUser != topicoDiscussaoModel.idUsuario)
+            if (!usuario.tipoUsuario.Equals(UserRole.Admin) && usuario.idUsuario != topicoDiscussaoModel.idUsuario)
                 throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
 
             TopicoDiscussaoModel topicoUpdated = new()

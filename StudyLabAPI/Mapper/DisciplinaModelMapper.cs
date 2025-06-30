@@ -12,7 +12,6 @@ public partial class DisciplinaModelMapper
     [MapProperty(nameof(DisciplinaModel.idDisciplina), nameof(DisciplinaReadModel.idDisciplina))]
     [MapProperty(nameof(DisciplinaModel.codigoDisciplina), nameof(DisciplinaReadModel.codigoDisciplina))]
     [MapProperty(nameof(DisciplinaModel.professorDisciplina), nameof(DisciplinaReadModel.professorDisciplina))]
-    [MapProperty(nameof(DisciplinaModel.professor), nameof(DisciplinaReadModel.professor))]
     [MapProperty(nameof(DisciplinaModel.nomeDisciplina), nameof(DisciplinaReadModel.nomeDisciplina))]
     [MapProperty(nameof(DisciplinaModel.quantidadeAluno), nameof(DisciplinaReadModel.quantidadeAluno))]
     public partial DisciplinaReadModel DisciplinaModelToDisciplinaReadModel(DisciplinaModel model);

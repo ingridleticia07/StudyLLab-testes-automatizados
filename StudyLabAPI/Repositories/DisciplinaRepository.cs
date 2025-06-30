@@ -52,11 +52,6 @@ namespace StudyLabAPI.Repositories
                     {
                         idCurso = f.curso.idCurso,
                         nomeCurso = f.curso.nomeCurso
-                    },
-                    professor = new UsuarioModel
-                    {
-                        idUsuario = f.professor.idUsuario,
-                        nomeUsuario = f.professor.nomeUsuario,
                     }
                 }).FirstOrDefaultAsync();
 
@@ -68,7 +63,7 @@ namespace StudyLabAPI.Repositories
             DisciplinaModel disciplinaModel = null;
 
             if (includeProfessor)
-                disciplinaModel = await _dbContext.disciplinas.Include(v => v.professor).Where(v => v.idDisciplina == id).FirstOrDefaultAsync();
+                disciplinaModel = await _dbContext.disciplinas.Where(v => v.idDisciplina == id).FirstOrDefaultAsync();
             else
                 disciplinaModel = await _dbContext.disciplinas.FindAsync(id);
 
@@ -131,11 +126,6 @@ namespace StudyLabAPI.Repositories
                 {
                     idCurso = f.curso.idCurso,
                     nomeCurso = f.curso.nomeCurso
-                },
-                professor = new UsuarioModel
-                {
-                    idUsuario = f.professor.idUsuario,
-                    nomeUsuario = f.professor.nomeUsuario
                 }
             })
             .ToListAsync();
@@ -156,7 +146,6 @@ namespace StudyLabAPI.Repositories
 
             disciplinaForUpdate.nomeDisciplina = disciplinaModel.nomeDisciplina;
             disciplinaForUpdate.professorDisciplina = disciplinaModel.professorDisciplina;
-            disciplinaForUpdate.professor = disciplinaModel.professor;
             disciplinaForUpdate.curso = disciplinaModel.curso;
             disciplinaForUpdate.quantidadeAluno = disciplinaModel.quantidadeAluno;
             disciplinaForUpdate.codigoDisciplina = disciplinaModel.codigoDisciplina;

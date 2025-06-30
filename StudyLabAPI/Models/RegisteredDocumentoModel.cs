@@ -22,5 +22,7 @@ namespace StudyLabAPI.Models
         public int IdUsuario { get; set; }
 
         public string descricao { get; set; }
+
+        public int fkDisciplina { get; set; }
     }
 }

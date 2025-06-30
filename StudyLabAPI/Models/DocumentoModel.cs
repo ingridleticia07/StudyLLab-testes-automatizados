@@ -37,7 +37,7 @@ namespace StudyLabAPI.Models
         [ForeignKey("fk_usuario")]
         public UsuarioModel usuario { get; set; }
 
-        [Column("fk_professor")]
-        public int professor { get; set; }
+        [Column("fk_disciplina")]
+        public int fkDisciplina { get; set; }
     }
 }
