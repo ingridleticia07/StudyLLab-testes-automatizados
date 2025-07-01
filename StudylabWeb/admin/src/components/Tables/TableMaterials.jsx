@@ -114,7 +114,7 @@ const TableMaterials = ({ data, currentPage, setCurrentPage, handleDelete }) => 
                         </td>
                         </tr>
                     )}
-                    </tfoot>
+                </tfoot>
 
             </table>
 

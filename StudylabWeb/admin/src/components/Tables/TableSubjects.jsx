@@ -104,13 +104,7 @@ const TableSubjects = ({ data, currentPage, setCurrentPage, handleDelete }) => {
                         ))}
                     </tbody>
                 ) : (
-                    <tr key={data.pageCount}>
-                        <td>
-                            <div className="flex justify-center gap-1 mt-4 pb-4">
-                                <h2>Nenhuma disciplina cadastrada para a página {currentPage}!</h2>
-                            </div>
-                        </td>
-                    </tr>
+                    <Loading />
                 )}
             </table>
             <tfoot>

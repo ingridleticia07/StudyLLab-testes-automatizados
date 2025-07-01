@@ -8,11 +8,12 @@ const Users = () => {
     const [showRegister, setShowRegister] = useState(false);
     const { data, removeItem } = useState();
     const [users, setUsers] = useState([]); 
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         const getAllUsers = async () => {
             try {
-                let userList = await getAllUsersInfo(1,10);
+                let userList = await getAllUsersInfo(currentPage,10);
                 setUsers(userList);
             } catch (error) {
                 console.log(error);            
@@ -26,7 +27,8 @@ const Users = () => {
             <Breadcrumb page='Usuários' />
             <section className='flex flex-col h-full mb-4 min-h-[450px] rounded-lg bg-white px-4'>
                 <h1 className='text-3xl font-bold py-8'>Usuarios</h1>
-                <TableUsers data={users} handleDelete={removeItem} />
+                <TableUsers data={users}  currentPage={currentPage}
+                setCurrentPage={setCurrentPage} handleDelete={removeItem} />
             </section>
         </div>
     );
