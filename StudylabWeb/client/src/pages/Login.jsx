@@ -10,6 +10,7 @@ import {handleLogin, validateLoginFields} from "../../../platform/business/login
 import AlertError from "./../components/Alerts/AlertErro";
 import {isEmptyString} from "../../../common/services/validation";
 import {saveDashboardSessionInfos,AUTH_TOKEN, getCookie } from "../../../platform/repository/auth.js";
+import Loading from '../components/Loading/Loading';
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -20,6 +21,7 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [showError, setShowError] = useState(false);
     const [canTry,setCanTry] = useState(true);
+    const [isFormSubmited, setIsFormSubmited] = useState(false);
 
     const isEmailValid = email.length > 0 && (email.endsWith('@alu.ufc.br') || email.endsWith('@ufc.br'));
     
@@ -30,6 +32,7 @@ const Login = () => {
 
     const logar = async (e) => {
         e.preventDefault();
+        setIsFormSubmited(true);
 
         setCanTry(false);
         setShowError(false);
@@ -47,10 +50,12 @@ const Login = () => {
             } catch (error) {   
                 setShowError(true);  
                 setAlertText("Email e/ou senha incorreto(s)!"); 
+                setIsFormSubmited(false);
             }
         }else{
             setShowError(true);
             setAlertText("Preencha os campos email e senha corretamente!");
+            setIsFormSubmited(false);
         }
         setCanTry(true);
     };
@@ -59,6 +64,7 @@ const Login = () => {
         <div>
             <div className='flex flex-col justify-center items-center rounded-xl px-10 py-10 bg-white'>
                 <AuthHeader infoText={'Entrar na sua conta'} />
+                {isFormSubmited &&  <Loading/>}
                 <form className='space-y-6' onSubmit={logar}>
                     {showError && <AlertError onHide={() => setShowError(false)} text={AlertText} />}
                     <InputField
@@ -72,6 +78,11 @@ const Login = () => {
                         isEmail={true}
                         isValid={email.length === 0 ? null : isEmailValid}
                     />
+                    {email.length <= 0 && isFormSubmited && (
+                        <h5 style={{ color: 'red' }} className="self-start">
+                            *Insira o email
+                        </h5>
+                    )}
                     <InputField
                         type={showPassword ? 'text' : 'password'}
                         id='senha'
@@ -89,6 +100,11 @@ const Login = () => {
                             />
                         }
                     />
+                    {password.length <= 0 && isFormSubmited && (
+                        <h5 style={{ color: 'red' }} className="self-start">
+                            *Insira a senha
+                        </h5>
+                    )}
                     <Button text='Entrar' type="submit"/>
                 </form>
                 <div className='text-center mt-8 text-sm text-americanOrange-500'>

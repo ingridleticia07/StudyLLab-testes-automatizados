@@ -10,6 +10,7 @@ import SelectField from '../components/SelectField/SelectField';
 import {register} from "../../../platform/repository/auth";
 import Button from '../components/Buttons/Button';
 import AlertRegisterUserError from '../components/Alerts/AlertRegisterUserError';
+import Loading from '../components/Loading/Loading';
 
 const Register = () => {
     const [email, setEmail] = useState('');
@@ -65,7 +66,7 @@ const Register = () => {
                 navigate('/LoginVerification');
 
             } catch (error) {
-                console.log(error)
+                setIsFormSubmited(false);
                 setShowError(true);
                 if(error.response.data.tipo == 2)
                     setExceptionText("já existe um usuário com esta matrícula ou email!")
@@ -82,6 +83,7 @@ const Register = () => {
             <div className='bg-white rounded-xl px-10 py-10 text-gray-800'>
                 {showError && <AlertRegisterUserError onHide={() => setShowError(false)} text={exceptionText}/>}
                 <form className='flex flex-col items-center' onSubmit={registerUser}>
+                    {isFormSubmited &&  <Loading/>}
                     <InputField
                         type='text'
                         id='nome'

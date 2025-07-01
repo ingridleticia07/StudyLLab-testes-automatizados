@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { icons } from '../assets/assets';
 import {activateUserWithCode} from "../../../platform/repository/auth";
 import AlertRegisterUserError from '../components/Alerts/AlertRegisterUserError';
+import Loading from '../components/Loading/Loading';
 
 const LoginVerification = () => {
     const [code, setCode] = useState('');
@@ -14,6 +15,7 @@ const LoginVerification = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [storedCode, setStoredCode] = useState('');
     const [showError, setShowError] = useState(false);
+    const [isFormSubmited, setIsFormSubmited] = useState(false);
 
     const navigate = useNavigate();
 
@@ -22,20 +24,23 @@ const LoginVerification = () => {
     };
 
     const handleSubmit = async (e) => {
+        setIsFormSubmited(true);
         e.preventDefault();
         setIsLoading(false);
         setErrorMessage('');
         
         if(!isLoading){
             try {
+                console.log(storedCode)
                 setIsLoading(true);
                 await activateUserWithCode(code);
-                if (isValidCode(code))
-                    navigate('/dashboard');
-                    //alterar a rota de navegação, para a dashboard de usuário, quando a mesma for criada.
+                navigate('/dashboard');
+                //alterar a rota de navegação, para a dashboard de usuário, quando a mesma for criada.
+                setIsFormSubmited(false);
             } catch (error) {
                 setErrorMessage('Código de verificação inválido!');
                 setShowError(true);
+                setIsFormSubmited(false);
             }
         }
         setIsLoading(false);
@@ -57,6 +62,7 @@ const LoginVerification = () => {
             <div className="bg-white rounded-xl px-10 py-10 text-gray-800 max-w-md mx-auto">
                 {showError && <AlertRegisterUserError onHide={() => setShowError(false)} text={errorMessage}/>}
                 <form className="flex flex-col items-center" onSubmit={handleSubmit}>
+                    {isFormSubmited &&  <Loading/>}
                     <h2 className="text-2xl font-bold mb-6">Verificação de Login</h2>
                     <InputField
                         type="text"
