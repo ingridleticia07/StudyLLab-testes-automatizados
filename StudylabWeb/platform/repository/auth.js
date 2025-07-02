@@ -79,6 +79,19 @@ export async function register(
   }
 }
 
+export async function resendConfirmationEmail(
+  
+) {
+
+  try {
+    const userId = getCookie('id-user')
+    await instance.post(AUTH_ENDPOINT + "/sec/resendConfirmationEmail?userId="+userId);
+
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function requestResetPasswordUser(
   userEmail
 ) {

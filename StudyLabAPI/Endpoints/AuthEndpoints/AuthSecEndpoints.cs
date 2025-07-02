@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using StudyLabAPI.Controllers;
 using StudyLabAPI.Exceptions;
@@ -75,23 +76,28 @@ public static class AuthSecEndpoints
     /// <permission cref="AuthorizationPolicies">Permitido apenas usuários e administradores autenticados</permission>
     async private static Task<IResult> AuthResendConfirmationEmail(
         HttpContext context,
+        [FromQuery] int? userId, 
         [FromServices] IAuthController controller)
     {
-        int userId = int.Parse(context.User.Claims.First(c => c.Type == ClaimTypes.Name).Value);
+        int userIdentifier = 0;
+
+        if (userId != 0)
+            userIdentifier = (int)userId;
+        else
+            userIdentifier = int.Parse(context.User.Claims
+            .First(c => c.Type == ClaimTypes.Name).Value);
         
         bool sended;
         try
         {
-            sended = await controller.RequestConfirmationCode(userId);
+            await controller.ResendVerificationCode(userIdentifier);
         }
         catch (Exception e)
         {
             return Results.BadRequest(e.Message);
         }
         
-        return sended ? Results.Ok() : 
-            Results.Problem("Não foi possível enviar o email de confirmação.",
-                statusCode: StatusCodes.Status503ServiceUnavailable);
+        return Results.Ok();
     }
     
     #endregion

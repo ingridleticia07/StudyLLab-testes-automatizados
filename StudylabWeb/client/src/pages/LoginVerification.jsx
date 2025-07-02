@@ -5,7 +5,7 @@ import InputField from '../components/InputField/InputField';
 import ButtonActivate from '../components/Buttons/ButtonActivate';
 import { useNavigate } from 'react-router-dom';
 import { icons } from '../assets/assets';
-import {activateUserWithCode} from "../../../platform/repository/auth";
+import {activateUserWithCode, resendConfirmationEmail} from "../../../platform/repository/auth";
 import AlertRegisterUserError from '../components/Alerts/AlertRegisterUserError';
 import Loading from '../components/Loading/Loading';
 
@@ -34,7 +34,7 @@ const LoginVerification = () => {
                 console.log(storedCode)
                 setIsLoading(true);
                 await activateUserWithCode(code);
-                navigate('/dashboard');
+                window.location.href = 'http://localhost:5173/'
                 //alterar a rota de navegação, para a dashboard de usuário, quando a mesma for criada.
                 setIsFormSubmited(false);
             } catch (error) {
@@ -53,6 +53,26 @@ const LoginVerification = () => {
         if (numericValue.length === 4) {
             handleSubmit(new Event('submit'));
         }
+    };
+
+    const handleResendCode = async() => {
+        setIsFormSubmited(true);
+        setIsLoading(false);
+        setErrorMessage('');
+        
+        if(!isLoading){
+            try {
+                setIsLoading(true);
+                await resendConfirmationEmail(code);
+                setIsFormSubmited(false);
+                alert("Código de verificação reenviado. Verifique seu email!");
+            } catch (error) {
+                setErrorMessage('Erro ao reenviar código. Tente novamente ou fale conosco!');
+                setShowError(true);
+                setIsFormSubmited(false);
+            }
+        }
+        setIsLoading(false);
     };
 
     return (
@@ -95,7 +115,7 @@ const LoginVerification = () => {
                             <button
                                 type="button"
                                 className="text-americanOrange-500 hover:underline focus:outline-none"
-                                onClick={() => console.log('Reenviar código')}
+                                onClick={() => handleResendCode()}
                             >
                                 Reenviar código
                             </button>

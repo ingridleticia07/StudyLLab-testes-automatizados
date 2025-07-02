@@ -23,6 +23,7 @@ const Register = () => {
     const [selectedCurso, setSelectedCurso] = useState('');
     const [exceptionText, setExceptionText] = useState('');
     const [showError, setShowError] = useState(false);
+    const [showLoader, setLoader] = useState(false);
     const [isFormSubmited, setIsFormSubmited] = useState(false);
 
     const cursos = [
@@ -62,12 +63,14 @@ const Register = () => {
 
         if(isFormValidAux){
             try {
+                setLoader(true);
                 await register(nome,email,password,matricula,selectedCurso)
                 navigate('/LoginVerification');
 
             } catch (error) {
                 setIsFormSubmited(false);
                 setShowError(true);
+                setLoader(false);
                 if(error.response.data.tipo == 2)
                     setExceptionText("já existe um usuário com esta matrícula ou email!")
                 else
@@ -83,7 +86,7 @@ const Register = () => {
             <div className='bg-white rounded-xl px-10 py-10 text-gray-800'>
                 {showError && <AlertRegisterUserError onHide={() => setShowError(false)} text={exceptionText}/>}
                 <form className='flex flex-col items-center' onSubmit={registerUser}>
-                    {isFormSubmited &&  <Loading/>}
+                    {isFormSubmited && isFormValid && showLoader && <Loading/>}
                     <InputField
                         type='text'
                         id='nome'
