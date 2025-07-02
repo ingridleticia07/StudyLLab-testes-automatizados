@@ -31,12 +31,12 @@ const LoginVerification = () => {
         
         if(!isLoading){
             try {
-                console.log(storedCode)
                 setIsLoading(true);
                 await activateUserWithCode(code);
                 window.location.href = 'http://localhost:5173/'
                 //alterar a rota de navegação, para a dashboard de usuário, quando a mesma for criada.
                 setIsFormSubmited(false);
+                setShowError(false);
             } catch (error) {
                 setErrorMessage('Código de verificação inválido!');
                 setShowError(true);
@@ -49,10 +49,6 @@ const LoginVerification = () => {
     const handleCodeChange = (value) => {
         const numericValue = value.replace(/\D/g, '').slice(0, 4);
         setCode(numericValue);
-        
-        if (numericValue.length === 4) {
-            handleSubmit(new Event('submit'));
-        }
     };
 
     const handleResendCode = async() => {
