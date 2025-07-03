@@ -23,9 +23,9 @@ const Users = () => {
     }, []);
     
     return (
-        <div>
+        <div className='flex flex-col h-full'>
             <Breadcrumb page='Usuários' />
-            <section className='flex flex-col h-full mb-4 min-h-[450px] rounded-lg bg-white px-4'>
+            <section className='rounded-xl bg-white px-4 '>
                 <h1 className='text-3xl font-bold py-8'>Usuarios</h1>
                 <TableUsers data={users}  currentPage={currentPage}
                 setCurrentPage={setCurrentPage} handleDelete={removeItem} />

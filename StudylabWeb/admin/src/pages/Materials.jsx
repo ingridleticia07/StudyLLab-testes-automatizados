@@ -30,18 +30,31 @@ const Materials = () => {
         <div className='flex flex-col h-full'>
             <Breadcrumb page='Conteúdos' />
             <section className='rounded-xl bg-white px-4 '>
-                <div className='flex items-center justify-between px-4 py-4'>
-                    {/* Título e filtro */}
-                    <div className='flex items-center gap-4'>
-                        <h1 className='text-3xl font-bold'>Conteúdos</h1>
+                <div className="flex flex-wrap items-center gap-2 px-4 py-4">
+                    {/* Esquerda: título + filtro */}
+                    <div className="flex items-center gap-4 flex-shrink-0">
+                        <h1 className="text-3xl font-bold">Conteúdos</h1>
                         <Filter data={conteudo.documentos} />
                     </div>
 
-                    {/* Botão alinhado à direita */}
-                    <Button
+                    {/* Centro: campo de busca ocupando o espaço livre */}
+                    <div className="flex-1 min-w-[200px]">
+                        <div className="input-group border rounded p-1">
+                        <input
+                            type="text"
+                            className="form-control form-control-lg fs-5 py-3"
+                            placeholder="Buscar"
+                        />
+                        </div>
+                    </div>
+
+                    {/* Direita: botão */}
+                    <div className="flex-shrink-0">
+                        <Button
                         text={'Cadastrar Conteúdo'}
                         handleClick={() => setShowRegister(true)}
-                    />
+                        />
+                    </div>
                 </div>
 
                 <TableMaterials

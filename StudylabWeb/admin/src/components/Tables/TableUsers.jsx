@@ -38,8 +38,8 @@ const TableUsers = ({ data, currentPage, setCurrentPage, handleDelete }) => {
     };
 
     return (
-        <div className='h-full max-h-[350px] overflow-y-scroll rounded-md'>
-            <table className='h-full min-w-full text-left border-separate border-spacing-0'>
+        <div className="overflow-auto max-h-[350px] rounded-md">
+            <table className="w-full min-w-full text-left border-separate border-spacing-0 table-auto">
                 <TableHead headers={headersColumns} />
                 {data.users && data.users.length > 0 ? (
                     <tbody>
