@@ -29,26 +29,33 @@ const Materials = () => {
     return (
         <div className='flex flex-col h-full'>
             <Breadcrumb page='Conteúdos' />
-            <section className='rounded-xl bg-white px-4'>
-                <div className='flex items-center justify-between px-6 py-6'>
-                    <h1 className='text-3xl font-bold'></h1>
+            <section className='rounded-xl bg-white px-4 '>
+                <div className='flex items-center justify-between px-4 py-4'>
+                    {/* Título e filtro */}
+                    <div className='flex items-center gap-4'>
+                        <h1 className='text-3xl font-bold'>Conteúdos</h1>
+                        <Filter data={conteudo.documentos} />
+                    </div>
+
+                    {/* Botão alinhado à direita */}
                     <Button
                         text={'Cadastrar Conteúdo'}
                         handleClick={() => setShowRegister(true)}
                     />
                 </div>
+
+                <TableMaterials
+                    data={conteudo}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    handleDelete={removeItem}
+                />
+
+                {showRegister && (
+                    <RegisterMaterial handleCancel={() => setShowRegister(false)} />
+                )}
             </section>
-            <section className='flex flex-col h-full min-h-[450px] px-3 mb-4 bg-white rounded-lg '>
-                <div className='flex items-center gap-x-10'>
-                    <h1 className='py-8 text-3xl font-bold'>Conteúdos</h1>
-                    <Filter data={conteudo.documentos} />
-                </div>
-                <TableMaterials data={conteudo} currentPage={currentPage}
-                setCurrentPage={setCurrentPage} handleDelete={removeItem} />
-            </section>
-            {showRegister && (
-                <RegisterMaterial handleCancel={() => setShowRegister(false)} />
-            )}
+
         </div>
     );
 };
