@@ -40,7 +40,7 @@ const Subjects = () => {
                 setCurrentPage={setCurrentPage} handleDelete={removeItem} />
             </section>
             {showRegister && (
-                <RegisterSubject handleCancel={() => setShowRegister(false)} />
+                <RegisterSubject handleCancel={() => setShowRegister(false)} setDisciplinas = {setDisciplinas} currentPage={currentPage}/>
             )}
         </div>
     );

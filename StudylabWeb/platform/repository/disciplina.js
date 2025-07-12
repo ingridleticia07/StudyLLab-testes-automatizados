@@ -1,4 +1,5 @@
 import { instance } from "./axios.js";
+import { getCursoCodeByName } from "../utils/curso_matcher.js";
 
 const DISCIPLINA_ENDPOINT = "/disciplina";
 
@@ -23,10 +24,12 @@ export async function getAllDisciplinas(page, pageSize) {
 }
 
 export async function createDisciplina(disciplina) {
+  const cursoCode = getCursoCodeByName(disciplina.curso);
+  
   let response = await instance.post(DISCIPLINA_ENDPOINT+"/cadastrarDisciplina",{
     nomeDisciplina:disciplina.nomeDisciplina,
     professorDisciplina:disciplina.professorDisciplina,
-    curso:disciplina.curso,
+    curso:cursoCode,
     quantidadeAluno:disciplina.quantidadeAluno,
     codigoDisciplina:disciplina.codigoDisciplina
   });

@@ -122,8 +122,6 @@ namespace StudyLabAPI.Controllers
 
             CursoModel? relatedCurso = await cursoRepository.GetCursoById(cursoId);
 
-            UsuarioModel? relatedProfessor = await usuarioRepository.GetUsuarioById((int)disciplinaModel.fkProfessor, true);
-
             DisciplinaModel novaDisciplina = new()
             {
                 nomeDisciplina = disciplinaModel.nomeDisciplina,
@@ -151,8 +149,6 @@ namespace StudyLabAPI.Controllers
             int cursoId = disciplinaModel.curso;
 
             CursoModel? relatedCurso = await cursoRepository.GetCursoById(cursoId);
-
-            UsuarioModel? relatedProfessor = await usuarioRepository.GetUsuarioById((int)disciplinaModel.fkProfessor, true);
 
             DisciplinaModel DisciplinaUpdateObj = new()
             {

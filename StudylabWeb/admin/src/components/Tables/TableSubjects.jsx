@@ -106,26 +106,26 @@ const TableSubjects = ({ data, currentPage, setCurrentPage, handleDelete }) => {
                 ) : (
                     <Loading />
                 )}
+                <tfoot>
+                    {maxPage > 1 && (
+                        <tr>
+                        <td colSpan={headersColumns.length} className="px-4 py-2 sticky bottom-0 bg-gray-100 shadow-md text-center">
+                            {Array.from({ length: maxPage }, (_, i) => (
+                            <button
+                                key={i + 1}
+                                onClick={() => handlePageChange(i + 1)}
+                                className={`w-8 h-8 rounded-full mx-1 ${
+                                currentPage === i + 1 ? 'bg-blue-500 text-white' : 'hover:bg-gray-200'
+                                }`}
+                            >
+                                {i + 1}
+                            </button>
+                            ))}
+                        </td>
+                        </tr>
+                    )}
+                </tfoot>
             </table>
-            <tfoot>
-                {maxPage > 1 && (
-                    <tr>
-                    <td colSpan={headersColumns.length} className="px-4 py-2 sticky bottom-0 bg-gray-100 shadow-md text-center">
-                        {Array.from({ length: maxPage }, (_, i) => (
-                        <button
-                            key={i + 1}
-                            onClick={() => handlePageChange(i + 1)}
-                            className={`w-8 h-8 rounded-full mx-1 ${
-                            currentPage === i + 1 ? 'bg-blue-500 text-white' : 'hover:bg-gray-200'
-                            }`}
-                        >
-                            {i + 1}
-                        </button>
-                        ))}
-                    </td>
-                    </tr>
-                )}
-            </tfoot>
 
             {showPopUpDelete && (
                 <PopUp

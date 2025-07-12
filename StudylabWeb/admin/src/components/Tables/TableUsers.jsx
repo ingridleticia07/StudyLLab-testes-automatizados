@@ -61,7 +61,7 @@ const TableUsers = ({ data, currentPage, setCurrentPage, handleDelete }) => {
                                     {d.email}
                                 </td>
                                 <td className='px-4 py-2 border-b'>
-                                    <td className='flex justify-center gap-6'>
+                                    <div className='flex gap-5'>
                                         <button aria-label='bloquear aluno'>
                                             <img
                                                 src={icons.block}
@@ -79,7 +79,7 @@ const TableUsers = ({ data, currentPage, setCurrentPage, handleDelete }) => {
                                                 alt='lixeira'
                                             />
                                         </button>
-                                    </td>
+                                    </div>
                                 </td>
                             </tr>
                         ))}

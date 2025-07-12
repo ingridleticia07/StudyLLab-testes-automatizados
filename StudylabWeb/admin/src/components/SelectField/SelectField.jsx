@@ -7,7 +7,6 @@ const SelectField = ({ id, name, label, options, value = '', onChange }) => {
             <select
                 name={name}
                 id={id}
-                required
                 className='border-2 rounded-lg pl-4 py-2 mt-2 min-w-96 text-lg focus:border-americanOrange-500 outline-none'
                 value={value}
                 onChange={onChange}

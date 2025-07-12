@@ -11,8 +11,6 @@
 
         public int? quantidadeAluno { get; set; }
 
-        public int? fkProfessor { get; set; }
-
         public string? codigoDisciplina { get; set; }
     }
 }
