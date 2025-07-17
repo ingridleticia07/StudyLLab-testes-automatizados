@@ -26,7 +26,7 @@ const Subjects = () => {
     }, [currentPage]);
     
     return (
-        <div>
+        <div className='flex flex-col h-full'>
             <Breadcrumb page='Disciplina' />
             <section className='rounded-xl bg-white px-4'>
                 <div className='flex items-center justify-between px-6 py-6'>
@@ -36,8 +36,8 @@ const Subjects = () => {
                         handleClick={() => setShowRegister(true)}
                     />
                 </div>
-                <TableSubjects data={disciplinas} currentPage={currentPage}
-                setCurrentPage={setCurrentPage} handleDelete={removeItem} />
+                <TableSubjects data={disciplinas} setDisciplinas = {setDisciplinas} 
+                currentPage={currentPage} setCurrentPage={setCurrentPage} handleDelete={removeItem} />
             </section>
             {showRegister && (
                 <RegisterSubject handleCancel={() => setShowRegister(false)} setDisciplinas = {setDisciplinas} currentPage={currentPage}/>

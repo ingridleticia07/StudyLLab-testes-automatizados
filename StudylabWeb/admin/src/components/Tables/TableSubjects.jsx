@@ -8,8 +8,9 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditSubject from '../EditSubject/EditSubject';
 import { StudylabContext } from '../../context/StudylabContext';
+import {deleteDisciplina, getAllDisciplinasWithPagination} from '../../../../platform/repository/disciplina';
 
-const TableSubjects = ({ data, currentPage, setCurrentPage, handleDelete }) => {
+const TableSubjects = ({ data, setDisciplinas, currentPage, setCurrentPage, handleDelete }) => {
     
     const headersColumns = [
         '#',
@@ -47,6 +48,17 @@ const TableSubjects = ({ data, currentPage, setCurrentPage, handleDelete }) => {
             setCurrentPage(newPage);
         }
     };
+
+    const handleDeleteRegister = async(identifier,key) => {
+        try {
+            await deleteDisciplina(identifier);
+            //alert('Disciplina cadastrada com sucesso!');
+            let disciplinas = await getAllDisciplinasWithPagination(currentPage,10);
+            setDisciplinas(disciplinas);
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <div className="overflow-auto max-h-[350px] rounded-md">
@@ -131,7 +143,7 @@ const TableSubjects = ({ data, currentPage, setCurrentPage, handleDelete }) => {
                 <PopUp
                     itemDelete={selectedItem}
                     handleClose={() => setShowPopUpDelete(false)}
-                    handleDeleteConfirmation={handleDelete}
+                    handleDeleteConfirmation={handleDeleteRegister}
                 />
             )}
             {showPopUpEdit && (
