@@ -7,11 +7,11 @@ import { isEmptyString } from '../../../../common/services/validation';
 import { createDisciplina, getAllDisciplinasWithPagination } from '../../../../platform/repository/disciplina';
 
 const cursoOptions = [
-  { value: 'CC', label: 'Ciência da Computação' },
-  { value: 'ES', label: 'Engenharia de Software' },
-  { value: 'EM', label: 'Engenharia Mecânica' },
-  { value: 'EP', label: 'Engenharia de Produção' },
-  { value: 'EC', label: 'Engenharia Civil' },
+    { value: 'ES', label: 'Engenharia de Software' },
+    { value: 'CC', label: 'Ciência da Computação' },
+    { value: 'EC', label: 'Engenharia Civil' },
+    { value: 'EP', label: 'Engenharia de Produção' },
+    { value: 'EM', label: 'Engenharia Mecânica' }
 ];
 
 const initialFormData = {

@@ -28,10 +28,11 @@ const TableSubjects = ({ data, setDisciplinas, currentPage, setCurrentPage, hand
     const { searchSubject } = useContext(StudylabContext);
     const maxPage = data.maxPage;
     
-    const onEdit = (id) => {
+    const onEdit = (item) => {
         setShowPopUpEdit(true);
-        const item = searchSubject(id);
-        setSelectedItem(item);
+        setSelectedItem({
+            item
+        });
     };
 
     const onDelete = (id, key, name) => {
@@ -92,7 +93,7 @@ const TableSubjects = ({ data, setDisciplinas, currentPage, setCurrentPage, hand
                                             <img
                                                 src={icons.pencil}
                                                 alt='lapis'
-                                                onClick={() => onEdit(d.idDisciplina)}
+                                                onClick={() => onEdit(d)}
                                             />
                                         </button>
                                         <button
@@ -149,7 +150,7 @@ const TableSubjects = ({ data, setDisciplinas, currentPage, setCurrentPage, hand
             {showPopUpEdit && (
                 <EditSubject
                     handleClose={() => setShowPopUpEdit(false)}
-                    item={selectedItem}
+                    row={selectedItem}
                 />
             )}
             <ToastContainer className='capitalize' />

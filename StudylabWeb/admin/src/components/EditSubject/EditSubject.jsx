@@ -4,16 +4,24 @@ import InputField from '../Inputs/InputField';
 import SelectField from '../SelectField/SelectField';
 import { StudylabContext } from '../../context/StudylabContext';
 
-const EditSubject = ({ item, handleClose }) => {
+const EditSubject = ({ row, handleClose }) => {
     const { editSubject } = useContext(StudylabContext);
 
-    const [formData, setFormData] = useState({
-        codigo: item.codigo || '',
-        nomeDisciplina: item.nomeDisciplina || '',
-        curso: item.curso || '',
-        professor: item.professor || '',
-    });
+    const cursoOptions = [
+        { value: 'ES', label: 'Engenharia de Software' },
+        { value: 'CC', label: 'Ciência da Computação' },
+        { value: 'EC', label: 'Engenharia Civil' },
+        { value: 'EP', label: 'Engenharia de Produção' },
+        { value: 'EM', label: 'Engenharia Mecânica' }
+    ];
 
+    const [formData, setFormData] = useState({
+        codigo: row.item.codigoDisciplina || '',
+        nomeDisciplina: row.item.nomeDisciplina || '',
+        curso: cursoOptions[row.item.curso.idCurso - 1]?.value || '',
+        professor: row.item.professorDisciplina || '',
+    });
+    
     const notifyEdit = () => {
         toast.success('Item Editado', {
             theme: 'colored',
@@ -39,14 +47,6 @@ const EditSubject = ({ item, handleClose }) => {
         notifyEdit();
         handleClose();
     };
-
-    const cursoOptions = [
-        { value: 'Ciência da Computação', label: 'Ciência da Computação' },
-        { value: 'Engenharia de Software', label: 'Engenharia de Software' },
-        { value: 'Engenharia de Produção', label: 'Engenharia de Produção' },
-        { value: 'Engenharia Mecânica', label: 'Engenharia Mecânica' },
-        { value: 'Engenharia Civil', label: 'Engenharia Civil' },
-    ];
 
     return (
         <div className='fixed inset-0 flex items-center justify-center z-50 bg-opacity-30 bg-gray-300'>
