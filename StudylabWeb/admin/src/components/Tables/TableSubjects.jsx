@@ -151,6 +151,8 @@ const TableSubjects = ({ data, setDisciplinas, currentPage, setCurrentPage, hand
                 <EditSubject
                     handleClose={() => setShowPopUpEdit(false)}
                     row={selectedItem}
+                    setDisciplinas={setDisciplinas}
+                    currentPage={currentPage}
                 />
             )}
             <ToastContainer className='capitalize' />
