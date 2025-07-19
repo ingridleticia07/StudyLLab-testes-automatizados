@@ -1,60 +1,109 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import AuthFooter from '../components/AuthFooter/AuthFooter';
 import AuthHeader from '../components/AuthHeader/AuthHeader';
 import InputField from '../components/InputField/InputField';
-import { useState } from 'react';
 import Button from '../components/Buttons/Button';
-import { useNavigate } from 'react-router-dom';
-import {requestResetPasswordUser} from "../../../platform/repository/auth";
+import AlertError from '../components/Alerts/AlertErro';
+import Loading from '../components/Loading/Loading';
+import { requestResetPasswordUser } from '../../../platform/repository/auth';
 
-const PassowordEmail = () => {
-    const [email, setEmail] = useState('');
-    const isEmailValid = email.length > 0 && (email.endsWith('@alu.ufc.br') || email.endsWith('@ufc.br'));
-    const navigate = useNavigate();
-    const requestResetPassword = async(e) => {
-        e.preventDefault();
-        
-        if(isEmailValid){
-            try {
-                await requestResetPasswordUser(email)
-                navigate('/verificacao')
-            } catch (error) {
-                console.log(error)
-            }
-        }
+const PasswordEmail = () => {
+  const [email, setEmail] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [alertText, setAlertText] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const isEmailValid = () =>
+    email.trim().length > 0 &&
+    (email.endsWith('@alu.ufc.br') || email.endsWith('@ufc.br'));
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitted(true);
+
+    if (!isEmailValid()) return;
+
+    setLoading(true);
+    setShowError(false);
+
+    try {
+      await requestResetPasswordUser(email);
+      navigate('/verificacao');
+    } catch (error) {
+      setAlertText('Erro ao solicitar recuperação de senha');
+      setShowError(true);
+    } finally {
+      setLoading(false);
     }
-    return (
-        <div>
-            <div className='flex flex-col justify-center items-center rounded-xl py-10 px-10 bg-white'>
-                <AuthHeader infoText='Recuperar senha' />
-                <form className='mb-5' onSubmit={requestResetPassword}>
-                    <InputField
-                        type='email'
-                        id='email'
-                        label='E-mail cadastrado'
-                        placeholder='Seu e-mail institucional'
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        isEmail={true}
-                        isValid={email.length === 0 ? null : isEmailValid}
-                    />
-                    
-                    <Button text='Continuar' type='submit' />
-                    
-                </form>
-                <div className='text-center mb-3 mt-3 text-sm text-americanOrange-500'>
-                    <p>
-                        Não tem uma conta?{' '}
-                        <Link to='/cadastro' className='text-americanOrange-500 hover:underline'>
-                            Cadastre-se
-                        </Link>
-                    </p>
-                </div>
-            </div>
-            <AuthFooter />
+  };
 
+  return (
+    <div>
+      <div className='flex flex-col justify-center items-center rounded-xl py-10 px-10 bg-white'>
+        <AuthHeader infoText='Recuperar senha' />
+
+        {loading && (
+          <div className='mb-4'>
+            <Loading />
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className='mb-5 w-full'>
+          {showError && (
+            <AlertError onHide={() => setShowError(false)} text={alertText} />
+          )}
+
+          <InputField
+            type='email'
+            id='email'
+            label='E-mail cadastrado'
+            placeholder='Seu e-mail institucional'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            isEmail={true}
+            isValid={email.length === 0 ? null : isEmailValid()}
+          />
+
+          {email.trim().length === 0 && isSubmitted && (
+            <h5 className='text-red-500 text-sm mt-1'>*Insira o e-mail</h5>
+          )}
+
+          {!isEmailValid() && email.length > 0 && isSubmitted && (
+            <h5 className='text-red-500 text-sm mt-1'>
+              *O e-mail deve terminar com @ufc.br ou @alu.ufc.br
+            </h5>
+          )}
+
+          <div className='mt-4'>
+            <Button
+              text='Continuar'
+              type='submit'
+              className='w-full'
+              aria-label='Solicitar recuperação de senha'
+            />
+          </div>
+        </form>
+
+        <div className='text-center mb-3 mt-3 text-sm text-americanOrange-500'>
+          <p>
+            Não tem uma conta?{' '}
+            <Link
+              to='/cadastro'
+              className='text-americanOrange-500 hover:underline'
+            >
+              Cadastre-se
+            </Link>
+          </p>
         </div>
-    );
+      </div>
+
+      <AuthFooter />
+    </div>
+  );
 };
 
-export default PassowordEmail;
+export default PasswordEmail;
