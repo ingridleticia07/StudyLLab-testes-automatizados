@@ -167,16 +167,35 @@ public static class AuthAnonEndpoints
             resetUserPasswordReadModel = await controller
                 .ResetUserPassword(resetUserPasswordRequestModel);
         }
-        catch (Exception e) when (e is UsuarioNotFoundException or ResetPasswordCodeNotFoundException)
+        catch (Exception e) when (e is UsuarioNotFoundException)
         {
-            return Results.NotFound(e.Message);
+            return Results.NotFound(new
+            {
+                status = 404,
+                Message = e.Message
+            });
+        }
+        catch(Exception e) when(e is ResetPasswordCodeNotFoundException) 
+        {
+            return Results.NotFound(new
+            {
+                status = 400,
+                Message = e.Message
+            });
         }
         catch (Exception e)
         {
-            return Results.BadRequest(e.Message);
+            return Results.NotFound(new
+            {
+                status = 400,
+                Message = e.Message
+            });
         }
 
-        return Results.Ok(resetUserPasswordReadModel);
+        return Results.Ok(new {
+            status = 200,
+            Message = "Senha resetada com sucesso!"
+        });
     }
     /// <summary>
     /// Trada da requisição de <c>/auth/requestResetPassword</c>
