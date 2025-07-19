@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import AuthFooter from '../components/AuthFooter/AuthFooter';
 import AuthHeader from '../components/AuthHeader/AuthHeader';
@@ -22,7 +23,7 @@ const ResetPassword = () => {
   const [showLoader, setShowLoader] = useState(false);
   const [errorText, setErrorText] = useState('');
   const [showError, setShowError] = useState(false);
-
+  const navigate = useNavigate();
   const togglePasswordVisibility = (e) => {
     e.preventDefault();
     setShowPassword(prev => !prev);
@@ -34,24 +35,23 @@ const ResetPassword = () => {
   };
 
   const validatePassword = () => {
+    if (password !== confirmPassword && password.length > 0 && confirmPassword.length > 0) {
+      showAlert("As senhas não coincidem!");
+      return false;
+    }
+    
     const isStrong =
       password.length >= 8 &&
       /[A-Z]/.test(password) &&
       /[a-z]/.test(password) &&
       /[0-9]/.test(password);
-
-    if (!isStrong) {
-      showAlert("A senha deve conter letras maiúsculas, minúsculas e pelo menos 8 caracteres!");
-      return false;
-    }
-
-    if (password !== confirmPassword) {
-      showAlert("As senhas não coincidem!");
+    
+    if (!isStrong && password.length > 0 && confirmPassword.length > 0) {
+      showAlert("A senha deve ter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas e ao menos um número.");
       return false;
     }
 
     if (isEmptyString(password) || isEmptyString(confirmPassword)) {
-      showAlert("Os campos de senha não podem estar vazios!");
       return false;
     }
 

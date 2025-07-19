@@ -9,7 +9,7 @@ const Sidebar = () => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        const confirmed = window.confirm('Tem certeza que deseja sair?');
+        const confirmed = window.confirm('Clique em ok para sair!');
         if (confirmed) {
             logoutSession();
             window.location.href = 'http://localhost:5174'

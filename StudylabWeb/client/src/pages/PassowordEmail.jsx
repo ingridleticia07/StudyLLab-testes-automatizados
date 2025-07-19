@@ -9,7 +9,7 @@ import Loading from '../components/Loading/Loading';
 import { requestResetPasswordUser } from '../../../platform/repository/auth';
 
 const PasswordEmail = () => {
-  const [email, setEmail] = useState('');
+  const [emailForReset, setEmailForReset] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showError, setShowError] = useState(false);
   const [alertText, setAlertText] = useState('');
@@ -18,8 +18,8 @@ const PasswordEmail = () => {
   const navigate = useNavigate();
 
   const isEmailValid = () =>
-    email.trim().length > 0 &&
-    (email.endsWith('@alu.ufc.br') || email.endsWith('@ufc.br'));
+    emailForReset.trim().length > 0 &&
+    (emailForReset.endsWith('@alu.ufc.br') || emailForReset.endsWith('@ufc.br'));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,7 +31,7 @@ const PasswordEmail = () => {
     setShowError(false);
 
     try {
-      await requestResetPasswordUser(email);
+      await requestResetPasswordUser(emailForReset);
       navigate('/verificacao');
     } catch (error) {
       setAlertText('Erro ao solicitar recuperação de senha');
@@ -52,7 +52,7 @@ const PasswordEmail = () => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className='mb-5 w-full'>
+        <form onSubmit={handleSubmit} className='mb-5 w-full' autoComplete='off'>
           {showError && (
             <AlertError onHide={() => setShowError(false)} text={alertText} />
           )}
@@ -62,17 +62,17 @@ const PasswordEmail = () => {
             id='email'
             label='E-mail cadastrado'
             placeholder='Seu e-mail institucional'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={emailForReset}
+            onChange={(e) => setEmailForReset(e.target.value)}
             isEmail={true}
-            isValid={email.length === 0 ? null : isEmailValid()}
+            isValid={emailForReset.length === 0 ? null : isEmailValid()}
           />
 
-          {email.trim().length === 0 && isSubmitted && (
+          {emailForReset.trim().length === 0 && isSubmitted && (
             <h5 className='text-red-500 text-sm mt-1'>*Insira o e-mail</h5>
           )}
 
-          {!isEmailValid() && email.length > 0 && isSubmitted && (
+          {!isEmailValid() && emailForReset.length > 0 && isSubmitted && (
             <h5 className='text-red-500 text-sm mt-1'>
               *O e-mail deve terminar com @ufc.br ou @alu.ufc.br
             </h5>
