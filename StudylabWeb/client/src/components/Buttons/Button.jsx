@@ -5,7 +5,7 @@ const Button = ({ text, link, onClick, type = 'button' }) => {
         return (
             <Link
                 to={link}
-                className='min-w-[30rem] w-full text-center bg-americanOrange-500 text-white py-2 rounded-full hover:bg-americanOrange-600 block'
+                className='w-full text-center bg-americanOrange-500 text-white py-2 rounded-lg hover:bg-americanOrange-600'
             >
                 {text}
             </Link>
@@ -15,7 +15,7 @@ const Button = ({ text, link, onClick, type = 'button' }) => {
     return (
         <button
             type='submit'
-            className='min-w-[30rem] w-full bg-americanOrange-500 text-white py-2 rounded-lg hover:bg-americanOrange-600'
+            className='w-full text-center bg-americanOrange-500 text-white py-2 rounded-lg hover:bg-americanOrange-600'
         >
             {text}
         </button>

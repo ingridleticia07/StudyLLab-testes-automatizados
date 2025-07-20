@@ -1,7 +1,7 @@
 const SelectField = ({ id, label, options, value, onChange, Placeholder }) => {
 
     return (
-        <div className="mb-4 w-full min-w-96">
+        <div className="mb-4 w-full max-w-full">
             <label
                 htmlFor={id}
                 className="block text-sm font-medium text-gray-700"

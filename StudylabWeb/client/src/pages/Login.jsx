@@ -14,9 +14,7 @@ import Loading from '../components/Loading/Loading';
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
-    const [isEmailInvalid, setIsEmailInvalid] = useState(false);
     const [AlertText, setAlertText] = useState("");
-    const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showError, setShowError] = useState(false);
@@ -61,68 +59,75 @@ const Login = () => {
     };
 
     return (
-        <div>
-            <div className='flex flex-col justify-center items-center rounded-xl px-10 py-10 bg-white'>
-                <AuthHeader infoText={'Entrar na sua conta'} />
-                {isFormSubmited &&  <Loading/>}
-                <form className='space-y-6' onSubmit={logar}>
-                    {showError && <AlertError onHide={() => setShowError(false)} text={AlertText} />}
-                    <InputField
-                        type='email'
-                        id='email'
-                        label='E-mail institucional'
-                        placeholder='Seu e-mail institucional'
-                        invalidText={'E-mail institucional inválido!'}
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        isEmail={true}
-                        isValid={email.length === 0 ? null : isEmailValid}
-                    />
-                    {email.length <= 0 && isFormSubmited && (
-                        <h5 style={{ color: 'red' }} className="self-start">
-                            *Insira o email
-                        </h5>
-                    )}
-                    <InputField
-                        type={showPassword ? 'text' : 'password'}
-                        id='senha'
-                        label='Senha'
-                        placeholder='Sua senha'
-                        icon={icons.padlock}
-                        invalidText={'senha invalida'}
-                        value={password}
-                        isValid={password.length === 0 ? null : isPasswordInvalid}
-                        onChange={(e) => setPassword(e.target.value)}
-                        rightElement={
-                            <VisibilityButton
-                                handleClick={togglePasswordVisibility}
-                                showPassword={showPassword}
-                            />
-                        }
-                    />
-                    {password.length <= 0 && isFormSubmited && (
-                        <h5 style={{ color: 'red' }} className="self-start">
-                            *Insira a senha
-                        </h5>
-                    )}
-                    <Button text='Entrar' type="submit"/>
-                </form>
-                <div className='text-center mt-8 text-sm text-americanOrange-500'>
-                    Não tem uma conta?{' '}
-                    <Link
-                        to={'/cadastro'}
-                        className='text-americanOrange-500 hover:underline'
-                    >
-                        Cadastre-se
-                    </Link>
-                </div>
-                <div className='text-center mt-8 text-sm'>
-                    <Link
-                        to={'/recuperar'}
-                        className='text-blue-500 hover:underline'
-                    >
-                        Esqueceu a senha? Recuperar
-                    </Link>
+        <div className="min-h-screen flex flex-col overflow-x-hidden">
+            {/* Container para centralizar vertical e horizontalmente */}
+            <div className="flex-grow flex items-center justify-center px-4 sm:px-6 md:px-0">
+                <div className="w-full max-w-2lg bg-white rounded-xl px-4 sm:px-6 md:px-10 py-10 shadow-lg">
+                    <AuthHeader infoText={'Entrar na sua conta'} />
+                    <form className='space-y-6' onSubmit={logar}>
+                        {isFormSubmited && (
+                            <div className="flex justify-center items-center my-4">
+                                <Loading />
+                            </div>
+                        )}
+                        {showError && <AlertError onHide={() => setShowError(false)} text={AlertText} />}
+                        <InputField
+                            type='email'
+                            id='email'
+                            label='E-mail institucional'
+                            placeholder='Seu e-mail institucional'
+                            invalidText={'E-mail institucional inválido!'}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            isEmail={true}
+                            isValid={email.length === 0 ? null : isEmailValid}
+                        />
+                        {email.length <= 0 && isFormSubmited && (
+                            <h5 style={{ color: 'red' }} className="self-start">
+                                *Insira o email
+                            </h5>
+                        )}
+                        <InputField
+                            type={showPassword ? 'text' : 'password'}
+                            id='senha'
+                            label='Senha'
+                            placeholder='Sua senha'
+                            icon={icons.padlock}
+                            invalidText={'senha invalida'}
+                            value={password}
+                            isValid={password.length === 0 ? null : false}
+                            onChange={(e) => setPassword(e.target.value)}
+                            rightElement={
+                                <VisibilityButton
+                                    handleClick={togglePasswordVisibility}
+                                    showPassword={showPassword}
+                                />
+                            }
+                        />
+                        {password.length <= 0 && isFormSubmited && (
+                            <h5 style={{ color: 'red' }} className="self-start">
+                                *Insira a senha
+                            </h5>
+                        )}
+                        <Button text='Entrar' type="submit"/>
+                    </form>
+                    <div className='text-center mt-8 text-sm text-americanOrange-500'>
+                        Não tem uma conta?{' '}
+                        <Link
+                            to={'/cadastro'}
+                            className='text-americanOrange-500 hover:underline'
+                        >
+                            Cadastre-se
+                        </Link>
+                    </div>
+                    <div className='text-center mt-8 text-sm'>
+                        <Link
+                            to={'/recuperar'}
+                            className='text-blue-500 hover:underline'
+                        >
+                            Esqueceu a senha? Recuperar
+                        </Link>
+                    </div>
                 </div>
             </div>
             <AuthFooter />

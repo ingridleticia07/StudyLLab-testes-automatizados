@@ -21,7 +21,7 @@ const InputField = ({
 
     if (isEmail) {
         return (
-            <div className='mb-4 w-full min-w-96'>
+            <div className='mb-4 w-full max-w-full'>
                 <label
                     htmlFor={id}
                     className='block text-sm font-medium text-gray-700'
@@ -63,21 +63,21 @@ const InputField = ({
         );
     };
     return (
-        <div className='mb-4 w-full min-w-96'>
+        <div className='mb-4 w-full max-w-full'>
             <label
                 htmlFor={id}
                 className='block text-sm font-medium text-gray-700'
             >
                 {label}
             </label>
-            <div className='flex items-center border border-gray-300 rounded-md p-2'>
-                {icon && <img src={icon} alt='' className='mr-2' />}
+            <div className="flex items-center border border-gray-300 rounded-md p-2 w-full max-w-full">
+                {icon && <img src={icon} alt='' className='mr-2 w-5 h-5' />}
                 <input
                     type={type}
                     id={id}
                     name={name}
                     placeholder={placeholder}
-                    className='flex-1 outline-none'
+                    className="flex-1 outline-none bg-transparent text-sm"
                     maxLength={maxLength}
                     onChange={onChange}
                     value={value}

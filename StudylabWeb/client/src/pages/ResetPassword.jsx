@@ -107,8 +107,9 @@ const ResetPassword = () => {
   );
 
   return (
-    <div>
-      <div className='flex flex-col justify-center items-center rounded-xl px-10 py-10 bg-white'>
+    <div className="min-h-screen flex flex-col overflow-x-hidden">
+      <div className="flex-grow flex items-center justify-center px-4 sm:px-6 md:px-0">
+          <div className="w-full max-w-2lg bg-white rounded-xl px-4 sm:px-6 md:px-10 py-10 shadow-lg">
         <AuthHeader
           infoText={
             isPasswordChanged
@@ -117,7 +118,11 @@ const ResetPassword = () => {
           }
         />
 
-        {isFormSubmitted && showLoader && <Loading />}
+        {showLoader &&(
+            <div className="flex justify-center items-center my-4">
+                <Loading />
+            </div>
+        )}
 
         {!isPasswordChanged ? (
           <form onSubmit={handleSubmit}>
@@ -160,7 +165,8 @@ const ResetPassword = () => {
           </div>
         )}
       </div>
-      <AuthFooter showFirstLink={false} />
+    </div>
+    <AuthFooter/>
     </div>
   );
 };
