@@ -5,7 +5,7 @@ const Button = ({ text, link, onClick, type = 'button' }) => {
         return (
             <Link
                 to={link}
-                className='w-full text-center bg-americanOrange-500 text-white py-2 rounded-lg hover:bg-americanOrange-600'
+                className='block w-full text-center bg-americanOrange-500 text-white py-2 rounded-lg hover:bg-americanOrange-600'
             >
                 {text}
             </Link>
