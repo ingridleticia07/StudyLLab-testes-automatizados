@@ -114,9 +114,9 @@ const RegisterSubject = ({ handleCancel, setDisciplinas, currentPage }) => {
           Cadastrar Disciplina
         </h2>
 
-        <form onSubmit={handleSubmit} autoComplete='off' className='grid grid-cols-2 gap-4'>
+        <form onSubmit={handleSubmit} autoComplete='off' className='grid grid-cols-1 md:grid-cols-2 gap-4'>
           {showError && (
-            <div className="col-span-2">
+            <div className="col-span-1 md:col-span-2">
               <AlertError onHide={() => setShowError(false)} text={errorMessage} />
             </div>
           )}
@@ -156,10 +156,9 @@ const RegisterSubject = ({ handleCancel, setDisciplinas, currentPage }) => {
             )}
           </div>
 
-          {/* Espaço vazio para alinhar a grid */}
           <div></div>
 
-          <div className='flex items-center justify-end gap-5 col-span-2'>
+          <div className='flex flex-col md:flex-row items-center md:justify-end gap-3 md:gap-5 col-span-1 md:col-span-2'>
             <button
               type='button'
               onClick={handleCancel}
@@ -177,6 +176,7 @@ const RegisterSubject = ({ handleCancel, setDisciplinas, currentPage }) => {
             </button>
           </div>
         </form>
+
       </div>
     </div>
   );

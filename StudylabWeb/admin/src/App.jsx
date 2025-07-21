@@ -10,53 +10,64 @@ import Materials from './pages/Materials';
 import Report from './pages/Report';
 import Help from './pages/Help';
 
-import { authTokenIsValid, saveDashboardSessionInfos,logoutSession } from "../../platform/repository/auth.js";
+import {
+  authTokenIsValid,
+  saveDashboardSessionInfos,
+  logoutSession,
+} from '../../platform/repository/auth.js';
 
 function App() {
-    const [authStatus, setAuthStatus] = useState(null);
-    const [hasAlerted, setHasAlerted] = useState(false);
+  const [authStatus, setAuthStatus] = useState(null);
+  const [hasAlerted, setHasAlerted] = useState(false);
 
-    useEffect(() => {
-        saveDashboardSessionInfos();
-        const verifyAuth = async () => {
-            try {
-                const isAuthenticated = await authTokenIsValid();
-                setAuthStatus(isAuthenticated);
-            } catch (error) {
-                setAuthStatus(false);
-            }
-        };
-        verifyAuth();
-    }, []);
+  useEffect(() => {
+    saveDashboardSessionInfos();
+    const verifyAuth = async () => {
+      try {
+        const isAuthenticated = await authTokenIsValid();
+        setAuthStatus(isAuthenticated);
+      } catch (error) {
+        setAuthStatus(false);
+      }
+    };
+    verifyAuth();
+  }, []);
 
-    useEffect(() => {
-        if (authStatus === false && !hasAlerted) {
-            setHasAlerted(true);
-            alert("Sua sessão expirou. Logue novamente!");
-            logoutSession();
-            window.location.href = "http://localhost:5174/";
-        }
-    }, [authStatus]);
+  useEffect(() => {
+    if (authStatus === false && !hasAlerted) {
+      setHasAlerted(true);
+      alert('Sua sessão expirou. Logue novamente!');
+      logoutSession();
+      window.location.href = 'http://localhost:5174/';
+    }
+  }, [authStatus]);
 
-    return (
-        <div className='flex min-h-screen bg-slate-200'>
-            <div>
-                <Menu />
-                <Sidebar />
-            </div>
+  return (
+    <div className="min-h-screen bg-slate-200 flex flex-col md:flex-row">
+      {/* Sidebar no topo em mobile */}
+      <div className="md:hidden fixed top-0 left-0 w-full z-50">
+        <Sidebar isMobile />
+      </div>
 
-            <main className='w-full mt-28 mx-4'>
-                <Routes>
-                    <Route path='/' element={<Home />} />
-                    <Route path='/disciplinas' element={<Subjects />} />
-                    <Route path='/usuarios' element={<Users />} />
-                    <Route path='/conteudos' element={<Materials />} />
-                    <Route path='/denuncias' element={<Report />} />
-                    <Route path='/ajuda' element={<Help />} />
-                </Routes>
-            </main>
-        </div>
-    );
+      {/* Menu lateral + Sidebar em desktop */}
+      <div className="hidden md:flex md:flex-col">
+        <Menu />
+        <Sidebar />
+      </div>
+
+      {/* Conteúdo principal */}
+      <main className="w-full mt-20 md:mt-28 px-4 overflow-x-auto">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/disciplinas" element={<Subjects />} />
+          <Route path="/usuarios" element={<Users />} />
+          <Route path="/conteudos" element={<Materials />} />
+          <Route path="/denuncias" element={<Report />} />
+          <Route path="/ajuda" element={<Help />} />
+        </Routes>
+      </main>
+    </div>
+  );
 }
 
 export default App;
