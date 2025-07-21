@@ -160,7 +160,7 @@ const EditSubject = ({ row, handleClose, setDisciplinas, currentPage }) => {
               />
               {isEmptyString(field.value) && state.isSubmitting && (
                 <h5 className='text-red-500 text-sm self-start'>
-                  *Insira o {field.label.toLowerCase()}
+                  *Insira {field.name.toLowerCase() === 'quantidade' ? 'a' : 'o'} {field.label.toLowerCase()}
                 </h5>
               )}
             </div>

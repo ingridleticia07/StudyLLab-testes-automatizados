@@ -119,7 +119,7 @@ const RegisterSubject = ({ handleCancel, setDisciplinas, currentPage }) => {
         </h2>
 
         <form onSubmit={handleSubmit} autoComplete='off' className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          {showError && (
+          {state.showError && (
             <div className="col-span-1 md:col-span-2">
               <AlertError onHide={() => setShowError(false)} text={state.errorMessage} />
             </div>
@@ -138,7 +138,7 @@ const RegisterSubject = ({ handleCancel, setDisciplinas, currentPage }) => {
               />
               {field.value.length <= 0 && state.isSubmitting && (
                 <h5 className="text-red-500 text-sm self-start">
-                  *Insira o {field.label.toLowerCase()}
+                  *Insira {field.name.toLowerCase() === 'quantidade' ? 'a' : 'o'} {field.label.toLowerCase()}
                 </h5>
               )}
             </div>
