@@ -25,9 +25,12 @@ const initialFormData = {
 const RegisterSubject = ({ handleCancel, setDisciplinas, currentPage }) => {
   const [formData, setFormData] = useState(initialFormData);
   const [showError, setShowError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showLoader, setShowLoader] = useState(false);
+  const [state, setState] = useState({
+    showError: false,
+    errorMessage: '',
+    isSubmitting: false,
+    showLoader: false,
+  });
 
   const handleChange = (field) => (e) => {
     setFormData({ ...formData, [field]: e.target.value });
@@ -39,14 +42,13 @@ const RegisterSubject = ({ handleCancel, setDisciplinas, currentPage }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setShowError(false);
-
+    setState((prev) => ({ ...prev, isSubmitting: true}));
     if (!isFormValid()) {
       return;
     }
 
-    setShowLoader(true);
+    setState((prev) => ({ ...prev, showLoader: true }));
+
     const disciplinaDTO = {
       codigoDisciplina: formData.codigo,
       nomeDisciplina: formData.nome,
@@ -61,11 +63,13 @@ const RegisterSubject = ({ handleCancel, setDisciplinas, currentPage }) => {
       setDisciplinas(disciplinas);
       handleCancel();
     } catch (error) {
-      setErrorMessage(error?.response?.data || 'Erro ao cadastrar disciplina.');
-      setShowError(true);
+      setState((prev) => ({
+        ...prev,
+        errorMessage: error?.response?.data || 'Erro ao editar disciplina.',
+        showError: true,
+      }));
     } finally {
-      setShowLoader(false);
-      setIsSubmitting(false);
+      setState((prev) => ({ ...prev, showLoader: false, isSubmitting: false }));
     }
   };
 
@@ -109,7 +113,7 @@ const RegisterSubject = ({ handleCancel, setDisciplinas, currentPage }) => {
       <div className='bg-white p-7 rounded-md shadow-lg'>
         <h2 className='text-2xl font-bold text-black mb-5'>
           <div className="flex justify-center mb-2">
-            {showLoader && <Loading />}
+            {state.showLoader && <Loading />}
           </div>
           Cadastrar Disciplina
         </h2>
@@ -117,7 +121,7 @@ const RegisterSubject = ({ handleCancel, setDisciplinas, currentPage }) => {
         <form onSubmit={handleSubmit} autoComplete='off' className='grid grid-cols-1 md:grid-cols-2 gap-4'>
           {showError && (
             <div className="col-span-1 md:col-span-2">
-              <AlertError onHide={() => setShowError(false)} text={errorMessage} />
+              <AlertError onHide={() => setShowError(false)} text={state.errorMessage} />
             </div>
           )}
 
@@ -132,7 +136,7 @@ const RegisterSubject = ({ handleCancel, setDisciplinas, currentPage }) => {
                 type={field.type}
                 onChange={handleChange(field.name)}
               />
-              {field.value.length <= 0 && isSubmitting && (
+              {field.value.length <= 0 && state.isSubmitting && (
                 <h5 className="text-red-500 text-sm self-start">
                   *Insira o {field.label.toLowerCase()}
                 </h5>
@@ -149,7 +153,7 @@ const RegisterSubject = ({ handleCancel, setDisciplinas, currentPage }) => {
               value={formData.curso}
               onChange={handleChange('curso')}
             />
-            {formData.curso.length <= 0 && isSubmitting && (
+            {formData.curso.length <= 0 && state.isSubmitting && (
               <h5 className="text-red-500 text-sm self-start">
                 *Insira o curso da disciplina
               </h5>

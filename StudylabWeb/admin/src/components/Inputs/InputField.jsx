@@ -5,7 +5,7 @@ const InputField = ({ id, name, label, placeholder, required = false, value = ''
                 {label}
             </label>
             <input
-                className='border-2 rounded-lg pl-4 py-2 mt-2 min-w-96 text-lg placeholder:text-sm placeholder:tracking-wider focus:border-americanOrange-500 outline-none'
+                className='border-2 rounded-lg pl-4 py-2 mt-2 w-full text-lg placeholder:text-sm placeholder:tracking-wider focus:border-americanOrange-500 outline-none'
                 type={type}
                 id={id}
                 name={name}

@@ -19,7 +19,6 @@ const EditSubject = ({ row, handleClose, setDisciplinas, currentPage }) => {
     id: row.item.idDisciplina,
     codigo: row.item.codigoDisciplina || '',
     nome: row.item.nomeDisciplina || '',
-    // Certifique-se de que cursoOptions[row.item.curso.idCurso - 1]?.value existe antes de acessar
     curso: cursoOptions.find(option => option.value === row.item.curso.value)?.value || cursoOptions[row.item.curso.idCurso - 1]?.value || '',
     professor: row.item.professorDisciplina || '',
     quantidade: row.item.quantidadeAluno?.toString() || '',
@@ -40,16 +39,13 @@ const EditSubject = ({ row, handleClose, setDisciplinas, currentPage }) => {
   };
 
   const isFormValid = () => {
-    // A validação de isEmptyString deve verificar se *todos* os campos estão preenchidos.
-    // Se você tem campos opcionais, precisará ajustar essa lógica.
-    // Para esta função, estou mantendo a lógica atual, mas é bom ter em mente.
     return !Object.values(formData).some(isEmptyString);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setState((prev) => ({ ...prev, isSubmitting: true, showError: false }));
-    setState
+    
     if (JSON.stringify(formData) === JSON.stringify(originalFormData)) {
       setState((prev) => ({
         ...prev,
@@ -61,7 +57,6 @@ const EditSubject = ({ row, handleClose, setDisciplinas, currentPage }) => {
     }
 
     if (!isFormValid()) {
-      // Se o formulário não for válido, não continue a submissão
       setState((prev) => ({
         ...prev,
         errorMessage: 'Por favor, preencha todos os campos obrigatórios.',
@@ -73,16 +68,13 @@ const EditSubject = ({ row, handleClose, setDisciplinas, currentPage }) => {
 
     setState((prev) => ({ ...prev, showLoader: true }));
 
-    // Garante que o ID do curso seja tratado corretamente.
-    // O backend provavelmente espera o ID (número) e não o valor (string 'ES', 'CC', etc.).
-    // A linha abaixo já parece estar fazendo isso corretamente.
     const cursoIndex = cursoOptions.findIndex(opt => opt.value === formData.curso);
 
     const disciplinaDTO = {
       idDisciplina: formData.id,
       codigoDisciplina: formData.codigo,
       nomeDisciplina: formData.nome,
-      curso: cursoIndex !== -1 ? cursoIndex + 1 : null, // Garante que curso seja um número válido
+      curso: cursoIndex !== -1 ? cursoIndex + 1 : null,
       professorDisciplina: formData.professor,
       quantidadeAluno: parseInt(formData.quantidade),
     };
@@ -140,10 +132,11 @@ const EditSubject = ({ row, handleClose, setDisciplinas, currentPage }) => {
 
   return (
     <div className='fixed inset-0 flex items-center justify-center z-50 bg-opacity-30 bg-gray-300'>
-      {/* ALTERAÇÕES AQUI: Adição de classes de largura e padding responsivo */}
-      <div className='bg-white p-2 sm:p-7 rounded-md shadow-lg w-12/12 max-w-sm mx-auto md:max-w-xl lg:max-w-4xl'>
+      <div className='bg-white p-7 rounded-md shadow-lg'>
         <h2 className='text-2xl font-bold text-black mb-5'>
-          <div className='flex justify-center mb-2'>{state.showLoader && <Loading />}</div>
+          <div className="flex justify-center mb-2">
+            {state.showLoader && <Loading />}
+          </div>
           Editar Disciplina
         </h2>
 
@@ -165,7 +158,6 @@ const EditSubject = ({ row, handleClose, setDisciplinas, currentPage }) => {
                 type={field.type}
                 onChange={handleChange(field.name)}
               />
-              {/* Ajuste na validação para usar o estado correto */}
               {isEmptyString(field.value) && state.isSubmitting && (
                 <h5 className='text-red-500 text-sm self-start'>
                   *Insira o {field.label.toLowerCase()}
@@ -183,13 +175,11 @@ const EditSubject = ({ row, handleClose, setDisciplinas, currentPage }) => {
               value={formData.curso}
               onChange={handleChange('curso')}
             />
-            {/* Ajuste na validação para usar o estado correto */}
             {isEmptyString(formData.curso) && state.isSubmitting && (
               <h5 className='text-red-500 text-sm self-start'>*Insira o curso da disciplina</h5>
             )}
           </div>
 
-          {/* ALTERAÇÃO AQUI: Garante que esta div vazia só apareça em telas maiores */}
           <div className="hidden md:block"></div>
 
           <div className='flex flex-col md:flex-row items-center md:justify-end gap-3 md:gap-5 col-span-1 md:col-span-2'>
