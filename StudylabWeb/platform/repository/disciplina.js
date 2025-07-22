@@ -3,9 +3,9 @@ import { getCursoCodeByName } from "../utils/curso_matcher.js";
 
 const DISCIPLINA_ENDPOINT = "/disciplina";
 
-export async function getAllDisciplinasWithPagination(page, pageSize) {
+export async function getAllDisciplinasWithPagination(page, pageSize, idCurso) {
     let response = await instance.get(DISCIPLINA_ENDPOINT+
-      "/listarDisciplinasWithPagination?page="+page+"&pageSize="+pageSize+"");
+      "/listarDisciplinasWithPagination?page="+page+"&pageSize="+pageSize+"&idCurso="+idCurso);
   
     if (response.status !== 200) {
       return null;

@@ -22,7 +22,7 @@ const initialFormData = {
   quantidade: '',
 };
 
-const RegisterSubject = ({ handleCancel, setDisciplinas, currentPage }) => {
+const RegisterSubject = ({ handleCancel, setIterationData, currentPage }) => {
   const [formData, setFormData] = useState(initialFormData);
   const [showError, setShowError] = useState(false);
   const [state, setState] = useState({
@@ -59,8 +59,9 @@ const RegisterSubject = ({ handleCancel, setDisciplinas, currentPage }) => {
 
     try {
       await createDisciplina(disciplinaDTO);
-      const disciplinas = await getAllDisciplinasWithPagination(currentPage, 10);
-      setDisciplinas(disciplinas);
+      
+      setIterationData((prev) => prev + 1);
+
       handleCancel();
     } catch (error) {
       setState((prev) => ({

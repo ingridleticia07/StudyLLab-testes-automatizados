@@ -51,7 +51,7 @@ namespace StudyLabAPI.Controllers
 
             return disciplinas;
         } 
-        public async Task<DisciplinaListResponse> GetAllDisciplinasWithPagination(int page,int pageSize)
+        public async Task<DisciplinaListResponse> GetAllDisciplinasWithPagination(int page,int pageSize, int idCurso)
         {
             logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
             page, pageSize);
@@ -69,7 +69,7 @@ namespace StudyLabAPI.Controllers
                 page, pageSize);
 
             (var result, int resultCount, int disciplinaCount) = await disciplinaRepository
-                .GetDisciplinasAndCount(page, pageSize);
+                .GetDisciplinasAndCount(page, pageSize, idCurso);
 
             var disciplinaReadResult = result.Select(_disciplinaModelMapper.DisciplinaModelToDisciplinaReadModel)
                 .ToList();

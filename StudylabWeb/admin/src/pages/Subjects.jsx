@@ -11,34 +11,31 @@ const Subjects = () => {
     const [cursoFilter, setCursoFilter] = useState('');
     const [disciplinas, setDisciplinas] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    
+    const [iterationData, setIterationData] = useState(0);
+
     useEffect(() => {
         const getDataDisciplinas = async () => {
             
             try {
-                let allDisciplinas = await getAllDisciplinasWithPagination(currentPage, 10);
-                let disciplinasFilter = allDisciplinas.disciplinas || [];
+                
+                const idCurso = cursoFilter || 0;
+                let currentPageFilter = currentPage || 1;
 
-                if (cursoFilter && cursoFilter > 0) {
-                    disciplinasFilter = disciplinasFilter.filter(
-                        (d) => String(d.curso?.idCurso) == String(cursoFilter)
-                    );
+                let disciplinasList = await getAllDisciplinasWithPagination(currentPageFilter, 10, idCurso);
+                
+                if(currentPage > disciplinasList.maxPage || currentPage == 0){
+                    currentPageFilter = disciplinasList.maxPage;
+                    setCurrentPage(currentPageFilter)
                 }
                 
-                let finalDisciplinaLista = [];
-                finalDisciplinaLista.maxPage = allDisciplinas.maxPage;
-                finalDisciplinaLista.disciplinaCount = allDisciplinas.disciplinaCount;
-                finalDisciplinaLista.pageCount = allDisciplinas.pageCount;
-                finalDisciplinaLista.disciplinas = disciplinasFilter;
-                
-                setDisciplinas(finalDisciplinaLista);
+                setDisciplinas(disciplinasList);
             } catch (error) {
                 console.log(error);
             }
         };
         getDataDisciplinas();
         
-    }, [currentPage, cursoFilter]);
+    }, [currentPage, cursoFilter, iterationData]);
 
     return (
         <div className="flex flex-col h-full">
@@ -65,6 +62,7 @@ const Subjects = () => {
                         setDisciplinas={setDisciplinas}
                         currentPage={currentPage}
                         setCurrentPage={setCurrentPage}
+                        setIterationData={setIterationData}
                         handleDelete={(id) => {
                             // implemente a remoção aqui se quiser
                         }}
@@ -75,7 +73,7 @@ const Subjects = () => {
             {showRegister && (
                 <RegisterSubject
                     handleCancel={() => setShowRegister(false)}
-                    setDisciplinas={setDisciplinas}
+                    setIterationData={setIterationData}
                     currentPage={currentPage}
                 />
             )}

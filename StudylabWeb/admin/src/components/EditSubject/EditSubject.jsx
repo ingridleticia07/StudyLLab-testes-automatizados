@@ -14,7 +14,7 @@ const cursoOptions = [
   { value: 'EM', label: 'Engenharia Mecânica' },
 ];
 
-const EditSubject = ({ row, handleClose, setDisciplinas, currentPage }) => {
+const EditSubject = ({ row, handleClose, setDisciplinas, currentPage, setIterationData }) => {
   const initialFormData = {
     id: row.item.idDisciplina,
     codigo: row.item.codigoDisciplina || '',
@@ -81,8 +81,7 @@ const EditSubject = ({ row, handleClose, setDisciplinas, currentPage }) => {
 
     try {
       await editarDisciplina(disciplinaDTO);
-      const disciplinas = await getAllDisciplinasWithPagination(currentPage, 10);
-      setDisciplinas(disciplinas);
+      setIterationData((prev) => prev + 1);
       handleClose();
     } catch (error) {
       setState((prev) => ({

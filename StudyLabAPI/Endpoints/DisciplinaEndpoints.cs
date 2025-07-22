@@ -45,13 +45,14 @@ public static class DisciplinaEndpoints
     private static async Task<IResult> GetDisciplinas(HttpContext context,
         [FromQuery] int page,
         [FromQuery] int pageSize,
+        [FromQuery] int idCurso,
         [FromServices] IDisciplinaController controller)
     {
 
         DisciplinaListResponse? result;
         try
         {
-            result = await controller.GetAllDisciplinasWithPagination(page,pageSize);
+            result = await controller.GetAllDisciplinasWithPagination(page,pageSize, idCurso);
         }
         catch (Exception e)
         {

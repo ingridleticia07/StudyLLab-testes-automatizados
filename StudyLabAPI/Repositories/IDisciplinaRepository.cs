@@ -37,7 +37,7 @@ public interface IDisciplinaRepository
     /// </summary>
     /// <returns>Representa uma tarefa asincrona do banco,
     /// ela retorna uma <see cref="List{T}"/> contendo todas as disciplinas</returns>
-    public Task<IList<DisciplinaModel>> GetAllDisciplinasWithPagination(int page, int pageSize);
+    public Task<IList<DisciplinaModel>> GetAllDisciplinasWithPagination(int page, int pageSize, int idCurso);
     /// <summary>
     /// Recupera todas as disciplinas no banco.
     /// </summary>
@@ -50,7 +50,7 @@ public interface IDisciplinaRepository
     /// <param name="disciplinaModel">Modelo da nova disciplina</param>
     /// <returns>Representa uma tarefa asincrona do banco</returns>
     /// 
-    public Task<(IList<DisciplinaModel>, int, int)> GetDisciplinasAndCount(int page, int pageSize);
+    public Task<(IList<DisciplinaModel>, int, int)> GetDisciplinasAndCount(int page, int pageSize, int idCurso);
 
     public Task CreateDisciplina(DisciplinaModel disciplinaModel);
     /// <summary>

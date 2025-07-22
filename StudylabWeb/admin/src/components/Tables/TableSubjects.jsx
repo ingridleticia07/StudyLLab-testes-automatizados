@@ -10,7 +10,7 @@ import EditSubject from '../EditSubject/EditSubject';
 import { StudylabContext } from '../../context/StudylabContext';
 import {deleteDisciplina, getAllDisciplinasWithPagination} from '../../../../platform/repository/disciplina';
 
-const TableSubjects = ({ data, setDisciplinas, currentPage, setCurrentPage, handleDelete }) => {
+const TableSubjects = ({ data, setDisciplinas, currentPage, setCurrentPage, setIterationData, handleDelete }) => {
     
     const headersColumns = [
         '#',
@@ -53,9 +53,7 @@ const TableSubjects = ({ data, setDisciplinas, currentPage, setCurrentPage, hand
     const handleDeleteRegister = async(identifier,key) => {
         try {
             await deleteDisciplina(identifier);
-            //alert('Disciplina cadastrada com sucesso!');
-            let disciplinas = await getAllDisciplinasWithPagination(currentPage,10);
-            setDisciplinas(disciplinas);
+            setIterationData((prev) => prev + 1);
         } catch (error) {
             console.log(error)
         }
@@ -153,6 +151,7 @@ const TableSubjects = ({ data, setDisciplinas, currentPage, setCurrentPage, hand
                     row={selectedItem}
                     setDisciplinas={setDisciplinas}
                     currentPage={currentPage}
+                    setIterationData={setIterationData}
                 />
             )}
             <ToastContainer className='capitalize' />

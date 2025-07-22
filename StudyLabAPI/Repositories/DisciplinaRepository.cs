@@ -18,24 +18,24 @@ namespace StudyLabAPI.Repositories
         public async Task<List<DisciplinaModel?>> GetAllDisciplinas() =>
             await _dbContext.disciplinas.ToListAsync();
 
-        private async Task<IList<DisciplinaModel>> GetDisciplinasWFactory(int page, int pageSize)
+        private async Task<IList<DisciplinaModel>> GetDisciplinasWFactory(int page, int pageSize, int idCurso)
         {
             await using AppDbContext? inDbContext = await _dbContextFactory.CreateDbContextAsync();
 
             if (inDbContext is null)
                 throw new("Was not possible to instanciaite a new DbContext");
 
-            return await GetAllDisciplinasWithPagination(inDbContext, page, pageSize);
+            return await GetAllDisciplinasWithPagination(inDbContext, page, pageSize, idCurso);
         }
 
-        private async Task<int> GetDisciplinasCountWFactory()
+        private async Task<int> GetDisciplinasCountWFactory(int idCurso)
         {
             await using AppDbContext? inDbContext = await _dbContextFactory.CreateDbContextAsync();
 
             if (inDbContext is null)
                 throw new("Was not possible to instanciaite a new DbContext");
 
-            return await GetDisciplinasCount(inDbContext);
+            return await GetDisciplinasCount(inDbContext, idCurso);
         }
 
         public async Task<DisciplinaModel?> GetDisciplinaById(int id)
@@ -90,14 +90,23 @@ namespace StudyLabAPI.Repositories
             return existingDisciplina;
         }
 
-        private async Task<int> GetDisciplinasCount(AppDbContext inDbContext) =>
-            await inDbContext.disciplinas.CountAsync();
-
-
-        public async Task<(IList<DisciplinaModel>, int, int)> GetDisciplinasAndCount(int page, int pageSize)
+        private async Task<int> GetDisciplinasCount(AppDbContext inDbContext, int idCurso)
         {
-            var disciplinaTask = GetDisciplinasWFactory(page, pageSize);
-            var disciplinaCountTask = GetDisciplinasCountWFactory();
+            int countDisciplinas = 0;
+            
+            if(idCurso == 0)
+                countDisciplinas = await inDbContext.disciplinas.CountAsync();
+            else
+                countDisciplinas = await inDbContext.disciplinas.Where(f => f.curso.idCurso == idCurso).CountAsync();
+
+            return countDisciplinas;
+        }
+
+
+        public async Task<(IList<DisciplinaModel>, int, int)> GetDisciplinasAndCount(int page, int pageSize, int idCurso)
+        {
+            var disciplinaTask = GetDisciplinasWFactory(page, pageSize, idCurso);
+            var disciplinaCountTask = GetDisciplinasCountWFactory(idCurso);
             await Task.WhenAll(disciplinaTask, disciplinaCountTask);
 
             var result = disciplinaTask.Result;
@@ -105,33 +114,41 @@ namespace StudyLabAPI.Repositories
             return (result, result.Count, disciplinaCount);
         }
 
-        public Task<IList<DisciplinaModel>> GetAllDisciplinasWithPagination(int page, int pageSize) =>
-            GetAllDisciplinasWithPagination(_dbContext, page, pageSize);
+        public Task<IList<DisciplinaModel>> GetAllDisciplinasWithPagination(int page, int pageSize, int idCurso) =>
+            GetAllDisciplinasWithPagination(_dbContext, page, pageSize, idCurso);
 
-        public async Task<IList<DisciplinaModel>> GetAllDisciplinasWithPagination(AppDbContext inDbContext, int page, int pageSize)
+        public async Task<IList<DisciplinaModel>> GetAllDisciplinasWithPagination(AppDbContext inDbContext, int page, int pageSize, int idCurso)
         {
-            var result = await inDbContext.disciplinas
-            .AsNoTracking()
-            .OrderBy(f => f.idDisciplina)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .Select(f => new DisciplinaModel
+            IQueryable<DisciplinaModel> query = inDbContext.disciplinas
+                .AsNoTracking()
+                .OrderBy(f => f.nomeDisciplina);
+
+            if (idCurso != 0)
             {
-                idDisciplina = f.idDisciplina,
-                nomeDisciplina = f.nomeDisciplina,
-                professorDisciplina = f.professorDisciplina,
-                quantidadeAluno = f.quantidadeAluno,
-                codigoDisciplina = f.codigoDisciplina,
-                curso = new CursoModel
+                query = query.Where(f => f.curso.idCurso == idCurso);
+            }
+
+            var result = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(f => new DisciplinaModel
                 {
-                    idCurso = f.curso.idCurso,
-                    nomeCurso = f.curso.nomeCurso
-                }
-            })
-            .ToListAsync();
+                    idDisciplina = f.idDisciplina,
+                    nomeDisciplina = f.nomeDisciplina,
+                    professorDisciplina = f.professorDisciplina,
+                    quantidadeAluno = f.quantidadeAluno,
+                    codigoDisciplina = f.codigoDisciplina,
+                    curso = new CursoModel
+                    {
+                        idCurso = f.curso.idCurso,
+                        nomeCurso = f.curso.nomeCurso
+                    }
+                })
+                .ToListAsync();
 
             return result;
         }
+
         public async Task CreateDisciplina(DisciplinaModel disciplinaModel) =>
             await _dbContext.disciplinas.AddAsync(disciplinaModel);
 
