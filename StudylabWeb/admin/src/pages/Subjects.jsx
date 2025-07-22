@@ -45,7 +45,7 @@ const Subjects = () => {
                 <div className="flex flex-wrap items-center gap-2 px-4 py-4">
                     <div className="flex items-center gap-4 flex-shrink-0">
                         <h1 className="text-3xl font-bold">Disciplinas</h1>
-                        <Filter data={disciplinas} setCursoFilter={setCursoFilter}/>
+                        <Filter data={disciplinas} setCursoFilter={setCursoFilter} setCurrentPage={setCurrentPage}/>
                     </div>
                     
                     <div className="flex-grow flex justify-end"> {/* Added mt-4 for some top margin and px for horizontal padding */}
