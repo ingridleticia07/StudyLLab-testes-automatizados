@@ -76,7 +76,7 @@ public class AuthController : IAuthController
     /// Regras: <seealso cref="RegisterUserRequestModelValidator"/>.</exception>
     /// <exception cref="ExistsUserException">Ocorre quando já existe algum usuário com a mesma matrícula ou email.</exception>
     /// <exception cref="CursoNotFoundException">Ocorre quando o curso solicitado para relação não existe.</exception>
-    public async Task<(UserReadModel, string, string, string, int)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel, HttpContext? httpContext = null, bool isProfessor = false)
+    public async Task<(UserReadModel, string, string, string, int)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel, HttpContext? httpContext = null)
     {
         logger.Information("Validando campos da requisição de cadastro para Username[{Username}]",
             registerUserRequestModel.username);
@@ -123,19 +123,16 @@ public class AuthController : IAuthController
         UsuarioModel usuarioModel = registerUserRequestModelMapper
             .RegisterUserRequestModelToUsuarioModel(registerUserRequestModel);
         usuarioModel.curso = relatedCurso;
-        usuarioModel.statusUsuario = isProfessor ? true : false;
+        usuarioModel.statusUsuario = false;
         usuarioModel.dataCadastroUsuario = new(registerDate.Year, registerDate.Month, registerDate.Day);
         usuarioModel.senhaUsuario = hashService.Hash(rawUserPassword);
-
-        if (isProfessor)
-            usuarioModel.tipoUsuario = UserRole.Prof;        
+        usuarioModel.tipoUsuario = UserRole.User;        
 
         logger.Information("Cadastrando usuário Username[{Username}]",
             registerUserRequestModel.username);
         await usuarioRepository.CreateUser(usuarioModel);
 
-        if (!isProfessor)
-            await GenerateAndSendConfirmationEmail(usuarioModel);
+        await GenerateAndSendConfirmationEmail(usuarioModel);
         await usuarioRepository.FlushChanges();
 
         logger.Information("Gerando token de autenticação para ID[{ID}]",
@@ -149,31 +146,96 @@ public class AuthController : IAuthController
         string requestToken = null;
         string cookieToken = null;
 
-        if (!isProfessor)
-        {
-            var (jwtUser, identity) = jwtService.GenerateJwtAndReturnClaims(new(userReadModel.id.ToString(), userReadModel.role));
+        var (jwtUser, identity) = jwtService.GenerateJwtAndReturnClaims(new(userReadModel.id.ToString(), userReadModel.role));
 
-            httpContext.User = new ClaimsPrincipal(identity);
+        httpContext.User = new ClaimsPrincipal(identity);
 
-            var tokens = _antiforgery.GetAndStoreTokens(httpContext);
+        var tokens = _antiforgery.GetAndStoreTokens(httpContext);
 
-            httpContext.Response.Cookies.Append(
-                ".AspNetCore.Antiforgery.KeSRHT2WmJs",
-                tokens.RequestToken,
-                new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.None
-                });
-            jwtToken = jwtUser;
-            requestToken = tokens.RequestToken;
-            cookieToken = tokens.CookieToken;
-        }
+        httpContext.Response.Cookies.Append(
+            ".AspNetCore.Antiforgery.KeSRHT2WmJs",
+            tokens.RequestToken,
+            new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None
+            });
+        jwtToken = jwtUser;
+        requestToken = tokens.RequestToken;
+        cookieToken = tokens.CookieToken;
 
         return (userReadModel, jwtToken, requestToken, cookieToken, userReadModel.id);
 
     }
+
+    public async Task<UserReadModel> RegisterNewAdminOrProf(RegisterUserRequestModel registerUserRequestModel)
+    {
+        logger.Information("Validando campos da requisição de cadastro para Username[{Username}]",
+            registerUserRequestModel.username);
+        ValidationResult validationResult = await registerUserRequestModelValidator
+            .ValidateAsync(registerUserRequestModel);
+        if (!validationResult.IsValid)
+        {
+            ValidationException exception = new(validationResult.Errors
+                .Select(e => e.ErrorMessage));
+            logger.Error(exception, "Validation issues");
+            throw exception;
+        }
+
+        logger.Information("Verificando se já existe um usuário com o CodigoUsuario[{CodigoUsuario}] e Email[{Email}]",
+            registerUserRequestModel.username, registerUserRequestModel.email);
+        bool invalidExists = await usuarioRepository
+            .CheckUserByMatriculaAndEmail(registerUserRequestModel.matricula,
+                registerUserRequestModel.email);
+        if (invalidExists)
+        {
+            ExistsUserException exception = new(
+                registerUserRequestModel.matricula,
+                registerUserRequestModel.email
+            );
+            logger.Error(exception, "Um usuário com o mesmo {NomeUsuario} ou {Email} já existe",
+                nameof(registerUserRequestModel.username), nameof(registerUserRequestModel.email));
+            throw exception;
+        }
+
+        logger.Information("Recuperando curso relacionado ao CodigoCurso[{CodigoCurso}] do usuário",
+            registerUserRequestModel.codeCurso);
+        int cursoId = registerUserRequestModel.codeCurso;
+        CursoModel? relatedCurso = await cursoRepository
+            .GetCursoById(cursoId);
+        if (relatedCurso is null)
+        {
+            CursoNotFoundException exception = new(cursoId);
+            logger.Error(exception, "Curso não encontrado");
+            throw exception;
+        }
+
+        DateTime registerDate = DateTime.Now.Date;
+        string rawUserPassword = registerUserRequestModel.password;
+        UsuarioModel usuarioModel = registerUserRequestModelMapper
+            .RegisterUserRequestModelToUsuarioModel(registerUserRequestModel);
+        usuarioModel.curso = relatedCurso;
+        usuarioModel.statusUsuario = true;
+        usuarioModel.dataCadastroUsuario = new(registerDate.Year, registerDate.Month, registerDate.Day);
+        usuarioModel.senhaUsuario = hashService.Hash(rawUserPassword);
+        usuarioModel.tipoUsuario = registerUserRequestModel.role;
+
+        logger.Information("Cadastrando usuário Username[{Username}]",
+            registerUserRequestModel.username);
+        await usuarioRepository.CreateUser(usuarioModel);
+
+        await usuarioRepository.FlushChanges();
+
+        UserReadModel userReadModel = usuarioModelMapper.UsuarioModelToUserReadModel(usuarioModel);
+
+        logger.Information("Usuário ID[{ID}] cadastrado com sucesso",
+        usuarioModel.idUsuario);
+
+        return userReadModel;
+
+    }
+
 
     /// <summary>
     /// Realiza a autenticação de um usuário. Ele irá validar os campos da requisição, verificar se o usuário existe, verificar se a senha está correta

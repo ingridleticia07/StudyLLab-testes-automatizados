@@ -7,17 +7,20 @@ import PopUp from '../PopUp/PopUp';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import StatusTagUser from '../StatusTag/StatusTagUser';
 
 const TableUsers = ({ data, currentPage, setCurrentPage, handleDelete }) => {
     const headersColumns = [
         '#',
         'matricula',
-        'aluno(a)',
+        'usuário(a)',
+        'Tipo',
+        'Status',
         'curso',
         'email',
         'ações',
     ];
-
+    const tipoUser = ['Aluno','Professor','Admin'];
     const [showPopUp, setShowPopUp] = useState(false);
     const [selectedItem, setSelectedItem] = useState();
     const maxPage = data.maxPage;
@@ -36,7 +39,7 @@ const TableUsers = ({ data, currentPage, setCurrentPage, handleDelete }) => {
             setCurrentPage(newPage);
         }
     };
-
+    console.log(data.users)
     return (
         <div className="overflow-auto max-h-[350px] rounded-md">
             <table className="w-full min-w-full text-left border-separate border-spacing-0 table-auto">
@@ -53,6 +56,12 @@ const TableUsers = ({ data, currentPage, setCurrentPage, handleDelete }) => {
                                 </td>
                                 <td className='px-4 py-2 border-b'>
                                     {d.username}
+                                </td>
+                                <td className='px-4 py-2 border-b'>
+                                    {tipoUser[d.role]}
+                                </td>
+                                <td className='px-4 py-2 border-b'>
+                                    <StatusTagUser status={d.active}/>
                                 </td>
                                 <td className='px-4 py-2 border-b'>
                                     {d.curso.nome}

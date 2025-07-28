@@ -29,7 +29,7 @@ public interface IAuthController
     /// e um JWT válido para o usuário.</returns>
     /// <exception cref="CursoNotFoundException"><c>codeCurso</c> de <paramref name="registerUserRequestModel"/>
     /// não pertence a nenhum curso.</exception>
-    public Task<(UserReadModel, string, string, string, int)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel, HttpContext? httpContext, bool isProfessor = false);
+    public Task<(UserReadModel, string, string, string, int)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel, HttpContext? httpContext);
     /// <summary>
     /// Realiza o login de um usuário já cadastrado no sistema.
     /// Os campos recebidos em &lt;paramref name="registerUserRequestModel"/&gt; são validados de acordo com <see cref="UserLoginRequestModelValidator"/>
@@ -40,6 +40,17 @@ public interface IAuthController
     /// <returns>Representa uma tarefa assíncrona, ela retorna uma tupla com as informações referentes ao usuário
     /// e um JWT válido</returns>
     /// 
+    public Task<UserReadModel> RegisterNewAdminOrProf(RegisterUserRequestModel registerUserRequestModel);
+    /// <summary>
+    /// Realiza o login de um usuário já cadastrado no sistema.
+    /// Os campos recebidos em &lt;paramref name="registerUserRequestModel"/&gt; são validados de acordo com <see cref="UserLoginRequestModelValidator"/>
+    /// Nenhuma mudança no banco é feita, apenas resgata as informações do usuário, faz verificações de segurança
+    /// e gera um JWT válido.
+    /// </summary>
+    /// <param name="userLoginRequestModel">Informações de um usuário já cadastrado.</param>
+    /// <returns>Representa uma tarefa assíncrona, ela retorna uma tupla com as informações referentes ao usuário
+    /// e um JWT válido</returns>
+    ///
     public Task<int> ResendVerificationCode(int userId);
     /// <summary>
     /// Realiza o reenvio do código de ativação do usuário, para o email do mesmo.

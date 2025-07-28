@@ -19,6 +19,9 @@ public static class AuthAnonEndpoints
             .WithOpenApi(AuthSummaries.AuthRequesResetPasswordSpecification);
         builder.MapPost("register", AuthRegisterEndpointHandler)
             .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
+        builder.MapPost("registerProfOrAdmin", AuthRegisterAdminOrProfEndpointHandler)
+            .RequireAuthorization(AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_ADMIN_ROLE)
+            .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
         builder.MapPut("resendVerificationCode", AuthResendVerificationCodeHandler)
             .WithOpenApi(AuthSummaries.AuthRegisterSpecification);
         builder.MapPost("login", AuthLoginEndpointHandler)
@@ -39,8 +42,7 @@ public static class AuthAnonEndpoints
     async private static Task<IResult> AuthRegisterEndpointHandler(
         HttpContext _httpContext,
         [FromBody] RegisterUserRequestModel registerUserRequest,
-        [FromServices] IAuthController controller,
-        [FromQuery] bool isProfessor = false)
+        [FromServices] IAuthController controller)
     {
         string jwtNewUser = null;
         string antiFogeryToken = null;
@@ -49,7 +51,7 @@ public static class AuthAnonEndpoints
 
         try
         {
-            (UserReadModel _, jwtNewUser,antiFogeryToken,antiFogeryTokenCookie, userId) = await controller.RegisterNewUser(registerUserRequest, _httpContext, isProfessor);
+            (UserReadModel _, jwtNewUser,antiFogeryToken,antiFogeryTokenCookie, userId) = await controller.RegisterNewUser(registerUserRequest, _httpContext);
         }
         catch (CursoNotFoundException ex)
         {
@@ -69,6 +71,28 @@ public static class AuthAnonEndpoints
         };
 
         return Results.Json(retorno);
+    }
+
+    async private static Task<IResult> AuthRegisterAdminOrProfEndpointHandler(
+        HttpContext _httpContext,
+        [FromBody] RegisterUserRequestModel registerUserRequest,
+        [FromServices] IAuthController controller)
+    {
+
+        try
+        {
+            await controller.RegisterNewAdminOrProf(registerUserRequest);
+        }
+        catch (CursoNotFoundException ex)
+        {
+            return Results.NotFound(new { message = ex.Message, tipo = 1 });
+        }
+        catch (Exception e)
+        {
+            return Results.BadRequest(new { message = e.Message, tipo = 2 });
+        }
+
+        return Results.Ok();
     }
 
     async private static Task<IResult> AuthResendVerificationCodeHandler(
