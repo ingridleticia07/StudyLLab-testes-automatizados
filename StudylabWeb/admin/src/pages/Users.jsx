@@ -4,7 +4,7 @@ import Button from '../components/Buttons/Button';
 import Breadcrumb from '../components/Breadcrumb/Breadcrumb';
 import TableUsers from '../components/Tables/TableUsers';
 import { getAllUsersInfo } from "../../../platform/repository/user";
-import RegisterUser from '../components/RegisterUser/RegisterUser';
+import RegisterUserModal from '../components/RegisterUser/RegisterUser';
 
 const Users = () => {
     const [showRegister, setShowRegister] = useState(false);
@@ -36,7 +36,7 @@ const Users = () => {
                     </div>
                     <div className="flex-grow flex justify-end">
                         <Button
-                            text="Cadastrar Disciplina"
+                            text="Cadastrar usuário"
                             handleClick={() => setShowRegister(true)}
                             className="w-full sm:w-auto"
                         />
@@ -46,7 +46,7 @@ const Users = () => {
                 setCurrentPage={setCurrentPage} handleDelete={removeItem} />
             </section>
             {showRegister && (
-                <RegisterUser
+                <RegisterUserModal
                     handleCancel={() => setShowRegister(false)}
                     setIterationData={setIterationData}
                     currentPage={currentPage}

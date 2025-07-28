@@ -4,6 +4,7 @@ import {
   removeAuthorizationHeaderInterceptor,
 } from "./axios.js";
 import { getCursoCodeByName } from "../utils/curso_matcher.js";
+import { getTipoUserByName } from "../utils/user_matcher.js";
 import { getUserInfo, cleanUserInfo } from "./user.js";
 
 export const AUTH_TOKEN = "authToken";
@@ -73,6 +74,34 @@ export async function register(
       res.data.tokenAntifogeryCookie,
       res.data.idUsuario
     );
+
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function registerAdminOrProf(
+  username,
+  email,
+  password,
+  matricula,
+  cursoName,
+  role
+) {
+  const cursoCode = getCursoCodeByName(cursoName);
+  const roleCode = getTipoUserByName(role);
+
+  try {
+    const res = await instance
+    .post(AUTH_ENDPOINT + "/registerProfOrAdmin", {
+      username: username,
+      email: email,
+      password: password,
+      matricula: matricula,
+      role: roleCode,
+      codeCurso: cursoCode,
+    });
+  
 
   } catch (error) {
     throw error;
