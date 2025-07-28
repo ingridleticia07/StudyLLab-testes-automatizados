@@ -8,8 +8,9 @@ import PopUp from '../PopUp/PopUp';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import StatusTagUser from '../StatusTag/StatusTagUser';
+import { deleteUser} from "../../../../platform/repository/user";
 
-const TableUsers = ({ data, currentPage, setCurrentPage, handleDelete }) => {
+const TableUsers = ({ data, currentPage, setCurrentPage, setIterationData }) => {
     const headersColumns = [
         '#',
         'matricula',
@@ -20,12 +21,13 @@ const TableUsers = ({ data, currentPage, setCurrentPage, handleDelete }) => {
         'email',
         'ações',
     ];
-    const tipoUser = ['Aluno','Professor','Admin'];
+    const tipoUser = ['Aluno','Admin','Professor'];
     const [showPopUp, setShowPopUp] = useState(false);
     const [selectedItem, setSelectedItem] = useState();
     const maxPage = data.maxPage;
 
     const onDelete = (id, key, name) => {
+        
         setSelectedItem({
             id,
             key,
@@ -39,7 +41,15 @@ const TableUsers = ({ data, currentPage, setCurrentPage, handleDelete }) => {
             setCurrentPage(newPage);
         }
     };
-    console.log(data.users)
+    
+    const handleDeleteRegister = async(identifier) => {
+        try {
+            await deleteUser(identifier);
+            setIterationData((prev) => prev + 1);
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <div className="overflow-auto max-h-[350px] rounded-md">
             <table className="w-full min-w-full text-left border-separate border-spacing-0 table-auto">
@@ -80,7 +90,7 @@ const TableUsers = ({ data, currentPage, setCurrentPage, handleDelete }) => {
                                         <button
                                             aria-label='excluir aluno'
                                             onClick={() =>
-                                                onDelete(d.id, 'usuarios', d.aluno)
+                                                onDelete(d.id, 'usuarios', d.username)
                                             }
                                         >
                                             <img
@@ -99,19 +109,19 @@ const TableUsers = ({ data, currentPage, setCurrentPage, handleDelete }) => {
                 <tfoot>
                     {maxPage > 1 && (
                         <tr>
-                        <td colSpan={headersColumns.length} className="px-4 py-2 sticky bottom-0 bg-gray-100 shadow-md text-center">
-                            {Array.from({ length: maxPage }, (_, i) => (
-                            <button
-                                key={i + 1}
-                                onClick={() => handlePageChange(i + 1)}
-                                className={`w-8 h-8 rounded-full mx-1 ${
-                                currentPage === i + 1 ? 'bg-blue-500 text-white' : 'hover:bg-gray-200'
-                                }`}
-                            >
-                                {i + 1}
-                            </button>
-                            ))}
-                        </td>
+                            <td colSpan={headersColumns.length} className="px-4 py-2 sticky bottom-0 bg-gray-100 shadow-md text-center">
+                                {Array.from({ length: maxPage }, (_, i) => (
+                                <button
+                                    key={i + 1}
+                                    onClick={() => handlePageChange(i + 1)}
+                                    className={`w-8 h-8 rounded-full mx-1 ${
+                                    currentPage === i + 1 ? 'bg-blue-500 text-white' : 'hover:bg-gray-200'
+                                    }`}
+                                >
+                                    {i + 1}
+                                </button>
+                                ))}
+                            </td>
                         </tr>
                     )}
                 </tfoot>
@@ -121,7 +131,7 @@ const TableUsers = ({ data, currentPage, setCurrentPage, handleDelete }) => {
                 <PopUp
                     itemDelete={selectedItem}
                     handleClose={() => setShowPopUp(false)}
-                    handleDeleteConfirmation={handleDelete}
+                    handleDeleteConfirmation={handleDeleteRegister}
                 />
             )}
             <ToastContainer className='capitalize'/>

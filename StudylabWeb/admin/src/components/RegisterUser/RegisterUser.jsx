@@ -30,7 +30,7 @@ const initialFormData = {
   confirmarSenha: '',
 };
 
-const RegisterUserModal = ({ handleCancel }) => {
+const RegisterUserModal = ({ handleCancel , setIterationData, currentPage}) => {
   const [formData, setFormData] = useState(initialFormData);
   const [showPassword, setShowPassword] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -86,6 +86,7 @@ const RegisterUserModal = ({ handleCancel }) => {
         formData.curso,
         formData.role
       );
+      setIterationData((prev) => prev + 1);
       handleCancel();
     } catch (error) {
       const message =
@@ -114,7 +115,7 @@ const RegisterUserModal = ({ handleCancel }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-opacity-30 bg-gray-300">
       <div className="bg-white p-7 rounded-md shadow-lg w-full max-w-2xl">
-        <h2 className="text-2xl font-bold text-black mb-5 text-center">
+        <h2 className="text-2xl font-bold text-black mb-5">
           <div className="flex justify-center mb-2">
             {state.showLoader && <Loading />}
           </div>

@@ -23,7 +23,7 @@ const Users = () => {
             }
         }
         getAllUsers();
-    }, []);
+    }, [iterationData]);
     
     return (
         <div className='flex flex-col h-full'>
@@ -43,7 +43,7 @@ const Users = () => {
                     </div>
                 </div>
                 <TableUsers data={users}  currentPage={currentPage}
-                setCurrentPage={setCurrentPage} handleDelete={removeItem} />
+                setCurrentPage={setCurrentPage} setIterationData={setIterationData} />
             </section>
             {showRegister && (
                 <RegisterUserModal
