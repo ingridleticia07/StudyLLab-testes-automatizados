@@ -9,6 +9,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import StatusTagUser from '../StatusTag/StatusTagUser';
 import { deleteUser} from "../../../../platform/repository/user";
+import EditUser from '../EditUser/EditUser';
 
 const TableUsers = ({ data, currentPage, setCurrentPage, setIterationData }) => {
     const headersColumns = [
@@ -23,8 +24,16 @@ const TableUsers = ({ data, currentPage, setCurrentPage, setIterationData }) => 
     ];
     const tipoUser = ['Aluno','Admin','Professor'];
     const [showPopUp, setShowPopUp] = useState(false);
+    const [showPopUpEdit, setShowPopUpEdit] = useState(false);
     const [selectedItem, setSelectedItem] = useState();
     const maxPage = data.maxPage;
+
+    const onEdit = (item) => {
+        setShowPopUpEdit(true);
+        setSelectedItem({
+            item
+        });
+    };
 
     const onDelete = (id, key, name) => {
         
@@ -81,6 +90,7 @@ const TableUsers = ({ data, currentPage, setCurrentPage, setIterationData }) => 
                                 </td>
                                 <td className='px-4 py-2 border-b'>
                                     <div className='flex gap-5'>
+                                        
                                         <button aria-label='bloquear aluno'>
                                             <img
                                                 src={icons.block}
@@ -98,6 +108,21 @@ const TableUsers = ({ data, currentPage, setCurrentPage, setIterationData }) => 
                                                 alt='lixeira'
                                             />
                                         </button>
+                                        {
+                                            d.role == 0 &&(
+                                                <button
+                                                    aria-label='editar aluno'
+                                                    onClick={() =>
+                                                        onEdit(d)
+                                                    }
+                                                >
+                                                    <img
+                                                        src={icons.pencil}
+                                                        alt='editar'
+                                                    />
+                                                </button>
+                                            )
+                                        }
                                     </div>
                                 </td>
                             </tr>
@@ -132,6 +157,13 @@ const TableUsers = ({ data, currentPage, setCurrentPage, setIterationData }) => 
                     itemDelete={selectedItem}
                     handleClose={() => setShowPopUp(false)}
                     handleDeleteConfirmation={handleDeleteRegister}
+                />
+            )}
+            {showPopUpEdit && (
+                <EditUser
+                    handleClose={() => setShowPopUpEdit(false)}
+                    row={selectedItem}
+                    setIterationData={setIterationData}
                 />
             )}
             <ToastContainer className='capitalize'/>

@@ -4,7 +4,7 @@ import SelectField from '../SelectField/SelectField';
 import AlertError from '../../components/Alerts/AlertErro';
 import Loading from '../../components/Loading/LoadingForm';
 import { isEmptyString } from '../../../../common/services/validation';
-import { editarDisciplina, getAllDisciplinasWithPagination } from '../../../../platform/repository/disciplina';
+import { editarDisciplina } from '../../../../platform/repository/disciplina';
 
 const cursoOptions = [
   { value: 'ES', label: 'Engenharia de Software' },
