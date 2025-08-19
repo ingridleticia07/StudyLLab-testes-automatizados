@@ -15,9 +15,9 @@ const cursoOptions = [
 ];
 
 const tipoUserOptions = [
-  { value: "student", label: 'Aluno' },
-  { value: "prof", label: 'Professor' },
-  { value: "admin", label: 'Admin' }
+  { role:0, value: "student", label: 'Aluno' },
+  { role:1, value: "admin", label: 'Admin' },
+  { role:2, value: "prof", label: 'Professor' }
 ];
 
 const EditUser = ({ row, handleClose, setIterationData }) => {
@@ -27,9 +27,9 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
     nome: row?.item.username || '',
     email: row?.item.email || '',
     matricula: row?.item.matricula || '',
-    curso: row?.item.curso || '',
-    senha: '', // senha só se quiser alterar
-    role: row?.item.tipoUsuario || '',
+    curso: cursoOptions.find(option => option.label.toLowerCase() == row.item.curso.nome.toLowerCase())?.value ||  '',
+    senha: '',
+    role: tipoUserOptions[row.item.role]?.value ||  '',
   };
   
   const [formData, setFormData] = useState(initialFormData);
@@ -100,14 +100,30 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
   const fields = [
     {
       id: 'nome',
-      name: 'Nome Completo',
+      name: 'nome',
       label: 'Nome Completo',
       placeholder: 'Digete seu nome',
       value: formData.nome,
       type: 'text',
     },
     {
-      id: 'Matricula',
+      id: 'curso',
+      name: 'curso',
+      label: 'Curso',
+      value: formData.curso,
+      options: cursoOptions,
+      type: 'select',
+    },
+    {
+      id: 'role',
+      name: 'role',
+      label: 'Tipo de usuário',
+      value: formData.role,
+      options: tipoUserOptions,
+      type: 'select',
+    },
+    {
+      id: 'matricula',
       name: 'matricula',
       label: 'Matrícula/Siape',
       placeholder: 'Matrícula/Siape',
@@ -142,15 +158,29 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
 
           {fields.map((field) => (
             <div className="flex flex-col" key={field.id}>
-                <InputField
-                    id={field.id}
-                    name={field.name}
-                    label={field.label}
-                    placeholder={field.placeholder}
-                    value={field.value}
-                    type={field.type}
-                    onChange={handleChange(field.name)}
-                />
+                {
+                    field.type == "text" &&(
+                      <InputField
+                        id={field.id}
+                        name={field.name}
+                        label={field.label}
+                        placeholder={field.placeholder}
+                        value={field.value}
+                        type={field.type}
+                        onChange={handleChange(field.name)}
+                    />
+                  )}
+                  {field.type != "text" &&(
+                      <SelectField
+                        id={field.id}
+                        name={field.name}
+                        label={field.label}
+                        options={field.options}
+                        value={field.value}
+                        onChange={handleChange(field.name)}
+                      />
+                  )
+                }
                 {isEmptyString(field.value) && state.isSubmitting && (
                     <h5 className='text-red-500 text-sm self-start'>
                     *Insira {field.name.toLowerCase() === 'quantidade' ? 'a' : 'o'} {field.label.toLowerCase()}
@@ -158,33 +188,6 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
                 )}
             </div>
         ))}
-          <div className="flex flex-col">
-            <SelectField
-              id="curso"
-              name="curso"
-              label="Curso"
-              options={cursoOptions}
-              value={formData.curso}
-              onChange={handleChange('curso')}
-            />
-            {isEmptyString(formData.curso) && state.isSubmitting && (
-              <h5 className="text-red-500 text-sm self-start">*Insira o curso</h5>
-            )}
-          </div>
-
-          <div className="flex flex-col">
-            <SelectField
-              id="role"
-              name="role"
-              label="Tipo de Usuário"
-              options={tipoUserOptions}
-              value={formData.role}
-              onChange={handleChange('role')}
-            />
-            {isEmptyString(formData.role) && state.isSubmitting && (
-              <h5 className="text-red-500 text-sm self-start">*Selecione o tipo de usuário</h5>
-            )}
-          </div>
 
           <div className="flex flex-col md:flex-row items-center md:justify-end gap-3 md:gap-5 col-span-1 md:col-span-2">
             <button
