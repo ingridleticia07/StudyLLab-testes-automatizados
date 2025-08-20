@@ -1,5 +1,7 @@
 import { instance } from "./axios.js";
 import User from "../../common/models/user_model.js";
+import { getCursoCodeByName } from "../utils/curso_matcher.js";
+import { getTipoUserByName } from "../utils/user_matcher.js";
 
 const USER_ENDPOINT = "/user";
 const USER_INFO_STORAGE_KEY = "user";
@@ -45,6 +47,23 @@ export async function deleteUser(id) {
 export async function changeUserStatus(id,status) {
   let response = await instance.put(USER_ENDPOINT + "/" + id,{
     active:status
+  })
+  .then(function(res){
+
+  }).catch(function(error){
+    console.log(error);
+  });
+
+}
+
+export async function changeUser(userDTO) {
+  let statusBooleano = (userDTO.status === "true");
+
+  let response = await instance.put(USER_ENDPOINT + "/" + userDTO.id,{
+    username:userDTO.nome,
+    codeCurso:getCursoCodeByName(userDTO.curso),
+    active:statusBooleano,
+    role:getTipoUserByName(userDTO.role)
   })
   .then(function(res){
 
