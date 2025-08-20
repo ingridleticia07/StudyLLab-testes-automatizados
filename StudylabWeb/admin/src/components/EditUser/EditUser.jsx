@@ -4,7 +4,7 @@ import SelectField from '../SelectField/SelectField';
 import AlertError from '../../components/Alerts/AlertErro';
 import Loading from '../../components/Loading/LoadingForm';
 import { isEmptyString } from '../../../../common/services/validation';
-import { registerAdminOrProf } from '../../../../platform/repository/auth';
+import { changeUser } from '../../../../platform/repository/user';
 
 const cursoOptions = [
   { value: 'ES', label: 'Engenharia de Software' },
@@ -20,13 +20,18 @@ const tipoUserOptions = [
   { role:2, value: "prof", label: 'Professor' }
 ];
 
-const EditUser = ({ row, handleClose, setIterationData }) => {
+const statusUserOptions = [ 
+  {value:'true', label:'Ativo'},
+  {value:'false', label:'Inativo'}
+];
 
+const EditUser = ({ row, handleClose, setIterationData }) => {
   const initialFormData = {
-    id: row?.id || '',
+    id: row?.item.id || '',
     nome: row?.item.username || '',
     email: row?.item.email || '',
     matricula: row?.item.matricula || '',
+    status:String(row?.item.active) || '',
     curso: cursoOptions.find(option => option.label.toLowerCase() == row.item.curso.nome.toLowerCase())?.value ||  '',
     senha: '',
     role: tipoUserOptions[row.item.role]?.value ||  '',
@@ -41,7 +46,7 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
     isSubmitting: false,
     showLoader: false,
   });
-
+  
   const handleChange = (field) => (e) => {
     setFormData({ ...formData, [field]: e.target.value });
   };
@@ -83,7 +88,7 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
     setState((prev) => ({ ...prev, showLoader: true }));
 
     try {
-      await registerAdminOrProf(formData); // precisa existir no seu repo
+      await changeUser(formData); // precisa existir no seu repo
       setIterationData((prev) => prev + 1);
       handleClose();
     } catch (error) {
@@ -102,7 +107,7 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
       id: 'nome',
       name: 'nome',
       label: 'Nome Completo',
-      placeholder: 'Digete seu nome',
+      placeholder: 'Digite seu nome',
       value: formData.nome,
       type: 'text',
     },
@@ -118,8 +123,18 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
       id: 'role',
       name: 'role',
       label: 'Tipo de usuário',
+      fisrtField: 'tipo de usuário',
       value: formData.role,
       options: tipoUserOptions,
+      type: 'select',
+    },
+    {
+      id: 'status',
+      name: 'status',
+      label: 'Status do usuário',
+      fisrtField: 'status do usuário',
+      value: formData.status,
+      options: statusUserOptions,
       type: 'select',
     },
     {
@@ -178,6 +193,7 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
                         options={field.options}
                         value={field.value}
                         onChange={handleChange(field.name)}
+                        fisrtField={field.fisrtField}
                       />
                   )
                 }
