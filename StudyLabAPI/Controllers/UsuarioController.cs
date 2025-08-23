@@ -4,6 +4,7 @@ using StudyLabAPI.Exceptions;
 using StudyLabAPI.Mapper;
 using StudyLabAPI.Models;
 using StudyLabAPI.Repositories;
+using StudyLabAPI.Services.Hash;
 using StudyLabAPI.Validators.CustomValidators;
 using StudyLabAPI.Validators.CustomValidators.RequestQuery;
 using ILogger = Serilog.ILogger;
@@ -22,10 +23,10 @@ public class UsuarioController : IUsuarioController
     private readonly UsuarioModelMapper _usuarioModelMapper;
     private readonly IValidator<UpdateUserRequestModel> _updateUserValidator;
     private ILogger logger { get; }
-
+    private IHashService hashService { get; }
     public UsuarioController(IUsuarioRepository userRepository, UsuarioModelMapper usuarioModelMapper,
         ICursoRepository cursoRepository, ICodigoUsuarioRepository codigoUsuarioRepository,
-        IValidator<UpdateUserRequestModel> updateUserValidator, ILogger logger)
+        IValidator<UpdateUserRequestModel> updateUserValidator, ILogger logger, IHashService hashService)
     {
         _userRepository = userRepository;
         _cursoRepository = cursoRepository;
@@ -33,6 +34,7 @@ public class UsuarioController : IUsuarioController
         _usuarioModelMapper = usuarioModelMapper;
         _updateUserValidator = updateUserValidator;
         this.logger = logger;
+        this.hashService = hashService;
     }
 
     public async Task<UsersListResponse> GetUsers(int page, int pageSize, bool onlyProfessor = false)
@@ -171,7 +173,7 @@ public class UsuarioController : IUsuarioController
 
         if (request.password is not null)
         {
-            user.senhaUsuario = request.password;
+            user.senhaUsuario = hashService.Hash(request.password);
             updated = true;
         }
 

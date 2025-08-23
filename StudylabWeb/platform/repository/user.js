@@ -63,6 +63,7 @@ export async function changeUser(userDTO) {
     username:userDTO.nome,
     codeCurso:getCursoCodeByName(userDTO.curso),
     active:statusBooleano,
+    password:userDTO.password,
     role:getTipoUserByName(userDTO.role)
   })
   .then(function(res){

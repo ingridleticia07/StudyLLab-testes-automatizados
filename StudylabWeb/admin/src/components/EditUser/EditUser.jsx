@@ -26,6 +26,7 @@ const statusUserOptions = [
 ];
 
 const EditUser = ({ row, handleClose, setIterationData }) => {
+  
   const initialFormData = {
     id: row?.item.id || '',
     nome: row?.item.username || '',
@@ -33,8 +34,8 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
     matricula: row?.item.matricula || '',
     status:String(row?.item.active) || '',
     curso: cursoOptions.find(option => option.label.toLowerCase() == row.item.curso.nome.toLowerCase())?.value ||  '',
-    senha: '',
-    role: tipoUserOptions[row.item.role]?.value ||  '',
+    password: '',
+    role: tipoUserOptions[row.item.role]?.value ||  ''
   };
   
   const [formData, setFormData] = useState(initialFormData);
@@ -120,15 +121,6 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
       type: 'select',
     },
     {
-      id: 'role',
-      name: 'role',
-      label: 'Tipo de usuário',
-      fisrtField: 'tipo de usuário',
-      value: formData.role,
-      options: tipoUserOptions,
-      type: 'select',
-    },
-    {
       id: 'status',
       name: 'status',
       label: 'Status do usuário',
@@ -153,6 +145,14 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
       value: formData.email,
       type: 'text',
     },
+    {
+      id: 'password',
+      name: 'password',
+      label: 'Nova senha',
+      placeholder: 'Nova Senha',
+      value: formData.password,
+      type: 'text',
+    }
   ];
   return (
     <div className='fixed inset-0 flex items-center justify-center z-50 bg-opacity-30 bg-gray-300'>
