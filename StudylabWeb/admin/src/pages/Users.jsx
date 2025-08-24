@@ -12,8 +12,8 @@ const Users = () => {
     const { data, removeItem } = useState();
     const [users, setUsers] = useState([]); 
     const [currentPage, setCurrentPage] = useState(1);
-    const [UserTypeFilter, setUserTypeFilter] = useState(0);
-    const [UserStatusFiler, setUserStatusFiler] = useState(0);
+    const [UserTypeFilter, setUserTypeFilter] = useState();
+    const [UserStatusFiler, setUserStatusFiler] = useState();
     const [iterationData, setIterationData] = useState(0);
 
     useEffect(() => {
@@ -26,7 +26,7 @@ const Users = () => {
             }
         }
         getAllUsers();
-    }, [iterationData, UserStatusFiler, UserTypeFilter]);
+    }, [currentPage,iterationData, UserStatusFiler, UserTypeFilter]);
     
     return (
         <div className='flex flex-col h-full'>

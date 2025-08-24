@@ -5,8 +5,8 @@ const UserFilter = ({ setUserStatusFiler, setUserTypeFilter, setCurrentPage }) =
   const [showStatus, setShowStatus] = useState(false);
   const [showType, setShowType] = useState(false);
 
-  const [selectedStatus, setSelectedStatus] = useState({ id: 1, name: 'Todos os status', value: '' });
-  const [selectedType, setSelectedType] = useState({ id: 1, name: 'Todos os tipos', value: '' });
+  const [selectedStatus, setSelectedStatus] = useState({ id: 1, name: 'Todos os status', value: 0 });
+  const [selectedType, setSelectedType] = useState({ id: 1, name: 'Todos os tipos', value: 0 });
 
   const statusDropdownRef = useRef(null);
   const typeDropdownRef = useRef(null);

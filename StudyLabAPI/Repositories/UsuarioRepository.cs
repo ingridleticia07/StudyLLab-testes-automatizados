@@ -104,23 +104,42 @@ public class UsuarioRepository : IUsuarioRepository
     public Task<int> GetUsersCount() =>
         GetUsersCount(_dbContext);
 
-    private async Task<int> GetUsersCountWFactory()
+    private async Task<int> GetUsersCountWFactory(int userType, int statusUsuario)
     {
         await using AppDbContext? inDbContext = await _dbContextFactory.CreateDbContextAsync();
 
         if (inDbContext is null)
             throw new("Was not possible to instanciaite a new DbContext");
 
-        return await GetUsersCount(inDbContext);
+        return await GetUsersCount(inDbContext,userType, statusUsuario);
     }
 
-    private async Task<int> GetUsersCount(AppDbContext inDbContext) =>
-        await inDbContext.usuarios.CountAsync();
+    private async Task<int> GetUsersCount(AppDbContext inDbContext, int userType = 0, int statusUsuario = 0)
+    {
+        var query = inDbContext.usuarios.AsQueryable();
+    
+        // filtro por statusUsuario (apenas se for 1 ou 2)
+        if (statusUsuario == 1)
+            query = query.Where(f => f.statusUsuario == false);
+        else if (statusUsuario == 2)
+            query = query.Where(f => f.statusUsuario == true);
+    
+        // filtro por userType (apenas se for 1, 2 ou 3)
+        if (userType == 1)
+            query = query.Where(f => f.tipoUsuario == UserRole.Admin);
+        else if (userType == 2)
+            query = query.Where(f => f.tipoUsuario == UserRole.Prof);
+        else if (userType == 3)
+            query = query.Where(f => f.tipoUsuario == UserRole.User);
+    
+        return await query.CountAsync();
+    }
+
 
     public async Task<(IList<UsuarioModel>, int, int)> GetUsersAndCount(int page, int pageSize,int userType = 0, int statusUsuario = 0, bool onlyProfessor = false)
     {
         var usersTask = GetUsersWFactory(page, pageSize, userType,statusUsuario, onlyProfessor);
-        var usersCountTask = GetUsersCountWFactory();
+        var usersCountTask = GetUsersCountWFactory(userType, statusUsuario);
         await Task.WhenAll(usersTask, usersCountTask);
 
         var result = usersTask.Result;
