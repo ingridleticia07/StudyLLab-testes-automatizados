@@ -5,25 +5,28 @@ import Breadcrumb from '../components/Breadcrumb/Breadcrumb';
 import TableUsers from '../components/Tables/TableUsers';
 import { getAllUsersInfo } from "../../../platform/repository/user";
 import RegisterUserModal from '../components/RegisterUser/RegisterUser';
+import FilterUser from '../components/Filter/FilterUser';
 
 const Users = () => {
     const [showRegister, setShowRegister] = useState(false);
     const { data, removeItem } = useState();
     const [users, setUsers] = useState([]); 
     const [currentPage, setCurrentPage] = useState(1);
+    const [UserTypeFilter, setUserTypeFilter] = useState(0);
+    const [UserStatusFiler, setUserStatusFiler] = useState(0);
     const [iterationData, setIterationData] = useState(0);
 
     useEffect(() => {
         const getAllUsers = async () => {
             try {
-                let userList = await getAllUsersInfo(currentPage,10);
+                let userList = await getAllUsersInfo(currentPage,10,UserStatusFiler,UserTypeFilter);
                 setUsers(userList);
             } catch (error) {
                 console.log(error);            
             }
         }
         getAllUsers();
-    }, [iterationData]);
+    }, [iterationData, UserStatusFiler, UserTypeFilter]);
     
     return (
         <div className='flex flex-col h-full'>
@@ -33,6 +36,7 @@ const Users = () => {
                 <div className="flex flex-wrap items-center gap-2 px-4 py-4">
                     <div className="flex items-center gap-4 flex-shrink-0">
                         <h1 className='text-3xl font-bold py-8'>Usuarios</h1>
+                        <FilterUser setUserStatusFiler={setUserStatusFiler} setUserTypeFilter={setUserTypeFilter} setCurrentPage={setCurrentPage}/>
                     </div>
                     <div className="flex-grow flex justify-end">
                         <Button
