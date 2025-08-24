@@ -57,43 +57,48 @@ public class UsuarioRepository : IUsuarioRepository
     public Task<IList<UsuarioModel>> GetUsers(int page, int pageSize) =>
         GetUsers(_dbContext, page, pageSize);
 
-    private async Task<IList<UsuarioModel>> GetUsersWFactory(int page, int pageSize, bool onlyProfessor = false)
+    private async Task<IList<UsuarioModel>> GetUsersWFactory(int page, int pageSize,int userType = 0, int statusUsuario = 0, bool onlyProfessor = false)
     {
         await using AppDbContext? inDbContext = await _dbContextFactory.CreateDbContextAsync();
 
         if (inDbContext is null)
             throw new("Was not possible to instanciaite a new DbContext");
 
-        return await GetUsers(inDbContext, page, pageSize, onlyProfessor);
+        return await GetUsers(inDbContext, page, pageSize,userType,statusUsuario, onlyProfessor);
     }
 
-    private async Task<IList<UsuarioModel>> GetUsers(AppDbContext inDbContext, int page, int pageSize, bool onlyProfessor = false)
+    private async Task<IList<UsuarioModel>> GetUsers(AppDbContext inDbContext, int page, int pageSize,int userType = 0, int statusUsuario = 0, bool onlyProfessor = false)
     {
         var result = new List<UsuarioModel>();
-
-        if (!onlyProfessor)
-        {
-            result = await inDbContext.usuarios
+        
+        var query = inDbContext.usuarios
             .AsNoTracking()
+            .Include(f => f.curso)
             .OrderBy(f => f.idUsuario)
+            .AsQueryable();
+        
+        // filtro por statusUsuario (apenas se for 0 ou 1)
+        if (statusUsuario == 1)
+            query = query.Where(f => f.statusUsuario == false);
+        else if (statusUsuario == 2)
+            query = query.Where(f => f.statusUsuario == true);
+        
+        // filtro por userType (apenas se for 1, 2 ou 3)
+        if (userType == 1)
+            query = query.Where(f => f.tipoUsuario == UserRole.Admin);
+        else if (userType == 2)
+            query = query.Where(f => f.tipoUsuario == UserRole.Prof);
+        else if (userType == 3)
+            query = query.Where(f => f.tipoUsuario == UserRole.User);
+        
+        // paginação e execução da query
+        result = await query
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Include(f => f.curso)
             .ToListAsync();
-        }
-        else
-        {
-            result = await inDbContext.usuarios
-            .AsNoTracking()
-            .OrderBy(f => f.idUsuario)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .Include(f => f.curso)
-            .Where(f => f.tipoUsuario == UserRole.Prof)
-            .ToListAsync();
-        }
-
+        
         return result;
+
     }
 
     public Task<int> GetUsersCount() =>
@@ -112,9 +117,9 @@ public class UsuarioRepository : IUsuarioRepository
     private async Task<int> GetUsersCount(AppDbContext inDbContext) =>
         await inDbContext.usuarios.CountAsync();
 
-    public async Task<(IList<UsuarioModel>, int, int)> GetUsersAndCount(int page, int pageSize, bool onlyProfessor = false)
+    public async Task<(IList<UsuarioModel>, int, int)> GetUsersAndCount(int page, int pageSize,int userType = 0, int statusUsuario = 0, bool onlyProfessor = false)
     {
-        var usersTask = GetUsersWFactory(page, pageSize, onlyProfessor);
+        var usersTask = GetUsersWFactory(page, pageSize, userType,statusUsuario, onlyProfessor);
         var usersCountTask = GetUsersCountWFactory();
         await Task.WhenAll(usersTask, usersCountTask);
 

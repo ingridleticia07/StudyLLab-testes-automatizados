@@ -37,7 +37,7 @@ public class UsuarioController : IUsuarioController
         this.hashService = hashService;
     }
 
-    public async Task<UsersListResponse> GetUsers(int page, int pageSize, bool onlyProfessor = false)
+    public async Task<UsersListResponse> GetUsers(int page, int pageSize,int userType = 0, int statusUsuario = 0, bool onlyProfessor = false)
     {
         logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
             page, pageSize);
@@ -53,7 +53,7 @@ public class UsuarioController : IUsuarioController
             page, pageSize);
 
         (var result, int resultCount, int usersCount) = await _userRepository
-            .GetUsersAndCount(page, pageSize, onlyProfessor);
+            .GetUsersAndCount(page, pageSize,userType, statusUsuario,onlyProfessor);
 
         var userReadResult = result
             .Select(_usuarioModelMapper.UsuarioModelToUserReadModel)

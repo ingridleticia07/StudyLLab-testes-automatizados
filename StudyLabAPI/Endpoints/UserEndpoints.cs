@@ -52,13 +52,15 @@ public static class UserEndpoints
     private async static Task<IResult> GetUsers(HttpContext context,
         [FromQuery] int page,
         [FromQuery] int pageSize,
+        [FromQuery] int status,
+        [FromQuery] int userType,
         [FromServices] IUsuarioController controller,
         [FromQuery] bool onlyProfessor = false)
     {
         UsersListResponse result;
         try
         {
-            result = await controller.GetUsers(page, pageSize, onlyProfessor);
+            result = await controller.GetUsers(page, pageSize,userType,status, onlyProfessor);
         }
         catch (Exception e)
         {

@@ -29,8 +29,8 @@ export async function getUserInfo(idUser) {
   return userInfo;
 }
 
-export async function getAllUsersInfo(page, pageSize) {
-  let response = await instance.get(USER_ENDPOINT + "?page="+page+"&pageSize="+pageSize);
+export async function getAllUsersInfo(page, pageSize,status = 0,userType = 0) {
+  let response = await instance.get(USER_ENDPOINT + "?page="+page+"&pageSize="+pageSize+"&status="+status+"&userType="+userType);
 
   if (response.status !== 200) {
     return null;
@@ -58,12 +58,12 @@ export async function changeUserStatus(id,status) {
 
 export async function changeUser(userDTO) {
   let statusBooleano = (userDTO.status === "true");
-
+  let password = userDTO.password == "" ? null : userDTO.password;
   let response = await instance.put(USER_ENDPOINT + "/" + userDTO.id,{
     username:userDTO.nome,
     codeCurso:getCursoCodeByName(userDTO.curso),
     active:statusBooleano,
-    password:userDTO.password,
+    password:password,
     role:getTipoUserByName(userDTO.role)
   })
   .then(function(res){
