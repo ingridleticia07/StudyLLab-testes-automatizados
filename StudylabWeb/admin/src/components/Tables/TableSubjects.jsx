@@ -10,7 +10,7 @@ import EditSubject from '../EditSubject/EditSubject';
 import { StudylabContext } from '../../context/StudylabContext';
 import {deleteDisciplina, getAllDisciplinasWithPagination} from '../../../../platform/repository/disciplina';
 
-const TableSubjects = ({ data, setDisciplinas, currentPage, setCurrentPage, setIterationData, handleDelete }) => {
+const TableSubjects = ({ data, setDisciplinas, currentPage, setCurrentPage, setIterationData, hasData }) => {
     
     const headersColumns = [
         '#',
@@ -115,7 +115,7 @@ const TableSubjects = ({ data, setDisciplinas, currentPage, setCurrentPage, setI
                         ))}
                     </tbody>
                 ) : (
-                    <Loading />
+                    <Loading hasData={hasData}/>
                 )}
                 <tfoot>
                     {maxPage > 1 && (

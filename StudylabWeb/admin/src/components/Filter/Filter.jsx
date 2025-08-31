@@ -35,7 +35,7 @@ const CourseFilter = ({ setCursoFilter, setCurrentPage }) => {
     setSelectedCourse(course);
     setCursoFilter(course.id);
     setShowCourses(false);
-
+    
     prevCursoFilter.current = course;
   };
 
@@ -47,7 +47,7 @@ const CourseFilter = ({ setCursoFilter, setCurrentPage }) => {
         onClick={() => setShowCourses(!showCourses)}
       >
         <img src={icons.filter} alt="Filtro" className="w-5 h-5" />
-        Filtro
+        {selectedCourse.name}
       </button>
 
       {showCourses && (

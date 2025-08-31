@@ -12,6 +12,7 @@ const Subjects = () => {
     const [disciplinas, setDisciplinas] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [iterationData, setIterationData] = useState(0);
+    const [ hasData, SetHasData ] = useState(true);
 
     useEffect(() => {
         const getDataDisciplinas = async () => {
@@ -23,12 +24,16 @@ const Subjects = () => {
 
                 let disciplinasList = await getAllDisciplinasWithPagination(currentPageFilter, 10, idCurso);
                 
+                setDisciplinas(disciplinasList);
+                if(disciplinasList.disciplinaCount == 0)
+                    SetHasData(false);
+                else
+                    SetHasData(true);
+
                 if(currentPage > disciplinasList.maxPage || currentPage == 0){
                     currentPageFilter = disciplinasList.maxPage;
                     setCurrentPage(currentPageFilter)
                 }
-                
-                setDisciplinas(disciplinasList);
             } catch (error) {
                 console.log(error);
             }
@@ -63,9 +68,7 @@ const Subjects = () => {
                         currentPage={currentPage}
                         setCurrentPage={setCurrentPage}
                         setIterationData={setIterationData}
-                        handleDelete={(id) => {
-                            // implemente a remoção aqui se quiser
-                        }}
+                        hasData={hasData}
                     />
                 </div>
             </section>

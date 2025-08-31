@@ -9,7 +9,7 @@ import FilterUser from '../components/Filter/FilterUser';
 
 const Users = () => {
     const [showRegister, setShowRegister] = useState(false);
-    const { data, removeItem } = useState();
+    const [ hasData, SetHasData ] = useState(true);
     const [users, setUsers] = useState([]); 
     const [currentPage, setCurrentPage] = useState(1);
     const [UserTypeFilter, setUserTypeFilter] = useState(0);
@@ -21,8 +21,14 @@ const Users = () => {
             try {
                 let userList = await getAllUsersInfo(currentPage,10,UserStatusFiler,UserTypeFilter);
                 setUsers(userList);
+                
+                if(userList.usersCount == 0)
+                    SetHasData(false);
+                else
+                    SetHasData(true);
             } catch (error) {
-                console.log(error);            
+                console.log(error);   
+                SetHasData(false);         
             }
         }
         getAllUsers();
@@ -47,7 +53,7 @@ const Users = () => {
                     </div>
                 </div>
                 <TableUsers data={users}  currentPage={currentPage}
-                setCurrentPage={setCurrentPage} setIterationData={setIterationData} />
+                setCurrentPage={setCurrentPage} setIterationData={setIterationData} hasData={hasData}/>
             </section>
             {showRegister && (
                 <RegisterUserModal

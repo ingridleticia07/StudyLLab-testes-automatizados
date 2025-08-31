@@ -1,15 +1,20 @@
 import { useEffect, useState } from 'react';
 
-const Loading = () => {
+const Loading = (data = true) => {
     const [showMessage, setShowMessage] = useState(false);
-
     useEffect(() => {
+        
+        if(!data.hasData){
+            setShowMessage(true);
+            return;
+        }
+        
         const timeout = setTimeout(() => {
             setShowMessage(true);
-        }, 4000);
+        }, 7000);
 
-        return () => clearTimeout(timeout); // Cleanup on unmount
-    }, []);
+        return () => clearTimeout(timeout);
+    }, [data]);
 
     return (
         <tbody>

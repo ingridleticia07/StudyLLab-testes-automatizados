@@ -11,7 +11,7 @@ import StatusTagUser from '../StatusTag/StatusTagUser';
 import { deleteUser} from "../../../../platform/repository/user";
 import EditUser from '../EditUser/EditUser';
 
-const TableUsers = ({ data, currentPage, setCurrentPage, setIterationData }) => {
+const TableUsers = ({ data, currentPage, setCurrentPage, setIterationData,hasData }) => {
     const headersColumns = [
         '#',
         'matricula',
@@ -129,7 +129,7 @@ const TableUsers = ({ data, currentPage, setCurrentPage, setIterationData }) => 
                         ))}
                     </tbody>
                 ) : (
-                    <Loading />
+                    <Loading hasData={hasData}/>
                 )}
                 <tfoot>
                     {maxPage > 1 && (
