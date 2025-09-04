@@ -15,9 +15,9 @@ public interface ITopicoDiscussaoRepository
     /// </summary>
     /// <returns>Representa uma tarefa asincrona do banco,
     /// ela retorna uma <see cref="List{T}"/> com todos os topicos de discussão</returns>
-    public Task<IList<TopicoDiscussaoModel>> GetTopicosDiscussaoLimitedByPageAndPageSize(int page, int pageSize);
+    public Task<IList<TopicoDiscussaoModel>> GetTopicosDiscussaoLimitedByPageAndPageSize(int page, int pageSize, int idDisciplina = 0);
 
-    public Task<(IList<TopicoDiscussaoModel>, int, int)> GetTopicosAndCount(int page, int pageSize);
+    public Task<(IList<TopicoDiscussaoModel>, int, int)> GetTopicosAndCount(int page, int pageSize, int idDisciplina = 0);
     /// <summary>
     /// Recupera um tópico de discussão pelo ID
     /// </summary>

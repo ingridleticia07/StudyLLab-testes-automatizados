@@ -39,7 +39,7 @@ namespace StudyLabAPI.Controllers
             this.forumRepository = forumRepository;
             this.logger = logger;
         }
-        public async Task<TopicoDiscussaoListResponse> GetTopicosDiscussaoLimitedByPageAndPageSize(int page, int pageSize)
+        public async Task<TopicoDiscussaoListResponse> GetTopicosDiscussaoLimitedByPageAndPageSize(int page, int pageSize, int idDisciplina = 0)
         {
             logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
             page, pageSize);
@@ -57,7 +57,7 @@ namespace StudyLabAPI.Controllers
                 page, pageSize);
 
             (var result, int resultCount, int topicosCount) = await topicoDiscussaoRepository
-            .GetTopicosAndCount(page, pageSize);
+            .GetTopicosAndCount(page, pageSize, idDisciplina);
 
             var topicosReadResult = result.Select(_topicoModelMapper.TopicoDiscussaoModelToDiscussaoReadModel)
                 .ToList();

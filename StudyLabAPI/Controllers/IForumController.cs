@@ -4,7 +4,7 @@ namespace StudyLabAPI.Controllers
 {
     public interface IForumController
     {
-        public Task<TopicoDiscussaoListResponse?> GetTopicosDiscussaoLimitedByPageAndPageSize(int page, int pageSize);
+        public Task<TopicoDiscussaoListResponse?> GetTopicosDiscussaoLimitedByPageAndPageSize(int page, int pageSize, int idDisciplina = 0);
 
         public Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussao();
 

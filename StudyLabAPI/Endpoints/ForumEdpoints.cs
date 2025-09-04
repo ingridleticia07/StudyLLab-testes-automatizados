@@ -70,13 +70,14 @@ namespace StudyLabAPI.Endpoints
         private static async Task<IResult> GetTopicosDiscussaoLimitedByPageAndPageSize(HttpContext context,
             [FromQuery] int page,
             [FromQuery] int pageSize,
+            [FromQuery] int idDisciplina,
             [FromServices] IForumController controller)
         {
 
             TopicoDiscussaoListResponse? result;
             try
             {
-                result = await controller.GetTopicosDiscussaoLimitedByPageAndPageSize(page,pageSize);
+                result = await controller.GetTopicosDiscussaoLimitedByPageAndPageSize(page,pageSize,idDisciplina);
             }
             catch (Exception e)
             {

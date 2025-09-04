@@ -37,49 +37,80 @@ namespace StudyLabAPI.Repositories
         public async Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussao() =>
             await dbContext.discussao.Include(r => r.usuario).ToListAsync();
 
-        private async Task<IList<TopicoDiscussaoModel>> GetTopicoWFactory(int page, int pageSize)
+        private async Task<IList<TopicoDiscussaoModel>> GetTopicoWFactory(int page, int pageSize, int idDisciplina = 0)
         {
             await using AppDbContext? inDbContext = await _dbContextFactory.CreateDbContextAsync();
 
             if (inDbContext is null)
                 throw new("Was not possible to instanciaite a new DbContext");
 
-            return await GetTopicosDiscussaoLimitedByPageAndPageSize(inDbContext, page, pageSize);
+            return await GetTopicosDiscussaoLimitedByPageAndPageSize(inDbContext, page, pageSize, idDisciplina);
         }
 
-        private async Task<int> GetTopicosCountWFactory()
+        private async Task<int> GetTopicosCountWFactory(int idDisciplina = 0)
         {
             await using AppDbContext? inDbContext = await _dbContextFactory.CreateDbContextAsync();
 
             if (inDbContext is null)
                 throw new("Was not possible to instanciaite a new DbContext");
 
-            return await GetTopicosAndCount(inDbContext);
+            return await GetTopicosAndCount(inDbContext, idDisciplina);
         }
 
-        private async Task<int> GetTopicosAndCount(AppDbContext inDbContext) =>
+        private async Task<int> GetTopicosAndCount(AppDbContext inDbContext, int idDisciplina = 0)
+        {
             await inDbContext.discussao.CountAsync();
+            int sizeRecords = 0;
+            
+            if(idDisciplina > 0)
+             sizeRecords = await inDbContext.discussao.Where(f => f.disciplina.idDisciplina == idDisciplina) .CountAsync();   
+            else 
+                sizeRecords = await inDbContext.discussao.CountAsync();
+            
+            return sizeRecords;
+        }
 
-        public Task<IList<TopicoDiscussaoModel>> GetTopicosDiscussaoLimitedByPageAndPageSize(int page, int pageSize) =>
-                GetTopicosDiscussaoLimitedByPageAndPageSize(dbContext, page, pageSize);
-        public async Task<IList<TopicoDiscussaoModel>> GetTopicosDiscussaoLimitedByPageAndPageSize(AppDbContext inDbContext, int page, int pageSize)
+        public Task<IList<TopicoDiscussaoModel>> GetTopicosDiscussaoLimitedByPageAndPageSize(int page, int pageSize, int idDisciplina = 0) =>
+                GetTopicosDiscussaoLimitedByPageAndPageSize(dbContext, page, pageSize, idDisciplina);
+        
+        public async Task<IList<TopicoDiscussaoModel>> GetTopicosDiscussaoLimitedByPageAndPageSize(AppDbContext inDbContext, int page, int pageSize, int idDisciplina = 0)
         {
-            var result = await inDbContext.discussao
-            .AsNoTracking()
-            .OrderBy(f => f.idTopico)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .Include(f => f.disciplina)
-            .Include(f => f.usuario)
-            .ToListAsync();
+            var query = inDbContext.discussao.AsNoTracking();
 
+            if (idDisciplina > 0)
+                query = query.Where(f => f.disciplina.idDisciplina == idDisciplina);
+            
+            var result = await query
+                .OrderBy(f => f.idTopico)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(f => new TopicoDiscussaoModel
+                {
+                    idTopico = f.idTopico,
+                    nomeTopico = f.nomeTopico,
+                    dataTopico = f.dataTopico,
+                    // popula os relacionamentos
+                    disciplina = new DisciplinaModel
+                    {
+                        idDisciplina = f.disciplina.idDisciplina,
+                        nomeDisciplina = f.disciplina.nomeDisciplina,
+                        professorDisciplina = f.disciplina.professorDisciplina
+                    },
+                    usuario = new UsuarioModel
+                    {
+                        idUsuario = f.usuario.idUsuario,
+                        nomeUsuario = f.usuario.nomeUsuario,
+                        emailUsuario = f.usuario.emailUsuario
+                    }
+                }).ToListAsync();
+            
             return result;
         }
 
-        public async Task<(IList<TopicoDiscussaoModel>, int, int)> GetTopicosAndCount(int page, int pageSize)
+        public async Task<(IList<TopicoDiscussaoModel>, int, int)> GetTopicosAndCount(int page, int pageSize, int idDisciplina = 0)
         {
-            var topicosTask = GetTopicoWFactory(page, pageSize);
-            var topicosCountTask = GetTopicosCountWFactory();
+            var topicosTask = GetTopicoWFactory(page, pageSize, idDisciplina);
+            var topicosCountTask = GetTopicosCountWFactory(idDisciplina);
             await Task.WhenAll(topicosTask, topicosCountTask);
 
             var result = topicosTask.Result;

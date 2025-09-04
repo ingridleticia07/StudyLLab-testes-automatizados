@@ -2,9 +2,9 @@ import { instance } from "./axios.js";
 
 const FORUM_ENDPOINT = "/forum";
 
-export async function getAllTopicosDisciplinaWithPagination(page, pageSize) {
+export async function getAllTopicosDisciplinaWithPagination(page, pageSize, idDisciplina = 0) {
     let response = await instance.get(FORUM_ENDPOINT+
-      "/listarTopicosDiscussaoWithPagination?page="+page+"&pageSize="+pageSize+"");
+      "/listarTopicosDiscussaoWithPagination?page="+page+"&pageSize="+pageSize+"&idDisciplina="+idDisciplina+"");
   
     if (response.status !== 200) {
       return null;
