@@ -12,7 +12,7 @@ export async function getAllTopicosDisciplinaWithPagination(page, pageSize, idDi
     return response.data;
 }
 
-export async function getAllTopicosDisciplina(page, pageSize) {
+export async function getAllTopicosDisciplina() {
   let response = await instance.get(FORUM_ENDPOINT+
     "/listarTopicosDiscussao");
 

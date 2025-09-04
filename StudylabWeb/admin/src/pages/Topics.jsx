@@ -2,14 +2,15 @@ import { useState, useEffect } from 'react';
 import Breadcrumb from '../components/Breadcrumb/Breadcrumb';
 import Button from '../components/Buttons/Button';
 import TableTopics from '../components/Tables/TableTopics';
-import RegisterSubject from '../components/RegisterSubject/RegisterSubject';
-import { getAllTopicosDisciplinaWithPagination } from "../../../platform/repository/topico";
+import RegisterTopic from '../components/RegisterTopic/RegisterTopic';
+import { getAllTopicosDisciplinaWithPagination,getAllTopicosDisciplina } from "../../../platform/repository/topico";
 import Filter from '../components/Filter/Filter';
 
 const Topics = () => {
     const [showRegister, setShowRegister] = useState(false);
     const [cursoFilter, setCursoFilter] = useState('');
     const [topicos, setTopicos] = useState([]);
+    const [selectTopicos, setSelectTopicos] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [iterationData, setIterationData] = useState(0);
     const [ hasData, SetHasData ] = useState(true);
@@ -27,13 +28,23 @@ const Topics = () => {
                 setTopicos(topicosList);
                 if(topicosList.topicoCount == 0)
                     SetHasData(false);
-                else
+                else{
                     SetHasData(true);
+                    let selectTopicos = await getAllTopicosDisciplina();
+                    
+                    const options = selectTopicos.map(t => ({
+                        value: t.idTopico,
+                        label: t.nomeTopico
+                    }));
+
+                    setSelectTopicos(options);
+                }
 
                 if(currentPage > topicosList.maxPage || currentPage == 0){
                     currentPageFilter = topicosList.maxPage;
                     setCurrentPage(currentPageFilter)
                 }
+
             } catch (error) {
                 console.log(error);
             }
@@ -74,10 +85,11 @@ const Topics = () => {
             </section>
 
             {showRegister && (
-                <RegisterSubject
+                <RegisterTopic
                     handleCancel={() => setShowRegister(false)}
                     setIterationData={setIterationData}
                     currentPage={currentPage}
+                    selectTopicos={selectTopicos}
                 />
             )}
         </div>

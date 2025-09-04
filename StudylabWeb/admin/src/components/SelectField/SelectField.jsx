@@ -1,4 +1,4 @@
-const SelectField = ({ id, name, label, options, value = '', onChange, fisrtField = 'curso' }) => {
+const SelectField = ({ id, name, label, options, value = '', onChange, fisrtField = 'curso',promom = "o" }) => {
     
     return (
         <div className='flex flex-col'>
@@ -12,7 +12,7 @@ const SelectField = ({ id, name, label, options, value = '', onChange, fisrtFiel
                 value={value}
                 onChange={onChange}
             >
-                <option value=''>Selecione o {fisrtField}</option>
+                <option value=''>Selecione {promom} {fisrtField}</option>
                 {options.map((option) => (
                     <option key={option.value} value={option.value}>
                         {option.label}
