@@ -19,9 +19,11 @@ import pencil from './svg/pencil.svg';
 import search from './svg/search.svg';
 import user from './svg/user.svg';
 import userSolid from './svg/userSolid.svg';
-
 import logo from './img/StudyLab.svg';
 import team from './img/team.svg';
+import topic from './svg/icon-topic.png';
+import subject from './svg/subject-book-icon.png';
+import pdfIcon from './svg/icon-pdf.png';
 
 export const icons = {
     at,
@@ -45,6 +47,9 @@ export const icons = {
     search,
     user,
     userSolid,
+    topic,
+    subject,
+    pdfIcon
 };
 
 export const images = {

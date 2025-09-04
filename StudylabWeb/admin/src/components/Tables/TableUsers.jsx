@@ -91,12 +91,12 @@ const TableUsers = ({ data, currentPage, setCurrentPage, setIterationData,hasDat
                                 <td className='px-4 py-2 border-b'>
                                     <div className='flex gap-5'>
                                         
-                                        <button aria-label='bloquear aluno'>
+                                        {/*<button aria-label='bloquear aluno'>
                                             <img
                                                 src={icons.block}
                                                 alt='bloqueio'
                                             />
-                                        </button>
+                                        </button>*/}
                                         <button
                                             aria-label='excluir aluno'
                                             onClick={() =>

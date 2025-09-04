@@ -9,6 +9,7 @@ import Users from './pages/Users';
 import Materials from './pages/Materials';
 import Report from './pages/Report';
 import Help from './pages/Help';
+import Topics from './pages/Topics';
 
 import {
   authTokenIsValid,
@@ -64,6 +65,7 @@ function App() {
           <Route path="/conteudos" element={<Materials />} />
           <Route path="/denuncias" element={<Report />} />
           <Route path="/ajuda" element={<Help />} />
+          <Route path="/topicos" element={<Topics />} />
         </Routes>
       </main>
     </div>
