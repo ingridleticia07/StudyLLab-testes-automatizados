@@ -3,14 +3,15 @@ import Breadcrumb from '../components/Breadcrumb/Breadcrumb';
 import Button from '../components/Buttons/Button';
 import TableTopics from '../components/Tables/TableTopics';
 import RegisterTopic from '../components/RegisterTopic/RegisterTopic';
-import { getAllTopicosDisciplinaWithPagination,getAllTopicosDisciplina } from "../../../platform/repository/topico";
+import { getAllTopicosDisciplinaWithPagination } from "../../../platform/repository/topico";
+import { getAllDisciplinas } from "../../../platform/repository/disciplina";
 import Filter from '../components/Filter/Filter';
 
 const Topics = () => {
     const [showRegister, setShowRegister] = useState(false);
     const [cursoFilter, setCursoFilter] = useState('');
     const [topicos, setTopicos] = useState([]);
-    const [selectTopicos, setSelectTopicos] = useState([]);
+    const [selectDisciplinas, setSelectDisciplinas] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [iterationData, setIterationData] = useState(0);
     const [ hasData, SetHasData ] = useState(true);
@@ -30,14 +31,14 @@ const Topics = () => {
                     SetHasData(false);
                 else{
                     SetHasData(true);
-                    let selectTopicos = await getAllTopicosDisciplina();
+                    let selectDisciplinas = await getAllDisciplinas();
                     
-                    const options = selectTopicos.map(t => ({
-                        value: t.idTopico,
-                        label: t.nomeTopico
+                    const options = selectDisciplinas.map(t => ({
+                        value: t.idDisciplina,
+                        label: t.nomeDisciplina
                     }));
-
-                    setSelectTopicos(options);
+                    
+                    setSelectDisciplinas(options);
                 }
 
                 if(currentPage > topicosList.maxPage || currentPage == 0){
@@ -75,7 +76,7 @@ const Topics = () => {
                 <div className="overflow-x-auto px-2 sm:px-6">
                     <TableTopics
                         data={topicos}
-                        setTopicos={setTopicos}
+                        selectDisciplinas={selectDisciplinas}
                         currentPage={currentPage}
                         setCurrentPage={setCurrentPage}
                         setIterationData={setIterationData}
@@ -89,7 +90,7 @@ const Topics = () => {
                     handleCancel={() => setShowRegister(false)}
                     setIterationData={setIterationData}
                     currentPage={currentPage}
-                    selectTopicos={selectTopicos}
+                    selectDisciplinas={selectDisciplinas}
                 />
             )}
         </div>

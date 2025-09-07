@@ -4,7 +4,13 @@ import SelectField from '../SelectField/SelectField';
 import AlertError from '../../components/Alerts/AlertErro';
 import Loading from '../../components/Loading/LoadingForm';
 import { isEmptyString } from '../../../../common/services/validation';
-import { createDisciplina } from '../../../../platform/repository/disciplina';
+import { createTopico } from '../../../../platform/repository/topico';
+
+export function getCookie(name) {
+  const cookies = document.cookie.split('; ');
+  const cookie = cookies.find(row => row.startsWith(`${name}=`));
+  return cookie ? cookie.split('=')[1] : null;
+}
 
 const cursoOptions = [
     { value: 'ES', label: 'Engenharia de Software' },
@@ -15,13 +21,11 @@ const cursoOptions = [
 ];
 
 const initialFormData = {
-  codigo: '',
   nome: '',
-  data: '',
   disciplina: '',
 };
 
-const RegisterTopic = ({ handleCancel, setIterationData, currentPage,selectTopicos }) => {
+const RegisterTopic = ({ handleCancel, setIterationData, currentPage,selectDisciplinas }) => {
     
   const [formData, setFormData] = useState(initialFormData);
   const [showError, setShowError] = useState(false);
@@ -49,16 +53,25 @@ const RegisterTopic = ({ handleCancel, setIterationData, currentPage,selectTopic
 
     setState((prev) => ({ ...prev, showLoader: true }));
 
-    const disciplinaDTO = {
-      codigoDisciplina: formData.codigo,
-      nomeDisciplina: formData.nome,
-      curso: formData.curso,
-      professorDisciplina: formData.professor,
-      quantidadeAluno: formData.quantidade,
-    };
+    const today = new Date();
 
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+
+    const formattedDate = `${year}-${month}-${day}`;
+
+    let idUser = getCookie('id-user');
+
+    const topicoDTO = {
+      nomeTopico:formData.nome,
+      dataTopico:formattedDate,
+      disciplina:formData.disciplina,
+      idUsuario: idUser
+    };
+    
     try {
-      await createDisciplina(disciplinaDTO);
+      await createTopico(topicoDTO);
       
       setIterationData((prev) => prev + 1);
 
@@ -66,7 +79,7 @@ const RegisterTopic = ({ handleCancel, setIterationData, currentPage,selectTopic
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        errorMessage: error?.response?.data || 'Erro ao editar disciplina.',
+        errorMessage: error?.response?.data || 'Erro ao cadastrar tópico.',
         showError: true,
       }));
     } finally {
@@ -137,7 +150,7 @@ const RegisterTopic = ({ handleCancel, setIterationData, currentPage,selectTopic
                         fisrtField={field.name}
                         promom='a'
                         label={field.label}
-                        options={selectTopicos}
+                        options={selectDisciplinas}
                         value={formData.disciplina}
                         onChange={handleChange(field.name)}
                     />

@@ -10,7 +10,7 @@ import EditSubject from '../EditSubject/EditSubject';
 import { StudylabContext } from '../../context/StudylabContext';
 import {deleteDisciplina, getAllDisciplinasWithPagination} from '../../../../platform/repository/disciplina';
 
-const TableTopics = ({ data, setTopicos, currentPage, setCurrentPage, setIterationData, hasData }) => {
+const TableTopics = ({ data, setSelectDisciplinas, currentPage, setCurrentPage, setIterationData, hasData }) => {
     
     const headersColumns = [
         '#',
