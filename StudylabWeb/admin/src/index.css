@@ -24,3 +24,13 @@ body {
 .rs-picker-popup {
   z-index: 9999 !important;
 }
+
+.rs-picker-toggle {
+  height: 47px !important;
+  padding: 0.7rem 1rem !important;
+  border-radius: 0.5rem !important;
+  font-size: 1.10rem !important;
+  width: '100%'!important;
+  margin-left: 0px!important;
+  margin-top: 8px!important;
+}

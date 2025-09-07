@@ -12,14 +12,6 @@ export function getCookie(name) {
   return cookie ? cookie.split('=')[1] : null;
 }
 
-const cursoOptions = [
-    { value: 'ES', label: 'Engenharia de Software' },
-    { value: 'CC', label: 'Ciência da Computação' },
-    { value: 'EC', label: 'Engenharia Civil' },
-    { value: 'EP', label: 'Engenharia de Produção' },
-    { value: 'EM', label: 'Engenharia Mecânica' }
-];
-
 const initialFormData = {
   nome: '',
   disciplina: '',
@@ -119,7 +111,7 @@ const RegisterTopic = ({ handleCancel, setIterationData, currentPage,selectDisci
         <form onSubmit={handleSubmit} autoComplete='off' className='grid grid-cols-1 md:grid-cols-2 gap-4'>
           {state.showError && (
             <div className="col-span-1 md:col-span-2">
-              <AlertError onHide={() => setShowError(false)} text={state.errorMessage} />
+              <AlertError onHide={() => setState(false)} text={state.errorMessage} />
             </div>
           )}
 
@@ -128,13 +120,13 @@ const RegisterTopic = ({ handleCancel, setIterationData, currentPage,selectDisci
                 {field.type === "text" ? (
                 <>
                     <InputField
-                        id={field.id}
-                        name={field.name}
-                        label={field.label}
-                        placeholder={field.placeholder}
-                        value={field.value}
-                        type={field.type}
-                        onChange={handleChange(field.name)}
+                      id={field.id}
+                      name={field.name}
+                      label={field.label}
+                      placeholder={field.placeholder}
+                      value={field.value}
+                      type={field.type}
+                      onChange={handleChange(field.name)}
                     />
                     {field.value.length <= 0 && state.isSubmitting && (
                     <h5 className="text-red-500 text-sm self-start">
@@ -145,13 +137,11 @@ const RegisterTopic = ({ handleCancel, setIterationData, currentPage,selectDisci
                 ) : (
                 <>
                     <SelectPicker
-                        id={field.id}
-                        label={field.label}
-                        options={selectDisciplinas}
-                        value={formData.disciplina}
-                        onChange={handleChange(field.name)}
-                        style={{ width: '100%' }}
-                        container={false}
+                      id={field.id}
+                      label={field.label}
+                      options={selectDisciplinas}
+                      value={formData.disciplina}
+                      onChange={handleChange(field.name)}
                     />
                     {formData.disciplina.length <= 0 && state.isSubmitting && (
                     <h5 className="text-red-500 text-sm self-start">

@@ -9,7 +9,7 @@ import Filter from '../components/Filter/Filter';
 
 const Topics = () => {
     const [showRegister, setShowRegister] = useState(false);
-    const [cursoFilter, setCursoFilter] = useState('');
+    const [disciplinaFilter, setDisciplinaFilter] = useState('');
     const [topicos, setTopicos] = useState([]);
     const [selectDisciplinas, setSelectDisciplinas] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -21,10 +21,10 @@ const Topics = () => {
             
             try {
                 
-                const idCurso = cursoFilter || 0;
+                const idDisciplina = disciplinaFilter || 0;
                 let currentPageFilter = currentPage || 1;
 
-                let topicosList = await getAllTopicosDisciplinaWithPagination(currentPageFilter, 10);
+                let topicosList = await getAllTopicosDisciplinaWithPagination(currentPageFilter, 10,idDisciplina);
                 
                 setTopicos(topicosList);
                 if(topicosList.topicoCount == 0)
@@ -52,7 +52,7 @@ const Topics = () => {
         };
         getTopicosDisciplinas();
         
-    }, [currentPage, cursoFilter, iterationData]);
+    }, [currentPage, disciplinaFilter, iterationData]);
 
     return (
         <div className="flex flex-col h-full">

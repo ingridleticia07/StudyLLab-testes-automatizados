@@ -89,12 +89,12 @@ const UserFilter = ({ setUserStatusFiler, setUserTypeFilter, setCurrentPage }) =
 
         {showStatus && (
           <div className="origin-top-right absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
-            <div className="py-1">
+            <div className="py-1" role='none'>
               {statusOptions.map((status) => (
                 <a
                   key={status.id}
                   href="#"
-                  className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
+                  className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 ${
                     status.id === selectedStatus.id ? 'bg-gray-100 font-semibold' : ''
                   }`}
                   onClick={(e) => {
@@ -128,7 +128,7 @@ const UserFilter = ({ setUserStatusFiler, setUserTypeFilter, setCurrentPage }) =
                 <a
                   key={type.id}
                   href="#"
-                  className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
+                  className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 ${
                     type.id === selectedType.id ? 'bg-gray-100 font-semibold' : ''
                   }`}
                   onClick={(e) => {
