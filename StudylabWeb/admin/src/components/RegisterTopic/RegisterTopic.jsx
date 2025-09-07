@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import InputField from '../Inputs/InputField';
-import SelectField from '../SelectField/SelectField';
+import SelectPicker from '../SelectField/selectPicker';
 import AlertError from '../../components/Alerts/AlertErro';
 import Loading from '../../components/Loading/LoadingForm';
 import { isEmptyString } from '../../../../common/services/validation';
@@ -37,7 +37,7 @@ const RegisterTopic = ({ handleCancel, setIterationData, currentPage,selectDisci
   });
 
   const handleChange = (field) => (e) => {
-    setFormData({ ...formData, [field]: e.target.value });
+    setFormData({ ...formData, [field]: e && e.target ? e.target.value : e});
   };
 
   const isFormValid = () => {
@@ -144,15 +144,14 @@ const RegisterTopic = ({ handleCancel, setIterationData, currentPage,selectDisci
                 </>
                 ) : (
                 <>
-                    <SelectField
+                    <SelectPicker
                         id={field.id}
-                        name={field.name}
-                        fisrtField={field.name}
-                        promom='a'
                         label={field.label}
                         options={selectDisciplinas}
                         value={formData.disciplina}
                         onChange={handleChange(field.name)}
+                        style={{ width: '100%' }}
+                        container={false}
                     />
                     {formData.disciplina.length <= 0 && state.isSubmitting && (
                     <h5 className="text-red-500 text-sm self-start">
