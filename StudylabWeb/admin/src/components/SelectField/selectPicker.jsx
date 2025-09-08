@@ -18,6 +18,7 @@ const SelectField = ({ id, label, options, value, onChange }) => {
                     placeholder="Selecione..."
                     menuMaxHeight={200}
                     cleanable={false}
+                    className='custom-select'
                 />
             </CustomProvider>
         </div>

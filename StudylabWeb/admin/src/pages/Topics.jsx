@@ -5,7 +5,7 @@ import TableTopics from '../components/Tables/TableTopics';
 import RegisterTopic from '../components/RegisterTopic/RegisterTopic';
 import { getAllTopicosDisciplinaWithPagination } from "../../../platform/repository/topico";
 import { getAllDisciplinas } from "../../../platform/repository/disciplina";
-import Filter from '../components/Filter/Filter';
+import FilterTopics from '../components/Filter/FilterTopics';
 
 const Topics = () => {
     const [showRegister, setShowRegister] = useState(false);
@@ -32,12 +32,17 @@ const Topics = () => {
                 else{
                     SetHasData(true);
                     let selectDisciplinas = await getAllDisciplinas();
-                    
-                    const options = selectDisciplinas.map(t => ({
-                        value: t.idDisciplina,
-                        label: t.nomeDisciplina
-                    }));
-                    
+                    let options = [
+
+                        {
+                            value:0,
+                            label:"Todas as disciplinas"
+                        },
+                        ...selectDisciplinas.map(t => ({
+                            value: t.idDisciplina,
+                            label: t.nomeDisciplina
+                        })),
+                    ];
                     setSelectDisciplinas(options);
                 }
 
@@ -62,7 +67,7 @@ const Topics = () => {
                 <div className="flex flex-wrap items-center gap-2 px-4 py-4">
                     <div className="flex items-center gap-4 flex-shrink-0">
                         <h1 className="text-3xl font-bold">Tópicos</h1>
-                        {/*<Filter data={topicos} setTopicos={setTopicos} setCurrentPage={setCurrentPage}/>*/}
+                        <FilterTopics setDisciplinaFilter={setDisciplinaFilter} disciplinas={selectDisciplinas} setCurrentPage={setCurrentPage}/>
                     </div>
                     
                     <div className="flex-grow flex justify-end"> {/* Added mt-4 for some top margin and px for horizontal padding */}
