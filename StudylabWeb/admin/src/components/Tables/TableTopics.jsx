@@ -6,11 +6,11 @@ import PopUp from '../PopUp/PopUp';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import EditSubject from '../EditSubject/EditSubject';
+import EditTopic from '../EditTopic/EditTopic';
 import { StudylabContext } from '../../context/StudylabContext';
-import {deleteDisciplina, getAllDisciplinasWithPagination} from '../../../../platform/repository/disciplina';
+import {deleteDisciplina} from '../../../../platform/repository/disciplina';
 
-const TableTopics = ({ data, setSelectDisciplinas, currentPage, setCurrentPage, setIterationData, hasData }) => {
+const TableTopics = ({ data, selectDisciplinas, currentPage, setCurrentPage, setIterationData, hasData }) => {
     
     const headersColumns = [
         '#',
@@ -145,15 +145,15 @@ const TableTopics = ({ data, setSelectDisciplinas, currentPage, setCurrentPage, 
                     handleDeleteConfirmation={handleDeleteRegister}
                 />
             )}
-            {/*showPopUpEdit && (
-                <EditSubject
-                    handleClose={() => setShowPopUpEdit(false)}
-                    row={selectedItem}
-                    setDisciplinas={setDisciplinas}
-                    currentPage={currentPage}
+            {showPopUpEdit && (
+                <EditTopic
+                    handleCancel={() => setShowPopUpEdit(false)}
                     setIterationData={setIterationData}
+                    currentPage={currentPage}
+                    selectDisciplinas={selectDisciplinas}
+                    selectedItem={selectedItem}
                 />
-            )*/}
+            )}
             <ToastContainer className='capitalize' />
         </div>
     );

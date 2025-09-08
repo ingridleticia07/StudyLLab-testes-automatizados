@@ -97,17 +97,21 @@ const TableUsers = ({ data, currentPage, setCurrentPage, setIterationData,hasDat
                                                 alt='bloqueio'
                                             />
                                         </button>*/}
-                                        <button
-                                            aria-label='excluir aluno'
-                                            onClick={() =>
-                                                onDelete(d.id, 'usuarios', d.username)
-                                            }
-                                        >
-                                            <img
-                                                src={icons.deleteIcon}
-                                                alt='lixeira'
-                                            />
-                                        </button>
+                                        {
+                                            d.role == 0 &&(
+                                                <button
+                                                    aria-label='excluir aluno'
+                                                    onClick={() =>
+                                                        onDelete(d.id, 'usuarios', d.username)
+                                                    }
+                                                >
+                                                    <img
+                                                        src={icons.deleteIcon}
+                                                        alt='lixeira'
+                                                    />
+                                                </button>
+                                            )
+                                        }
                                         {
                                             d.role == 0 &&(
                                                 <button
