@@ -4,11 +4,11 @@ import { icons } from '../../assets/assets';
 
 const PopUp = ({ itemDelete, handleClose, handleDeleteConfirmation }) => {
     const notifyDelete = () => {
-        toast.success('Item Deletado', {
+        /*toast.success('Item Deletado', {
             theme: 'colored',
             position: 'top-center',
             autoClose: 1300,
-        });
+        });*/
     };
 
     return (

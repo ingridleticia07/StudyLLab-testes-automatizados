@@ -5,7 +5,7 @@ import 'rsuite/dist/rsuite.min.css';
 import { ptBR } from 'rsuite/esm/locales';
 
 
-const TopicsFilter = ({ setDisciplinaFilter, disciplinas, setCurrentPage }) => {
+const SubjectFilter = ({ setDisciplinaFilter, disciplinas, setCurrentPage }) => {
   const prevDisciplinaFilter = useRef('');
 
   const handleDisciplinaSelect = (disciplina) => {
@@ -45,4 +45,4 @@ const TopicsFilter = ({ setDisciplinaFilter, disciplinas, setCurrentPage }) => {
   );
 };
 
-export default TopicsFilter;
+export default SubjectFilter;

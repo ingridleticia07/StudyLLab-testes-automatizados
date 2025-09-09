@@ -8,7 +8,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditSubject from '../EditSubject/EditSubject';
 import { StudylabContext } from '../../context/StudylabContext';
-import {deleteDisciplina, getAllDisciplinasWithPagination} from '../../../../platform/repository/disciplina';
+import {deleteDisciplina} from '../../../../platform/repository/disciplina';
+import { toast } from 'react-toastify';
 
 const TableSubjects = ({ data, setDisciplinas, currentPage, setCurrentPage, setIterationData, hasData }) => {
     
@@ -54,8 +55,19 @@ const TableSubjects = ({ data, setDisciplinas, currentPage, setCurrentPage, setI
         try {
             await deleteDisciplina(identifier);
             setIterationData((prev) => prev + 1);
+
+            toast.success('Item Deletado', {
+                theme: 'colored',
+                position: 'top-center',
+                autoClose: 1300,
+            });
         } catch (error) {
-            console.log(error)
+            
+            toast.warning('Verifique se algum tópico, possui está disciplina!', {
+                theme: 'dark',
+                position: 'top-center',
+                autoClose: 4000,
+            });
         }
     }
 

@@ -3,13 +3,19 @@ import { icons } from '../../assets/assets';
 import Loading from '../Loading/Loading';
 import PopUp from '../PopUp/PopUp';
 import StatusTag from '../StatusTag/StatusTag';
-import TableFoot from './TableFoot';
 import TableHead from './TableHead';
-
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {ToastContainer, toast } from 'react-toastify';
+import {deleteDocumento} from '../../../../platform/repository/material';
 
-const TableMaterials = ({ data, currentPage, setCurrentPage, handleDelete }) => {
+export function getCookie(name) {
+  const cookies = document.cookie.split('; ');
+  const cookie = cookies.find(row => row.startsWith(`${name}=`));
+  return cookie ? cookie.split('=')[1] : null;
+}
+
+const TableMaterials = ({ data, currentPage, setCurrentPage, setIterationData }) => {
+    
     const headersColumns = [
         '#',
         'título',
@@ -39,6 +45,27 @@ const TableMaterials = ({ data, currentPage, setCurrentPage, handleDelete }) => 
             setCurrentPage(newPage);
         }
     };
+
+    const handleDeleteRegister = async(identifier,key) => {
+        try {
+            let idUser = getCookie('id-user');
+            
+            await deleteDocumento(identifier, idUser);
+            setIterationData((prev) => prev + 1);
+
+            toast.success('Item Deletado', {
+                theme: 'colored',
+                position: 'top-center',
+                autoClose: 1300,
+            })
+        } catch (error) {
+            toast.warning('Verifique se alguma denúncia, possui este material!', {
+                theme: 'dark',
+                position: 'top-center',
+                autoClose: 4000,
+            });
+        }
+    }
 
     return (
         <div className="overflow-auto max-h-[350px] rounded-md">
@@ -77,9 +104,9 @@ const TableMaterials = ({ data, currentPage, setCurrentPage, handleDelete }) => 
                                             aria-label='excluir'
                                             onClick={() =>
                                                 onDelete(
-                                                    d.id,
+                                                    d.idDocumento,
                                                     'conteudos',
-                                                    d.titulo
+                                                    d.topico.nomeTopico
                                                 )
                                             }
                                         >
@@ -122,9 +149,10 @@ const TableMaterials = ({ data, currentPage, setCurrentPage, handleDelete }) => 
                 <PopUp
                     itemDelete={selectedItem}
                     handleClose={() => setShowPopUp(false)}
-                    handleDeleteConfirmation={handleDelete}
+                    handleDeleteConfirmation={handleDeleteRegister}
                 />
             )}
+            <ToastContainer className='capitalize' />
         </div>
     );
 };

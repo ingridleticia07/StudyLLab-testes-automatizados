@@ -1,30 +1,50 @@
-import { useContext,useEffect,useState } from 'react';
-import { StudylabContext } from '../context/StudylabContext';
+import {useEffect,useState } from 'react';
 import Button from '../components/Buttons/Button';
 
 import Breadcrumb from '../components/Breadcrumb/Breadcrumb';
 import TableMaterials from '../components/Tables/TableMaterials';
-import Filter from '../components/Filter/Filter';
+import SubjectFilter from '../components/Filter/FilterSubject';
 import RegisterMaterial from '../components/RegisterMaterial/RegisterMaterial';
 import { getMaterialByDisciplinaOrTopico } from "../../../platform/repository/material";
+import { getAllDisciplinas } from "../../../platform/repository/disciplina";
 
 const Materials = () => {
     const [showRegister, setShowRegister] = useState(false);
     const { data, removeItem } = useState();
+    const [disciplinaFilter, setDisciplinaFilter] = useState('');
+    const [selectDisciplinas, setSelectDisciplinas] = useState([]);
     const [conteudo, setConteudo] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [iterationData, setIterationData] = useState(0);
 
     useEffect(() => {
         const getAllConteudos = async () => {
             try {
-                let conteudoList = await getMaterialByDisciplinaOrTopico(currentPage,10, 0,0);
-                setConteudo(conteudoList);                    
+                const idDisciplina = disciplinaFilter || 0;
+                let currentPageFilter = currentPage || 1;
+                
+                let conteudoList = await getMaterialByDisciplinaOrTopico(currentPage,10, idDisciplina,0);
+                setConteudo(conteudoList);
+
+                let selectDisciplinas = await getAllDisciplinas();
+                let options = [
+
+                    {
+                        value:0,
+                        label:"Todas as disciplinas"
+                    },
+                    ...selectDisciplinas.map(t => ({
+                        value: t.idDisciplina,
+                        label: t.nomeDisciplina
+                    })),
+                ];
+                setSelectDisciplinas(options);                    
             } catch (error) {
                 console.log(error);            
             }
         }
         getAllConteudos();
-    }, [currentPage]);
+    }, [currentPage, disciplinaFilter, iterationData]);
 
     return (
         <div className='flex flex-col h-full'>
@@ -34,22 +54,10 @@ const Materials = () => {
                     
                     <div className="flex items-center gap-4 flex-shrink-0">
                         <h1 className="text-3xl font-bold">Conteúdos</h1>
-                        <Filter data={conteudo.documentos} />
+                        <SubjectFilter setDisciplinaFilter={setDisciplinaFilter} disciplinas={selectDisciplinas} setCurrentPage={setCurrentPage}/>
                     </div>
 
-                    
-                    <div className="flex-1 min-w-[200px]">
-                        <div className="input-group border rounded p-1">
-                        <input
-                            type="text"
-                            className="form-control form-control-lg fs-5 py-3"
-                            placeholder="Buscar"
-                        />
-                        </div>
-                    </div>
-
-                    {/* Direita: botão */}
-                    <div className="flex-shrink-0">
+                    <div className="flex-grow flex justify-end">
                         <Button
                         text={'Cadastrar Conteúdo'}
                         handleClick={() => setShowRegister(true)}
@@ -61,7 +69,7 @@ const Materials = () => {
                     data={conteudo}
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
-                    handleDelete={removeItem}
+                    setIterationData={setIterationData}
                 />
 
                 {showRegister && (

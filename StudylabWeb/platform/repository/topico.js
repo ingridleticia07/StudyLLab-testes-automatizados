@@ -63,7 +63,6 @@ export async function updateTopico(topico) {
 }
 
 export async function deleteTopicoDisciplina(idTopico) {
-  console.log(idTopico)
   let response = await instance.delete(FORUM_ENDPOINT+"/deletarTopicoDiscussao?idTopicoDiscussao="+idTopico);
 
   if (response.status !== 200) {

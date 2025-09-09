@@ -8,7 +8,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditTopic from '../EditTopic/EditTopic';
 import { StudylabContext } from '../../context/StudylabContext';
-import {deleteDisciplina} from '../../../../platform/repository/disciplina';
+import {deleteTopicoDisciplina} from '../../../../platform/repository/topico';
+import { toast } from 'react-toastify';
 
 const TableTopics = ({ data, selectDisciplinas, currentPage, setCurrentPage, setIterationData, hasData }) => {
     
@@ -52,10 +53,19 @@ const TableTopics = ({ data, selectDisciplinas, currentPage, setCurrentPage, set
 
     const handleDeleteRegister = async(identifier,key) => {
         try {
-            await deleteDisciplina(identifier);
+            await deleteTopicoDisciplina(identifier);
             setIterationData((prev) => prev + 1);
+            toast.success('Item Deletado', {
+                theme: 'colored',
+                position: 'top-center',
+                autoClose: 1300,
+            })
         } catch (error) {
-            console.log(error)
+            toast.success(error, {
+                theme: 'dark',
+                position: 'top-center',
+                autoClose: 1300,
+            });
         }
     }
 
@@ -95,12 +105,12 @@ const TableTopics = ({ data, selectDisciplinas, currentPage, setCurrentPage, set
                                             />
                                         </button>
                                         <button
-                                            aria-label='deletar disciplina'
+                                            aria-label='deletar tópico'
                                             onClick={() =>
                                                 onDelete(
-                                                    d.idDisciplina,
-                                                    'disciplinas',
-                                                    d.nomeDisciplina
+                                                    d.idTopico,
+                                                    'topicos',
+                                                    d.nomeTopico
                                                 )
                                             }
                                         >

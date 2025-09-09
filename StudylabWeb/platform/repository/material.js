@@ -129,9 +129,9 @@ export async function deleteTopicoDisciplina(idTopico) {
   return response.data;
 }
 
-export async function deleteDocumento(idDocumento,usuario) {
-  console.log(usuario)
-  let response = await instance.delete(MATERIAL_ENDPOINT+"/DeleteDocumento?idDocumento="+idDocumento+"&idUsuario="+usuario.id);
+export async function deleteDocumento(idDocumento,idUsuario) {
+  
+  let response = await instance.delete(MATERIAL_ENDPOINT+"/DeleteDocumento?idDocumento="+idDocumento+"&idUsuario="+idUsuario);
 
   if (response.status !== 200) {
     return null;

@@ -5,7 +5,7 @@ import TableTopics from '../components/Tables/TableTopics';
 import RegisterTopic from '../components/RegisterTopic/RegisterTopic';
 import { getAllTopicosDisciplinaWithPagination } from "../../../platform/repository/topico";
 import { getAllDisciplinas } from "../../../platform/repository/disciplina";
-import FilterTopics from '../components/Filter/FilterTopics';
+import SubjectFilter from '../components/Filter/FilterSubject';
 
 const Topics = () => {
     const [showRegister, setShowRegister] = useState(false);
@@ -67,7 +67,7 @@ const Topics = () => {
                 <div className="flex flex-wrap items-center gap-2 px-4 py-4">
                     <div className="flex items-center gap-4 flex-shrink-0">
                         <h1 className="text-3xl font-bold">Tópicos</h1>
-                        <FilterTopics setDisciplinaFilter={setDisciplinaFilter} disciplinas={selectDisciplinas} setCurrentPage={setCurrentPage}/>
+                        <SubjectFilter setDisciplinaFilter={setDisciplinaFilter} disciplinas={selectDisciplinas} setCurrentPage={setCurrentPage}/>
                     </div>
                     
                     <div className="flex-grow flex justify-end"> {/* Added mt-4 for some top margin and px for horizontal padding */}
