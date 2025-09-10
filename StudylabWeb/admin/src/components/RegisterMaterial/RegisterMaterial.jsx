@@ -1,9 +1,16 @@
 import { useState } from 'react';
 import FileInputField from '../Inputs/FileInputField';
 import { saveMaterial } from '../../../../platform/repository/material';
-
-const RegisterMaterial = ({ handleCancel }) => {
+import FilterTopic from '../../components/Filter/FilterTopic';
+const RegisterMaterial = ({ handleCancel,setTopicoFilter,selectedTopicos, setCurrentPage}) => {
     const [selectedFiles, setSelectedFiles] = useState([]);
+    const [topico, setTopico] = useState('');
+    
+    function getCookie(name) {
+        const cookies = document.cookie.split('; ');
+        const cookie = cookies.find(row => row.startsWith(`${name}=`));
+        return cookie ? cookie.split('=')[1] : null;
+    }
 
     const handleFileChange = (e) => {
         setSelectedFiles(Array.from(e.target.files)); // Converte FileList em array
@@ -17,12 +24,15 @@ const RegisterMaterial = ({ handleCancel }) => {
             return;
         }
 
+        let idUser = getCookie('id-user');
+
         const materialDTO = {
-            Idtopico:16,
+            Idtopico:topico,
             TipoMaterial:3,
             File:selectedFiles,
-            IdUsuario:38
-          };
+            IdUsuario:idUser
+        };
+
         try {
             await saveMaterial(materialDTO);
             alert('Upload realizado com sucesso!');
@@ -46,6 +56,9 @@ const RegisterMaterial = ({ handleCancel }) => {
                         onChange={handleFileChange}
                         multiple // permite múltiplos arquivos
                     />
+
+                    <FilterTopic setTopicoFilter={setTopico} topicos={selectedTopicos} setCurrentPage={setCurrentPage}/>
+
                     <div className='flex items-center justify-end gap-5'>
                         <button
                             type='button'

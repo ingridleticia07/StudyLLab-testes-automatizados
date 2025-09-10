@@ -7,12 +7,16 @@ import SubjectFilter from '../components/Filter/FilterSubject';
 import RegisterMaterial from '../components/RegisterMaterial/RegisterMaterial';
 import { getMaterialByDisciplinaOrTopico } from "../../../platform/repository/material";
 import { getAllDisciplinas } from "../../../platform/repository/disciplina";
+import FilterTopic from '../components/Filter/FilterTopic';
+import { getAllTopicosDisciplina } from "../../../platform/repository/topico";
 
 const Materials = () => {
     const [showRegister, setShowRegister] = useState(false);
     const { data, removeItem } = useState();
     const [disciplinaFilter, setDisciplinaFilter] = useState('');
     const [selectDisciplinas, setSelectDisciplinas] = useState([]);
+    const [topicoFilter, setTopicoFilter] = useState('');
+    const [selectedTopicos, setSelectedTopicos] = useState([]);
     const [conteudo, setConteudo] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [iterationData, setIterationData] = useState(0);
@@ -21,9 +25,10 @@ const Materials = () => {
         const getAllConteudos = async () => {
             try {
                 const idDisciplina = disciplinaFilter || 0;
+                const idTopico = topicoFilter || 0;
                 let currentPageFilter = currentPage || 1;
                 
-                let conteudoList = await getMaterialByDisciplinaOrTopico(currentPage,10, idDisciplina,0);
+                let conteudoList = await getMaterialByDisciplinaOrTopico(currentPage,10, idDisciplina,idTopico);
                 setConteudo(conteudoList);
 
                 let selectDisciplinas = await getAllDisciplinas();
@@ -38,13 +43,30 @@ const Materials = () => {
                         label: t.nomeDisciplina
                     })),
                 ];
-                setSelectDisciplinas(options);                    
+                setSelectDisciplinas(options);
+                
+                let topicoList = await getAllTopicosDisciplina();
+                console
+                let optionsTopico = [
+
+                    {
+                        value:0,
+                        label:"Todas os tópicos"
+                    },
+                    ...topicoList.map(t => ({
+                        value: t.idTopico,
+                        label: t.nomeTopico
+                    })),
+                ];
+                setSelectedTopicos(optionsTopico);
+
+                setConteudo(conteudoList);
             } catch (error) {
                 console.log(error);            
             }
         }
         getAllConteudos();
-    }, [currentPage, disciplinaFilter, iterationData]);
+    }, [currentPage, disciplinaFilter, iterationData, topicoFilter]);
 
     return (
         <div className='flex flex-col h-full'>
@@ -55,6 +77,7 @@ const Materials = () => {
                     <div className="flex items-center gap-4 flex-shrink-0">
                         <h1 className="text-3xl font-bold">Conteúdos</h1>
                         <SubjectFilter setDisciplinaFilter={setDisciplinaFilter} disciplinas={selectDisciplinas} setCurrentPage={setCurrentPage}/>
+                        <FilterTopic setTopicoFilter={setTopicoFilter} topicos={selectedTopicos} setCurrentPage={setCurrentPage}/>
                     </div>
 
                     <div className="flex-grow flex justify-end">
@@ -73,7 +96,7 @@ const Materials = () => {
                 />
 
                 {showRegister && (
-                    <RegisterMaterial handleCancel={() => setShowRegister(false)} />
+                    <RegisterMaterial handleCancel={() => setShowRegister(false)} setTopicoFilter={setTopicoFilter} selectedTopicos={selectedTopicos} setCurrentPage={setCurrentPage}/>
                 )}
             </section>
 
