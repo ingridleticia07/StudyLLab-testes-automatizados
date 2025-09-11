@@ -8,7 +8,7 @@ import RegisterMaterial from '../components/RegisterMaterial/RegisterMaterial';
 import { getMaterialByDisciplinaOrTopico } from "../../../platform/repository/material";
 import { getAllDisciplinas } from "../../../platform/repository/disciplina";
 import FilterTopic from '../components/Filter/FilterTopic';
-import { getAllTopicosDisciplina } from "../../../platform/repository/topico";
+import { getAllTopicosDisciplina, getAllTopicosDisciplinaByDisciplina } from "../../../platform/repository/topico";
 
 const Materials = () => {
     const [showRegister, setShowRegister] = useState(false);
@@ -45,8 +45,13 @@ const Materials = () => {
                 ];
                 setSelectDisciplinas(options);
                 
-                let topicoList = await getAllTopicosDisciplina();
-                console
+                let topicoList;
+                
+                if(disciplinaFilter!='')
+                    topicoList = await getAllTopicosDisciplinaByDisciplina(disciplinaFilter);
+                else 
+                    topicoList = await getAllTopicosDisciplina();
+
                 let optionsTopico = [
 
                     {
@@ -77,7 +82,11 @@ const Materials = () => {
                     <div className="flex items-center gap-4 flex-shrink-0">
                         <h1 className="text-3xl font-bold">Conteúdos</h1>
                         <SubjectFilter setDisciplinaFilter={setDisciplinaFilter} disciplinas={selectDisciplinas} setCurrentPage={setCurrentPage}/>
-                        <FilterTopic setTopicoFilter={setTopicoFilter} topicos={selectedTopicos} setCurrentPage={setCurrentPage}/>
+                        {
+                            disciplinaFilter!=='' && (
+                                <FilterTopic setTopicoFilter={setTopicoFilter} topicos={selectedTopicos} setCurrentPage={setCurrentPage}/>
+                            )
+                        }
                     </div>
 
                     <div className="flex-grow flex justify-end">

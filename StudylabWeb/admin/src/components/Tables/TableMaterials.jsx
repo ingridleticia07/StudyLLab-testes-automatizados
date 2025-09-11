@@ -28,7 +28,7 @@ const TableMaterials = ({ data, currentPage, setCurrentPage, setIterationData })
     
     const [showPopUp, setShowPopUp] = useState(false);
     const [selectedItem, setSelectedItem] = useState('');
-    const [tipoMaterial] = useState(['prova','Trabalho','pdf','Artigo','atividade']);
+    const [tipoMaterial] = useState(['prova','Trabalho','Artigo','Tarefa','Pesquisa','Tcc','Outros']);
     const maxPage = data.maxPage;
 
     const onDelete = (id, key, name) => {

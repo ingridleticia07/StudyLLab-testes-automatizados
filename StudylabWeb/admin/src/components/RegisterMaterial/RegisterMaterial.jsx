@@ -2,10 +2,27 @@ import { useState } from 'react';
 import FileInputField from '../Inputs/FileInputField';
 import { saveMaterial } from '../../../../platform/repository/material';
 import FilterTopic from '../../components/Filter/FilterTopic';
+import SelectField from '../SelectField/SelectField';
+
 const RegisterMaterial = ({ handleCancel,setTopicoFilter,selectedTopicos, setCurrentPage}) => {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [topico, setTopico] = useState('');
-    
+    const [typeMaterial, setTypeMaterial] = useState('');
+
+    const typeOption = [
+        { value: '1', label: 'Prova' },
+        { value: '2', label: 'Trabalho' },
+        { value: '3', label: 'Artigo' },
+        { value: '4', label: 'Tarefa' },
+        { value: '5', label: 'Pesquisa' },
+        { value: '6', label: 'Tcc' },
+        { value: '7', label: 'Outros' }
+    ];
+
+    const handleChange = (field) => (e) => {
+        setTypeMaterial(e.target.value);
+    };
+
     function getCookie(name) {
         const cookies = document.cookie.split('; ');
         const cookie = cookies.find(row => row.startsWith(`${name}=`));
@@ -28,7 +45,7 @@ const RegisterMaterial = ({ handleCancel,setTopicoFilter,selectedTopicos, setCur
 
         const materialDTO = {
             Idtopico:topico,
-            TipoMaterial:3,
+            TipoMaterial:typeMaterial,
             File:selectedFiles,
             IdUsuario:idUser
         };
@@ -57,6 +74,18 @@ const RegisterMaterial = ({ handleCancel,setTopicoFilter,selectedTopicos, setCur
                         multiple // permite múltiplos arquivos
                     />
 
+                    <div className="flex flex-col">
+                        <SelectField
+                            id='typeMaterial'
+                            name='typeMaterial'
+                            label='Tipo de material'
+                            fisrtField='tipo de material'
+                            options={typeOption}
+                            value={typeMaterial}
+                            onChange={handleChange('typeMaterial')}
+                        />
+                    </div>
+                    
                     <FilterTopic setTopicoFilter={setTopico} topicos={selectedTopicos} setCurrentPage={setCurrentPage}/>
 
                     <div className='flex items-center justify-end gap-5'>
