@@ -106,121 +106,80 @@ namespace StudyLabAPI.Repositories
 
         public Task<IList<DocumentoModel>> GetAllDocumentos(int page, int pageSize, int? idDisciplina, int? idTopico, bool isAnyStatus) =>
                 GetAllDocumentos(dbContext, page, pageSize, idDisciplina, idTopico, isAnyStatus);
-        public async Task<IList<DocumentoModel>> GetAllDocumentos(AppDbContext inDbContext, int page, int pageSize, int? idDisciplina, int? idTopico, bool isAnyStatus)
+        public async Task<IList<DocumentoModel>> GetAllDocumentos(
+            AppDbContext inDbContext, int page, int pageSize, int? idDisciplina, int? idTopico, bool isAnyStatus)
         {
-            var result = new List<DocumentoModel>();
-
-            if (isAnyStatus)
+            var query = inDbContext.documento
+                .AsNoTracking()
+                .AsQueryable();
+        
+            // filtro por status
+            if (!isAnyStatus)
             {
-                if (idDisciplina != 0 && idTopico != 0)
-                {
-                    result = await inDbContext.documento
-                    .AsNoTracking()
-                    .Where(f => f.topico.idTopico == idTopico && f.topico.disciplina.idDisciplina == idDisciplina)
-                    .OrderBy(f => f.idDocumento)
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .Include(f => f.topico)
-                    .ThenInclude(td => td.disciplina)
-                    .Include(f => f.usuario)
-                    .ToListAsync();
-                }
-                else if (idDisciplina != 0 || idTopico != 0)
-                {
-                    result = await inDbContext.documento
-                    .AsNoTracking()
-                    .Where(f => f.topico.idTopico == idTopico || f.topico.disciplina.idDisciplina == idDisciplina)
-                    .OrderBy(f => f.idDocumento)
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .Include(f => f.topico)
-                    .ThenInclude(td => td.disciplina)
-                    .Include(f => f.usuario)
-                    .ToListAsync();
-
-                }
-                else
-                {
-                    result = await inDbContext.documento
-                    .AsNoTracking()
-                    .OrderBy(f => f.idDocumento)
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .Include(f => f.topico)
-                    .ThenInclude(td => td.disciplina)
-                    .Include(f => f.usuario)
-                    .ToListAsync();
-                }
+                query = query.Where(f => f.status == statusDocumentoEnum.aprovado);
             }
-            else
+        
+            // filtro por disciplina e/ou tópico
+            if (idDisciplina != null && idDisciplina != 0 && idTopico != null && idTopico != 0)
             {
-                if (idDisciplina != 0 && idTopico != 0)
-                {
-                    result = await inDbContext.documento
-                    .AsNoTracking()
-                    .Where(f => f.topico.idTopico == idTopico && f.topico.disciplina.idDisciplina == idDisciplina && f.status == statusDocumentoEnum.aprovado)
-                    .OrderBy(f => f.idDocumento)
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .Include(f => f.topico)
-                    .ThenInclude(td => td.disciplina)
-                    .Include(f => f.usuario)
-                    .ToListAsync();
-                }
-                else if (idDisciplina != 0 || idTopico != 0)
-                {
-                    result = await inDbContext.documento
-                    .AsNoTracking()
-                    .Where(f => f.topico.idTopico == idTopico || f.topico.disciplina.idDisciplina == idDisciplina && f.status == statusDocumentoEnum.aprovado)
-                    .OrderBy(f => f.idDocumento)
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .Include(f => f.topico)
-                    .ThenInclude(td => td.disciplina)
-                    .Include(f => f.usuario)
-                    .ToListAsync();
-
-                }
-                else
-                {
-                    result = await inDbContext.documento
-                    .AsNoTracking()
-                    .Where(f => f.status == statusDocumentoEnum.aprovado)
-                    .OrderBy(f => f.idDocumento)
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .Include(f => f.topico)
-                    .ThenInclude(td => td.disciplina)
-                    .Include(f => f.usuario)
-                    .ToListAsync();
-                }
+                query = query.Where(f => f.topico.idTopico == idTopico &&
+                                         f.topico.disciplina.idDisciplina == idDisciplina);
             }
-
-            return result.Select(resposta => new DocumentoModel
+            else if ((idDisciplina != null && idDisciplina != 0) ||
+                     (idTopico != null && idTopico != 0))
             {
-                idDocumento = resposta.idDocumento,
-                diretorioMaterial1 = resposta.diretorioMaterial1,
-                diretorioMaterial2 = resposta.diretorioMaterial2,
-                tipoArquivo = resposta.tipoArquivo,
-                status = resposta.status,
-                tipoMaterial = resposta.tipoMaterial,
-                dataCadastro = resposta.dataCadastro,
-                topico = resposta.topico,
-                usuario = new UsuarioModel
+                query = query.Where(f =>
+                    (idTopico != null && idTopico != 0 && f.topico.idTopico == idTopico) ||
+                    (idDisciplina != null && idDisciplina != 0 && f.topico.disciplina.idDisciplina == idDisciplina));
+            }
+        
+            // paginação e projeção: só traz os campos que você realmente usa
+            var documentos = await query
+                .OrderByDescending(f => f.idDocumento)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(f => new DocumentoModel
                 {
-                    idUsuario = resposta.usuario.idUsuario,
-                    emailUsuario = null,
-                    matricula = null,
-                    senhaUsuario = null,
-                    statusUsuario = false,
-                    tipoUsuario = default,
-                    curso = null,
-                    nomeUsuario = resposta.usuario.nomeUsuario,
-                    dataCadastroUsuario = default,
-                    imagemUsuario = null
-                }
-            }).ToList();
+                    idDocumento = f.idDocumento,
+                    diretorioMaterial1 = f.diretorioMaterial1,
+                    diretorioMaterial2 = f.diretorioMaterial2,
+                    tipoArquivo = f.tipoArquivo,
+                    status = f.status,
+                    tipoMaterial = f.tipoMaterial,
+                    dataCadastro = f.dataCadastro,
+        
+                    topico = new TopicoDiscussaoModel
+                    {
+                        idTopico = f.topico.idTopico,
+                        nomeTopico = f.topico.nomeTopico,
+                        disciplina = new DisciplinaModel
+                        {
+                            idDisciplina = f.topico.disciplina.idDisciplina,
+                            nomeDisciplina = f.topico.disciplina.nomeDisciplina,
+                            professorDisciplina = f.topico.disciplina.professorDisciplina
+                        }
+                    },
+        
+                    usuario = new UsuarioModel
+                    {
+                        idUsuario = f.usuario.idUsuario,
+                        nomeUsuario = f.usuario.nomeUsuario,
+                        // dados sensíveis ficam nulos
+                        emailUsuario = null,
+                        matricula = null,
+                        senhaUsuario = null,
+                        statusUsuario = false,
+                        tipoUsuario = default,
+                        curso = null,
+                        dataCadastroUsuario = default,
+                        imagemUsuario = null
+                    }
+                })
+                .ToListAsync();
+        
+            return documentos;
         }
+
 
         private async Task<IList<DocumentoModel>> GetDocumentosWFactory(int page, int pageSize, int? idDisciplina, int? idTopico, bool isAnyStatus)
         {
