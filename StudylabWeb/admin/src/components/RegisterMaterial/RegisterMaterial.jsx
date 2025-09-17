@@ -3,10 +3,12 @@ import FileInputField from '../Inputs/FileInputField';
 import { saveMaterial } from '../../../../platform/repository/material';
 import FilterTopic from '../../components/Filter/FilterTopic';
 import SelectField from '../SelectField/SelectField';
+import {toast } from 'react-toastify';
 
 const RegisterMaterial = ({ handleCancel,setTopicoFilter,selectedTopicos, setCurrentPage}) => {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [topico, setTopico] = useState('');
+    const [isSubmitting, SetIsSubmitting] = useState(false);
     const [typeMaterial, setTypeMaterial] = useState('');
 
     const typeOption = [
@@ -34,10 +36,10 @@ const RegisterMaterial = ({ handleCancel,setTopicoFilter,selectedTopicos, setCur
     };
 
     const handleSubmit = async (e) => {
+        SetIsSubmitting(true);
         e.preventDefault();
 
-        if (!selectedFiles.length) {
-            alert('Por favor, selecione ao menos um arquivo.');
+        if (selectedFiles.length == 0 || topico.length == 0 || typeMaterial.length == 0) {
             return;
         }
 
@@ -52,10 +54,19 @@ const RegisterMaterial = ({ handleCancel,setTopicoFilter,selectedTopicos, setCur
 
         try {
             await saveMaterial(materialDTO);
-            alert('Upload realizado com sucesso!');
+            toast.success('Upload realizado com sucesso!', {
+                theme: 'colored',
+                position: 'top-center',
+                autoClose: 1300,
+            });
+            handleCancel();
         } catch (error) {
-            console.error('Erro ao enviar o arquivo:', error);
-            alert('Erro no upload');
+            
+            toast.error('Erro no upload!', {
+                theme: 'colored',
+                position: 'top-center',
+                autoClose: 1300,
+            });
         }
     };
 
@@ -69,10 +80,14 @@ const RegisterMaterial = ({ handleCancel,setTopicoFilter,selectedTopicos, setCur
                         name='files'
                         label='Selecione os arquivos'
                         placeholder='Selecione os arquivos'
-                        required
                         onChange={handleFileChange}
                         multiple // permite múltiplos arquivos
                     />
+                    {!selectedFiles.length && isSubmitting && (
+                        <h5 className="text-red-500 text-sm self-start">
+                        *Insira ao menos um arquivo, até 3 imagens ou 1 pdf.
+                        </h5>
+                    )}
 
                     <div className="flex flex-col">
                         <SelectField
@@ -84,10 +99,20 @@ const RegisterMaterial = ({ handleCancel,setTopicoFilter,selectedTopicos, setCur
                             value={typeMaterial}
                             onChange={handleChange('typeMaterial')}
                         />
+                        {typeMaterial.length <= 0 && isSubmitting && (
+                            <h5 className="text-red-500 text-sm self-start">
+                            *Insira o tipo de material.
+                            </h5>
+                        )}
                     </div>
-                    
+                    <label className='font-bold text-gray-500'>Selecione o tópico:</label>
                     <FilterTopic setTopicoFilter={setTopico} topicos={selectedTopicos} setCurrentPage={setCurrentPage}/>
-
+                    
+                    {topico.length <= 0 && isSubmitting && (
+                        <h5 className="text-red-500 text-sm self-start">
+                        *Insira o tópico.
+                        </h5>
+                    )}
                     <div className='flex items-center justify-end gap-5'>
                         <button
                             type='button'

@@ -14,7 +14,7 @@ export function getCookie(name) {
   return cookie ? cookie.split('=')[1] : null;
 }
 
-const TableMaterials = ({ data, currentPage, setCurrentPage, setIterationData }) => {
+const TableMaterials = ({ data, currentPage, setCurrentPage, setIterationData,hasData }) => {
     
     const headersColumns = [
         '#',
@@ -121,7 +121,7 @@ const TableMaterials = ({ data, currentPage, setCurrentPage, setIterationData })
                         ))}
                     </tbody>
                 ) : (
-                    <Loading />
+                    <Loading hasData={hasData}/>
                 )}
                 <tfoot>
                     {maxPage > 1 && (

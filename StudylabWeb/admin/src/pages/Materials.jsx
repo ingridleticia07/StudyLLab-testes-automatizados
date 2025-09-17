@@ -12,7 +12,7 @@ import { getAllTopicosDisciplina, getAllTopicosDisciplinaByDisciplina } from "..
 
 const Materials = () => {
     const [showRegister, setShowRegister] = useState(false);
-    const { data, removeItem } = useState();
+    const [ hasData, SetHasData ] = useState(true);
     const [disciplinaFilter, setDisciplinaFilter] = useState('');
     const [selectDisciplinas, setSelectDisciplinas] = useState([]);
     const [topicoFilter, setTopicoFilter] = useState('');
@@ -31,6 +31,11 @@ const Materials = () => {
                 let conteudoList = await getMaterialByDisciplinaOrTopico(currentPage,10, idDisciplina,idTopico);
                 setConteudo(conteudoList);
 
+                if(conteudoList.documentoForumCount == 0)
+                    SetHasData(false);
+                else
+                    SetHasData(true);
+                
                 let selectDisciplinas = await getAllDisciplinas();
                 let options = [
 
@@ -51,7 +56,7 @@ const Materials = () => {
                     topicoList = await getAllTopicosDisciplinaByDisciplina(disciplinaFilter);
                 else 
                     topicoList = await getAllTopicosDisciplina();
-
+                
                 let optionsTopico = [
 
                     {
@@ -102,6 +107,7 @@ const Materials = () => {
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
                     setIterationData={setIterationData}
+                    hasData={hasData}
                 />
 
                 {showRegister && (
