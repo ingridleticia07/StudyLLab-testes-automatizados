@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import FileInputField from '../Inputs/FileInputField';
 import { saveMaterial } from '../../../../platform/repository/material';
+import Loading from '../../components/Loading/LoadingForm';
 import FilterTopic from '../../components/Filter/FilterTopic';
 import SelectField from '../SelectField/SelectField';
 import {toast } from 'react-toastify';
 
-const RegisterMaterial = ({ handleCancel,setTopicoFilter,selectedTopicos, setCurrentPage}) => {
+const RegisterMaterial = ({ handleCancel,selectedTopicos, setCurrentPage, setIterationData}) => {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [topico, setTopico] = useState('');
     const [isSubmitting, SetIsSubmitting] = useState(false);
     const [typeMaterial, setTypeMaterial] = useState('');
-
+    const [topicos, SetTopicos] = useState(selectedTopicos.slice(1));
+    const [showLoader,setShowLoader] = useState(false);
     const typeOption = [
         { value: '1', label: 'Prova' },
         { value: '2', label: 'Trabalho' },
@@ -43,6 +45,8 @@ const RegisterMaterial = ({ handleCancel,setTopicoFilter,selectedTopicos, setCur
             return;
         }
 
+        setShowLoader(true);
+
         let idUser = getCookie('id-user');
 
         const materialDTO = {
@@ -54,6 +58,7 @@ const RegisterMaterial = ({ handleCancel,setTopicoFilter,selectedTopicos, setCur
 
         try {
             await saveMaterial(materialDTO);
+            setIterationData(prev => prev+1);
             toast.success('Upload realizado com sucesso!', {
                 theme: 'colored',
                 position: 'top-center',
@@ -67,12 +72,17 @@ const RegisterMaterial = ({ handleCancel,setTopicoFilter,selectedTopicos, setCur
                 position: 'top-center',
                 autoClose: 1300,
             });
+        }finally{
+            setShowLoader(false);
         }
     };
 
     return (
         <div className='fixed inset-0 flex items-center justify-center z-50 bg-opacity-30 bg-gray-300'>
             <div className='bg-white p-7 rounded-md shadow-lg'>
+                <div className="flex justify-center mb-2">
+                    {showLoader && <Loading />}
+                </div>
                 <h2 className='text-2xl font-bold text-black mb-5'>Cadastrar conteúdo</h2>
                 <form onSubmit={handleSubmit} className='flex flex-col gap-5'>
                     <FileInputField
@@ -106,7 +116,7 @@ const RegisterMaterial = ({ handleCancel,setTopicoFilter,selectedTopicos, setCur
                         )}
                     </div>
                     <label className='font-bold text-gray-500'>Selecione o tópico:</label>
-                    <FilterTopic setTopicoFilter={setTopico} topicos={selectedTopicos} setCurrentPage={setCurrentPage}/>
+                    <FilterTopic setTopicoFilter={setTopico} topicos={topicos} setCurrentPage={setCurrentPage}/>
                     
                     {topico.length <= 0 && isSubmitting && (
                         <h5 className="text-red-500 text-sm self-start">

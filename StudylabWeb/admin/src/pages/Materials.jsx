@@ -111,7 +111,7 @@ const Materials = () => {
                 />
 
                 {showRegister && (
-                    <RegisterMaterial handleCancel={() => setShowRegister(false)} setTopicoFilter={setTopicoFilter} selectedTopicos={selectedTopicos} setCurrentPage={setCurrentPage}/>
+                    <RegisterMaterial handleCancel={() => setShowRegister(false)} selectedTopicos={selectedTopicos} setCurrentPage={setCurrentPage} setIterationData={setIterationData}/>
                 )}
             </section>
 
