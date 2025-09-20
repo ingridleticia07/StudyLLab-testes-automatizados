@@ -7,6 +7,7 @@ import TableHead from './TableHead';
 import 'react-toastify/dist/ReactToastify.css';
 import {ToastContainer, toast } from 'react-toastify';
 import {deleteDocumento} from '../../../../platform/repository/material';
+import ViewMaterials from '../Viewer/ViewMaterials';
 
 export function getCookie(name) {
   const cookies = document.cookie.split('; ');
@@ -27,6 +28,7 @@ const TableMaterials = ({ data, currentPage, setCurrentPage, setIterationData,ha
     ];
     
     const [showPopUp, setShowPopUp] = useState(false);
+    const [showPopUpVisualize, setShowPopUpVizualeze] = useState(false);
     const [selectedItem, setSelectedItem] = useState('');
     const [tipoMaterial] = useState(['prova','Trabalho','Artigo','Tarefa','Pesquisa','Tcc','Outros']);
     const maxPage = data.maxPage;
@@ -38,6 +40,16 @@ const TableMaterials = ({ data, currentPage, setCurrentPage, setIterationData,ha
             name,
         });
         setShowPopUp(true);
+    };
+
+    const onVisualize = (typeFile,dir1,dir2,dir3) =>{
+        setSelectedItem({
+            typeFile,
+            dir1,
+            dir2,
+            dir3
+        });
+        setShowPopUpVizualeze(true);
     };
 
     const handlePageChange = (newPage) => {
@@ -94,7 +106,16 @@ const TableMaterials = ({ data, currentPage, setCurrentPage, setIterationData,ha
                                 </td>
                                 <td className='px-4 py-2 border-b'>
                                     <div className='flex gap-5'>
-                                        <button aria-label='visualizar'>
+                                        <button aria-label='visualizar'
+                                            onClick={() =>
+                                                onVisualize(
+                                                    d.tipoArquivo,
+                                                    d.diretorioMaterial1,
+                                                    d.diretorioMaterial2,
+                                                    d.diretorioMaterial2
+                                                )
+                                            }
+                                        >
                                             <img
                                                 src={icons.eyeOpen}
                                                 alt='Visualizar'
@@ -152,6 +173,15 @@ const TableMaterials = ({ data, currentPage, setCurrentPage, setIterationData,ha
                     handleDeleteConfirmation={handleDeleteRegister}
                 />
             )}
+
+            {showPopUpVisualize && (
+                <ViewMaterials
+                    itemForView={selectedItem}
+                    handleClose={() => setShowPopUpVizualeze(false)}
+
+                />
+            )}
+
             <ToastContainer className='capitalize' />
         </div>
     );
