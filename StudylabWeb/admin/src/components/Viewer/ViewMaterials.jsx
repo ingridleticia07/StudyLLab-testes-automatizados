@@ -1,7 +1,7 @@
 import 'react-toastify/dist/ReactToastify.css';
 
 const ViewMaterials = ({ itemForView, handleClose }) => {
-    console.log(itemForView)
+    
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-opacity-30 bg-gray-300">
@@ -13,11 +13,18 @@ const ViewMaterials = ({ itemForView, handleClose }) => {
                             className="w-full h-full rounded-lg"
                         />
                     ) : (
-                        <img
-                            src={`http://localhost:5000${itemForView.dir1}`}
-                            className="max-h-full max-w-full rounded-lg"
-                            alt="Visualização"
-                        />
+                        <>
+                            <img
+                                src={`http://localhost:5000${itemForView.dir1}`}
+                                className="max-h-full max-w-full rounded-lg"
+                                alt="Visualização"
+                            />
+                            <img
+                                src={`http://localhost:5000${itemForView.dir2}`}
+                                className="max-h-full max-w-full rounded-lg"
+                                alt="Visualização"
+                            />
+                        </>
                     )}
                 </div>
                 <div className="flex items-center justify-end">
