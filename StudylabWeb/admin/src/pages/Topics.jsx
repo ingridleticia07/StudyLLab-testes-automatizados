@@ -29,23 +29,22 @@ const Topics = () => {
                 setTopicos(topicosList);
                 if(topicosList.topicoCount == 0)
                     SetHasData(false);
-                else{
+                else
                     SetHasData(true);
-                    let selectDisciplinas = await getAllDisciplinas();
+
+                let selectDisciplinas = await getAllDisciplinas();
                     let options = [
 
-                        {
-                            value:0,
-                            label:"Todas as disciplinas"
-                        },
-                        ...selectDisciplinas.map(t => ({
-                            value: t.idDisciplina,
-                            label: t.nomeDisciplina
-                        })),
-                    ];
-                    setSelectDisciplinas(options);
-                }
-
+                    {
+                        value:0,
+                        label:"Todas as disciplinas"
+                    },
+                    ...selectDisciplinas.map(t => ({
+                        value: t.idDisciplina,
+                        label: t.nomeDisciplina
+                    })),
+                ];
+                setSelectDisciplinas(options); 
                 if(currentPage > topicosList.maxPage || currentPage == 0){
                     currentPageFilter = topicosList.maxPage;
                     setCurrentPage(currentPageFilter)
