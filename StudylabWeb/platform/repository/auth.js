@@ -18,13 +18,13 @@ export async function login(email, password) {
       password,
     });
     
-    saveUserCredentials(
+    await saveUserCredentials(
       res.data.tokenJwt,
       res.data.tokenAntifogery,
       res.data.tokenAntifogeryCookie,
       res.data.idUsuario
     );
-
+    return res;
   } catch (e) {
     throw e;
   }
@@ -196,7 +196,7 @@ export function updateUserAuthState() {
   }
 }
 
-function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifogeryCookie, idUser) {
+async function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifogeryCookie, idUser) {
   
   if (tokenAntifogery) {
 
@@ -210,7 +210,6 @@ function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifogeryCo
     document.cookie = `${AUTH_TOKEN}=${tokenJwt}; path=/; ${expires};`;
     saveDashboardSessionInfos(tokenJwt, idUser);
 
-    console.log("Anti-forgery token saved.");
   } else {
     console.log("No anti-forgery token provided.");
   }
@@ -219,7 +218,7 @@ function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifogeryCo
   sessionStorage.setItem(AUTH_TOKEN, tokenJwt);
   sessionStorage.setItem(AUTH_VARIABLE, idUser);
   // Optionally call a function to get user info
-  getUserInfo(idUser);
+  await getUserInfo(idUser);
 }
 
 export function getCookie(name) {
