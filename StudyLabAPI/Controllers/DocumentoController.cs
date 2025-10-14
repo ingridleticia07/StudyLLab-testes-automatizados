@@ -5,6 +5,8 @@ using StudyLabAPI.Models.Enums;
 using StudyLabAPI.Repositories;
 using StudyLabAPI.Validators.CustomValidators.RequestQuery;
 using ILogger = Serilog.ILogger;
+using Supabase; // Adicione esta using
+using Microsoft.Extensions.DependencyInjection; // Adicione esta using
 
 namespace StudyLabAPI.Controllers
 {
@@ -27,13 +29,18 @@ namespace StudyLabAPI.Controllers
         private readonly DocumentoModelMapper _documentoModelMapper;
 
         private readonly DenunciaModelMapper _denunciaModelMapper;
-
+        
+        private readonly IServiceProvider _serviceProvider;
+        
+        private readonly Client _supabaseClient;
         public DocumentoController(DocumentoModelMapper
             documentoModelMapper, DenunciaModelMapper
             denunciaModelMapper, ITopicoDiscussaoRepository topicoDiscussaoRepository,
             IDisciplinaRepository DisciplinaRepository, IUsuarioRepository usuarioRepository,
             IRespostaForumRepository respostaForumRepository, IForumRepository forumRepository,
-            IDocumentoRepository documentoRepository, ILogger logger)
+            IDocumentoRepository documentoRepository, ILogger logger,
+            IServiceProvider serviceProvider,
+            Client supabaseClient)
         {
             this._documentoModelMapper = documentoModelMapper;
             this._denunciaModelMapper = denunciaModelMapper;
@@ -44,6 +51,8 @@ namespace StudyLabAPI.Controllers
             this.forumRepository = forumRepository;
             this.documentoRepository = documentoRepository;
             this.logger = logger;
+            this._serviceProvider = serviceProvider;
+            this._supabaseClient = supabaseClient;
         }
 
         public async Task<DocumentoModel?> CreateDocumento(RegisteredDocumentoModel documento, List<IFormFile> file)
@@ -81,71 +90,97 @@ namespace StudyLabAPI.Controllers
         {
             if (files == null || files.Count == 0)
                 throw new ArgumentException("No files uploaded.");
-
+        
             if (files.Count > 1 && files.Any(f => Path.GetExtension(f.FileName)?.ToLower() == ".pdf"))
                 throw new ArgumentException("Cannot upload multiple files if one is a PDF.");
-
+        
             if (files.Count > 2)
                 throw new ArgumentException("You can upload up to two image files or one PDF file.");
-
+        
             var validExtensions = new HashSet<string> { ".jpeg", ".jpg", ".png", ".pdf" };
-
+        
             foreach (var file in files)
             {
                 if (file == null || file.Length == 0)
                     throw new ArgumentException("One of the uploaded files is empty.");
-
+        
                 string fileExtension = Path.GetExtension(file.FileName)?.ToLower();
                 if (string.IsNullOrEmpty(fileExtension) || !validExtensions.Contains(fileExtension))
                     throw new ArgumentException("Unsupported file type.");
-
+        
                 const long maxFileSize = 2 * 1024 * 1024; // 2MB
                 if (file.Length > maxFileSize)
                     throw new ArgumentException("File size exceeds the 2MB limit.");
             }
-
+        
             string destinationDirectory = Path.Combine("wwwroot", "documents");
-
             Directory.CreateDirectory(destinationDirectory); // Ensure the folder exists
-
+        
             var results = new List<(string RelativePath, tipoArquivo FileType)>();
-
+        
             foreach (var file in files)
             {
                 string fileExtension = Path.GetExtension(file.FileName)?.ToLower();
                 string newFileName = $"document_{Guid.NewGuid()}{fileExtension}";
                 string destinationFilePath = Path.Combine(destinationDirectory, newFileName);
-
+        
                 try
                 {
-                    await using var stream = new FileStream(destinationFilePath, FileMode.Create);
-                    await file.CopyToAsync(stream);
+                    // 1. Primeiro faz o upload local (mantém o comportamento original)
+                    await using var localStream = new FileStream(destinationFilePath, FileMode.Create);
+                    await file.CopyToAsync(localStream);
+        
+                    // 2. Depois faz upload para o Supabase (em background, não bloqueia)
+                    await UploadToSupabaseAsync(file, newFileName); // Fire and forget
+        
+                    string relativePath = Path.Combine("/documents", newFileName).Replace(Path.DirectorySeparatorChar, '/');
+                    
+                    tipoArquivo type = fileExtension switch
+                    {
+                        ".jpeg" or ".jpg" or ".png" => tipoArquivo.imagem,
+                        ".pdf" => tipoArquivo.pdf,
+                        _ => throw new ArgumentException("Unsupported file type.")
+                    };
+        
+                    results.Add((relativePath, type));
                 }
                 catch (Exception ex)
                 {
                     throw new IOException("Failed to save file.", ex);
                 }
-
-                string relativePath = Path.Combine("/documents", newFileName).Replace(Path.DirectorySeparatorChar, '/');
-                
-                tipoArquivo type = fileExtension switch
-                {
-                    ".jpeg" or ".jpg" or ".png" => tipoArquivo.imagem,
-                    ".pdf" => tipoArquivo.pdf,
-                    _ => throw new ArgumentException("Unsupported file type.")
-                };
-
-                results.Add((relativePath, type));
             }
-
+        
             string diretorio1 = results.Count > 0 ? results[0].RelativePath : null;
             string diretorio2 = results.Count > 1 ? results[1].RelativePath : null;
             tipoArquivo fileType = results.Count > 0 ? results[0].FileType : tipoArquivo.imagem;
-
+        
             return (diretorio1, diretorio2, fileType);
         }
-
-
+        
+        // Novo método para upload assíncrono ao Supabase
+        private async Task UploadToSupabaseAsync(IFormFile file, string fileName)
+        {
+            try
+            {
+                // Converter o arquivo para byte[]
+                await using var memoryStream = new MemoryStream();
+                await file.CopyToAsync(memoryStream);
+                byte[] fileBytes = memoryStream.ToArray();
+        
+                // Fazer upload usando byte[]
+                var result = await _supabaseClient.Storage
+                    .From("study-documents") // Nome do seu bucket no Supabase
+                    .Upload(fileBytes, $"documents/{fileName}");
+        
+                logger.Information("Upload para Supabase realizado: {Result}", result);
+            }
+            catch (Exception ex)
+            {
+                // Log do erro sem interromper o fluxo principal
+                logger.Error(ex, "Erro no upload para Supabase para o arquivo: {FileName}", fileName);
+            }
+        }
+        
         public async Task DeleteDocumento(int idDocumento, int idUsuario)
         {
             DocumentoModel documento = await documentoRepository.GetDocumentoById(idDocumento);

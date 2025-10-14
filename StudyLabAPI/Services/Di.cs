@@ -18,6 +18,7 @@ using StudyLabAPI.Services.Jwt;
 using StudyLabAPI.Utils;
 using StudyLabAPI.Validators;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Supabase; // Adicione esta using
 
 // ReSharper disable UnusedMethodReturnValue.Global
 
@@ -201,6 +202,31 @@ public static class Di
         services.AddScoped<IForumController, ForumController>();
         services.AddScoped<IDocumentoController, DocumentoController>();
         services.AddScoped<IUtilsController, UtilsController>();
+        return services;
+    }
+    
+    public static IServiceCollection AddSupabaseStorage(this IServiceCollection services, IConfiguration configuration)
+    {
+        var url = configuration["Supabase:Url"];
+        var key = configuration["Supabase:Key"];
+        
+        if (string.IsNullOrEmpty(url) || string.IsNullOrEmpty(key))
+        {
+            throw new ArgumentException("Supabase URL and Key must be configured in appsettings.json");
+        }
+
+        // Configurar o cliente Supabase
+        services.AddScoped(provider =>
+        {
+            var options = new SupabaseOptions
+            {
+                AutoConnectRealtime = false,
+                AutoRefreshToken = true
+            };
+
+            return new Client(url, key, options);
+        });
+
         return services;
     }
 }
