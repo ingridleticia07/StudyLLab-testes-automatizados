@@ -31,7 +31,6 @@ export async function handleLogin(email, password) {
 
       const res = await login(email, password);
       
-
       let user = JSON.parse(localStorage.getItem("user"));
       
       if(user.role == 1)

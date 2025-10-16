@@ -208,7 +208,7 @@ async function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifo
     document.cookie = `.csrf-token=${tokenAntifogery}; path=/; ${expires};`;
     document.cookie = `id-user=${idUser}; path=/; ${expires};`;
     document.cookie = `${AUTH_TOKEN}=${tokenJwt}; path=/; ${expires};`;
-    saveDashboardSessionInfos(tokenJwt, idUser);
+    await saveDashboardSessionInfos(tokenJwt, idUser);
 
   } else {
     console.log("No anti-forgery token provided.");
@@ -218,7 +218,6 @@ async function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifo
   sessionStorage.setItem(AUTH_TOKEN, tokenJwt);
   sessionStorage.setItem(AUTH_VARIABLE, idUser);
   // Optionally call a function to get user info
-  await getUserInfo(idUser);
 }
 
 export function getCookie(name) {
@@ -227,10 +226,10 @@ export function getCookie(name) {
   return cookie ? cookie.split('=')[1] : null;
 }
 
-export function saveDashboardSessionInfos(tokenJwt, idUser) {
+export async function saveDashboardSessionInfos(tokenJwt, idUser) {
   if (!sessionStorage.getItem(AUTH_TOKEN)) {
     sessionStorage.setItem(AUTH_TOKEN, getCookie(AUTH_TOKEN));
-    getUserInfo(getCookie('id-user'));
+    await getUserInfo(getCookie('id-user'));
   }
 }
 

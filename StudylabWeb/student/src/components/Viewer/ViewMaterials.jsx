@@ -9,18 +9,18 @@ const ViewMaterials = ({ itemForView, handleClose }) => {
                 <div className="flex-1 flex justify-center items-center">
                     {itemForView.typeFile == 1 ? (
                         <iframe
-                            src={`http://localhost:5000${itemForView.dir1}`}
+                            src={`https://agqvmxhwxafycxcwhyft.supabase.co/storage/v1/object/public/study-documents${itemForView.dir1}`}
                             className="w-full h-full rounded-lg"
                         />
                     ) : (
                         <>
                             <img
-                                src={`http://localhost:5000${itemForView.dir1}`}
+                                src={`https://agqvmxhwxafycxcwhyft.supabase.co/storage/v1/object/public/study-documents${itemForView.dir1}`}
                                 className="max-h-full max-w-full rounded-lg"
                                 alt="Visualização"
                             />
                             <img
-                                src={`http://localhost:5000${itemForView.dir2}`}
+                                src={`https://agqvmxhwxafycxcwhyft.supabase.co/storage/v1/object/public/study-documents${itemForView.dir2}`}
                                 className="max-h-full max-w-full rounded-lg"
                                 alt="Visualização"
                             />

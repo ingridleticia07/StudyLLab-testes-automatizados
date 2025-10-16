@@ -25,7 +25,6 @@ const Topics = () => {
                 let currentPageFilter = currentPage || 1;
 
                 let topicosList = await getAllTopicosDisciplinaWithPagination(currentPageFilter, 10,idDisciplina);
-                
                 setTopicos(topicosList);
                 if(topicosList.topicoCount == 0)
                     SetHasData(false);
