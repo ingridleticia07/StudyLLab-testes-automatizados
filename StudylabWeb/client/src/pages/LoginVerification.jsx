@@ -33,7 +33,7 @@ const LoginVerification = () => {
             try {
                 setIsLoading(true);
                 await activateUserWithCode(code);
-                window.location.href = 'http://localhost:5173/'
+                window.location.href = 'http://localhost:5175/'
                 //alterar a rota de navegação, para a dashboard de usuário, quando a mesma for criada.
                 setIsFormSubmited(false);
                 setShowError(false);

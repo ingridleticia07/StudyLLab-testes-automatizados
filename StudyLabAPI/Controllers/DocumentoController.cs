@@ -203,12 +203,48 @@ namespace StudyLabAPI.Controllers
 
             if (File.Exists(file2))
                 File.Delete(file2);
-
+            
+            await DeleteFromSupabaseAsync(documento.diretorioMaterial1, documento.diretorioMaterial2);
+            
             await documentoRepository.DeleteDocumento(idDocumento);
 
             await documentoRepository.Flush();
         }
-
+        
+        private async Task DeleteFromSupabaseAsync(string filePath1, string filePath2)
+        {
+            try
+            {
+                var filesToDelete = new List<string>();
+        
+                // Extrair nomes dos arquivos do path local para o Supabase
+                if (!string.IsNullOrEmpty(filePath1))
+                {
+                    string supabasePath1 = filePath1.TrimStart('/');
+                    filesToDelete.Add(supabasePath1);
+                }
+        
+                if (!string.IsNullOrEmpty(filePath2))
+                {
+                    string supabasePath2 = filePath1.TrimStart('/');
+                    filesToDelete.Add(supabasePath2);
+                }
+        
+                if (filesToDelete.Any())
+                {
+                    await _supabaseClient.Storage
+                        .From("study-documents")
+                        .Remove(filesToDelete);
+                        
+                    logger.Information("Arquivos removidos do Supabase: {FileCount} arquivos", filesToDelete.Count);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Erro ao remover arquivos do Supabase: {FilePath1}, {FilePath2}", filePath1, filePath2);
+            }
+        }
+        
         public async Task<List<DocumentoModel?>> GetAllDocumentos()
         {
             List<DocumentoModel> documentosLista = await documentoRepository.GetAllDocumentos();

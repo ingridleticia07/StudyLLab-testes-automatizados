@@ -5,25 +5,31 @@ const ViewMaterials = ({ itemForView, handleClose }) => {
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-opacity-30 bg-gray-300">
-            <div className="bg-white flex flex-col tracking-wide rounded-lg shadow-lg p-4 gap-4 w-[80%] h-[90%]">
-                <div className="flex-1 flex justify-center items-center">
+            <div className="bg-white flex flex-col tracking-wide rounded-lg shadow-lg p-4 gap-4 w-[90%] h-[90%]">
+                <div className="flex-1 flex justify-center items-center overflow-auto">
                     {itemForView.typeFile == 1 ? (
                         <iframe
                             src={`https://agqvmxhwxafycxcwhyft.supabase.co/storage/v1/object/public/study-documents${itemForView.dir1}`}
                             className="w-full h-full rounded-lg"
                         />
                     ) : (
-                        <div className="flex flex-col md:flex-row gap-4 w-full h-full justify-center items-center p-4">
-                            <img
-                                src={`https://agqvmxhwxafycxcwhyft.supabase.co/storage/v1/object/public/study-documents${itemForView.dir1}`}
-                                className="max-h-full max-w-full rounded-lg object-contain"
-                                alt="Visualização"
-                            />
-                            <img
-                                src={`https://agqvmxhwxafycxcwhyft.supabase.co/storage/v1/object/public/study-documents${itemForView.dir2}`}
-                                className="max-h-full max-w-full rounded-lg object-contain"
-                                alt="Visualização"
-                            />
+                        <div className="flex flex-col gap-4 w-full h-full items-center p-4 overflow-auto">
+                            <div className="flex justify-center items-center w-full">
+                                <img
+                                    src={`https://agqvmxhwxafycxcwhyft.supabase.co/storage/v1/object/public/study-documents${itemForView.dir1}`}
+                                    className="max-h-[90%] max-w-[90%] rounded-lg object-contain"
+                                    alt="Visualização 1"
+                                />
+                            </div>
+                            {itemForView.dir2 && (
+                                <div className="flex justify-center items-center w-full">
+                                    <img
+                                        src={`https://agqvmxhwxafycxcwhyft.supabase.co/storage/v1/object/public/study-documents${itemForView.dir2}`}
+                                        className="max-h-[90%] max-w-[90%] rounded-lg object-contain"
+                                        alt="Visualização 2"
+                                    />
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>

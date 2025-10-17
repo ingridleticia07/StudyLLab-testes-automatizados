@@ -6,10 +6,9 @@ import VisibilityButton from '../components/Buttons/VisibilityButton';
 import Button from '../components/Buttons/Button';
 import AuthHeader from '../components/AuthHeader/AuthHeader';
 import AuthFooter from '../components/AuthFooter/AuthFooter';
-import {handleLogin, validateLoginFields} from "../../../platform/business/login";
+import {handleLogin, cleanUserCredentials} from "../../../platform/business/login";
 import AlertError from "./../components/Alerts/AlertErro";
 import {isEmptyString} from "../../../common/services/validation";
-import {saveDashboardSessionInfos,AUTH_TOKEN, getCookie } from "../../../platform/repository/auth.js";
 import Loading from '../components/Loading/Loading';
 
 const Login = () => {
@@ -42,8 +41,7 @@ const Login = () => {
 
         if(!(InvalidEmail || InvalidPassword) && isEmailValid){
             try {
-                if(getCookie(AUTH_TOKEN) != null)
-                    saveDashboardSessionInfos()
+                cleanUserCredentials();
                 await handleLogin(email,password)   
             } catch (error) {   
                 setShowError(true);  

@@ -21,8 +21,8 @@ const Sidebar = ({ isMobile = false }) => {
     { link: '/topicos', icon: icons.topic, alt: 'item sidebar topicos' },
     { link: '/usuarios', icon: icons.user, alt: 'item sidebar usuarios' },
     { link: '/conteudos', icon: icons.pdfIcon, alt: 'item sidebar conteudos' },
-    { link: '/denucias', icon: icons.info, alt: 'item sidebar denuncias' },
-    { link: '/ajuda', icon: icons.help, alt: 'item sidebar ajuda' },
+    /*{ link: '/denucias', icon: icons.info, alt: 'item sidebar denuncias' },
+    { link: '/ajuda', icon: icons.help, alt: 'item sidebar ajuda' },*/
   ];
 
   return (

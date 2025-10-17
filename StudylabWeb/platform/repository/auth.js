@@ -19,6 +19,8 @@ export async function login(email, password) {
       password,
     });
     
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
     await saveUserCredentials(
       res.data.tokenJwt,
       res.data.tokenAntifogery,

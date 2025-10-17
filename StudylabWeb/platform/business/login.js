@@ -22,12 +22,6 @@ export async function handleLogin(email, password) {
     const isCookieLoginTokenValid = cookieLoginToken == sessionStorage.getItem(AUTH_TOKEN) ? 1 : 0;
     
     if (!isAuthenticated || isCookieLoginTokenValid == 0) {
-      document.cookie.split(';').forEach(cookie => {
-        const [name] = cookie.trim().split('=');
-        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-      });
-      sessionStorage.clear();
-      localStorage.clear();
 
       const res = await login(email, password);
       
@@ -52,4 +46,12 @@ export async function handleLogin(email, password) {
   } catch (error) {
     throw error;
   }
+}
+export function cleanUserCredentials(){
+  document.cookie.split(';').forEach(cookie => {
+    const [name] = cookie.trim().split('=');
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  });
+  sessionStorage.clear();
+  localStorage.clear();
 }
