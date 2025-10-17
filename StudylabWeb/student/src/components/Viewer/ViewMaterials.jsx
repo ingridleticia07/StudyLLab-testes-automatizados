@@ -13,18 +13,18 @@ const ViewMaterials = ({ itemForView, handleClose }) => {
                             className="w-full h-full rounded-lg"
                         />
                     ) : (
-                        <>
+                        <div className="flex flex-col md:flex-row gap-4 w-full h-full justify-center items-center p-4">
                             <img
                                 src={`https://agqvmxhwxafycxcwhyft.supabase.co/storage/v1/object/public/study-documents${itemForView.dir1}`}
-                                className="max-h-full max-w-full rounded-lg"
+                                className="max-h-full max-w-full rounded-lg object-contain"
                                 alt="Visualização"
                             />
                             <img
                                 src={`https://agqvmxhwxafycxcwhyft.supabase.co/storage/v1/object/public/study-documents${itemForView.dir2}`}
-                                className="max-h-full max-w-full rounded-lg"
+                                className="max-h-full max-w-full rounded-lg object-contain"
                                 alt="Visualização"
                             />
-                        </>
+                        </div>
                     )}
                 </div>
                 <div className="flex items-center justify-end">

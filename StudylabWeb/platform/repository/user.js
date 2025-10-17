@@ -5,12 +5,14 @@ import { getTipoUserByName } from "../utils/user_matcher.js";
 
 const USER_ENDPOINT = "/user";
 const USER_INFO_STORAGE_KEY = "user";
+const USER_INFO_STORAGE_KEY_TIME = "timeStorageKey";
 
 export async function getUserInfo(idUser) {
   let cachedUserInfo = getUserInfoCached();
-  if(cachedUserInfo !== null) {
-    return cachedUserInfo
-  }
+
+  if (cachedUserInfo !== null && timestampStr !== null)
+    return cachedUserInfo;
+  
   let response = await instance.get(USER_ENDPOINT + "/profile?idUsuario="+idUser);
   if (response.status !== 200) {
     return null;
@@ -84,7 +86,10 @@ function getUserInfoCached() {
 }
 
 function saveUserInfo(data) {
+  const now = new Date().getTime(); // Timestamp atual em ms
+
   localStorage.setItem(USER_INFO_STORAGE_KEY, JSON.stringify(data));
+  localStorage.setItem(USER_INFO_STORAGE_KEY_TIME, now.toString());
 }
 
 function hasUserInfoSaved() {

@@ -10,6 +10,7 @@ import { getUserInfo, cleanUserInfo } from "./user.js";
 export const AUTH_TOKEN = "authToken";
 const AUTH_VARIABLE = "idUser";
 const AUTH_ENDPOINT = "/auth";
+const USER_INFO_STORAGE_KEY_TIME = "timeStorageKey";
 
 export async function login(email, password) {
   try {
@@ -198,6 +199,9 @@ export function updateUserAuthState() {
 
 async function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifogeryCookie, idUser) {
   
+  sessionStorage.setItem(AUTH_TOKEN, tokenJwt);
+  sessionStorage.setItem(AUTH_VARIABLE, idUser);
+
   if (tokenAntifogery) {
 
     const expireDate = new Date();
@@ -213,11 +217,6 @@ async function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifo
   } else {
     console.log("No anti-forgery token provided.");
   }
-
-  // Save the JWT token in session storage
-  sessionStorage.setItem(AUTH_TOKEN, tokenJwt);
-  sessionStorage.setItem(AUTH_VARIABLE, idUser);
-  // Optionally call a function to get user info
 }
 
 export function getCookie(name) {
@@ -227,10 +226,20 @@ export function getCookie(name) {
 }
 
 export async function saveDashboardSessionInfos(tokenJwt, idUser) {
-  if (!sessionStorage.getItem(AUTH_TOKEN)) {
+  const timestampStr = localStorage.getItem(USER_INFO_STORAGE_KEY_TIME);
+
+  if (!sessionStorage.getItem(AUTH_TOKEN) || !hasExpired(timestampStr, 24)) {
     sessionStorage.setItem(AUTH_TOKEN, getCookie(AUTH_TOKEN));
     await getUserInfo(getCookie('id-user'));
   }
+}
+
+function hasExpired(timestampStr, expiryHours = 24) {
+    const now = new Date().getTime();
+    const savedTime = parseInt(timestampStr);
+    const expiryTime = expiryHours * 60 * 60 * 1000;
+    
+    return (now - savedTime) > expiryTime;
 }
 
 export function logoutSession() {
