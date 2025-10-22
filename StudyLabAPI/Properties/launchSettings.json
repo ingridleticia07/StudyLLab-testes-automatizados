@@ -16,7 +16,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "API_KEY": "e24dd2210803b4737a9bd9e3163a4ca807b63201c3bc32b68fb122ca52efff36",
-        "POSTGRES_CONNECTION_STRING": "User ID=postgres;Password=study2025;Host=localhost;Port=5433;Database=study;",
+        "POSTGRES_CONNECTION_STRING": "User ID=postgres.agqvmxhwxafycxcwhyft;Password=Studyproject2025#;Host=aws-1-us-east-2.pooler.supabase.com;Port=5432;Database=postgres;",
         "JWT_KEY": "4102b844edd0474bb0038057956e393d55672d4da5844ece125d43a73250900b",
         "SMTP_SERVER": "smtp.gmail.com",
         "SMTP_PORT": "587",
@@ -33,7 +33,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production",
         "API_KEY": "e24dd2210803b4737a9bd9e3163a4ca807b63201c3bc32b68fb122ca52efff36",
-        "POSTGRES_CONNECTION_STRING": "User ID=postgres;Password=study2025;Host=localhost;Port=5433;Database=study;",
+        "POSTGRES_CONNECTION_STRING": "User ID=postgres;Password=180293;Host=localhost;Port=5433;Database=study;",
         "JWT_KEY": "4102b844edd0474bb0038057956e393d55672d4da5844ece125d43a73250900b",
         "SMTP_SERVER": "smtp.gmail.com",
         "SMTP_PORT": "587",

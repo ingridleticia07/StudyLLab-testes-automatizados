@@ -19,6 +19,11 @@ export async function login(email, password) {
       password,
     });
     
+    sessionStorage.setItem(AUTH_TOKEN, res.data.tokenJwt);
+    sessionStorage.setItem(AUTH_VARIABLE, res.data.idUsuario);
+
+    updateUserAuthState();
+    
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     await saveUserCredentials(
@@ -200,10 +205,6 @@ export function updateUserAuthState() {
 }
 
 async function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifogeryCookie, idUser) {
-  
-  sessionStorage.setItem(AUTH_TOKEN, tokenJwt);
-  sessionStorage.setItem(AUTH_VARIABLE, idUser);
-
   if (tokenAntifogery) {
 
     const expireDate = new Date();
