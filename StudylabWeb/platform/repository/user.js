@@ -7,11 +7,17 @@ const USER_ENDPOINT = "/user";
 const USER_INFO_STORAGE_KEY = "user";
 const USER_INFO_STORAGE_KEY_TIME = "timeStorageKey";
 
-export async function getUserInfo(idUser) {
+export async function getUserInfo(idUser, needValidateTime = true) {
   let cachedUserInfo = getUserInfoCached();
+  let timestampStr = sessionStorage.getItem(USER_INFO_STORAGE_KEY_TIME);
 
-  if (cachedUserInfo !== null && timestampStr !== null)
-    return cachedUserInfo;
+  if(needValidateTime){
+    if (cachedUserInfo !== null && timestampStr !== null)
+      return cachedUserInfo;
+  }else{
+    if (cachedUserInfo !== null)
+      return cachedUserInfo;
+  }
   
   let response = await instance.get(USER_ENDPOINT + "/profile?idUsuario="+idUser);
   if (response.status !== 200) {

@@ -1,6 +1,6 @@
 import { login,authTokenIsValid } from "../../platform/repository/auth.js";
 import {isEmptyString} from "../../common/services/validation";
-import {AUTH_TOKEN,getCookie } from "../../platform/repository/auth.js";
+import {AUTH_TOKEN,getCookie,LAST_USER_LOGIN } from "../../platform/repository/auth.js";
 
 export function validateLoginFields(setValidateField,field) {
   var fielNeedValidation = false;
@@ -19,9 +19,11 @@ export async function handleLogin(email, password) {
   try {
     const isAuthenticated = await checkAuth();
     const cookieLoginToken = getCookie(AUTH_TOKEN);
+    const lastUserLogin = getCookie(LAST_USER_LOGIN);
     const isCookieLoginTokenValid = cookieLoginToken == sessionStorage.getItem(AUTH_TOKEN) ? 1 : 0;
+    const isNewUser = lastUserLogin != email ? 1 : 0;
     
-    if (!isAuthenticated || isCookieLoginTokenValid == 0) {
+    if (!isAuthenticated || isCookieLoginTokenValid == 0 || isNewUser == 1) {
 
       const res = await login(email, password);
       

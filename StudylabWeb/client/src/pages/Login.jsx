@@ -41,7 +41,6 @@ const Login = () => {
 
         if(!(InvalidEmail || InvalidPassword) && isEmailValid){
             try {
-                cleanUserCredentials();
                 await handleLogin(email,password)   
             } catch (error) {   
                 setShowError(true);  

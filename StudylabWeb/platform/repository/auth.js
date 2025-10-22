@@ -6,11 +6,13 @@ import {
 import { getCursoCodeByName } from "../utils/curso_matcher.js";
 import { getTipoUserByName } from "../utils/user_matcher.js";
 import { getUserInfo, cleanUserInfo } from "./user.js";
+import {cleanUserCredentials} from "../business/login";
 
 export const AUTH_TOKEN = "authToken";
 const AUTH_VARIABLE = "idUser";
 const AUTH_ENDPOINT = "/auth";
 const USER_INFO_STORAGE_KEY_TIME = "timeStorageKey";
+export const LAST_USER_LOGIN = "email-user";
 
 export async function login(email, password) {
   try {
@@ -19,19 +21,34 @@ export async function login(email, password) {
       password,
     });
     
-    sessionStorage.setItem(AUTH_TOKEN, res.data.tokenJwt);
-    sessionStorage.setItem(AUTH_VARIABLE, res.data.idUsuario);
+    if (!localStorage.getItem('user') || !getCookie(LAST_USER_LOGIN)) {
 
-    updateUserAuthState();
-    
-    await new Promise(resolve => setTimeout(resolve, 2000));
+      let user = JSON.parse(localStorage.getItem("user"));
+      let timestampStr = localStorage.getItem("timeStorageKey");
 
-    await saveUserCredentials(
-      res.data.tokenJwt,
-      res.data.tokenAntifogery,
-      res.data.tokenAntifogeryCookie,
-      res.data.idUsuario
-    );
+      // Garante que os dados realmente existem e são válidos
+      if (!user || !timestampStr || res.data.idUsuario != user.id || hasExpired(timestampStr) || !getCookie(LAST_USER_LOGIN)) {
+        //console.log("Renovando credenciais, usuário anterior:", user);
+
+        cleanUserCredentials();
+
+        sessionStorage.setItem(AUTH_TOKEN, res.data.tokenJwt);
+        sessionStorage.setItem(AUTH_VARIABLE, res.data.idUsuario);
+
+        updateUserAuthState();
+
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        await saveUserCredentials(
+          res.data.tokenJwt,
+          res.data.tokenAntifogery,
+          res.data.tokenAntifogeryCookie,
+          res.data.idUsuario, 
+          email
+        );
+      }
+    }
+
     return res;
   } catch (e) {
     throw e;
@@ -204,7 +221,7 @@ export function updateUserAuthState() {
   }
 }
 
-async function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifogeryCookie, idUser) {
+async function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifogeryCookie, idUser, emailUser) {
   if (tokenAntifogery) {
 
     const expireDate = new Date();
@@ -214,8 +231,9 @@ async function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifo
     document.cookie = `.AspNetCore.Antiforgery.KeSRHT2WmJs=${tokenAntifogeryCookie}; path=/; ${expires};`;
     document.cookie = `.csrf-token=${tokenAntifogery}; path=/; ${expires};`;
     document.cookie = `id-user=${idUser}; path=/; ${expires};`;
+    document.cookie = `email-user=${emailUser}; path=/; ${expires};`;
     document.cookie = `${AUTH_TOKEN}=${tokenJwt}; path=/; ${expires};`;
-    await saveDashboardSessionInfos(tokenJwt, idUser);
+    await saveUsersInfos(tokenJwt, idUser);
 
   } else {
     console.log("No anti-forgery token provided.");
@@ -228,12 +246,20 @@ export function getCookie(name) {
   return cookie ? cookie.split('=')[1] : null;
 }
 
-export async function saveDashboardSessionInfos(tokenJwt, idUser) {
+export async function saveUsersInfos(tokenJwt, idUser) {
   const timestampStr = localStorage.getItem(USER_INFO_STORAGE_KEY_TIME);
 
-  if (!sessionStorage.getItem(AUTH_TOKEN) || !hasExpired(timestampStr, 24)) {
+  if (!sessionStorage.getItem(AUTH_TOKEN) || !timestampStr) {
     sessionStorage.setItem(AUTH_TOKEN, getCookie(AUTH_TOKEN));
     await getUserInfo(getCookie('id-user'));
+  }
+}
+
+export async function saveDashboardSessionInfos() {
+  if (!sessionStorage.getItem(AUTH_TOKEN)) {
+    sessionStorage.setItem(AUTH_TOKEN, getCookie(AUTH_TOKEN));
+    addAuthorizationHeaderInterceptor(sessionStorage.getItem(AUTH_TOKEN))
+    await getUserInfo(getCookie('id-user'), false);
   }
 }
 
@@ -252,5 +278,6 @@ export function logoutSession() {
   });
 
   sessionStorage.clear();
+  localStorage.clear();
 }
 
