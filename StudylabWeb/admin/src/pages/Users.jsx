@@ -38,21 +38,30 @@ const Users = () => {
         <div className='flex flex-col h-full'>
             <Breadcrumb page='Usuários' />
             
-            <section className='rounded-xl bg-white px-4 '>
-                <div className="flex flex-wrap items-center gap-2 px-4 py-4">
-                    <div className="flex items-center gap-4 flex-shrink-0">
-                        <h1 className='text-3xl font-bold py-8'>Usuarios</h1>
-                        <FilterUser setUserStatusFiler={setUserStatusFiler} setUserTypeFilter={setUserTypeFilter} setCurrentPage={setCurrentPage}/>
+            <section className='rounded-xl bg-white px-4'>
+                <div className="flex flex-col lg:flex-row lg:flex-wrap items-center gap-2 px-0 lg:px-2 py-4">
+                    <div className="flex flex-col lg:flex-row items-start lg:items-center gap-2 lg:gap-4 w-full lg:w-auto mb-2 lg:mb-0">
+                        <h1 className='text-3xl font-bold py-4 lg:py-8'>Usuarios</h1>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 w-full lg:w-auto">
+                            <FilterUser setUserStatusFiler={setUserStatusFiler} setUserTypeFilter={setUserTypeFilter} setCurrentPage={setCurrentPage}/>
+                            <div className="sm:flex-grow sm:flex sm:justify-end lg:hidden">
+                                <Button
+                                    text="Cadastrar usuário"
+                                    handleClick={() => setShowRegister(true)}
+                                    className="w-full sm:w-auto"
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <div className="flex-grow flex justify-end">
+                    <div className="hidden lg:flex lg:flex-grow lg:justify-end">
                         <Button
                             text="Cadastrar usuário"
                             handleClick={() => setShowRegister(true)}
-                            className="w-full sm:w-auto"
+                            className="w-full lg:w-auto"
                         />
                     </div>
                 </div>
-                <TableUsers data={users}  currentPage={currentPage}
+                <TableUsers data={users} currentPage={currentPage}
                 setCurrentPage={setCurrentPage} setIterationData={setIterationData} hasData={hasData}/>
             </section>
             {showRegister && (

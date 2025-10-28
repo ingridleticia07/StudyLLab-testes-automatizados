@@ -40,19 +40,25 @@ const CourseFilter = ({ setCursoFilter, setCurrentPage }) => {
   };
 
   return (
-    <div className="relative inline-block text-left" ref={dropdownRef}>
+    <div className="relative w-full sm:w-auto text-left" ref={dropdownRef}>
       <button
         type="button"
-        className="inline-flex items-center gap-2 justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        className="inline-flex w-full sm:w-auto items-center gap-2 justify-between sm:justify-left rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         onClick={() => setShowCourses(!showCourses)}
       >
-        <img src={icons.filter} alt="Filtro" className="w-5 h-5" />
-        {selectedCourse.name}
+        <span className="flex items-center gap-2">
+          <img src={icons.filter} alt="Filtro" className="w-5 h-5" />
+          {selectedCourse.name}
+        </span>
+        {/* Seta para indicar dropdown */}
+        <svg className="w-4 h-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
       </button>
 
       {showCourses && (
         <div
-          className="origin-top-right absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
+          className="origin-top-right absolute left-0 right-0 sm:left-auto sm:right-auto sm:w-56 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
           role="menu"
           aria-orientation="vertical"
         >

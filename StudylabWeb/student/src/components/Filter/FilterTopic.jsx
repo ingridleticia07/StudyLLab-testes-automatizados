@@ -4,7 +4,6 @@ import { SelectPicker,CustomProvider } from 'rsuite';
 import 'rsuite/dist/rsuite.min.css';
 import { ptBR } from 'rsuite/esm/locales';
 
-
 const TopicFilter = ({ setTopicoFilter, topicos, setCurrentPage,copulateTopico=true }) => {
   const prevDisciplinaFilter = useRef('');
 
@@ -16,7 +15,7 @@ const TopicFilter = ({ setTopicoFilter, topicos, setCurrentPage,copulateTopico=t
   };
 
   return (
-    <div className="flex flex-col col">
+    <div className="w-full md:w-auto">
         <CustomProvider locale={ptBR} > 
             <SelectPicker
               id="topicos"
@@ -27,7 +26,8 @@ const TopicFilter = ({ setTopicoFilter, topicos, setCurrentPage,copulateTopico=t
               menuMaxHeight={200}
               cleanable={false}
               appearance="default"
-              style={{ width: 220 }}
+              style={{ width: '100%' }}
+              className="w-full md:w-[220px] hidden-selector !rounded-md !border !shadow-sm !px-0 !py-0 !bg-white text-sm font-medium text-gray-700 hover:!bg-gray-100 focus:!outline-none focus:!ring-2 focus:!ring-offset-2 focus:!ring-indigo-10"
               // Quando uma opção estiver selecionada
               renderValue={(value, item) => (
                 <div className="flex items-center gap-2">
@@ -35,11 +35,7 @@ const TopicFilter = ({ setTopicoFilter, topicos, setCurrentPage,copulateTopico=t
                     <span>{item?.label || "Tópicos"}</span>  
                 </div>
               )}
-
-                className="hidden-selector !rounded-md !border !shadow-sm !px-0 !py-0 !bg-white text-sm font-medium text-gray-700 hover:!bg-gray-100 focus:!outline-none focus:!ring-2 focus:!ring-offset-2 focus:!ring-indigo-10"
             />
-
-
         </CustomProvider>
     </div>
   );

@@ -47,13 +47,13 @@ const Subjects = () => {
             <Breadcrumb page="Disciplina" />
             
             <section className='rounded-xl bg-white px-4 '>
-                <div className="flex flex-wrap items-center gap-2 px-4 py-4">
-                    <div className="flex items-center gap-4 flex-shrink-0">
+                <div className="flex flex-wrap items-center gap-2 px-0 md:px-4 py-4">
+                    <div className="flex flex-col md:flex-row items-start md:items-center gap-1 flex-shrink-0 w-full md:w-auto">
                         <h1 className="text-3xl font-bold">Disciplinas</h1>
                         <Filter data={disciplinas} setCursoFilter={setCursoFilter} setCurrentPage={setCurrentPage}/>
                     </div>
                     
-                    <div className="flex-grow flex justify-end"> {/* Added mt-4 for some top margin and px for horizontal padding */}
+                    <div className="w-full sm:w-auto sm:flex-grow sm:flex sm:justify-end"> {/* Added mt-4 for some top margin and px for horizontal padding */}
                         <Button
                             text="Cadastrar Disciplina"
                             handleClick={() => setShowRegister(true)}

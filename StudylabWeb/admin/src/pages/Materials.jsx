@@ -81,23 +81,40 @@ const Materials = () => {
     return (
         <div className='flex flex-col h-full'>
             <Breadcrumb page='Conteúdos' />
-            <section className='rounded-xl bg-white px-4 '>
-                <div className="flex flex-wrap items-center gap-2 px-4 py-4">
-                    
-                    <div className="flex items-center gap-4 flex-shrink-0">
+            <section className='rounded-xl bg-white px-4'>
+                <div className="flex flex-col lg:flex-row lg:flex-wrap items-center gap-2 px-0 lg:px-2 py-4">
+                    <div className="flex flex-col lg:flex-row items-start lg:items-center gap-2 lg:gap-4 w-full lg:w-auto mb-2 lg:mb-0">
                         <h1 className="text-3xl font-bold">Conteúdos</h1>
-                        <SubjectFilter setDisciplinaFilter={setDisciplinaFilter} disciplinas={selectDisciplinas} setCurrentPage={setCurrentPage}/>
-                        {
-                            disciplinaFilter!=='' && (
-                                <FilterTopic setTopicoFilter={setTopicoFilter} topicos={selectedTopicos} setCurrentPage={setCurrentPage}/>
-                            )
-                        }
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 w-full lg:w-auto">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
+                                {/* SubjectFilter com 100% em mobile */}
+                                <div className="w-full sm:w-auto">
+                                    <SubjectFilter setDisciplinaFilter={setDisciplinaFilter} disciplinas={selectDisciplinas} setCurrentPage={setCurrentPage}/>
+                                </div>
+                                
+                                {/* FilterTopic com 100% em mobile */}
+                                {
+                                    disciplinaFilter!=='' && (
+                                        <div className="w-full sm:w-auto">
+                                            <FilterTopic setTopicoFilter={setTopicoFilter} topicos={selectedTopicos} setCurrentPage={setCurrentPage}/>
+                                        </div>
+                                    )
+                                }
+                            </div>
+                            <div className="sm:flex-grow sm:flex sm:justify-end lg:hidden">
+                                <Button
+                                    text={'Cadastrar Conteúdo'}
+                                    handleClick={() => setShowRegister(true)}
+                                    className="w-full sm:w-auto"
+                                />
+                            </div>
+                        </div>
                     </div>
-
-                    <div className="flex-grow flex justify-end">
+                    <div className="hidden lg:flex lg:flex-grow lg:justify-end">
                         <Button
-                        text={'Cadastrar Conteúdo'}
-                        handleClick={() => setShowRegister(true)}
+                            text={'Cadastrar Conteúdo'}
+                            handleClick={() => setShowRegister(true)}
+                            className="w-full lg:w-auto"
                         />
                     </div>
                 </div>

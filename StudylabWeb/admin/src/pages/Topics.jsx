@@ -61,18 +61,18 @@ const Topics = () => {
         <div className="flex flex-col h-full">
             <Breadcrumb page="Disciplina" />
             
-            <section className='rounded-xl bg-white px-4 '>
-                <div className="flex flex-wrap items-center gap-2 px-4 py-4">
-                    <div className="flex items-center gap-4 flex-shrink-0">
+            <section className='rounded-xl bg-white px-4'>
+                <div className="flex flex-col md:flex-row md:flex-wrap items-center gap-2 px-0 md:px-2 py-4">
+                    <div className="flex flex-col md:flex-row items-start md:items-center gap-1 md:gap-4 flex-shrink-0 w-full md:w-auto mb-2 md:mb-0">
                         <h1 className="text-3xl font-bold">Tópicos</h1>
                         <SubjectFilter setDisciplinaFilter={setDisciplinaFilter} disciplinas={selectDisciplinas} setCurrentPage={setCurrentPage}/>
                     </div>
                     
-                    <div className="flex-grow flex justify-end"> {/* Added mt-4 for some top margin and px for horizontal padding */}
+                    <div className="w-full md:w-auto md:flex-grow md:flex md:justify-end">
                         <Button
                             text="Cadastrar Tópico"
                             handleClick={() => setShowRegister(true)}
-                            className="w-full sm:w-auto"
+                            className="w-full md:w-auto"
                         />
                     </div>
                 </div>
