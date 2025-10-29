@@ -14,7 +14,6 @@ import { toast } from 'react-toastify';
 const TableSubjects = ({ data, setDisciplinas, currentPage, setCurrentPage, setIterationData, hasData }) => {
     
     const headersColumns = [
-        '#',
         'código',
         'nome da disciplina',
         'professor(a)',
@@ -79,9 +78,6 @@ const TableSubjects = ({ data, setDisciplinas, currentPage, setCurrentPage, setI
                     <tbody>
                         {data.disciplinas.map((d, index) => (
                             <tr key={index}>
-                                <td className='px-4 py-2 border-b'>
-                                    <input type='checkbox' />
-                                </td>
                                 <td className='px-4 py-2 border-b'>
                                     {d.codigoDisciplina}
                                 </td>

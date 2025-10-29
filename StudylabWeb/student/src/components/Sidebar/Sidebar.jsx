@@ -24,7 +24,7 @@ const Sidebar = ({ isMobile = false }) => {
     <nav
       className={`bg-white shadow-sm z-40
         ${isMobile
-          ? 'w-full fixed top-0 left-0 py-2 px-4 flex justify-around items-center'
+          ? 'w-full fixed bottom-0 left-0 py-2 px-4 flex justify-around items-center'
           : 'h-full w-28 pt-32 flex flex-col items-center'}
       `}
     >

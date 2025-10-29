@@ -18,7 +18,6 @@ export function getCookie(name) {
 const TableMaterials = ({ data, currentPage, setCurrentPage, setIterationData,hasData }) => {
     
     const headersColumns = [
-        '#',
         'título',
         'disciplina',
         'autor',
@@ -87,9 +86,6 @@ const TableMaterials = ({ data, currentPage, setCurrentPage, setIterationData,ha
                     <tbody>
                         {data.documentos.map((d, index) => (
                             <tr key={index} className='capitalize'>
-                                <td className='px-4 py-2 border-b'>
-                                    <input type='checkbox' />
-                                </td>
                                 <td className='px-4 py-2 border-b'>
                                     {d.topico.nomeTopico
                                     }
