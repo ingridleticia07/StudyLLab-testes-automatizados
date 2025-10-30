@@ -54,6 +54,7 @@ const InputField = ({
                                 ? "border border-[#00BDEB]"
                                 : "border border-[#EB0000]"
                         }`}
+                        maxLength={maxLength}
                     />
                 </div>
                 {invalidText && isValid === false && (

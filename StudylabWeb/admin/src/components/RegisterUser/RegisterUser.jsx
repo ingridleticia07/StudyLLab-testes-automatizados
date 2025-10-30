@@ -141,6 +141,7 @@ const RegisterUserModal = ({ handleCancel , setIterationData, currentPage}) => {
               type="text"
               value={formData.nome}
               onChange={handleChange('nome')}
+              maxLength={45}
             />
             {requiredError(formData.nome.length > 0, '*Insira o nome')}
           </div>
@@ -191,6 +192,7 @@ const RegisterUserModal = ({ handleCancel , setIterationData, currentPage}) => {
               placeholder="email@alu.ufc.br"
               type="email"
               value={formData.email}
+              maxLength={50}
               onChange={handleChange('email')}
             />
             {requiredError(isEmailValid, '*Insira um email institucional válido')}
@@ -206,6 +208,7 @@ const RegisterUserModal = ({ handleCancel , setIterationData, currentPage}) => {
               value={formData.senha}
               onChange={handleChange('senha')}
               icon={icons.padlock}
+              maxLength={60}
             />
             {requiredError(formData.senha.length > 0, '*Insira a senha')}
           </div>

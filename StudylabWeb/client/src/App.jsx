@@ -18,7 +18,6 @@ function App() {
                 {/* Rotas da tela de cadastro */}
                 <Route path='/' element={<Login />} />
                 <Route path='/cadastro' element={<Register />} />
-                <Route path='/cadastro2' element={<Register2 />} />
                 <Route path='/recuperar' element={<PassowordEmail />} />
                 <Route path='/verificacao' element={<VerificationCode />} />
                 <Route path='/senha' element={<ResetPassword />} />

@@ -81,7 +81,8 @@ const RegisterSubject = ({ handleCancel, setIterationData, currentPage }) => {
       label: 'Código da Disciplina',
       placeholder: 'xxxxxx',
       value: formData.codigo,
-      type:'text'
+      type:'text',
+      maxLength: 10
     },
     {
       id: 'nome',
@@ -89,7 +90,8 @@ const RegisterSubject = ({ handleCancel, setIterationData, currentPage }) => {
       label: 'Nome da Disciplina',
       placeholder: 'Digite o nome da disciplina',
       value: formData.nome,
-      type:'text'
+      type:'text',
+      maxLength: 45
     },
     {
       id: 'professor',
@@ -97,7 +99,8 @@ const RegisterSubject = ({ handleCancel, setIterationData, currentPage }) => {
       label: 'Professor(a) Responsável',
       placeholder: 'Nome do professor',
       value: formData.professor,
-      type:'text'
+      type:'text',
+      maxLength: 45
     },
     {
       id: 'quantidade',
@@ -105,7 +108,8 @@ const RegisterSubject = ({ handleCancel, setIterationData, currentPage }) => {
       label: 'Quantidade de Alunos',
       placeholder: 'Quantidade de alunos',
       value: formData.quantidade,
-      type:'number'
+      type:'number',
+      maxLength: 3
     },
   ];
 
@@ -135,6 +139,7 @@ const RegisterSubject = ({ handleCancel, setIterationData, currentPage }) => {
                 placeholder={field.placeholder}
                 value={field.value}
                 type={field.type}
+                maxLength={field.maxLength}
                 onChange={handleChange(field.name)}
               />
               {field.value.length <= 0 && state.isSubmitting && (

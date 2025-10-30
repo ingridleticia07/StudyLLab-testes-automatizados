@@ -102,6 +102,7 @@ const Register = () => {
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
                 invalidText="Nome inválido"
+                maxLength={45}
               />
               {nome.length <= 0 && isFormSubmited && (
                 <h5 className="text-red-500 self-start">*Insira o nome do aluno.</h5>
@@ -142,6 +143,7 @@ const Register = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 isEmail={true}
                 isValid={email.length === 0 ? null : isEmailValid}
+                maxLength={50}
               />
               {email.length <= 0 && isFormSubmited && (
                 <h5 className="text-red-500 self-start">*Insira o email institucional do aluno corretamente.</h5>
@@ -153,7 +155,7 @@ const Register = () => {
                 label="Senha"
                 placeholder="Crie sua senha"
                 icon={icons.padlock}
-                maxLength={32}
+                maxLength={30}
                 rightElement={
                   <VisibilityButton
                     handleClick={togglePasswordVisibility}
@@ -173,7 +175,7 @@ const Register = () => {
                 label="Confirmar Senha"
                 placeholder="Confirme a sua senha"
                 icon={icons.padlock}
-                maxLength={32}
+                maxLength={30}
                 rightElement={
                   <VisibilityButton
                     handleClick={togglePasswordVisibility}

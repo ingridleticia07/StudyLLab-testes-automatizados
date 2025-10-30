@@ -65,6 +65,7 @@ const PasswordEmail = () => {
             value={emailForReset}
             onChange={(e) => setEmailForReset(e.target.value)}
             isEmail={true}
+            maxLength={50}
             isValid={emailForReset.length === 0 ? null : isEmailValid()}
           />
 

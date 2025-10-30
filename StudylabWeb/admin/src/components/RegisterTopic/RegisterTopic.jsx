@@ -86,7 +86,8 @@ const RegisterTopic = ({ handleCancel, setIterationData, currentPage,selectDisci
       label: 'Nome do tópico',
       placeholder: 'Digite o nome do tópico',
       value: formData.nome,
-      type:'text'
+      type:'text', 
+      maxLength: 45
     },
     {
       id: 'disciplina',
@@ -127,6 +128,7 @@ const RegisterTopic = ({ handleCancel, setIterationData, currentPage,selectDisci
                       value={field.value}
                       type={field.type}
                       onChange={handleChange(field.name)}
+                      maxLength={field.maxLength}
                     />
                     {field.value.length <= 0 && state.isSubmitting && (
                     <h5 className="text-red-500 text-sm self-start">
