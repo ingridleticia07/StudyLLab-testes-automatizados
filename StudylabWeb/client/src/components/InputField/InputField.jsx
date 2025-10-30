@@ -15,6 +15,7 @@ const InputField = ({
     needValidation,
     isEmail = false,
     isValid = null,
+    autoComplete = "on"
 }) => {
     // const [invalid, setInvalid] = useState(false);
     const invalid = false;
@@ -76,6 +77,7 @@ const InputField = ({
                 <input
                     type={type}
                     id={id}
+                    autoComplete={autoComplete}
                     name={name}
                     placeholder={placeholder}
                     className="flex-1 outline-none bg-transparent text-sm"

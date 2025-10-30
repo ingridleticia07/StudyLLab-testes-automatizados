@@ -43,7 +43,7 @@ const Register = () => {
     /[0-9]/.test(password);
   const isConfirmMatch = password === confirmPassword;
   const isNameValid = nome.length > 0;
-  const isMatriculaValid = matricula.length > 0;
+  const isMatriculaValid = matricula.length > 0 && /^[0-9]+$/.test(matricula);
   const isCurseValid = selectedCurso.length > 0;
 
   const isFormValid = isEmailValid && isPasswordStrong && isConfirmMatch &&
@@ -130,8 +130,8 @@ const Register = () => {
                 maxLength={6}
                 invalidText="Matrícula inválida"
               />
-              {matricula.length <= 0 && isFormSubmited && (
-                <h5 className="text-red-500 self-start">*Insira a matrícula do aluno.</h5>
+              {(matricula.length <= 0 || !/^[0-9]+$/.test(matricula)) && isFormSubmited && (
+                <h5 className="text-red-500 self-start">*Insira a matrícula numérica do aluno.</h5>
               )}
 
               <InputField
@@ -164,6 +164,7 @@ const Register = () => {
                 }
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                autoComplete='new-password'
               />
               {password.length <= 0 && isFormSubmited && (
                 <h5 className="text-red-500 self-start">*Insira a senha do aluno.</h5>
@@ -184,6 +185,7 @@ const Register = () => {
                 }
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                autoComplete='new-password'
               />
               {confirmPassword.length <= 0 && isFormSubmited && (
                 <h5 className="text-red-500 self-start">*Confirme a senha do aluno.</h5>

@@ -14,6 +14,7 @@ const InputField = ({ id, name, label, placeholder, required = false, value = ''
                 value={value} 
                 onChange={onChange}
                 maxLength={maxLength}
+                autoComplete="new-password"
                 min={1}
                 max={100}
             />

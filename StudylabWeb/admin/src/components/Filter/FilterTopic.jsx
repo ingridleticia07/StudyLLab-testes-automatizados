@@ -23,7 +23,7 @@ const TopicFilter = ({ setTopicoFilter, topicos, setCurrentPage,copulateTopico=t
               defaultValue=""
               value={topicos.value}
               onChange={handleDisciplinaSelect}
-              menuMaxHeight={200}
+              menuMaxHeight={110}
               cleanable={false}
               appearance="default"
               style={{ width: '100%' }}
