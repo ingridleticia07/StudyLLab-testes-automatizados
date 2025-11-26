@@ -27,12 +27,12 @@ const SubjectFilter = ({ setDisciplinaFilter, disciplinas, setCurrentPage }) => 
               cleanable={false}
               appearance="default"
               style={{ width: '100%' }}
-              className="w-full md:w-[220px] hidden-selector !rounded-md !border !shadow-sm !px-0 !py-0 !bg-white text-sm font-medium text-gray-700 hover:!bg-gray-100 focus:!outline-none focus:!ring-2 focus:!ring-offset-2 focus:!ring-indigo-10"
+              className="w-full md:w-[220px] hidden-selector"
               // Quando uma opção estiver selecionada
               renderValue={(value, item) => (
                 <div className="flex items-center gap-2">
                     <img src={icons.filter} alt="Filtro" className="w-5 h-5" />
-                    <span>{item?.label || "Todas as disciplinas"}</span>  
+                    <span className='text-gray-700'>{item?.label || "Todas as disciplinas"}</span>  
                 </div>
               )}
             />

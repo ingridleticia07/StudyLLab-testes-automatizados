@@ -85,6 +85,7 @@ const UserFilter = ({ setUserStatusFiler, setUserTypeFilter, setCurrentPage }) =
         >
           <img src={icons.filter} alt="Filtro" className="w-5 h-5" />
           {selectedStatus.name}
+          <img src={icons.arrowBottom} alt="Filtro" className="w-5 h-5" />
         </button>
 
         {showStatus && (
@@ -94,7 +95,8 @@ const UserFilter = ({ setUserStatusFiler, setUserTypeFilter, setCurrentPage }) =
                 <a
                   key={status.id}
                   href="#"
-                  className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 ${
+                  style={{ textDecoration: 'none' }}
+                  className={`block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 hover:text-blue-900 no-underline ${
                     status.id === selectedStatus.id ? 'bg-gray-100 font-semibold' : ''
                   }`}
                   onClick={(e) => {
@@ -104,6 +106,7 @@ const UserFilter = ({ setUserStatusFiler, setUserTypeFilter, setCurrentPage }) =
                 >
                   {status.name}
                 </a>
+
               ))}
             </div>
           </div>
@@ -119,6 +122,7 @@ const UserFilter = ({ setUserStatusFiler, setUserTypeFilter, setCurrentPage }) =
         >
           <img src={icons.filter} alt="Filtro" className="w-5 h-5" />
           {selectedType.name}
+          <img src={icons.arrowBottom} alt="Filtro" className="w-5 h-5" />
         </button>
 
         {showType && (
@@ -128,7 +132,8 @@ const UserFilter = ({ setUserStatusFiler, setUserTypeFilter, setCurrentPage }) =
                 <a
                   key={type.id}
                   href="#"
-                  className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 ${
+                  style={{ textDecoration: 'none' }}
+                  className={`block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 hover:text-blue-900 no-underline ${
                     type.id === selectedType.id ? 'bg-gray-100 font-semibold' : ''
                   }`}
                   onClick={(e) => {

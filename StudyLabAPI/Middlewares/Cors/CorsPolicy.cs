@@ -22,9 +22,13 @@ file static class CustomCorsPolicies
 {
     public static void AllowAllCorsPolicy(CorsPolicyBuilder builder, string[] allowedOrigin)
     {
-        builder.WithOrigins(allowedOrigin)
-                   .AllowAnyHeader()
-                   .AllowAnyMethod()
-                   .AllowCredentials();
+        bool allowAll = allowedOrigin != null && allowedOrigin.Contains("*");
+        
+        builder.AllowAnyHeader().AllowAnyMethod();
+        
+        if (allowAll)
+            builder.SetIsOriginAllowed(origin => true).AllowCredentials();
+        else if (allowedOrigin != null && allowedOrigin.Length > 0)
+            builder.WithOrigins(allowedOrigin).AllowCredentials();
     }
 }

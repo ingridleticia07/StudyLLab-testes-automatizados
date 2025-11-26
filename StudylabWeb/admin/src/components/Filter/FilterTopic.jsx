@@ -27,12 +27,11 @@ const TopicFilter = ({ setTopicoFilter, topicos, setCurrentPage,copulateTopico=t
               cleanable={false}
               appearance="default"
               style={{ width: '100%' }}
-              className="w-full md:w-[220px] hidden-selector !rounded-md !border !shadow-sm !px-0 !py-0 !bg-white text-sm font-medium text-gray-700 hover:!bg-gray-100 focus:!outline-none focus:!ring-2 focus:!ring-offset-2 focus:!ring-indigo-10"
-              // Quando uma opção estiver selecionada
+              className="w-full md:w-[220px] hidden-selector"              
               renderValue={(value, item) => (
                 <div className="flex items-center gap-2">
                     <img src={icons.filter} alt="Filtro" className="w-5 h-5" />
-                    <span>{item?.label || "Tópicos"}</span>  
+                    <span className='text-gray-700'>{item?.label || "Tópicos"}</span>  
                 </div>
               )}
             />

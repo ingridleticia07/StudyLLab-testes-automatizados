@@ -24,10 +24,12 @@ import team from './img/team.svg';
 import topic from './svg/icon-topic.png';
 import subject from './svg/subject-book-icon.png';
 import pdfIcon from './svg/icon-pdf.png';
+import arrowBottom from './svg/arrow-bottom.svg';
 
 export const icons = {
     at,
     arrowLeft,
+    arrowBottom,
     arrowRight,
     book,
     block,
