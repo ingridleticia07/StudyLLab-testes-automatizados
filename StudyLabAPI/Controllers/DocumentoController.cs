@@ -126,11 +126,7 @@ namespace StudyLabAPI.Controllers
         
                 try
                 {
-                    // 1. Primeiro faz o upload local (mantém o comportamento original)
-                    await using var localStream = new FileStream(destinationFilePath, FileMode.Create);
-                    await file.CopyToAsync(localStream);
-        
-                    // 2. Depois faz upload para o Supabase (em background, não bloqueia)
+                    // 1. Faz upload para o Supabase (em background, não bloqueia)
                     await UploadToSupabaseAsync(file, newFileName); // Fire and forget
         
                     string relativePath = Path.Combine("/documents", newFileName).Replace(Path.DirectorySeparatorChar, '/');
@@ -193,16 +189,6 @@ namespace StudyLabAPI.Controllers
                 && documento.fkProfessor != idUsuario)
                 throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
             */
-            string rootDirectory = "wwwroot";
-
-            string file1 = string.Concat(rootDirectory, documento.diretorioMaterial1);
-            string file2 = string.Concat(rootDirectory, documento.diretorioMaterial2);
-
-            if (File.Exists(file1))
-                File.Delete(file1);
-
-            if (File.Exists(file2))
-                File.Delete(file2);
             
             await DeleteFromSupabaseAsync(documento.diretorioMaterial1, documento.diretorioMaterial2);
             

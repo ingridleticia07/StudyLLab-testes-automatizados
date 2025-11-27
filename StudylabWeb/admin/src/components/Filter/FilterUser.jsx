@@ -80,7 +80,7 @@ const UserFilter = ({ setUserStatusFiler, setUserTypeFilter, setCurrentPage }) =
       <div className="relative inline-block text-left" ref={statusDropdownRef}>
         <button
           type="button"
-          className="inline-flex items-center gap-2 justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+          className="inline-flex items-center gap-2 justify-center rounded-md border border-gray-300 shadow-sm px-4 py-1.5 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
           onClick={() => setShowStatus(!showStatus)}
         >
           <img src={icons.filter} alt="Filtro" className="w-5 h-5" />
@@ -117,7 +117,7 @@ const UserFilter = ({ setUserStatusFiler, setUserTypeFilter, setCurrentPage }) =
       <div className="relative inline-block text-left" ref={typeDropdownRef}>
         <button
           type="button"
-          className="inline-flex items-center gap-2 justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+          className="inline-flex items-center gap-2 justify-center rounded-md border border-gray-300 shadow-sm px-4 py-1.5 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
           onClick={() => setShowType(!showType)}
         >
           <img src={icons.filter} alt="Filtro" className="w-5 h-5" />

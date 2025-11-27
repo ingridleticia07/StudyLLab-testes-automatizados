@@ -56,6 +56,8 @@
 
 	<ItemGroup>
 		<Content Remove="StudyLabAPI.Test\**" />
+		<Content Remove="wwwroot\documents\document_c00f83c6-5890-489c-80bf-e0ce9c500c6f.jpg" />
+		<Content Remove="wwwroot\documents\document_a366f352-7050-4bb5-80ed-e95299ae185c.pdf" />
 	</ItemGroup>
 
 
@@ -63,11 +65,6 @@
 		<_ContentIncludedByDefault Remove="StudyLabAPI.Test\obj\project.assets.json" />
 		<_ContentIncludedByDefault Remove="StudyLabAPI.Test\obj\project.packagespec.json" />
 		<_ContentIncludedByDefault Remove="StudyLabAPI.Test\obj\StudyLabAPI.Test.csproj.nuget.dgspec.json" />
-	</ItemGroup>
-
-
-	<ItemGroup>
-	  <Folder Include="wwwroot\documents\" />
 	</ItemGroup>
 
 </Project>

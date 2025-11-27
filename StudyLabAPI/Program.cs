@@ -53,7 +53,7 @@ app.UseAntiforgery();
 
 app.MapPrometheusScrapingEndpoint();
 app
-    .UseCors()
+    .UseCors(CorsPoliciesName.ALLOW_ALL_CORS_POLICY)
     .UseAuthentication()
     .UseAuthorization();
 

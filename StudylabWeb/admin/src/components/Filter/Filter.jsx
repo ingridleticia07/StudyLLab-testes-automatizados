@@ -43,7 +43,7 @@ const CourseFilter = ({ setCursoFilter, setCurrentPage }) => {
     <div className="relative w-full sm:w-auto text-left" ref={dropdownRef}>
       <button
         type="button"
-        className="inline-flex w-full sm:w-auto items-center gap-2 justify-between sm:justify-left rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        className="inline-flex w-full sm:w-auto items-center gap-2 justify-between sm:justify-left rounded-md border border-gray-300 shadow-sm px-4 py-1.5 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         onClick={() => setShowCourses(!showCourses)}
       >
         <span className="flex items-center gap-2">
@@ -51,9 +51,7 @@ const CourseFilter = ({ setCursoFilter, setCurrentPage }) => {
           {selectedCourse.name}
         </span>
         {/* Seta para indicar dropdown */}
-        <svg className="w-4 h-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <img src={icons.arrowBottom} alt="Filtro" className="w-5 h-5" />
       </button>
 
       {showCourses && (
@@ -67,7 +65,8 @@ const CourseFilter = ({ setCursoFilter, setCurrentPage }) => {
               <a
                 key={course.id}
                 href="#"
-                className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 ${
+                style={{ textDecoration: 'none' }}
+                className={`block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 hover:text-gray-900 ${
                   course.id === selectedCourse.id ? 'bg-gray-100 font-semibold' : ''
                 }`}
                 role="menuitem"
