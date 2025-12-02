@@ -22,7 +22,7 @@ const Navbar = () => {
 
             <div className="lg:hidden ml-[48vw]" onClick={() => setIsMenuOpen(!isMenuOpen)}>
 
-              <button className = "text-4xl ">
+              <button className = "text-4xl text-black ">
               {isMenuOpen ? <MdClose /> : <MdMenu />}
               </button>
             </div>

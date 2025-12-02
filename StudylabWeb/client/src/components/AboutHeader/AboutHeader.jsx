@@ -8,8 +8,8 @@ const AboutHeader = () => {
         <NavBar /> 
       </div>
       <div className="pb-10 pt-16 text-center">
-        <h1 className="text-4xl mb-4">Sobre o projeto</h1>
-        <p className="text-xl">Conheça a nossa equipe de idealizadores e nossas missões</p>
+        <h1 className="md:text-4xl text-2xl mb-4">Sobre o projeto</h1>
+        <p className="md:text-xl text-sm">Conheça a nossa equipe de idealizadores e nossas missões</p>
       </div>
     </header>
   );
