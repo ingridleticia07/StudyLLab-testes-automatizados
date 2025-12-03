@@ -43,9 +43,9 @@ const Register = () => {
     /[0-9]/.test(password);
   const isConfirmMatch = password === confirmPassword;
   const isNameValid = nome.length > 0;
-  const isMatriculaValid = matricula.length > 0 && /^[0-9]+$/.test(matricula);
+  const isMatriculaValid = matricula.length == 6 && /^[0-9]+$/.test(matricula);
   const isCurseValid = selectedCurso.length > 0;
-
+  const exceptionMessage = ['Preencha uma matrícula númerica, com 6 digítos']
   const isFormValid = isEmailValid && isPasswordStrong && isConfirmMatch &&
     isNameValid && isMatriculaValid && isCurseValid && termsAccepted;
 
@@ -69,7 +69,7 @@ const Register = () => {
       setShowError(true);
       setLoader(false);
       if (error.response?.data?.tipo === 2) {
-        setExceptionText("Já existe um usuário com esta matrícula ou email!");
+        setExceptionText("Esse email ou matrícula, já está existe no sistema!");
       } else {
         setExceptionText("Curso não encontrado!");
       }
@@ -121,7 +121,7 @@ const Register = () => {
               )}
 
               <InputField
-                type="text"
+                type="number"
                 id="matricula"
                 label="Matrícula"
                 placeholder="Sua matrícula"
@@ -130,8 +130,8 @@ const Register = () => {
                 maxLength={6}
                 invalidText="Matrícula inválida"
               />
-              {(matricula.length <= 0 || !/^[0-9]+$/.test(matricula)) && isFormSubmited && (
-                <h5 className="text-red-500 self-start">*Insira a matrícula numérica do aluno.</h5>
+              {(matricula.length != 6 || !/^[0-9]+$/.test(matricula)) && isFormSubmited && (
+                <h5 className="text-red-500 self-start">*Insira uma matrícula numérica com 6 dígitos.</h5>
               )}
 
               <InputField
@@ -145,8 +145,8 @@ const Register = () => {
                 isValid={email.length === 0 ? null : isEmailValid}
                 maxLength={50}
               />
-              {email.length <= 0 && isFormSubmited && (
-                <h5 className="text-red-500 self-start">*Insira o email institucional do aluno corretamente.</h5>
+              {!(email.endsWith('@alu.ufc.br') || email.endsWith('@ufc.br') && email.length <= 0) && isFormSubmited && (
+                <h5 className="text-red-500 self-start">*Insira o email institucional, no padrão da UFC(joão@alu.ufc.br)</h5>
               )}
 
               <InputField
@@ -166,8 +166,8 @@ const Register = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete='new-password'
               />
-              {password.length <= 0 && isFormSubmited && (
-                <h5 className="text-red-500 self-start">*Insira a senha do aluno.</h5>
+              {!(/[A-Z]/.test(password) && /[a-z]/.test(password) && /[0-9]/.test(password)) && isFormSubmited && (
+                <h5 className="text-red-500 self-start">*Insira uma senha com pelo menos 8 dígitos, pelo menos uma letra maiúscula e minúscula, e um número.</h5>
               )}
 
               <InputField
@@ -197,15 +197,6 @@ const Register = () => {
               <PasswordValidation password={password} />
 
               <Button text="Continuar meu cadastro" type="submit" disabled={!isFormValid} />
-
-              <p
-                className={`text-sm text-red-500 mt-3 transition-opacity duration-200 ${
-                  isFormValid ? 'invisible' : 'visible'
-                }`}
-              >
-                A senha não corresponde ao requisito da diretiva de senha ou algum
-                <br /> campo está vazio.
-              </p>
 
               <div className="flex gap-2 text-start w-full mt-3">
                 <input

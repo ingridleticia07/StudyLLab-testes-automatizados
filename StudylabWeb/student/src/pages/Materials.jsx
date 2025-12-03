@@ -103,13 +103,6 @@ const Materials = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="hidden lg:flex lg:flex-grow lg:justify-end">
-                        <Button
-                            text={'Cadastrar Conteúdo'}
-                            handleClick={() => setShowRegister(true)}
-                            className="w-full lg:w-auto"
-                        />
-                    </div>
                 </div>
 
                 <TableMaterials
