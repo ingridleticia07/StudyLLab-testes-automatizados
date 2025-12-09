@@ -14,8 +14,8 @@ function ContactForm() {
   };
 
   return (
-    <div className="flex justify-center items-center">
-      <form className="bg-white p-6 rounded-lg border-[0.2px] border-americanOrange-500 w-[34rem]">
+    <div className="flex justify-center items-center w-full">
+      <form className="bg-white p-6 rounded-lg border-[0.2px] border-americanOrange-500 w-full lg:w-[34rem] text-sm xs:text-base">
         <div className="mb-4">
           <label htmlFor="name" className="block text-gray-700 font-medium mb-2">Seu nome</label>
           <input

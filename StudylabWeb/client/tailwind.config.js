@@ -69,6 +69,9 @@ export default {
                 inter: ['Inter', 'Helvetica', 'Arial', 'sans-serif'],
                 urbanist: ['Urbanist', 'Roboto', 'Arial', 'sans-serif'],
             },
+            screens: {
+                'xs': '480px',  // Extra small devices
+            },
         },
     },
     plugins: [],
