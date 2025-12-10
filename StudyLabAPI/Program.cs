@@ -1,10 +1,11 @@
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 using StudyLabAPI.Endpoints;
 using StudyLabAPI.Endpoints.AuthEndpoints;
 using StudyLabAPI.Middlewares.Cors;
 using StudyLabAPI.Middlewares.Filters;
 using StudyLabAPI.Services;
-using Microsoft.AspNetCore.HttpOverrides;
 using ILogger = Serilog.ILogger;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -36,34 +37,70 @@ builder.Services.AddStorageServices()
 builder.Services.AddAuth();
 
 
-// =========================================================
-// 1. CONFIGURAÇÃO NECESSÁRIA PARA RENDER/CLOUDFLARE
-// =========================================================
+// ========================================
+// 1. Forwarded Headers (Render + Cloudflare)
+// ========================================
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
-    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
 
-    // permite proxies (Render + Cloudflare)
     options.KnownNetworks.Clear();
     options.KnownProxies.Clear();
 });
 
 
-// =========================================================
-// 2. ANTIFORGERY COMPLETO PARA FUNCIONAR EM DOMÍNIOS DIFERENTES
-// =========================================================
+// ========================================
+// 2. DataProtection (Render)
+// ========================================
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo("/tmp/dataprotection-keys/"))
+    .SetApplicationName("StudyLabAPI")
+    .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
+
+
+// ========================================
+// 3. Antiforgery
+// ========================================
 builder.Services.AddAntiforgery(options =>
 {
     options.HeaderName = "X-CSRF-TOKEN";
     options.Cookie.Name = ".AspNetCore.Antiforgery.KeSRHT2WmJs";
-    // Essencial para cookies cross-site
+
     options.Cookie.HttpOnly = false;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.Path = "/";
+    options.Cookie.MaxAge = TimeSpan.FromHours(24);
+    options.Cookie.IsEssential = true;
+
+    if (builder.Environment.IsDevelopment())
+        options.Cookie.SecurePolicy = CookieSecurePolicy.None;  
+    else
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+
+    options.SuppressXFrameOptionsHeader = true;
 });
 
 
 WebApplication app = builder.Build();
+
+
+// ========================================
+// 4. ForwardedHeaders logo de início
+// ========================================
+app.UseForwardedHeaders();
+
+// Middleware que corrige o Scheme baseado no X-Forwarded-Proto
+app.Use((context, next) =>
+{
+    var proto = context.Request.Headers["X-Forwarded-Proto"].FirstOrDefault();
+
+    if (!string.IsNullOrEmpty(proto))
+        context.Request.Scheme = proto;
+
+    return next();
+});
+
 
 if (app.Environment.IsDevelopment())
 {
@@ -72,30 +109,28 @@ if (app.Environment.IsDevelopment())
 }
 
 
-// =========================================================
-// 3. ESSENCIAL: habilitar leitura correta de HTTPS real
-// =========================================================
-app.UseForwardedHeaders();
-
-
-// =========================================================
-// 4. ANTIFORGERY MIDDLEWARE
-// =========================================================
+// ========================================
+// 5. Antiforgery vem ANTES de CORS
+// ========================================
 app.UseAntiforgery();
+
+// ========================================
+// 6. CORS
+// ========================================
+app.UseCors(CorsPoliciesName.ALLOW_ALL_CORS_POLICY);
+
 
 app.MapPrometheusScrapingEndpoint();
 
-app.UseCors(CorsPoliciesName.ALLOW_ALL_CORS_POLICY);
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseStaticFiles();
 
 
-// =========================================================
-// ENDPOINT GROUPS
-// =========================================================
-
+// ========================================
+// Endpoints
+// ========================================
 RouteGroupBuilder authGroup = app.MapGroup("auth")
     .AddEndpointFilter<ApiKeyFilter>()
     .RequireCors(CorsPoliciesName.ALLOW_ALL_CORS_POLICY)

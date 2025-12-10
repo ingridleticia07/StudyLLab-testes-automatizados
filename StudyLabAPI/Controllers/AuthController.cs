@@ -292,16 +292,6 @@ public class AuthController : IAuthController
 
         var tokens = _antiforgery.GetAndStoreTokens(httpContext);
 
-        httpContext.Response.Cookies.Append(
-            ".AspNetCore.Antiforgery.KeSRHT2WmJs",
-            tokens.RequestToken,
-            new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.None
-            });
-
         return (userReadModel, jwtUser, tokens.RequestToken, tokens.CookieToken, userReadModel.id);
     }
 
