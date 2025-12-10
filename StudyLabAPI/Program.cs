@@ -4,6 +4,7 @@ using StudyLabAPI.Endpoints.AuthEndpoints;
 using StudyLabAPI.Middlewares.Cors;
 using StudyLabAPI.Middlewares.Filters;
 using StudyLabAPI.Services;
+using Microsoft.AspNetCore.HttpOverrides;
 using ILogger = Serilog.ILogger;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -13,8 +14,8 @@ ILogger serilog = new LoggerConfiguration()
     .Enrich.WithEnvironmentName()
     .WriteTo.Console()
     .CreateLogger();
-builder.Logging.ClearProviders()
-    .AddSerilog(serilog);
+
+builder.Logging.ClearProviders().AddSerilog(serilog);
 builder.Host.UseSerilog(serilog);
 
 builder.Services
@@ -34,33 +35,66 @@ builder.Services.AddStorageServices()
 
 builder.Services.AddAuth();
 
+
+// =========================================================
+// 1. CONFIGURAÇÃO NECESSÁRIA PARA RENDER/CLOUDFLARE
+// =========================================================
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+
+    // permite proxies (Render + Cloudflare)
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
+
+// =========================================================
+// 2. ANTIFORGERY COMPLETO PARA FUNCIONAR EM DOMÍNIOS DIFERENTES
+// =========================================================
 builder.Services.AddAntiforgery(options =>
 {
     options.HeaderName = "X-CSRF-TOKEN";
     options.Cookie.Name = ".AspNetCore.Antiforgery.KeSRHT2WmJs";
+    // Essencial para cookies cross-site
     options.Cookie.HttpOnly = false;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.SameSite = SameSiteMode.None;
 });
 
+
 WebApplication app = builder.Build();
 
-if(app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
-    app
-        .UseSwagger()
-        .UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
+
+// =========================================================
+// 3. ESSENCIAL: habilitar leitura correta de HTTPS real
+// =========================================================
+app.UseForwardedHeaders();
+
+
+// =========================================================
+// 4. ANTIFORGERY MIDDLEWARE
+// =========================================================
 app.UseAntiforgery();
 
 app.MapPrometheusScrapingEndpoint();
-app
-    .UseCors(CorsPoliciesName.ALLOW_ALL_CORS_POLICY)
-    .UseAuthentication()
-    .UseAuthorization();
+
+app.UseCors(CorsPoliciesName.ALLOW_ALL_CORS_POLICY);
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseStaticFiles();
+
+
+// =========================================================
+// ENDPOINT GROUPS
+// =========================================================
 
 RouteGroupBuilder authGroup = app.MapGroup("auth")
     .AddEndpointFilter<ApiKeyFilter>()
