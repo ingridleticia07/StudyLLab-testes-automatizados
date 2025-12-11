@@ -158,7 +158,7 @@ forumGroup.MapForumEndpoints();
 RouteGroupBuilder materialGroup = app.MapGroup("material")
     .AddEndpointFilter<ApiKeyFilter>()
     .RequireCors(CorsPoliciesName.ALLOW_ALL_CORS_POLICY)
-    .WithTags("Material");
+    .WithTags("Material").DisableAntiforgery();
 materialGroup.MapMaterialEndpoints();
 
 RouteGroupBuilder utilsGroup = app.MapGroup("utils")
