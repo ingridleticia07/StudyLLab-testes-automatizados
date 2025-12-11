@@ -46,12 +46,10 @@ export async function saveMaterial(respostaMaterialDTO) {
             MATERIAL_ENDPOINT + "/cadastrarDocumento",
             formData,
             {
-                headers: { 
-                    'X-CSRF-TOKEN': csrfToken, // CSRF token header
-                    'Content-Type': 'multipart/form-data', // Important for sending FormData,
-                    'accept': 'application/json, text/plain, */*'
-                },
-                withCredentials: true, // Ensures that cookies are sent
+              headers: { 
+                  'Content-Type': 'multipart/form-data', // Important for sending FormData,
+                  'accept': 'application/json, text/plain, */*'
+              }
             }
         );
 

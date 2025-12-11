@@ -227,9 +227,6 @@ async function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifo
     const expireDate = new Date();
     expireDate.setDate(expireDate.getDate() + 1);
     const expires = `expires=${expireDate.toUTCString()}`;
-
-    document.cookie = `.AspNetCore.Antiforgery.KeSRHT2WmJs=${tokenAntifogeryCookie}; path=/; ${expires};`;
-    document.cookie = `.csrf-token=${tokenAntifogery}; path=/; ${expires};`;
     document.cookie = `id-user=${idUser}; path=/; ${expires};`;
     document.cookie = `email-user=${emailUser}; path=/; ${expires};`;
     document.cookie = `${AUTH_TOKEN}=${tokenJwt}; path=/; ${expires};`;
