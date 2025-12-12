@@ -30,9 +30,9 @@ export async function handleLogin(email, password) {
       let user = JSON.parse(localStorage.getItem("user"));
       
       if(user.role == 1)
-        window.location.href='http://localhost:5173';
+        window.location.href='https://localhost:5173';
       else
-        window.location.href='http://localhost:5175';
+        window.location.href='https://localhost:5175';
       
     }else{
       alert("Você já está logado!");
@@ -40,9 +40,9 @@ export async function handleLogin(email, password) {
       let user = JSON.parse(localStorage.getItem("user"));
       
       if(user.role == 1)
-        window.location.href='http://localhost:5173';
+        window.location.href='https://localhost:5173';
       else
-        window.location.href='http://localhost:5175';
+        window.location.href='https://localhost:5175';
       
     }
   } catch (error) {

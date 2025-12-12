@@ -45,13 +45,11 @@ public static class AuthAnonEndpoints
         [FromServices] IAuthController controller)
     {
         string jwtNewUser = null;
-        string antiFogeryToken = null;
-        string antiFogeryTokenCookie = null;
         int userId = 0;
 
         try
         {
-            (UserReadModel _, jwtNewUser,antiFogeryToken,antiFogeryTokenCookie, userId) = await controller.RegisterNewUser(registerUserRequest, _httpContext);
+            (UserReadModel _, jwtNewUser, userId) = await controller.RegisterNewUser(registerUserRequest, _httpContext);
         }
         catch (CursoNotFoundException ex)
         {
@@ -65,8 +63,6 @@ public static class AuthAnonEndpoints
         object retorno = new
         {
             tokenJwt = jwtNewUser,
-            tokenAntifogery = antiFogeryToken,
-            tokenAntifogeryCookie = antiFogeryTokenCookie,
             idUsuario = userId
         };
 
@@ -134,13 +130,11 @@ public static class AuthAnonEndpoints
         [FromServices] IAuthController controller)
     {
         string jwtUser;
-        string antiFogeryToken;
-        string antiFogeryTokenCookie;
         int userId = 0;
 
         try
         {
-            (UserReadModel _, jwtUser, antiFogeryToken, antiFogeryTokenCookie, userId) = await controller.LoginUser(loginRequestModel, _httpContext);
+            (UserReadModel _, jwtUser, userId) = await controller.LoginUser(loginRequestModel, _httpContext);
         }
         catch (UsuarioNotFoundException e)
         {
@@ -158,8 +152,6 @@ public static class AuthAnonEndpoints
         object retorno = new
         {
             tokenJwt = jwtUser,
-            tokenAntifogery = antiFogeryToken,
-            tokenAntifogeryCookie = antiFogeryTokenCookie,
             idUsuario = userId
         };
 

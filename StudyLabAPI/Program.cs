@@ -49,44 +49,11 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.KnownProxies.Clear();
 });
 
-
-// ========================================
-// 2. DataProtection (Render)
-// ========================================
-builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo("/tmp/dataprotection-keys/"))
-    .SetApplicationName("StudyLabAPI")
-    .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
-
-
-// ========================================
-// 3. Antiforgery
-// ========================================
-builder.Services.AddAntiforgery(options =>
-{
-    options.HeaderName = "X-CSRF-TOKEN";
-    options.Cookie.Name = ".AspNetCore.Antiforgery.KeSRHT2WmJs";
-
-    options.Cookie.HttpOnly = false;
-    options.Cookie.SameSite = SameSiteMode.None;
-    options.Cookie.Path = "/";
-    options.Cookie.MaxAge = TimeSpan.FromHours(24);
-    options.Cookie.IsEssential = true;
-
-    if (builder.Environment.IsDevelopment())
-        options.Cookie.SecurePolicy = CookieSecurePolicy.None;  
-    else
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-
-    options.SuppressXFrameOptionsHeader = true;
-});
-
-
 WebApplication app = builder.Build();
 
 
 // ========================================
-// 4. ForwardedHeaders logo de início
+// 2. ForwardedHeaders logo de início
 // ========================================
 app.UseForwardedHeaders();
 
@@ -108,14 +75,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
 // ========================================
-// 5. Antiforgery vem ANTES de CORS
-// ========================================
-app.UseAntiforgery();
-
-// ========================================
-// 6. CORS
+// 3. CORS
 // ========================================
 app.UseCors(CorsPoliciesName.ALLOW_ALL_CORS_POLICY);
 
