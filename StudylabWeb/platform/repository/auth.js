@@ -41,8 +41,6 @@ export async function login(email, password) {
 
         await saveUserCredentials(
           res.data.tokenJwt,
-          res.data.tokenAntifogery,
-          res.data.tokenAntifogeryCookie,
           res.data.idUsuario, 
           email
         );
@@ -95,8 +93,6 @@ export async function register(
     
     saveUserCredentials(
       res.data.tokenJwt,
-      res.data.tokenAntifogery,
-      res.data.tokenAntifogeryCookie,
       res.data.idUsuario
     );
 
@@ -221,8 +217,8 @@ export function updateUserAuthState() {
   }
 }
 
-async function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifogeryCookie, idUser, emailUser) {
-  if (tokenAntifogery) {
+async function saveUserCredentials(tokenJwt, idUser, emailUser) {
+  if (tokenJwt) {
 
     const expireDate = new Date();
     expireDate.setDate(expireDate.getDate() + 1);
@@ -233,7 +229,7 @@ async function saveUserCredentials(tokenJwt, tokenAntifogery = null, tokenAntifo
     await saveUsersInfos(tokenJwt, idUser);
 
   } else {
-    console.log("No anti-forgery token provided.");
+    console.log("No jwt token provided.");
   }
 }
 

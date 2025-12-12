@@ -29,7 +29,7 @@ public interface IAuthController
     /// e um JWT válido para o usuário.</returns>
     /// <exception cref="CursoNotFoundException"><c>codeCurso</c> de <paramref name="registerUserRequestModel"/>
     /// não pertence a nenhum curso.</exception>
-    public Task<(UserReadModel, string, string, string, int)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel, HttpContext? httpContext);
+    public Task<(UserReadModel, string, int)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel, HttpContext? httpContext);
     /// <summary>
     /// Realiza o login de um usuário já cadastrado no sistema.
     /// Os campos recebidos em &lt;paramref name="registerUserRequestModel"/&gt; são validados de acordo com <see cref="UserLoginRequestModelValidator"/>
@@ -61,7 +61,7 @@ public interface IAuthController
     /// <returns>Representa uma tarefa assíncrona, ela um inteiro com a informação referente ao Id do usuário</returns>
     /// 
 
-    public Task<(UserReadModel, string, string, string, int)> LoginUser(UserLoginRequestModel userLoginRequestModel, HttpContext? httpContext);
+    public Task<(UserReadModel, string, int)> LoginUser(UserLoginRequestModel userLoginRequestModel, HttpContext? httpContext);
     /// <summary>
     /// Usa o código de confirmação em <paramref name="confirmUserEmailRequestModel"/> para confirmar o email,
     /// se o código não for valido, a confirmação não acontecerá.

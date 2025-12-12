@@ -11,7 +11,7 @@ const Sidebar = ({ isMobile = false }) => {
     const confirmed = window.confirm('Clique em ok para sair!');
     if (confirmed) {
       logoutSession();
-      window.location.href = 'http://localhost:5174';
+      window.location.href = 'https://localhost:5174';
     }
   };
 

@@ -34,7 +34,7 @@ function App() {
       setHasAlerted(true);
       alert('Sua sessão expirou. Logue novamente!');
       logoutSession();
-      window.location.href = 'http://localhost:5174/';
+      window.location.href = 'https://localhost:5174/';
     }
   }, [authStatus]);
 
