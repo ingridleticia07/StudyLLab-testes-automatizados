@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Mail;
+using System.Text;
 using StudyLabAPI.Services.Email.Models;
 using MailMessage = System.Net.Mail.MailMessage;
 // ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
@@ -13,6 +14,8 @@ public class EmailService : IDisposable, IEmailService
     private readonly int _smtpPort;
     private readonly string _smtpEmail;
     private readonly string _smtpPassword;
+    private readonly string _supaUrl;
+    private readonly string _supaKey;
 
     public EmailService(EnvironmentService environmentService)
     {
@@ -20,6 +23,8 @@ public class EmailService : IDisposable, IEmailService
         _smtpPort = int.Parse(environmentService.smtpPort);
         _smtpEmail = environmentService.smtpEmail;
         _smtpPassword = environmentService.smtpPassword;
+        _supaUrl = environmentService.supabaseUrl;
+        _supaKey = environmentService.supabaseKey;
         
         smtpClient = new(_smtpServer, _smtpPort)
         {
@@ -29,7 +34,7 @@ public class EmailService : IDisposable, IEmailService
         };
     }
     
-    public async Task SendEmail(EmailIntent intent)
+    public async Task SendEmail(EmailIntent intent,bool useEdgeFunction = true)
     {
         string emailBody = intent.template.FormatWithParams();
         MailMessage internalMailScope = new(from: _smtpEmail, to: intent.toEmail)
@@ -38,8 +43,47 @@ public class EmailService : IDisposable, IEmailService
             Body = emailBody,
             IsBodyHtml = true,
         };
-        await smtpClient.SendMailAsync(internalMailScope);
+        if(useEdgeFunction)
+            await SendEmailViaSupabaseEdgeFunction(intent, emailBody);
+        else
+            await smtpClient.SendMailAsync(internalMailScope);
     }
+    
+    private async Task SendEmailViaSupabaseEdgeFunction(EmailIntent intent, string emailBody)
+    {
+        var payload = new
+        {
+            to = intent.toEmail,
+            subject = intent.subject,
+            html = emailBody,
+            text = "Feito de estudantes, para estudantes"
+        };
+    
+        var json = System.Text.Json.JsonSerializer.Serialize(payload);
+    
+        using var httpClient = new HttpClient();
+    
+        httpClient.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue(
+                "Bearer",
+                _supaKey
+            );
+    
+        using var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var url = "https://agqvmxhwxafycxcwhyft.supabase.co/functions/v1/send-email";
+        
+        var response = await httpClient.PostAsync(url, content);
+    
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            throw new Exception(
+                $"Erro ao enviar email via Supabase Edge Function: {response.StatusCode} - {error}"
+            );
+        }
+    }
+
 
     public void Dispose()
     {

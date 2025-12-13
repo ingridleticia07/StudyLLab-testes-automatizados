@@ -65,7 +65,7 @@ public class AuthControllerCrudTests
             x.Hash(requestModel.password))
             .Returns(AuthControllerFakeData.FAKE_HASH_OUTPUT);
         emailServiceMock.Setup(x => 
-            x.SendEmail(It.IsAny<EmailIntent>()));
+            x.SendEmail(It.IsAny<EmailIntent>(), true));
         
         (UserReadModel readModel, string jwt, int userId) = await authController.RegisterNewUser(requestModel);
 

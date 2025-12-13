@@ -13,6 +13,8 @@ public static class UtilsControllerFakeData
         smtpPassword = string.Empty,
         smtpPort = string.Empty,
         postgresConnectionString = string.Empty,
-        smtpServer = string.Empty
+        smtpServer = string.Empty,
+        supabaseUrl = string.Empty,
+        supabaseKey = string.Empty
     };
 }
