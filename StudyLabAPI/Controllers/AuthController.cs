@@ -99,7 +99,7 @@ public class AuthController : IAuthController
                 registerUserRequestModel.matricula,
                 registerUserRequestModel.email
             );
-            logger.Error(exception, "Um usuário com o mesmo {NomeUsuario} ou {Email} já existe",
+            logger.Error(exception, "Um usuário com a mesma {registerUserRequestModel.matricula} ou {Email} já existe",
                 nameof(registerUserRequestModel.username), nameof(registerUserRequestModel.email));
             throw exception;
         }
