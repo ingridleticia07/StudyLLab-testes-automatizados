@@ -63,7 +63,7 @@ const LoginVerification = () => {
                 setIsFormSubmited(false);
                 alert("Código de verificação reenviado. Verifique seu email!");
             } catch (error) {
-                setErrorMessage('Erro ao reenviar código. Tente novamente ou fale conosco!');
+                setErrorMessage('Erro ao reenviar código. Tente novamente mais tarde ou fale conosco!');
                 setShowError(true);
                 setIsFormSubmited(false);
             }
