@@ -1,6 +1,6 @@
 ﻿namespace StudyLabAPI.Models.User.DTOs;
 
-public class RequestResetPasswordEmailRequestModel
+public record RequestResetPasswordEmailRequestModel
 {
-    public string userEmail { get; set; }
+    public string userEmail { get; init; }
 }

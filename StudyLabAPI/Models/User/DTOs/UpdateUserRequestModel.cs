@@ -2,12 +2,12 @@
 
 namespace StudyLabAPI.Models.User.DTOs;
 
-public class UpdateUserRequestModel
+public record UpdateUserRequestModel
 {
-    public string? username { get; set; }
-    public string? password { get; set; }
-    public UserRole? role { get; set; }
-    public bool? active { get; set; }
-    public int? codeCurso { get; set; }
-    public string? imagem { get; set; }
+    public string? username { get; init; }
+    public string? password { get; init; }
+    public UserRole? role { get; init; }
+    public bool? active { get; init; }
+    public int? codeCurso { get; init; }
+    public string? imagem { get; init; }
 }

@@ -1,6 +1,6 @@
 ﻿namespace StudyLabAPI.Models.User.DTOs;
 
-public class UsersListResponse
+public record UsersListResponse
 {
     public int maxPage { get; init; }
     public int usersCount { get; init; }

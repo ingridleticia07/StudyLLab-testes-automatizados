@@ -1,6 +1,6 @@
 ﻿namespace StudyLabAPI.Models.Material.DTOs
 {
-    public class DocumentoListResponse
+    public record DocumentoListResponse
     {
         public int maxPage { get; init; }
         public int documentoForumCount { get; init; }

@@ -1,6 +1,6 @@
 ﻿namespace StudyLabAPI.Models.Forum.DTOs
 {
-    public class TopicoDiscussaoListResponse
+    public record TopicoDiscussaoListResponse
     {
         public int maxPage { get; init; }
         public int topicoCount { get; init; }

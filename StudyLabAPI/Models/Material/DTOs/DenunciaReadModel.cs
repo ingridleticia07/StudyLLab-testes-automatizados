@@ -3,20 +3,20 @@ using StudyLabAPI.Models.User;
 
 namespace StudyLabAPI.Models.Material.DTOs
 {
-    public class DenunciaReadModel
+    public record DenunciaReadModel
     {
-        public int idDenuncia { get; set; }
+        public int idDenuncia { get; init; }
 
-        public UsuarioModel usuario { get; set; }
+        public UsuarioModel usuario { get; init; }
 
-        public DocumentoModel documento { get; set; }
+        public DocumentoModel documento { get; init; }
 
-        public statusDenunciaEnum statusDenuncia { get; set; }
+        public statusDenunciaEnum statusDenuncia { get; init; }
 
-        public statusDocumentoEnum statusDocumento { get; set; }
+        public statusDocumentoEnum statusDocumento { get; init; }
 
-        public DateOnly dataDenuncia { get; set; }
+        public DateOnly dataDenuncia { get; init; }
 
-        public string descricao { get; set; }
+        public string descricao { get; init; }
     }
 }

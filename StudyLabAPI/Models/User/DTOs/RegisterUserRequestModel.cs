@@ -2,13 +2,13 @@
 
 namespace StudyLabAPI.Models.User.DTOs;
 
-public class RegisterUserRequestModel
+public record RegisterUserRequestModel
 {
-    public string username { get; set; } = null!;
-    public string email { get; set; } = null!;
-    public string password { get; set; } = null!;
-    public string matricula { get; set; } = null!;
-    public UserRole role { get; set; }
-    public int codeCurso { get; set; }
-    public string? imagem { get; set; }
+    public string username { get; init; } = null!;
+    public string email { get; init; } = null!;
+    public string password { get; init; } = null!;
+    public string matricula { get; init; } = null!;
+    public UserRole role { get; init; }
+    public int codeCurso { get; init; }
+    public string? imagem { get; init; }
 }

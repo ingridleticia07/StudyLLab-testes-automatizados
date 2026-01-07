@@ -3,7 +3,7 @@ using StudyLabAPI.Models.User.Enums;
 
 namespace StudyLabAPI.Models.User.DTOs;
 
-public class UserReadModel
+public record UserReadModel
 {
     public required int id { get; init; }
     public required string username { get; init; }

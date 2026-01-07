@@ -1,15 +1,15 @@
 ﻿namespace StudyLabAPI.Models.Forum.DTOs
 {
-    public class RegisteredTopicoDiscussaoRequestModel
+    public record RegisteredTopicoDiscussaoRequestModel
     {
-        public int idTopico { get; set; }
+        public int idTopico { get; init; }
 
-        public string nomeTopico { get; set; }
+        public string nomeTopico { get; init; }
 
-        public DateOnly dataTopico { get; set; }
+        public DateOnly dataTopico { get; init; }
 
-        public int disciplina { get; set; }
+        public int disciplina { get; init; }
 
-        public int idUsuario { get; set; }
+        public int idUsuario { get; init; }
     }
 }

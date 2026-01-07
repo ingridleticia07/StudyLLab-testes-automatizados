@@ -1,6 +1,6 @@
 ﻿namespace StudyLabAPI.Models.Disciplina.DTOs
 {
-    public class DisciplinaListResponse
+    public record DisciplinaListResponse
     {
         public int maxPage { get; init; }
         public int disciplinaCount { get; init; }

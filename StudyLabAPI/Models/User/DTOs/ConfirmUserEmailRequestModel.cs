@@ -1,6 +1,6 @@
 namespace StudyLabAPI.Models.User.DTOs;
 
-public class ConfirmUserEmailRequestModel
+public record ConfirmUserEmailRequestModel
 {
-    public string confirmationCode { get; set; }
+    public string confirmationCode { get; init; }
 }

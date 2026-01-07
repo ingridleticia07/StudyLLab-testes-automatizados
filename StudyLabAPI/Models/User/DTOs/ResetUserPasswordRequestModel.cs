@@ -1,8 +1,8 @@
 namespace StudyLabAPI.Models.User.DTOs;
 
-public class ResetUserPasswordRequestModel
+public record ResetUserPasswordRequestModel
 {
-    public string userEmail { get; set; }
-    public string newPassword { get; set; }
-    public string resetCode { get; set; }
+    public string userEmail { get; init; }
+    public string newPassword { get; init; }
+    public string resetCode { get; init; }
 }

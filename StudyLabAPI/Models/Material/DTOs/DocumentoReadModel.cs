@@ -4,26 +4,26 @@ using StudyLabAPI.Models.User;
 
 namespace StudyLabAPI.Models.Material.DTOs
 {
-    public class DocumentoReadModel
+    public record DocumentoReadModel
     {
-        public int idDocumento { get; set; }
+        public int idDocumento { get; init; }
 
-        public DateOnly dataCadastro { get; set; }
+        public DateOnly dataCadastro { get; init; }
 
-        public string diretorioMaterial1 { get; set; }
+        public string diretorioMaterial1 { get; init; }
 
-        public string diretorioMaterial2 { get; set; }
+        public string diretorioMaterial2 { get; init; }
 
-        public statusDocumentoEnum status { get; set; }
+        public statusDocumentoEnum status { get; init; }
 
-        public tipoMaterialEnum tipoMaterial { get; set; }
+        public tipoMaterialEnum tipoMaterial { get; init; }
 
-        public TopicoDiscussaoModel topico { get; set; }
+        public TopicoDiscussaoModel topico { get; init; }
 
-        public tipoArquivo tipoArquivo { get; set; }
+        public tipoArquivo tipoArquivo { get; init; }
 
-        public UsuarioModel usuario { get; set; }
+        public UsuarioModel usuario { get; init; }
 
-        public int professor {get; set;}
+        public int professor {get; init;}
     }
 }

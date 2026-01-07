@@ -3,19 +3,19 @@ using StudyLabAPI.Models.User;
 
 namespace StudyLabAPI.Models.Disciplina.DTOs
 {
-    public class DisciplinaReadModel
+    public record DisciplinaReadModel
     {
-        public int idDisciplina { get; set; }
+        public int idDisciplina { get; init; }
 
-        public string nomeDisciplina { get; set; }
+        public string nomeDisciplina { get; init; }
 
-        public string professorDisciplina { get; set; }
+        public string professorDisciplina { get; init; }
 
         public CursoModel curso { get; init; }
 
         public UsuarioModel professor { get; init; }
 
-        public int ?quantidadeAluno { get; set; }
-        public string codigoDisciplina { get; set; }
+        public int ?quantidadeAluno { get; init; }
+        public string codigoDisciplina { get; init; }
     }
 }

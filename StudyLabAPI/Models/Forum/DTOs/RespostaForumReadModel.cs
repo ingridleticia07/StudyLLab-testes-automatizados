@@ -2,16 +2,16 @@
 
 namespace StudyLabAPI.Models.Forum.DTOs
 {
-    public class RespostaForumReadModel
+    public record RespostaForumReadModel
     {
-        public int idResposta { get; set; }
+        public int idResposta { get; init; }
 
-        public string resposta { get; set; }
+        public string resposta { get; init; }
 
-        public DateOnly dataResposta { get; set; }
+        public DateOnly dataResposta { get; init; }
 
-        public TopicoDiscussaoModel topicoDiscussao { get; set; }
+        public TopicoDiscussaoModel topicoDiscussao { get; init; }
 
-        public UsuarioModel usuario { get; set; }
+        public UsuarioModel usuario { get; init; }
     }
 }

@@ -3,16 +3,16 @@ using StudyLabAPI.Models.User;
 
 namespace StudyLabAPI.Models.Forum.DTOs
 {
-    public class TopicoDiscussaoReadModel
+    public record TopicoDiscussaoReadModel
     {
-        public int idTopico { get; set; }
+        public int idTopico { get; init; }
 
-        public string nomeTopico { get; set; }
+        public string nomeTopico { get; init; }
 
-        public DateOnly dataTopico { get; set; }
+        public DateOnly dataTopico { get; init; }
 
-        public DisciplinaModel disciplina { get; set; }
+        public DisciplinaModel disciplina { get; init; }
 
-        public UsuarioModel usuario { get; set; }
+        public UsuarioModel usuario { get; init; }
     }
 }
