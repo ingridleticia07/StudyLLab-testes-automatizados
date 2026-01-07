@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using StudyLabAPI.Controllers;
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.Disciplina;
+using StudyLabAPI.Models.Disciplina.DTOs;
 
 namespace StudyLabAPI.Endpoints;
 public static class DisciplinaEndpoints

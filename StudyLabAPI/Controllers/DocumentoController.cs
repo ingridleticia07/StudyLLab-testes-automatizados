@@ -1,12 +1,19 @@
 ﻿using StudyLabAPI.Exceptions;
 using StudyLabAPI.Mapper;
 using StudyLabAPI.Models;
-using StudyLabAPI.Models.Enums;
 using StudyLabAPI.Repositories;
 using StudyLabAPI.Validators.CustomValidators.RequestQuery;
 using ILogger = Serilog.ILogger;
 using Supabase; // Adicione esta using
-using Microsoft.Extensions.DependencyInjection; // Adicione esta using
+using Microsoft.Extensions.DependencyInjection;
+using StudyLabAPI.Models.Forum;
+using StudyLabAPI.Models.Material;
+using StudyLabAPI.Models.Material.DTOs;
+using StudyLabAPI.Models.Material.Enums;
+using StudyLabAPI.Models.User;
+using StudyLabAPI.Models.User.Enums;
+
+// Adicione esta using
 
 namespace StudyLabAPI.Controllers
 {

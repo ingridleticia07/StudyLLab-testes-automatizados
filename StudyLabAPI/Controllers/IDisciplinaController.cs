@@ -1,4 +1,6 @@
 ﻿using StudyLabAPI.Models;
+using StudyLabAPI.Models.Disciplina;
+using StudyLabAPI.Models.Disciplina.DTOs;
 using StudyLabAPI.Repositories;
 
 namespace StudyLabAPI.Controllers;

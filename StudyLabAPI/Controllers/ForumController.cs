@@ -1,6 +1,10 @@
 ﻿using StudyLabAPI.Mapper;
 using StudyLabAPI.Models;
-using StudyLabAPI.Models.Enums;
+using StudyLabAPI.Models.Disciplina;
+using StudyLabAPI.Models.Forum;
+using StudyLabAPI.Models.Forum.DTOs;
+using StudyLabAPI.Models.User;
+using StudyLabAPI.Models.User.Enums;
 using StudyLabAPI.Repositories;
 using StudyLabAPI.Validators.CustomValidators.RequestQuery;
 using ILogger = Serilog.ILogger;

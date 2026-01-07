@@ -1,5 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.Auth;
+using StudyLabAPI.Models.Curso;
+using StudyLabAPI.Models.Disciplina;
+using StudyLabAPI.Models.Forum;
+using StudyLabAPI.Models.Material;
+using StudyLabAPI.Models.User;
 using StudyLabAPI.Services;
 // ReSharper disable PropertyCanBeMadeInitOnly.Global
 

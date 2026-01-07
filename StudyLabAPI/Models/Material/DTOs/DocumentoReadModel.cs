@@ -1,0 +1,29 @@
+﻿using StudyLabAPI.Models.Forum;
+using StudyLabAPI.Models.Material.Enums;
+using StudyLabAPI.Models.User;
+
+namespace StudyLabAPI.Models.Material.DTOs
+{
+    public class DocumentoReadModel
+    {
+        public int idDocumento { get; set; }
+
+        public DateOnly dataCadastro { get; set; }
+
+        public string diretorioMaterial1 { get; set; }
+
+        public string diretorioMaterial2 { get; set; }
+
+        public statusDocumentoEnum status { get; set; }
+
+        public tipoMaterialEnum tipoMaterial { get; set; }
+
+        public TopicoDiscussaoModel topico { get; set; }
+
+        public tipoArquivo tipoArquivo { get; set; }
+
+        public UsuarioModel usuario { get; set; }
+
+        public int professor {get; set;}
+    }
+}

@@ -1,6 +1,7 @@
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.User.DTOs;
 
 namespace StudyLabAPI.Summaries;
 

@@ -1,5 +1,7 @@
 ﻿using Riok.Mapperly.Abstractions;
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.Material;
+using StudyLabAPI.Models.Material.DTOs;
 
 namespace StudyLabAPI.Mapper
 {

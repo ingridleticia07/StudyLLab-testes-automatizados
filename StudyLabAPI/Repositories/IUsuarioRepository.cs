@@ -1,4 +1,5 @@
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.User;
 
 namespace StudyLabAPI.Repositories;
 

@@ -2,6 +2,7 @@
 using StudyLabAPI.Controllers;
 using StudyLabAPI.Middlewares.Auth;
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.Material.DTOs;
 using StudyLabAPI.Summaries;
 
 namespace StudyLabAPI.Endpoints

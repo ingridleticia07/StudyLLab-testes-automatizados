@@ -1,5 +1,6 @@
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.User.DTOs;
 using StudyLabAPI.Repositories;
 
 namespace StudyLabAPI.Controllers;

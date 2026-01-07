@@ -1,7 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudyLabAPI.Context;
 using StudyLabAPI.Models;
-using StudyLabAPI.Models.Enums;
+using StudyLabAPI.Models.Disciplina;
+using StudyLabAPI.Models.Forum;
+using StudyLabAPI.Models.Material;
+using StudyLabAPI.Models.Material.DTOs;
+using StudyLabAPI.Models.Material.Enums;
+using StudyLabAPI.Models.User;
 
 namespace StudyLabAPI.Repositories
 {

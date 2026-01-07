@@ -1,5 +1,6 @@
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.User.DTOs;
 using StudyLabAPI.Repositories;
 using StudyLabAPI.Services.Jwt;
 using StudyLabAPI.Validators;

@@ -1,5 +1,8 @@
 ﻿using StudyLabAPI.Mapper;
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.Curso;
+using StudyLabAPI.Models.Disciplina;
+using StudyLabAPI.Models.Disciplina.DTOs;
 using StudyLabAPI.Repositories;
 using StudyLabAPI.Validators.CustomValidators.RequestQuery;
 using ILogger = Serilog.ILogger;

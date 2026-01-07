@@ -11,6 +11,7 @@ using StudyLabAPI.Middlewares.Auth;
 using StudyLabAPI.Middlewares.Swagger;
 using StudyLabAPI.Models;
 using StudyLabAPI.Models.Options;
+using StudyLabAPI.Models.User.DTOs;
 using StudyLabAPI.Repositories;
 using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Hash;

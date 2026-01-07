@@ -1,5 +1,6 @@
 ﻿using StudyLabAPI.Models;
-using StudyLabAPI.Models.Enums;
+using StudyLabAPI.Models.Material;
+using StudyLabAPI.Models.Material.DTOs;
 
 namespace StudyLabAPI.Controllers
 {

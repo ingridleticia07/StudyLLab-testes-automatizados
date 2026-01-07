@@ -1,4 +1,4 @@
-using StudyLabAPI.Models.Enums;
+using StudyLabAPI.Models.Auth.Enums;
 
 namespace StudyLabAPI.Exceptions;
 

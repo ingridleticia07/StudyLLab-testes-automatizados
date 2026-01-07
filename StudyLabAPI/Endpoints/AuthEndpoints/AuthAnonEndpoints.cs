@@ -3,6 +3,7 @@ using StudyLabAPI.Controllers;
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Middlewares.Auth;
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.User.DTOs;
 using StudyLabAPI.Summaries;
 
 namespace StudyLabAPI.Endpoints.AuthEndpoints;
