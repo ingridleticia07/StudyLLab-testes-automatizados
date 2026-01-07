@@ -37,9 +37,6 @@ function App() {
   useEffect(() => {
     if (authStatus === false && !hasAlerted) {
       setHasAlerted(true);
-      alert('Sua sessão expirou. Logue novamente!');
-      logoutSession();
-      window.location.href = 'https://localhost:5174/';
     }
   }, [authStatus]);
 
