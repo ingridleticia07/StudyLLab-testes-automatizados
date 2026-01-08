@@ -11,9 +11,9 @@ namespace StudyLabAPI.Models.Material.DTOs
 
         public DocumentoModel documento { get; init; }
 
-        public statusDenunciaEnum statusDenuncia { get; init; }
+        public StatusDenuncia statusDenuncia { get; init; }
 
-        public statusDocumentoEnum statusDocumento { get; init; }
+        public StatusDocumento statusDocumento { get; init; }
 
         public DateOnly dataDenuncia { get; init; }
 

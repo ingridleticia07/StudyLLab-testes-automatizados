@@ -14,13 +14,13 @@ namespace StudyLabAPI.Models.Material.DTOs
 
         public string diretorioMaterial2 { get; init; }
 
-        public statusDocumentoEnum status { get; init; }
+        public StatusDocumento status { get; init; }
 
-        public tipoMaterialEnum tipoMaterial { get; init; }
+        public TipoMaterial tipoMaterial { get; init; }
 
         public TopicoDiscussaoModel topico { get; init; }
 
-        public tipoArquivo tipoArquivo { get; init; }
+        public TipoArquivo tipoArquivo { get; init; }
 
         public UsuarioModel usuario { get; init; }
 

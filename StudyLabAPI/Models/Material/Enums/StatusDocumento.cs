@@ -1,9 +1,9 @@
 ﻿namespace StudyLabAPI.Models.Material.Enums
 {
-    public enum statusDenunciaEnum
+    public enum StatusDocumento
     {
-        Resolvido = 0,
-        Analise = 1,
+        Aprovado = 0,
+        Pendente = 1,
         Rejeitado = 2
     }
 }

@@ -121,7 +121,7 @@ namespace StudyLabAPI.Repositories
             // filtro por status
             if (!isAnyStatus)
             {
-                query = query.Where(f => f.status == statusDocumentoEnum.aprovado);
+                query = query.Where(f => f.status == StatusDocumento.Aprovado);
             }
         
             // filtro por disciplina e/ou tópico
@@ -213,12 +213,12 @@ namespace StudyLabAPI.Repositories
             if (!isAnyStatus)
             {
                 if (idTopico != 0 || idDisciplina != 0)
-                    count = await inDbContext.documento.Where(f => f.topico.idTopico == idTopico || f.topico.disciplina.idDisciplina == idDisciplina && f.status == statusDocumentoEnum.aprovado).CountAsync();
+                    count = await inDbContext.documento.Where(f => f.topico.idTopico == idTopico || f.topico.disciplina.idDisciplina == idDisciplina && f.status == StatusDocumento.Aprovado).CountAsync();
 
                 else if (idTopico != 0 && idDisciplina != 0)
-                    count = await inDbContext.documento.Where(f => f.topico.idTopico == idTopico && f.topico.disciplina.idDisciplina == idDisciplina && f.status == statusDocumentoEnum.aprovado).CountAsync();
+                    count = await inDbContext.documento.Where(f => f.topico.idTopico == idTopico && f.topico.disciplina.idDisciplina == idDisciplina && f.status == StatusDocumento.Aprovado).CountAsync();
                 else
-                    count = await inDbContext.documento.Where(f => f.status == statusDocumentoEnum.aprovado).CountAsync();
+                    count = await inDbContext.documento.Where(f => f.status == StatusDocumento.Aprovado).CountAsync();
             }
             else
             {

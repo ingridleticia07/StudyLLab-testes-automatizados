@@ -19,7 +19,7 @@ namespace StudyLabAPI.Models.Material
 
         [Column("status_denuncia")]
         [Required]
-        public statusDenunciaEnum statusDenuncia { get; set; }
+        public StatusDenuncia statusDenuncia { get; set; }
 
         [Column("data_denuncia")]
         [Required]

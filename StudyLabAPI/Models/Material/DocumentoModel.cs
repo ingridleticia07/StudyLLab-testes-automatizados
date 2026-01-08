@@ -24,17 +24,17 @@ namespace StudyLabAPI.Models.Material
         public string? diretorioMaterial2 { get; set; }
 
         [Column("tipo_material")]
-        public tipoMaterialEnum tipoMaterial { get; set; }
+        public TipoMaterial tipoMaterial { get; set; }
 
         [Column("status")]
-        public statusDocumentoEnum status { get; set; }
+        public StatusDocumento status { get; set; }
 
         [ForeignKey("fk_topico")]
 
         public TopicoDiscussaoModel topico { get; set; }
 
         [Column("tipo_arquivo")]
-        public tipoArquivo tipoArquivo { get; set; }
+        public TipoArquivo tipoArquivo { get; set; }
 
         [ForeignKey("fk_usuario")]
         public UsuarioModel usuario { get; set; }

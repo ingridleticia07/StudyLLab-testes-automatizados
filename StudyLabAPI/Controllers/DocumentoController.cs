@@ -72,7 +72,7 @@ namespace StudyLabAPI.Controllers
 
             UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId, true);
 
-            (string diretorio1, string diretorio2,tipoArquivo tipoArquivo) = await MoveDocumentFileAsync(file);
+            (string diretorio1, string diretorio2,TipoArquivo tipoArquivo) = await MoveDocumentFileAsync(file);
 
             DocumentoModel novoDocumento = new()
             {
@@ -81,7 +81,7 @@ namespace StudyLabAPI.Controllers
                 diretorioMaterial2 = diretorio2,
                 tipoMaterial = documento.TipoMaterial,
                 topico = relatedTopico,
-                status = statusDocumentoEnum.pendente,
+                status = StatusDocumento.Pendente,
                 tipoArquivo = tipoArquivo,
                 usuario = relatedUsuario
             };
@@ -93,7 +93,7 @@ namespace StudyLabAPI.Controllers
             return (novoDocumento);
         }
 
-        private async Task<(string Diretorio1, string Diretorio2, tipoArquivo FileType)> MoveDocumentFileAsync(List<IFormFile> files)
+        private async Task<(string Diretorio1, string Diretorio2, TipoArquivo FileType)> MoveDocumentFileAsync(List<IFormFile> files)
         {
             if (files == null || files.Count == 0)
                 throw new ArgumentException("No files uploaded.");
@@ -123,7 +123,7 @@ namespace StudyLabAPI.Controllers
             string destinationDirectory = Path.Combine("wwwroot", "documents");
             Directory.CreateDirectory(destinationDirectory); // Ensure the folder exists
         
-            var results = new List<(string RelativePath, tipoArquivo FileType)>();
+            var results = new List<(string RelativePath, TipoArquivo FileType)>();
         
             foreach (var file in files)
             {
@@ -138,10 +138,10 @@ namespace StudyLabAPI.Controllers
         
                     string relativePath = Path.Combine("/documents", newFileName).Replace(Path.DirectorySeparatorChar, '/');
                     
-                    tipoArquivo type = fileExtension switch
+                    TipoArquivo type = fileExtension switch
                     {
-                        ".jpeg" or ".jpg" or ".png" => tipoArquivo.imagem,
-                        ".pdf" => tipoArquivo.pdf,
+                        ".jpeg" or ".jpg" or ".png" => TipoArquivo.Imagem,
+                        ".pdf" => TipoArquivo.Pdf,
                         _ => throw new ArgumentException("Unsupported file type.")
                     };
         
@@ -155,7 +155,7 @@ namespace StudyLabAPI.Controllers
         
             string diretorio1 = results.Count > 0 ? results[0].RelativePath : null;
             string diretorio2 = results.Count > 1 ? results[1].RelativePath : null;
-            tipoArquivo fileType = results.Count > 0 ? results[0].FileType : tipoArquivo.imagem;
+            TipoArquivo fileType = results.Count > 0 ? results[0].FileType : TipoArquivo.Imagem;
         
             return (diretorio1, diretorio2, fileType);
         }
@@ -382,7 +382,7 @@ namespace StudyLabAPI.Controllers
                     usuario = relatedUsuario,
                     documento = relatedDocumento,
                     dataDenuncia = DateOnly.FromDateTime(DateTime.Now),
-                    statusDenuncia = statusDenunciaEnum.Analise, 
+                    statusDenuncia = StatusDenuncia.Analise, 
                     descricao = descricao
                 };
 
