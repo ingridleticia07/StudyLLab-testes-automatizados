@@ -6,6 +6,7 @@ using StudyLabAPI.Exceptions;
 using StudyLabAPI.Middlewares.Auth;
 using StudyLabAPI.Models;
 using StudyLabAPI.Models.User.DTOs;
+using StudyLabAPI.Services.Application.Auth;
 using StudyLabAPI.Summaries;
 
 namespace StudyLabAPI.Endpoints.AuthEndpoints;
@@ -34,14 +35,14 @@ public static class AuthSecEndpoints
     /// <param name="context">Usado para pegar o ID do usuário nos Claims da requisição</param>
     /// <param name="confirmUserEmailRequestModel">Informações para confirmação do email,
     /// vindas do corpo da requisição</param>
-    /// <param name="controller">Controlador que irá gerenciar as nescessidades da requisição</param>
+    /// <param name="service">Controlador que irá gerenciar as nescessidades da requisição</param>
     /// <returns>Resposta da requisição</returns>
     /// <permission cref="AuthorizationPolicies">Permitido apenas usuários e administradores autenticados</permission>
     [ProducesResponseType(typeof(CodigoUsuarioReadModel), 200)]
     async private static Task<IResult> AuthConfirmEmailHandler(
         HttpContext context,
         [FromBody] ConfirmUserEmailRequestModel confirmUserEmailRequestModel,
-        [FromServices] IAuthController controller,
+        [FromServices] IAuthService service,
         [FromQuery] int idUser = 0)
     {
         int userId = 0;
@@ -55,7 +56,7 @@ public static class AuthSecEndpoints
         CodigoUsuarioReadModel codigoUsuarioReadModel;
         try
         {
-            codigoUsuarioReadModel = await controller.ConfirmUserEmail(confirmUserEmailRequestModel, userId);
+            codigoUsuarioReadModel = await service.ConfirmUserEmail(confirmUserEmailRequestModel, userId);
         }
         catch (Exception e) when (e is UsuarioNotFoundException or ConfirmationCodeNotFoundException)
         {
@@ -72,13 +73,13 @@ public static class AuthSecEndpoints
     /// Trata da requisição de <c>/auth/resendConfirmationEmail</c>
     /// </summary>
     /// <param name="context">Usado para pegar o ID do usuário nos Claims da requisição</param>
-    /// <param name="controller">Controlador que irá gerenciar as nescessidades da requisição</param>
+    /// <param name="service">Controlador que irá gerenciar as nescessidades da requisição</param>
     /// <returns>Resposta da requisição</returns>
     /// <permission cref="AuthorizationPolicies">Permitido apenas usuários e administradores autenticados</permission>
     async private static Task<IResult> AuthResendConfirmationEmail(
         HttpContext context,
         [FromQuery] int? userId, 
-        [FromServices] IAuthController controller)
+        [FromServices] IAuthService service)
     {
         int userIdentifier = 0;
 
@@ -91,7 +92,7 @@ public static class AuthSecEndpoints
         bool sended;
         try
         {
-            await controller.ResendVerificationCode(userIdentifier);
+            await service.ResendVerificationCode(userIdentifier);
         }
         catch (Exception e)
         {

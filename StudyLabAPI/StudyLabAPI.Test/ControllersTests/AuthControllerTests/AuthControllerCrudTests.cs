@@ -9,6 +9,7 @@ using StudyLabAPI.Models.Auth.Enums;
 using StudyLabAPI.Models.User;
 using StudyLabAPI.Models.User.DTOs;
 using StudyLabAPI.Repositories;
+using StudyLabAPI.Services.Application.Auth;
 using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Email.Models;
 using StudyLabAPI.Services.Hash;
@@ -28,7 +29,7 @@ public class AuthControllerCrudTests
     private Mock<IHashService> hashServiceMock { get; } = new();
     private Mock<ILogger> loggerMock { get; } = new();
     
-    private AuthController authController { get; }
+    private AuthService authService { get; }
     
     private AuthControllerFakeData fakeData { get; }
 
@@ -70,7 +71,7 @@ public class AuthControllerCrudTests
         emailServiceMock.Setup(x => 
             x.SendEmail(It.IsAny<EmailIntent>()));
         
-        (UserReadModel readModel, string jwt, int userId) = await authController.RegisterNewUser(requestModel);
+        (UserReadModel readModel, string jwt, int userId) = await authService.RegisterNewUser(requestModel);
 
         Assert.Equal(requestModel.username, readModel.username);
         Assert.Equal(requestModel.email, readModel.email);
@@ -96,7 +97,7 @@ public class AuthControllerCrudTests
             x.GenerateJwt(It.IsAny<JwtPayload>()))
             .Returns(AuthControllerFakeData.FAKE_JWT);
         
-        (UserReadModel readModel, string jwt, int userId) = await authController.LoginUser(loginRequestModel);
+        (UserReadModel readModel, string jwt, int userId) = await authService.LoginUser(loginRequestModel);
         
         Assert.Equal(usuarioModel.nomeUsuario, readModel.username);
         Assert.Equal(usuarioModel.emailUsuario, readModel.email);
@@ -121,7 +122,7 @@ public class AuthControllerCrudTests
             x.GetUserCode(usuarioModel, UserCodeKind.EmailConfirmation))
             .ReturnsAsync(codigoUsuarioModel);
         
-        CodigoUsuarioReadModel codigoUsuarioReadModel = await authController
+        CodigoUsuarioReadModel codigoUsuarioReadModel = await authService
             .ConfirmUserEmail(confirmUserEmailRequest, AuthControllerFakeData.FAKE_USER_ID);
         
         Assert.Equal(codigoUsuarioModel.codigo, codigoUsuarioReadModel.code);
@@ -147,7 +148,7 @@ public class AuthControllerCrudTests
             x.Hash(resetUserPasswordRequest.newPassword))
             .Returns(newPasswordHash);
         
-        ResetUserPasswordReadModel resetUserPasswordReadModel = await authController
+        ResetUserPasswordReadModel resetUserPasswordReadModel = await authService
             .ResetUserPassword(resetUserPasswordRequest);
         
         Assert.Equal(codigoUsuarioModel.codigo, resetUserPasswordReadModel.resetCode);
@@ -173,7 +174,7 @@ public class AuthControllerCrudTests
             x.GenerateAndEnsureCode(usuarioModel, UserCodeKind.EmailConfirmation))
             .ReturnsAsync(codigoUsuarioModel);
         
-        bool success = await authController.RequestConfirmationCode(AuthControllerFakeData.FAKE_USER_ID);
+        bool success = await authService.RequestConfirmationCode(AuthControllerFakeData.FAKE_USER_ID);
         
         Assert.True(success);
     }
@@ -192,7 +193,7 @@ public class AuthControllerCrudTests
                 x.GenerateAndEnsureCode(usuarioModel, UserCodeKind.PasswordReset))
             .ReturnsAsync(codigoUsuarioModel);
         
-        bool success = await authController
+        bool success = await authService
             .RequestPasswordResetCode(requestResetPasswordEmailRequestModel);
         
         Assert.True(success);

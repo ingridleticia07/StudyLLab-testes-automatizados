@@ -13,6 +13,7 @@ using StudyLabAPI.Models;
 using StudyLabAPI.Models.Options;
 using StudyLabAPI.Models.User.DTOs;
 using StudyLabAPI.Repositories;
+using StudyLabAPI.Services.Application.Auth;
 using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Hash;
 using StudyLabAPI.Services.Jwt;
@@ -198,7 +199,7 @@ public static class Di
     public static IServiceCollection AddApiControllers(this IServiceCollection services)
     {
         services.AddScoped<IUsuarioController, UsuarioController>();
-        services.AddScoped<IAuthController, AuthController>();
+        services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IDisciplinaController, DisciplinaController>();
         services.AddScoped<IForumController, ForumController>();
         services.AddScoped<IDocumentoController, DocumentoController>();
