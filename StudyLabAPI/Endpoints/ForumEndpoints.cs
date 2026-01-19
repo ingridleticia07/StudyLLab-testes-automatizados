@@ -7,7 +7,7 @@ using StudyLabAPI.Summaries;
 
 namespace StudyLabAPI.Endpoints
 {
-    public static class ForumEdpoints
+    public static class ForumEndpoints
     {
         public static RouteGroupBuilder MapForumEndpoints(this RouteGroupBuilder builder)
         {
