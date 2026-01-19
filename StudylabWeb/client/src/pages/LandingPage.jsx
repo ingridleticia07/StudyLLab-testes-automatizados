@@ -13,8 +13,16 @@ const LandingPage = () => {
                 <br />
                 <HomeContent 
                     infoText={[
-                        "What is Lorem Ipsum?", 
-                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum\n has been the industry's standard dummy text ever since the 1500s."
+                        <>
+                            O que é o StudyLab?
+                        </>,
+                        <>
+                            O StudyLab é uma plataforma projetada para facilitar o compartilhamento e a discussão de conteúdos acadêmicos entre estudantes da UFC Russas.
+
+                            <br /><br />
+
+                            Nosso objetivo é criar uma comunidade colaborativa onde os alunos possam acessar materiais de estudo, trocar ideias e ajudar uns aos outros a alcançar o sucesso acadêmico.
+                        </>
                     ]}
                 />
                 <HomeFeaturesSection/>
