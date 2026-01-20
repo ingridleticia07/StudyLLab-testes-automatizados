@@ -1,6 +1,5 @@
 ﻿using StudyLabAPI.Summaries;
 using Microsoft.AspNetCore.Mvc;
-using StudyLabAPI.Controllers;
 using StudyLabAPI.Models;
 using StudyLabAPI.Models.Disciplina;
 using StudyLabAPI.Models.Disciplina.DTOs;

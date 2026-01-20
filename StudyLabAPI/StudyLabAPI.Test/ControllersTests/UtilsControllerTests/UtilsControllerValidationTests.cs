@@ -1,14 +1,14 @@
-﻿using StudyLabAPI.Controllers;
+﻿using StudyLabAPI.Services.Application.Utils;
 
 namespace StudyLabAPI.Test.ControllersTests.UtilsControllerTests;
 
 public class UtilsControllerValidationTests
 {
-    private IUtilsController utilsController { get; }
+    private IUtilsService utilsService { get; }
 
     public UtilsControllerValidationTests()
     {
-        utilsController = new UtilsController();
+        utilsService = new UtilsService();
     }
 
     [Theory]
@@ -17,7 +17,7 @@ public class UtilsControllerValidationTests
     [InlineData("NaN")]
     public void ValidateInvalidUserClaimToken(string? claimsFromContext)
     {
-        Assert.False(utilsController.ValidateAuthState(claimsFromContext));
+        Assert.False(utilsService.ValidateAuthState(claimsFromContext));
     }
     
     [Theory]
@@ -26,6 +26,6 @@ public class UtilsControllerValidationTests
     [InlineData("3")]
     public void ValidateValidUserClaimToken(string? claimsFromContext)
     {
-        Assert.True(utilsController.ValidateAuthState(claimsFromContext));
+        Assert.True(utilsService.ValidateAuthState(claimsFromContext));
     }
 }

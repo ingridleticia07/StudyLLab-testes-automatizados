@@ -5,7 +5,6 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using StudyLabAPI.Context;
-using StudyLabAPI.Controllers;
 using StudyLabAPI.Mapper;
 using StudyLabAPI.Middlewares.Auth;
 using StudyLabAPI.Middlewares.Swagger;
@@ -18,6 +17,7 @@ using StudyLabAPI.Services.Application.Disciplina;
 using StudyLabAPI.Services.Application.Documento;
 using StudyLabAPI.Services.Application.Forum;
 using StudyLabAPI.Services.Application.User;
+using StudyLabAPI.Services.Application.Utils;
 using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Hash;
 using StudyLabAPI.Services.Jwt;
@@ -207,7 +207,7 @@ public static class Di
         services.AddScoped<IDisciplinaService, DisciplinaService>();
         services.AddScoped<IForumService, ForumService>();
         services.AddScoped<IDocumentoService, DocumentoService>();
-        services.AddScoped<IUtilsController, UtilsController>();
+        services.AddScoped<IUtilsService, UtilsService>();
         return services;
     }
     

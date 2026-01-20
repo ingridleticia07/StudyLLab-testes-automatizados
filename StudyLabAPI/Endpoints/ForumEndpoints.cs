@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StudyLabAPI.Controllers;
 using StudyLabAPI.Models;
 using StudyLabAPI.Models.Forum;
 using StudyLabAPI.Models.Forum.DTOs;

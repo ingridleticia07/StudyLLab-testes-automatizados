@@ -1,7 +1,6 @@
 using FluentValidation;
 using Moq;
 using Serilog;
-using StudyLabAPI.Controllers;
 using StudyLabAPI.Mapper;
 using StudyLabAPI.Models;
 using StudyLabAPI.Models.Auth;
