@@ -15,6 +15,7 @@ using StudyLabAPI.Models.User.DTOs;
 using StudyLabAPI.Repositories;
 using StudyLabAPI.Services.Application.Auth;
 using StudyLabAPI.Services.Application.Disciplina;
+using StudyLabAPI.Services.Application.Documento;
 using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Hash;
 using StudyLabAPI.Services.Jwt;
@@ -203,7 +204,7 @@ public static class Di
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IDisciplinaService, DisciplinaService>();
         services.AddScoped<IForumController, ForumController>();
-        services.AddScoped<IDocumentoController, DocumentoController>();
+        services.AddScoped<IDocumentoService, DocumentoService>();
         services.AddScoped<IUtilsController, UtilsController>();
         return services;
     }
