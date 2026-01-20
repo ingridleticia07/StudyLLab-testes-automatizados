@@ -1,9 +1,9 @@
 ﻿using StudyLabAPI.Summaries;
 using Microsoft.AspNetCore.Mvc;
-using StudyLabAPI.Controllers;
 using StudyLabAPI.Models;
 using StudyLabAPI.Models.Disciplina;
 using StudyLabAPI.Models.Disciplina.DTOs;
+using StudyLabAPI.Services.Application.Disciplina;
 
 namespace StudyLabAPI.Endpoints;
 public static class DisciplinaEndpoints
@@ -27,13 +27,13 @@ public static class DisciplinaEndpoints
 
     [ProducesResponseType(typeof(List<DisciplinaReadModel>), 200)]
     private static async Task<IResult> GetAllDisciplinas(HttpContext context,
-        [FromServices] IDisciplinaController controller)
+        [FromServices] IDisciplinaService service)
     {
 
         List<DisciplinaModel>? result;
         try
         {
-            result = await controller.GetAllDisciplinas();
+            result = await service.GetAllDisciplinas();
         }
         catch (Exception e)
         {
@@ -48,13 +48,13 @@ public static class DisciplinaEndpoints
         [FromQuery] int page,
         [FromQuery] int pageSize,
         [FromQuery] int idCurso,
-        [FromServices] IDisciplinaController controller)
+        [FromServices] IDisciplinaService service)
     {
 
         DisciplinaListResponse? result;
         try
         {
-            result = await controller.GetAllDisciplinasWithPagination(page,pageSize, idCurso);
+            result = await service.GetAllDisciplinasWithPagination(page,pageSize, idCurso);
         }
         catch (Exception e)
         {
@@ -67,15 +67,15 @@ public static class DisciplinaEndpoints
     [ProducesResponseType(typeof(DisciplinaReadModel), 200)]
     private static async Task<IResult> GetDisciplina(HttpContext context,
             [FromRoute(Name = "IdDisciplina")] int idDisciplina,
-            [FromServices] IDisciplinaController controller)
+            [FromServices] IDisciplinaService service)
     {
         DisciplinaReadModel? result;
         try
         {
-            bool disciplinaExists = await controller.VerifyDisciplinaCreatedWithId(idDisciplina);
+            bool disciplinaExists = await service.VerifyDisciplinaCreatedWithId(idDisciplina);
 
             if(disciplinaExists == true)
-                result = await controller.GetDisciplinaById(idDisciplina);
+                result = await service.GetDisciplinaById(idDisciplina);
             else
                 return Results.Content("Disciplina inexistente",
                 statusCode: StatusCodes.Status409Conflict);
@@ -91,15 +91,15 @@ public static class DisciplinaEndpoints
     [ProducesResponseType(typeof(RegisterDisciplinaRequestModel), 200)]
     private static async Task<IResult> CreateDisciplina(HttpContext context,
         [FromBody] RegisterDisciplinaRequestModel novaDisciplina,
-        [FromServices] IDisciplinaController controller)
+        [FromServices] IDisciplinaService service)
     {
-        var checkIfObjectExists = await controller.VerifyDisciplinaCreated(novaDisciplina);
+        var checkIfObjectExists = await service.VerifyDisciplinaCreated(novaDisciplina);
 
         if(checkIfObjectExists == false)
         {
             try
             {
-                await controller.CreateDisciplina(novaDisciplina);
+                await service.CreateDisciplina(novaDisciplina);
             }
             catch (Exception e)
             {
@@ -118,15 +118,15 @@ public static class DisciplinaEndpoints
     [ProducesResponseType(typeof(RegisterDisciplinaRequestModel), 200)]
     private static async Task<IResult> UpdateDisciplina(HttpContext context,
         [FromBody] RegisterDisciplinaRequestModel novaDisciplina,
-        [FromServices] IDisciplinaController controller)
+        [FromServices] IDisciplinaService service)
     {
-        bool checkIfDisciplinaExists = await controller.VerifyDisciplinaCreated(novaDisciplina);
+        bool checkIfDisciplinaExists = await service.VerifyDisciplinaCreated(novaDisciplina);
 
         if (checkIfDisciplinaExists == false)
         {
             try
             {
-                await controller.UpdateDisciplina(novaDisciplina);
+                await service.UpdateDisciplina(novaDisciplina);
             }
             catch (Exception e)
             {
@@ -144,11 +144,11 @@ public static class DisciplinaEndpoints
     [ProducesResponseType(typeof(DisciplinaModel), 200)]
     private static async Task<IResult> DeleteDisciplina(HttpContext context,
         [FromQuery] int disciplinaIdentifier, //TODO: Precissa do modelo inteiro para deletar?
-        [FromServices] IDisciplinaController controller)
+        [FromServices] IDisciplinaService service)
     {
         try
         {
-            await controller.DeleteDisciplina(disciplinaIdentifier);
+            await service.DeleteDisciplina(disciplinaIdentifier);
         }
         catch (Exception e)
         {

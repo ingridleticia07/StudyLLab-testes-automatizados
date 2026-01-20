@@ -1,7 +1,6 @@
 using FluentValidation;
 using Moq;
 using Serilog;
-using StudyLabAPI.Controllers;
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Mapper;
 using StudyLabAPI.Models;
@@ -10,6 +9,7 @@ using StudyLabAPI.Models.Auth.Enums;
 using StudyLabAPI.Models.User;
 using StudyLabAPI.Models.User.DTOs;
 using StudyLabAPI.Repositories;
+using StudyLabAPI.Services.Application.Auth;
 using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Hash;
 using StudyLabAPI.Services.Jwt;
@@ -28,7 +28,7 @@ public class AuthControllerExceptionsTests
     private Mock<IHashService> hashServiceMock { get; } = new();
     private Mock<ILogger> loggerMock { get; } = new();
     
-    private AuthController authController { get; }
+    private AuthService authService { get; }
     
     private AuthControllerFakeData fakeData { get; }
 
@@ -52,7 +52,7 @@ public class AuthControllerExceptionsTests
     {
         RegisterUserRequestModel requestModel = fakeData.fakeInvalidRegisterUserRequestModel;
         
-        await Assert.ThrowsAsync<ValidationException>(() => authController.RegisterNewUser(requestModel));
+        await Assert.ThrowsAsync<ValidationException>(() => authService.RegisterNewUser(requestModel));
     }
     
     /// <summary>
@@ -67,7 +67,7 @@ public class AuthControllerExceptionsTests
             x.CheckUserByMatriculaAndEmail(requestModel.matricula, requestModel.email))
             .ReturnsAsync(true);
         
-        await Assert.ThrowsAsync<ExistsUserException>(() => authController.RegisterNewUser(requestModel));
+        await Assert.ThrowsAsync<ExistsUserException>(() => authService.RegisterNewUser(requestModel));
     }
     
     [Fact]
@@ -82,7 +82,7 @@ public class AuthControllerExceptionsTests
             x.GetCursoById(requestModel.codeCurso))
             .ReturnsAsync(() => null);
         
-        await Assert.ThrowsAsync<CursoNotFoundException>(() => authController.RegisterNewUser(requestModel));
+        await Assert.ThrowsAsync<CursoNotFoundException>(() => authService.RegisterNewUser(requestModel));
     }
     
     [Fact]
@@ -90,7 +90,7 @@ public class AuthControllerExceptionsTests
     {
         UserLoginRequestModel requestModel = fakeData.fakeInvalidLoginRequestModel;
         
-        await Assert.ThrowsAsync<ValidationException>(() => authController.LoginUser(requestModel));
+        await Assert.ThrowsAsync<ValidationException>(() => authService.LoginUser(requestModel));
     }
     
     [Fact]
@@ -102,7 +102,7 @@ public class AuthControllerExceptionsTests
             x.GetUsuarioByEmail(requestModel.email, false))
             .ReturnsAsync(() => null);
         
-        await Assert.ThrowsAsync<UsuarioNotFoundException>(() => authController.LoginUser(requestModel));
+        await Assert.ThrowsAsync<UsuarioNotFoundException>(() => authService.LoginUser(requestModel));
     }
     
     [Fact]
@@ -119,7 +119,7 @@ public class AuthControllerExceptionsTests
             x.Hash(requestModel.password))
             .Returns(invalidPasswordHash);
         
-        await Assert.ThrowsAsync<InvalidLoginPasswordException>(() => authController.LoginUser(requestModel));
+        await Assert.ThrowsAsync<InvalidLoginPasswordException>(() => authService.LoginUser(requestModel));
     }
     
     [Fact]
@@ -131,7 +131,7 @@ public class AuthControllerExceptionsTests
             x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID, false))
             .ReturnsAsync(() => null);
         
-        await Assert.ThrowsAsync<UsuarioNotFoundException>(() => authController
+        await Assert.ThrowsAsync<UsuarioNotFoundException>(() => authService
             .ConfirmUserEmail(requestModel, AuthControllerFakeData.FAKE_USER_ID));
     }
 
@@ -140,7 +140,7 @@ public class AuthControllerExceptionsTests
     {
         ConfirmUserEmailRequestModel requestModel = fakeData.fakeInvalidConfirmUserEmailRequestModel;
         
-        await Assert.ThrowsAsync<ValidationException>(() => authController
+        await Assert.ThrowsAsync<ValidationException>(() => authService
             .ConfirmUserEmail(requestModel, AuthControllerFakeData.FAKE_USER_ID));
     }
     
@@ -157,7 +157,7 @@ public class AuthControllerExceptionsTests
             x.GetUserCode(usuarioModel, UserCodeKind.EmailConfirmation))
             .ReturnsAsync(() => null);
         
-        await Assert.ThrowsAsync<ConfirmationCodeNotFoundException>(() => authController
+        await Assert.ThrowsAsync<ConfirmationCodeNotFoundException>(() => authService
             .ConfirmUserEmail(requestModel, AuthControllerFakeData.FAKE_USER_ID));
     }
     
@@ -177,7 +177,7 @@ public class AuthControllerExceptionsTests
             x.GetUserCode(usuarioModel, UserCodeKind.EmailConfirmation))
             .ReturnsAsync(codigoUsuarioModel);
         
-        await Assert.ThrowsAsync<UserCodeNotMatchException>(() => authController
+        await Assert.ThrowsAsync<UserCodeNotMatchException>(() => authService
             .ConfirmUserEmail(requestModel, AuthControllerFakeData.FAKE_USER_ID));
     }
 
@@ -186,7 +186,7 @@ public class AuthControllerExceptionsTests
     {
         ResetUserPasswordRequestModel requestModel = fakeData.fakeInvalidResetUserPasswordRequestModel;
         
-        await Assert.ThrowsAsync<ValidationException>(() => authController
+        await Assert.ThrowsAsync<ValidationException>(() => authService
             .ResetUserPassword(requestModel));
     }
     
@@ -195,7 +195,7 @@ public class AuthControllerExceptionsTests
     {
         ResetUserPasswordRequestModel requestModel = fakeData. fakeInvalidResetUserPasswordRequestModel;
         
-        await Assert.ThrowsAsync<ValidationException>(() => authController
+        await Assert.ThrowsAsync<ValidationException>(() => authService
             .ResetUserPassword(requestModel));
     }
     
@@ -208,7 +208,7 @@ public class AuthControllerExceptionsTests
             x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID, false))
             .ReturnsAsync(() => null);
         
-        await Assert.ThrowsAsync<UsuarioNotFoundException>(() => authController
+        await Assert.ThrowsAsync<UsuarioNotFoundException>(() => authService
             .ResetUserPassword(requestModel));
     }
     
@@ -225,7 +225,7 @@ public class AuthControllerExceptionsTests
             x.GetUserCode(usuarioModel, UserCodeKind.PasswordReset))
             .ReturnsAsync(() => null);
         
-        await Assert.ThrowsAsync<ResetPasswordCodeNotFoundException>(() => authController
+        await Assert.ThrowsAsync<ResetPasswordCodeNotFoundException>(() => authService
             .ResetUserPassword(requestModel));
     }
     
@@ -245,7 +245,7 @@ public class AuthControllerExceptionsTests
             x.GetUserCode(usuarioModel, UserCodeKind.PasswordReset))
             .ReturnsAsync(codigoUsuarioModel);
         
-        await Assert.ThrowsAsync<UserCodeNotMatchException>(() => authController
+        await Assert.ThrowsAsync<UserCodeNotMatchException>(() => authService
             .ResetUserPassword(requestModel));
     }
     
@@ -256,7 +256,7 @@ public class AuthControllerExceptionsTests
             x.GetUsuarioById(AuthControllerFakeData.FAKE_USER_ID, false));
         
         await Assert.ThrowsAsync<UsuarioNotFoundException>(() => 
-            authController.RequestConfirmationCode(AuthControllerFakeData.FAKE_USER_ID));
+            authService.RequestConfirmationCode(AuthControllerFakeData.FAKE_USER_ID));
     }
     
     [Fact]
@@ -269,6 +269,6 @@ public class AuthControllerExceptionsTests
             x.GetUsuarioByEmail(AuthControllerFakeData.FAKE_EMAIL, false));
         
         await Assert.ThrowsAsync<UsuarioNotFoundException>(() => 
-            authController.RequestPasswordResetCode(requestResetPasswordEmailRequestModel));
+            authService.RequestPasswordResetCode(requestResetPasswordEmailRequestModel));
     }
 }

@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StudyLabAPI.Controllers;
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Middlewares.Auth;
 using StudyLabAPI.Models;
 using StudyLabAPI.Models.User.DTOs;
+using StudyLabAPI.Services.Application.Auth;
 using StudyLabAPI.Summaries;
 
 namespace StudyLabAPI.Endpoints.AuthEndpoints;
@@ -37,20 +37,20 @@ public static class AuthAnonEndpoints
     /// Trata requisição de <c>/auth/register</c>
     /// </summary>
     /// <param name="registerUserRequest">Informações para cadastro do novo usuário.</param>
-    /// <param name="controller">Controlador que irá gerenciar as necessidades da requisição.</param>
+    /// <param name="service">Serviço que irá gerenciar as necessidades da requisição.</param>
     /// <returns>Resposta da requisição.</returns>
     /// <permission cref="AuthorizationPolicies">Requisições não autenticadas são autorizadas.</permission>
     async private static Task<IResult> AuthRegisterEndpointHandler(
         HttpContext _httpContext,
         [FromBody] RegisterUserRequestModel registerUserRequest,
-        [FromServices] IAuthController controller)
+        [FromServices] IAuthService service)
     {
         string jwtNewUser = null;
         int userId = 0;
 
         try
         {
-            (UserReadModel _, jwtNewUser, userId) = await controller.RegisterNewUser(registerUserRequest, _httpContext);
+            (UserReadModel _, jwtNewUser, userId) = await service.RegisterNewUser(registerUserRequest, _httpContext);
         }
         catch (CursoNotFoundException ex)
         {
@@ -73,12 +73,12 @@ public static class AuthAnonEndpoints
     async private static Task<IResult> AuthRegisterAdminOrProfEndpointHandler(
         HttpContext _httpContext,
         [FromBody] RegisterUserRequestModel registerUserRequest,
-        [FromServices] IAuthController controller)
+        [FromServices] IAuthService service)
     {
 
         try
         {
-            await controller.RegisterNewAdminOrProf(registerUserRequest);
+            await service.RegisterNewAdminOrProf(registerUserRequest);
         }
         catch (CursoNotFoundException ex)
         {
@@ -95,11 +95,11 @@ public static class AuthAnonEndpoints
     async private static Task<IResult> AuthResendVerificationCodeHandler(
         HttpContext _,
         [FromQuery] int userId,
-        [FromServices] IAuthController controller)
+        [FromServices] IAuthService service)
     {
         try
         {
-            await controller.ResendVerificationCode(userId);
+            await service.ResendVerificationCode(userId);
         }
         catch (CursoNotFoundException ex)
         {
@@ -122,20 +122,20 @@ public static class AuthAnonEndpoints
     /// Trata requisição de <c>/auth/login</c>
     /// </summary>
     /// <param name="loginRequestModel">Informações do usuário para login, vindas do body da requisição.</param>
-    /// <param name="controller">Controlador que irá gerenciar as necessidades da requisição.</param>
+    /// <param name="service">Serviço que irá gerenciar as necessidades da requisição.</param>
     /// <returns>Resposta da requisição.</returns>
     /// <permission cref="AuthorizationPolicies">Requisições não autenticadas são autorizadas.</permission>
     async private static Task<IResult> AuthLoginEndpointHandler(
         HttpContext _httpContext,
         [FromBody] UserLoginRequestModel loginRequestModel,
-        [FromServices] IAuthController controller)
+        [FromServices] IAuthService service)
     {
         string jwtUser;
         int userId = 0;
 
         try
         {
-            (UserReadModel _, jwtUser, userId) = await controller.LoginUser(loginRequestModel, _httpContext);
+            (UserReadModel _, jwtUser, userId) = await service.LoginUser(loginRequestModel, _httpContext);
         }
         catch (UsuarioNotFoundException e)
         {
@@ -169,19 +169,19 @@ public static class AuthAnonEndpoints
     /// <param name="context">Usado para pegar o ID do usuário nos Claims da requisição</param>
     /// <param name="resetUserPasswordRequestModel">Informações para recuperação da senha do usuário,
     /// vindas do corpo da requisição</param>
-    /// <param name="controller">Controlador que irá gerenciar as nescessidades da requisição</param>
+    /// <param name="service">Serviço que irá gerenciar as nescessidades da requisição</param>
     /// <returns>Resposta da requisição</returns>
     /// <permission cref="AuthorizationPolicies">Permitido apenas usuários e administradores autenticados</permission>
     [ProducesResponseType(typeof(ResetUserPasswordReadModel), 200)]
     async private static Task<IResult> AuthResetPasswordHandler(
         HttpContext context,
         [FromBody] ResetUserPasswordRequestModel resetUserPasswordRequestModel,
-        [FromServices] IAuthController controller)
+        [FromServices] IAuthService service)
     {
         ResetUserPasswordReadModel resetUserPasswordReadModel;
         try
         {
-            resetUserPasswordReadModel = await controller
+            resetUserPasswordReadModel = await service
                 .ResetUserPassword(resetUserPasswordRequestModel);
         }
         catch (Exception e) when (e is UsuarioNotFoundException)
@@ -219,18 +219,18 @@ public static class AuthAnonEndpoints
     /// </summary>
     /// <param name="context">Usado para pegar o ID do usuário nos Claims da requisição.</param>
     /// <param name="request">Corpo da requisição, contentdo as informações para requisitar o email de recuperação.</param>
-    /// <param name="controller">Controlador que irá gerenciar as nescessidades da requisição.</param>
+    /// <param name="service">Serviço que irá gerenciar as nescessidades da requisição.</param>
     /// <returns>Resposta da requisição</returns>
     /// <permission cref="AuthorizationPolicies">Permitido apenas usuários e administradores autenticados</permission>
     async private static Task<IResult> AuthRequestResetPasswordHandler(
         HttpContext context,
         [FromBody] RequestResetPasswordEmailRequestModel request,
-        [FromServices] IAuthController controller)
+        [FromServices] IAuthService service)
     {
         bool sended;
         try
         {
-            sended = await controller.RequestPasswordResetCode(request);
+            sended = await service.RequestPasswordResetCode(request);
         }
         catch (Exception e)
         {

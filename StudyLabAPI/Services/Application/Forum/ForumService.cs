@@ -1,5 +1,4 @@
 ﻿using StudyLabAPI.Mapper;
-using StudyLabAPI.Models;
 using StudyLabAPI.Models.Disciplina;
 using StudyLabAPI.Models.Forum;
 using StudyLabAPI.Models.Forum.DTOs;
@@ -10,9 +9,9 @@ using StudyLabAPI.Validators.CustomValidators.RequestQuery;
 using ILogger = Serilog.ILogger;
 using ValidationException = StudyLabAPI.Exceptions.ValidationException;
 
-namespace StudyLabAPI.Controllers
+namespace StudyLabAPI.Services.Application.Forum
 {
-    public class ForumController : IForumController
+    public class ForumService : IForumService
     {
         private ITopicoDiscussaoRepository topicoDiscussaoRepository { get; }
 
@@ -29,7 +28,7 @@ namespace StudyLabAPI.Controllers
 
         private readonly RespotaForumModelMapper _respostaForumModelMapper;
 
-        public ForumController(TopicoDiscussaoModelMapper topicoDiscussaoModelMapper, RespotaForumModelMapper
+        public ForumService(TopicoDiscussaoModelMapper topicoDiscussaoModelMapper, RespotaForumModelMapper
             respostaForumModelMapper, ITopicoDiscussaoRepository topicoDiscussaoRepository,
             IDisciplinaRepository DisciplinaRepository, IUsuarioRepository usuarioRepository,
             IRespostaForumRepository respostaForumRepository, IForumRepository forumRepository, ILogger logger)

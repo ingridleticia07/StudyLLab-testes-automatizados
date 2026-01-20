@@ -1,19 +1,18 @@
 using StudyLabAPI.Exceptions;
-using StudyLabAPI.Models;
 using StudyLabAPI.Models.User.DTOs;
 using StudyLabAPI.Repositories;
 
-namespace StudyLabAPI.Controllers;
+namespace StudyLabAPI.Services.Application.User;
 
 /// <summary>
-/// Controlador de usuário. Ele é responsável por gerenciar as requisições de CRUD referentes a usuários.
+/// Serviço de usuário. Ele é responsável por gerenciar as requisições de CRUD referentes a usuários.
 /// Devem ser implementado e cadastrado no container de DI.
 /// </summary>
 /// <remarks>
 /// Deve usar os serviços basicos do container de DI para realizar as operações CRUD de usuários, como
 /// <see cref="ILogger"/> e <see cref="IUsuarioRepository"/>. 
 /// </remarks>
-public interface IUsuarioController
+public interface IUsuarioService
 {
     /// <summary>
     /// Recupera todos os usuários cadastrados no banco, limitados por paginação.

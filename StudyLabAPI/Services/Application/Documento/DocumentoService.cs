@@ -1,23 +1,22 @@
 ﻿using StudyLabAPI.Exceptions;
 using StudyLabAPI.Mapper;
-using StudyLabAPI.Models;
-using StudyLabAPI.Repositories;
-using StudyLabAPI.Validators.CustomValidators.RequestQuery;
-using ILogger = Serilog.ILogger;
-using Supabase; // Adicione esta using
-using Microsoft.Extensions.DependencyInjection;
 using StudyLabAPI.Models.Forum;
 using StudyLabAPI.Models.Material;
 using StudyLabAPI.Models.Material.DTOs;
 using StudyLabAPI.Models.Material.Enums;
 using StudyLabAPI.Models.User;
 using StudyLabAPI.Models.User.Enums;
+using StudyLabAPI.Repositories;
+using StudyLabAPI.Validators.CustomValidators.RequestQuery;
+using Supabase;
+using ILogger = Serilog.ILogger;
+// Adicione esta using
 
 // Adicione esta using
 
-namespace StudyLabAPI.Controllers
+namespace StudyLabAPI.Services.Application.Documento
 {
-    public class DocumentoController : IDocumentoController
+    public class DocumentoService : IDocumentoService
     {
 
         private ITopicoDiscussaoRepository topicoDiscussaoRepository { get; }
@@ -40,7 +39,7 @@ namespace StudyLabAPI.Controllers
         private readonly IServiceProvider _serviceProvider;
         
         private readonly Client _supabaseClient;
-        public DocumentoController(DocumentoModelMapper
+        public DocumentoService(DocumentoModelMapper
             documentoModelMapper, DenunciaModelMapper
             denunciaModelMapper, ITopicoDiscussaoRepository topicoDiscussaoRepository,
             IDisciplinaRepository DisciplinaRepository, IUsuarioRepository usuarioRepository,

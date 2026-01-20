@@ -1,10 +1,9 @@
-﻿using StudyLabAPI.Models;
-using StudyLabAPI.Models.Material;
+﻿using StudyLabAPI.Models.Material;
 using StudyLabAPI.Models.Material.DTOs;
 
-namespace StudyLabAPI.Controllers
+namespace StudyLabAPI.Services.Application.Documento
 {
-    public interface IDocumentoController
+    public interface IDocumentoService
     {
         public Task<DocumentoListResponse?> GetAllDocumentosByDisciplinaOrTopico(int page, int pageSize, int? idDisciplina, int? idTopico, bool isAnyStatus);
 

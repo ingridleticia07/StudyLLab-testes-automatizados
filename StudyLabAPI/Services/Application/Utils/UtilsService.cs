@@ -1,6 +1,6 @@
-﻿namespace StudyLabAPI.Controllers;
+﻿namespace StudyLabAPI.Services.Application.Utils;
 
-public class UtilsController : IUtilsController
+public class UtilsService : IUtilsService
 {
     public bool ValidateAuthState(string? claimsFromContext)
     {

@@ -1,9 +1,13 @@
 using FluentValidation;
 using FluentValidation.Results;
-using Microsoft.AspNetCore.Antiforgery;
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Mapper;
-using StudyLabAPI.Models;
+using StudyLabAPI.Models.Auth;
+using StudyLabAPI.Models.Auth.Enums;
+using StudyLabAPI.Models.Curso;
+using StudyLabAPI.Models.User;
+using StudyLabAPI.Models.User.DTOs;
+using StudyLabAPI.Models.User.Enums;
 using StudyLabAPI.Repositories;
 using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Email.Models;
@@ -11,22 +15,15 @@ using StudyLabAPI.Services.Email.Models.Template;
 using StudyLabAPI.Services.Hash;
 using StudyLabAPI.Services.Jwt;
 using StudyLabAPI.Validators;
-using System.Security.Claims;
-using StudyLabAPI.Models.Auth;
-using StudyLabAPI.Models.Auth.Enums;
-using StudyLabAPI.Models.Curso;
-using StudyLabAPI.Models.User;
-using StudyLabAPI.Models.User.DTOs;
-using StudyLabAPI.Models.User.Enums;
 using ILogger = Serilog.ILogger;
 using ValidationException = StudyLabAPI.Exceptions.ValidationException;
 
-namespace StudyLabAPI.Controllers;
+namespace StudyLabAPI.Services.Application.Auth;
 
 /// <summary>
-/// Implementação genérica de <see cref="IAuthController"/>.
+/// Implementação genérica de <see cref="IAuthService"/>.
 /// </summary>
-public class AuthController : IAuthController
+public class AuthService : IAuthService
 {
     private IUsuarioRepository usuarioRepository { get; }
     private ICursoRepository cursoRepository { get; }
@@ -44,7 +41,7 @@ public class AuthController : IAuthController
     private IValidator<ResetUserPasswordRequestModel> resetUserPasswordRequestModelValidator { get; }
     private ILogger logger { get; }
 
-    public AuthController(IUsuarioRepository usuarioRepository, ICursoRepository cursoRepository,
+    public AuthService(IUsuarioRepository usuarioRepository, ICursoRepository cursoRepository,
         ICodigoUsuarioRepository codigoUsuarioRepository, UsuarioModelMapper usuarioModelMapper,
         RegisterUserRequestModelMapper registerUserRequestModelMapper, CodigoUsuarioModelMapper codigoUsuarioModelMapper,
         ResetUserPasswordRequestModelMapper resetUserPasswordRequestModelMapper, IJwtService jwtService, IEmailService emailService, IHashService hashService,
@@ -223,7 +220,7 @@ public class AuthController : IAuthController
     /// Realiza a autenticação de um usuário. Ele irá validar os campos da requisição, verificar se o usuário existe, verificar se a senha está correta
     /// e gerar o token de autenticação.
     /// </summary>
-    /// <param name="userLoginRequestModel">Modelo usado para transferir as infomações de login da requisição para o controller.</param>
+    /// <param name="userLoginRequestModel">Modelo usado para transferir as infomações de login da requisição para o service.</param>
     /// <returns>Retorna o modelo de leitura (<see cref="UserReadModel"/>) do usuário cadastrado e o token de autenticação.</returns>
     /// <exception cref="ValidationException">Ocorre quando alguma informação contradiz alguma regra de validação.
     /// Regras: <seealso cref="UserLoginRequestModelValidator"/>.</exception>

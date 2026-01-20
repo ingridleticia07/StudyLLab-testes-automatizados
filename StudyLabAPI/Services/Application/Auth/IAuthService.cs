@@ -1,14 +1,13 @@
 using StudyLabAPI.Exceptions;
-using StudyLabAPI.Models;
 using StudyLabAPI.Models.User.DTOs;
 using StudyLabAPI.Repositories;
 using StudyLabAPI.Services.Jwt;
 using StudyLabAPI.Validators;
 
-namespace StudyLabAPI.Controllers;
+namespace StudyLabAPI.Services.Application.Auth;
 
 /// <summary>
-/// Controlador de autenticação. Ele é responsável por gerenciar as requisições de autenticação.
+/// Serviço de autenticação. Ele é responsável por gerenciar as requisições de autenticação.
 /// Nele, é possível realizar o registro de um novo usuário e o login de um usuário já existente.
 /// Deve ser implementado e cadastrado no container de DI.
 /// </summary>
@@ -16,7 +15,7 @@ namespace StudyLabAPI.Controllers;
 /// Deve usar os serviços basicos do container de DI para realizar as operações de autenticação, como
 /// <see cref="ILogger"/>, <see cref="IUsuarioRepository"/>, <see cref="ICursoRepository"/>, <see cref="JwtService"/>. 
 /// </remarks>
-public interface IAuthController
+public interface IAuthService
 {
     //TODO: Documentar também as exceções que cada metodo pode jogar
     /// <summary>

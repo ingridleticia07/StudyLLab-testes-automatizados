@@ -1,12 +1,11 @@
-﻿using StudyLabAPI.Models;
-using StudyLabAPI.Models.Disciplina;
+﻿using StudyLabAPI.Models.Disciplina;
 using StudyLabAPI.Models.Disciplina.DTOs;
 using StudyLabAPI.Repositories;
 
-namespace StudyLabAPI.Controllers;
+namespace StudyLabAPI.Services.Application.Disciplina;
 
 /// <summary>
-/// Controlador das diciplinas. Ele é responsável por gerenciar as requisições relacionadas com disciplina.
+/// Serviço das diciplinas. Ele é responsável por gerenciar as requisições relacionadas com disciplina.
 /// Nele, é possível realizar o cadastro de uma nova disciplina, atualizar uma disciplina já existente e
 /// deletar uma disciplina
 /// Deve ser implementado e cadastrado no container de DI.
@@ -15,7 +14,7 @@ namespace StudyLabAPI.Controllers;
 /// Deve usar os serviços basicos do container de DI para realizar as operações de autenticação, como
 /// <see cref="ILogger"/>, <see cref="IDisciplinaRepository"/> e <see cref="ICursoRepository"/>. 
 /// </remarks>
-public interface IDisciplinaController
+public interface IDisciplinaService
 {
     /// <summary>
     /// Retorna uma disciplina com o id especificado.

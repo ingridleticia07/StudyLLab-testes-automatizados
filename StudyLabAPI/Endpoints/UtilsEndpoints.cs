@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using StudyLabAPI.Controllers;
 using StudyLabAPI.Middlewares.Auth;
+using StudyLabAPI.Services.Application.Utils;
 using StudyLabAPI.Summaries;
 
 namespace StudyLabAPI.Endpoints;
@@ -19,11 +19,11 @@ public static class UtilsEndpoints
         return endpoints;
     }
     private static IResult CheckAuthState(HttpContext context,
-        [FromServices] IUtilsController controller)
+        [FromServices] IUtilsService service)
     {
         string? userIdFromClaims = context.User.Claims
             .FirstOrDefault(claim => claim.Type == ClaimTypes.Name)?.Value;
-        bool isValid = controller.ValidateAuthState(userIdFromClaims);
+        bool isValid = service.ValidateAuthState(userIdFromClaims);
         
         return isValid ? Results.Ok() : Results.Unauthorized();
     }
