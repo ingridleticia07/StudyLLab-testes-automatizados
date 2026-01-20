@@ -3,6 +3,7 @@ using StudyLabAPI.Controllers;
 using StudyLabAPI.Models;
 using StudyLabAPI.Models.Forum;
 using StudyLabAPI.Models.Forum.DTOs;
+using StudyLabAPI.Services.Application.Forum;
 using StudyLabAPI.Summaries;
 
 namespace StudyLabAPI.Endpoints
@@ -52,13 +53,13 @@ namespace StudyLabAPI.Endpoints
             [FromQuery] int pageSize,
             [FromQuery] int idDisciplina,
             [FromQuery] int idTopico,
-            [FromServices] IForumController controller)
+            [FromServices] IForumService service)
         {
 
             RespostaForumListResponse? result;
             try
             {
-                result = await controller.GetAllRespostasForumByDisciplinaOrTopico(page, pageSize,idDisciplina,idTopico);
+                result = await service.GetAllRespostasForumByDisciplinaOrTopico(page, pageSize,idDisciplina,idTopico);
             }
             catch (Exception e)
             {
@@ -73,13 +74,13 @@ namespace StudyLabAPI.Endpoints
             [FromQuery] int page,
             [FromQuery] int pageSize,
             [FromQuery] int idDisciplina,
-            [FromServices] IForumController controller)
+            [FromServices] IForumService service)
         {
 
             TopicoDiscussaoListResponse? result;
             try
             {
-                result = await controller.GetTopicosDiscussaoLimitedByPageAndPageSize(page,pageSize,idDisciplina);
+                result = await service.GetTopicosDiscussaoLimitedByPageAndPageSize(page,pageSize,idDisciplina);
             }
             catch (Exception e)
             {
@@ -91,13 +92,13 @@ namespace StudyLabAPI.Endpoints
 
         [ProducesResponseType(typeof(List<TopicoDiscussaoModel>), 200)]
         private static async Task<IResult> GetAllTopicosDiscussao(HttpContext context,
-            [FromServices] IForumController controller)
+            [FromServices] IForumService service)
         {
 
             List<TopicoDiscussaoModel>? result;
             try
             {
-                result = await controller.GetAllTopicosDiscussao();
+                result = await service.GetAllTopicosDiscussao();
             }
             catch (Exception e)
             {
@@ -110,13 +111,13 @@ namespace StudyLabAPI.Endpoints
         [ProducesResponseType(typeof(List<TopicoDiscussaoModel>), 200)]
         private static async Task<IResult> GetAllTopicosDiscussaoByDisciplina(HttpContext context,
             [FromQuery] int idDisciplina,
-            [FromServices] IForumController controller)
+            [FromServices] IForumService service)
         {
 
             List<TopicoDiscussaoModel>? result;
             try
             {
-                result = await controller.GetAllTopicosDiscussaoByDisciplina(idDisciplina);
+                result = await service.GetAllTopicosDiscussaoByDisciplina(idDisciplina);
             }
             catch (Exception e)
             {
@@ -129,15 +130,15 @@ namespace StudyLabAPI.Endpoints
         [ProducesResponseType(typeof(RegisteredTopicoDiscussaoRequestModel), 200)]
         private static async Task<IResult> CreateTopicoDiscussao(HttpContext context,
             [FromBody] RegisteredTopicoDiscussaoRequestModel novoTopico,
-            [FromServices] IForumController controller)
+            [FromServices] IForumService service)
         {
-            var checkIfTopicoDiscussaoExists = await controller.VerifyTopicoDiscussaoExists(novoTopico);
+            var checkIfTopicoDiscussaoExists = await service.VerifyTopicoDiscussaoExists(novoTopico);
 
             if(checkIfTopicoDiscussaoExists == false)
             {
                 try
                 {
-                    await controller.CreateTopicoDiscussao(novoTopico);
+                    await service.CreateTopicoDiscussao(novoTopico);
                 }
                 catch (Exception e)
                 {
@@ -155,15 +156,15 @@ namespace StudyLabAPI.Endpoints
         [ProducesResponseType(typeof(RegisteredTopicoDiscussaoRequestModel), 200)]
         private static async Task<IResult> UpdateTopicoDiscussao(HttpContext context,
         [FromBody] RegisteredTopicoDiscussaoRequestModel topicoDiscussaoUpdate,
-        [FromServices] IForumController controller)
+        [FromServices] IForumService service)
         {
-            var checkIfTopicoDiscussaoExists = await controller.VerifyTopicoDiscussaoExistsWithId(topicoDiscussaoUpdate);
+            var checkIfTopicoDiscussaoExists = await service.VerifyTopicoDiscussaoExistsWithId(topicoDiscussaoUpdate);
 
             if (checkIfTopicoDiscussaoExists == false)
             {
                 try
                 {
-                    await controller.UpdateTopicoDiscussao(topicoDiscussaoUpdate);
+                    await service.UpdateTopicoDiscussao(topicoDiscussaoUpdate);
                 }
                 catch (Exception e)
                 {
@@ -183,12 +184,12 @@ namespace StudyLabAPI.Endpoints
         [ProducesResponseType(typeof(TopicoDiscussaoModel), 200)]
         private static async Task<IResult> DeleteTopicoDiscussao(HttpContext context,
         [FromQuery] int idTopicoDiscussao,
-        [FromServices] IForumController controller)
+        [FromServices] IForumService service)
         {
 
             try
             {
-                await controller.DeleteTopicoDiscussao(idTopicoDiscussao);
+                await service.DeleteTopicoDiscussao(idTopicoDiscussao);
             }
             catch (Exception e)
             {
@@ -200,12 +201,12 @@ namespace StudyLabAPI.Endpoints
         
         [ProducesResponseType(typeof(List<RespostaForumModel>), 200)]
         private static async Task<IResult> GetAllRespostasForum(HttpContext context,
-        [FromServices] IForumController controller)
+        [FromServices] IForumService service)
         {
             List<RespostaForumModel>? result;
             try
             {
-                result = await controller.GetAllRespostasForum();
+                result = await service.GetAllRespostasForum();
             }
             catch (Exception e)
             {
@@ -218,15 +219,15 @@ namespace StudyLabAPI.Endpoints
         [ProducesResponseType(typeof(RegisteredRespostaForumModel), 200)]
         private static async Task<IResult> CreateRespostaForum(HttpContext context,
             [FromBody] RegisteredRespostaForumModel newRespostaForum,
-            [FromServices] IForumController controller)
+            [FromServices] IForumService service)
         {
-            bool checkIfRespostaForum = await controller.VerifyRespostaForumExists(newRespostaForum);
+            bool checkIfRespostaForum = await service.VerifyRespostaForumExists(newRespostaForum);
 
             if (checkIfRespostaForum == false)
             {
                 try
                 {
-                    await controller.CreateRespostaForum(newRespostaForum);
+                    await service.CreateRespostaForum(newRespostaForum);
                 }
                 catch (Exception e)
                 {
@@ -244,15 +245,15 @@ namespace StudyLabAPI.Endpoints
         [ProducesResponseType(typeof(RegisteredRespostaForumModel), 200)]
         private static async Task<IResult> UpdateRespostaForum(HttpContext context,
         [FromBody] RegisteredRespostaForumModel newRespostaForum,
-        [FromServices] IForumController controller)
+        [FromServices] IForumService service)
         {
-            var checkIfRespostaForumExists = await controller.VerifyRespostaForumExistsWithId(newRespostaForum);
+            var checkIfRespostaForumExists = await service.VerifyRespostaForumExistsWithId(newRespostaForum);
 
             if (checkIfRespostaForumExists == false)
             {
                 try
                 {
-                    await controller.UpdateRespostaForum(newRespostaForum);
+                    await service.UpdateRespostaForum(newRespostaForum);
                 }
                 catch (Exception e)
                 {
@@ -271,11 +272,11 @@ namespace StudyLabAPI.Endpoints
         [ProducesResponseType(typeof(RespostaForumModel), 200)]
         private static async Task<IResult> DeleteRespostaForum(HttpContext context,
         [FromQuery] int idRespostaForum,int idUsuario,
-        [FromServices] IForumController controller)
+        [FromServices] IForumService service)
         {
             try
             {
-                await controller.DeleteRespostaForum(idRespostaForum,idUsuario);
+                await service.DeleteRespostaForum(idRespostaForum,idUsuario);
             }
             catch (Exception e)
             {
@@ -288,14 +289,14 @@ namespace StudyLabAPI.Endpoints
         [ProducesResponseType(typeof(ResgisteredForumModel), 200)]
         private static async Task<IResult> CreateForum(HttpContext context,
             [FromBody] ResgisteredForumModel novoForum,
-            [FromServices] IForumController controller)
+            [FromServices] IForumService service)
         {
-            var checkIfForumExists = await controller.VerifyForumCreated(novoForum);
+            var checkIfForumExists = await service.VerifyForumCreated(novoForum);
             if(checkIfForumExists == false)
             {
                 try
                 {
-                    await controller.CreateForum(novoForum);
+                    await service.CreateForum(novoForum);
                 }
                 catch (Exception e)
                 {
@@ -312,14 +313,14 @@ namespace StudyLabAPI.Endpoints
         [ProducesResponseType(typeof(ResgisteredForumModel), 200)]
         private static async Task<IResult> UpdateForum(HttpContext context,
         [FromBody] ResgisteredForumModel forumForUpdate,
-        [FromServices] IForumController controller)
+        [FromServices] IForumService service)
         {
-            var checkIfForumExists = await controller.VerifyForumCreatedWithId(forumForUpdate);
+            var checkIfForumExists = await service.VerifyForumCreatedWithId(forumForUpdate);
             if (checkIfForumExists == false)
             {
                 try
                 {
-                    await controller.UpdateForum(forumForUpdate);
+                    await service.UpdateForum(forumForUpdate);
                 }
                 catch (Exception e)
                 {
@@ -336,13 +337,13 @@ namespace StudyLabAPI.Endpoints
         
         [ProducesResponseType(typeof(List<ForumModel>), 200)]
         private static async Task<IResult> GetForums(HttpContext context,
-        [FromServices] IForumController controller)
+        [FromServices] IForumService service)
         {
 
             List<ForumModel>? result;
             try
             {
-                result = await controller.GetAllForums();
+                result = await service.GetAllForums();
             }
             catch (Exception e)
             {
@@ -355,11 +356,11 @@ namespace StudyLabAPI.Endpoints
         [ProducesResponseType(typeof(ForumModel), 200)]
         private static async Task<IResult> DeleteForum(HttpContext context,
         [FromBody] ForumModel forumModel,
-        [FromServices] IForumController controller)
+        [FromServices] IForumService service)
         {
             try
             {
-                await controller.DeleteForum(forumModel);
+                await service.DeleteForum(forumModel);
             }
             catch (Exception e)
             {
@@ -372,13 +373,13 @@ namespace StudyLabAPI.Endpoints
         [ProducesResponseType(typeof(List<ForumModel>), 200)]
         private static async Task<IResult> GetForumByTopico(HttpContext context,
         [FromBody] RegisteredTopicoDiscussaoRequestModel topico,
-        [FromServices] IForumController controller)
+        [FromServices] IForumService service)
         {
 
             List<ForumModel>? result;
             try
             {
-                result = await controller.GetForumByTopico(topico);
+                result = await service.GetForumByTopico(topico);
             }
             catch (Exception e)
             {

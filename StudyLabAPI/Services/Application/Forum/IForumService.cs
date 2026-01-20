@@ -1,10 +1,9 @@
-﻿using StudyLabAPI.Models;
-using StudyLabAPI.Models.Forum;
+﻿using StudyLabAPI.Models.Forum;
 using StudyLabAPI.Models.Forum.DTOs;
 
-namespace StudyLabAPI.Controllers
+namespace StudyLabAPI.Services.Application.Forum
 {
-    public interface IForumController
+    public interface IForumService
     {
         public Task<TopicoDiscussaoListResponse?> GetTopicosDiscussaoLimitedByPageAndPageSize(int page, int pageSize, int idDisciplina = 0);
 
