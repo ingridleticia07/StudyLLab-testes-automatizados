@@ -2,7 +2,6 @@ using FluentValidation;
 using FluentValidation.Results;
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Mapper;
-using StudyLabAPI.Models;
 using StudyLabAPI.Models.Curso;
 using StudyLabAPI.Models.User;
 using StudyLabAPI.Models.User.DTOs;
@@ -13,12 +12,12 @@ using StudyLabAPI.Validators.CustomValidators.RequestQuery;
 using ILogger = Serilog.ILogger;
 using ValidationException = StudyLabAPI.Exceptions.ValidationException;
 
-namespace StudyLabAPI.Controllers;
+namespace StudyLabAPI.Services.Application.User;
 
 /// <summary>
-/// Implementação genérica de <see cref="IUsuarioController"/>.
+/// Implementação genérica de <see cref="IUsuarioService"/>.
 /// </summary>
-public class UsuarioController : IUsuarioController
+public class UsuarioService : IUsuarioService
 {
     private readonly IUsuarioRepository _userRepository;
     private readonly ICursoRepository _cursoRepository;
@@ -27,7 +26,7 @@ public class UsuarioController : IUsuarioController
     private readonly IValidator<UpdateUserRequestModel> _updateUserValidator;
     private ILogger logger { get; }
     private IHashService hashService { get; }
-    public UsuarioController(IUsuarioRepository userRepository, UsuarioModelMapper usuarioModelMapper,
+    public UsuarioService(IUsuarioRepository userRepository, UsuarioModelMapper usuarioModelMapper,
         ICursoRepository cursoRepository, ICodigoUsuarioRepository codigoUsuarioRepository,
         IValidator<UpdateUserRequestModel> updateUserValidator, ILogger logger, IHashService hashService)
     {

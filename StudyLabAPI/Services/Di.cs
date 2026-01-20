@@ -17,6 +17,7 @@ using StudyLabAPI.Services.Application.Auth;
 using StudyLabAPI.Services.Application.Disciplina;
 using StudyLabAPI.Services.Application.Documento;
 using StudyLabAPI.Services.Application.Forum;
+using StudyLabAPI.Services.Application.User;
 using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Hash;
 using StudyLabAPI.Services.Jwt;
@@ -201,7 +202,7 @@ public static class Di
     /// <returns><see cref="IServiceCollection"/> para que outras chamadas possam ser encadeadas.</returns>
     public static IServiceCollection AddApiControllers(this IServiceCollection services)
     {
-        services.AddScoped<IUsuarioController, UsuarioController>();
+        services.AddScoped<IUsuarioService, UsuarioService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IDisciplinaService, DisciplinaService>();
         services.AddScoped<IForumService, ForumService>();
