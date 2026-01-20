@@ -1,5 +1,4 @@
 ﻿using StudyLabAPI.Mapper;
-using StudyLabAPI.Models;
 using StudyLabAPI.Models.Curso;
 using StudyLabAPI.Models.Disciplina;
 using StudyLabAPI.Models.Disciplina.DTOs;
@@ -7,9 +6,9 @@ using StudyLabAPI.Repositories;
 using StudyLabAPI.Validators.CustomValidators.RequestQuery;
 using ILogger = Serilog.ILogger;
 using ValidationException = StudyLabAPI.Exceptions.ValidationException;
-namespace StudyLabAPI.Controllers
+namespace StudyLabAPI.Services.Application.Disciplina
 {
-    public class DisciplinaController : IDisciplinaController
+    public class DisciplinaService : IDisciplinaService
     {
         private IDisciplinaRepository disciplinaRepository { get; }
 
@@ -20,7 +19,7 @@ namespace StudyLabAPI.Controllers
 
         private readonly DisciplinaModelMapper _disciplinaModelMapper;
 
-        public DisciplinaController(IDisciplinaRepository disciplinaRepository, 
+        public DisciplinaService(IDisciplinaRepository disciplinaRepository, 
             DisciplinaModelMapper disciplinaModelMapper,
             ICursoRepository cursoRepository,IUsuarioRepository usuarioRepository,
             ILogger logger)
