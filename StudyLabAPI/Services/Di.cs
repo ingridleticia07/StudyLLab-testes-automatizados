@@ -197,10 +197,10 @@ public static class Di
         return services;
     }
     /// <summary>
-    /// Adiciona controladores dos endpoints da API ao container de DI.
+    /// Adiciona serviços dos endpoints da API ao container de DI.
     /// </summary>
     /// <returns><see cref="IServiceCollection"/> para que outras chamadas possam ser encadeadas.</returns>
-    public static IServiceCollection AddApiControllers(this IServiceCollection services)
+    public static IServiceCollection AddApiServices(this IServiceCollection services)
     {
         services.AddScoped<IUsuarioService, UsuarioService>();
         services.AddScoped<IAuthService, AuthService>();
