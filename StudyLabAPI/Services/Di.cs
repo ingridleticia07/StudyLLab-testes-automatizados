@@ -213,8 +213,8 @@ public static class Di
     
     public static IServiceCollection AddSupabaseStorage(this IServiceCollection services, IConfiguration configuration)
     {
-        var url = configuration["Supabase:Url"];
-        var key = configuration["Supabase:Key"];
+        var url = EnvVars.GetSupabaseUrl();
+        var key = EnvVars.GetSupabaseKey();
         
         if (string.IsNullOrEmpty(url) || string.IsNullOrEmpty(key))
         {

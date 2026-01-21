@@ -4,5 +4,6 @@ namespace StudyLabAPI.Services.Email;
 
 public interface IEmailService
 {
-    public Task SendEmail(EmailIntent intent);
+    public Task SendEmail(EmailIntent intent, bool useEdgeFunction = true);
+    
 }
