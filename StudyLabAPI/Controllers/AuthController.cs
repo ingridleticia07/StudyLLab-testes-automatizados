@@ -23,7 +23,6 @@ namespace StudyLabAPI.Controllers;
 /// </summary>
 public class AuthController : IAuthController
 {
-    private readonly IAntiforgery _antiforgery;
     private IUsuarioRepository usuarioRepository { get; }
     private ICursoRepository cursoRepository { get; }
     private ICodigoUsuarioRepository codigoUsuarioRepository { get; }
@@ -46,9 +45,8 @@ public class AuthController : IAuthController
         ResetUserPasswordRequestModelMapper resetUserPasswordRequestModelMapper, IJwtService jwtService, IEmailService emailService, IHashService hashService,
         IValidator<RegisterUserRequestModel> registerUserRequestModelValidator, IValidator<UserLoginRequestModel> userLoginRequestModelValidator,
         IValidator<ResetUserPasswordRequestModel> resetUserPasswordRequestModelValidator, IValidator<ConfirmUserEmailRequestModel> confirmUserEmailRequestModelValidator,
-        ILogger logger, IAntiforgery antiforgery)
+        ILogger logger)
     {
-        _antiforgery = antiforgery;
         this.usuarioRepository = usuarioRepository;
         this.cursoRepository = cursoRepository;
         this.codigoUsuarioRepository = codigoUsuarioRepository;
@@ -76,7 +74,7 @@ public class AuthController : IAuthController
     /// Regras: <seealso cref="RegisterUserRequestModelValidator"/>.</exception>
     /// <exception cref="ExistsUserException">Ocorre quando já existe algum usuário com a mesma matrícula ou email.</exception>
     /// <exception cref="CursoNotFoundException">Ocorre quando o curso solicitado para relação não existe.</exception>
-    public async Task<(UserReadModel, string, string, string, int)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel, HttpContext? httpContext = null)
+    public async Task<(UserReadModel, string, int)> RegisterNewUser(RegisterUserRequestModel registerUserRequestModel, HttpContext? httpContext = null)
     {
         logger.Information("Validando campos da requisição de cadastro para Username[{Username}]",
             registerUserRequestModel.username);
@@ -101,7 +99,7 @@ public class AuthController : IAuthController
                 registerUserRequestModel.matricula,
                 registerUserRequestModel.email
             );
-            logger.Error(exception, "Um usuário com o mesmo {NomeUsuario} ou {Email} já existe",
+            logger.Error(exception, "Um usuário com a mesma {registerUserRequestModel.matricula} ou {Email} já existe",
                 nameof(registerUserRequestModel.username), nameof(registerUserRequestModel.email));
             throw exception;
         }
@@ -141,31 +139,10 @@ public class AuthController : IAuthController
 
         logger.Information("Usuário ID[{ID}] cadastrado com sucesso",
         usuarioModel.idUsuario);
-
-        string jwtToken = null;
-        string requestToken = null;
-        string cookieToken = null;
-
+        
         var (jwtUser, identity) = jwtService.GenerateJwtAndReturnClaims(new(userReadModel.id.ToString(), userReadModel.role));
-
-        httpContext.User = new ClaimsPrincipal(identity);
-
-        var tokens = _antiforgery.GetAndStoreTokens(httpContext);
-
-        httpContext.Response.Cookies.Append(
-            ".AspNetCore.Antiforgery.KeSRHT2WmJs",
-            tokens.RequestToken,
-            new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.None
-            });
-        jwtToken = jwtUser;
-        requestToken = tokens.RequestToken;
-        cookieToken = tokens.CookieToken;
-
-        return (userReadModel, jwtToken, requestToken, cookieToken, userReadModel.id);
+        
+        return (userReadModel, jwtUser, userReadModel.id);
 
     }
 
@@ -247,7 +224,7 @@ public class AuthController : IAuthController
     /// Regras: <seealso cref="UserLoginRequestModelValidator"/>.</exception>
     /// <exception cref="UsuarioNotFoundException"></exception>
     /// <exception cref="InvalidLoginPasswordException"></exception>
-    public async Task<(UserReadModel, string, string, string, int)> LoginUser(UserLoginRequestModel userLoginRequestModel, HttpContext? httpContext = null)
+    public async Task<(UserReadModel, string, int)> LoginUser(UserLoginRequestModel userLoginRequestModel, HttpContext? httpContext = null)
     {
         logger.Information("Validando campos da requisição de login para Email[{UserEmail}]",
             userLoginRequestModel.email);
@@ -287,22 +264,8 @@ public class AuthController : IAuthController
         UserReadModel userReadModel = usuarioModelMapper.UsuarioModelToUserReadModel(usuarioModel);
 
         var (jwtUser, identity) = jwtService.GenerateJwtAndReturnClaims(new(userReadModel.id.ToString(), userReadModel.role));
-
-        httpContext.User = new ClaimsPrincipal(identity);
-
-        var tokens = _antiforgery.GetAndStoreTokens(httpContext);
-
-        httpContext.Response.Cookies.Append(
-            ".AspNetCore.Antiforgery.KeSRHT2WmJs",
-            tokens.RequestToken,
-            new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.None
-            });
-
-        return (userReadModel, jwtUser, tokens.RequestToken, tokens.CookieToken, userReadModel.id);
+        
+        return (userReadModel, jwtUser, userReadModel.id);
     }
 
     /// <summary>
@@ -575,7 +538,7 @@ public class AuthController : IAuthController
         {
             await emailService.SendEmail(emailIntent);
         }
-        catch (Exception) { return false; }
+        catch (Exception e) { return false; }
         return true;
     }
 

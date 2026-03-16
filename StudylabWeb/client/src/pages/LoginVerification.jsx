@@ -33,7 +33,7 @@ const LoginVerification = () => {
             try {
                 setIsLoading(true);
                 await activateUserWithCode(code);
-                window.location.href = 'http://localhost:5175/'
+                window.location.href = 'https://localhost:5175/'
                 //alterar a rota de navegação, para a dashboard de usuário, quando a mesma for criada.
                 setIsFormSubmited(false);
                 setShowError(false);
@@ -63,7 +63,7 @@ const LoginVerification = () => {
                 setIsFormSubmited(false);
                 alert("Código de verificação reenviado. Verifique seu email!");
             } catch (error) {
-                setErrorMessage('Erro ao reenviar código. Tente novamente ou fale conosco!');
+                setErrorMessage('Erro ao reenviar código. Tente novamente mais tarde ou fale conosco!');
                 setShowError(true);
                 setIsFormSubmited(false);
             }

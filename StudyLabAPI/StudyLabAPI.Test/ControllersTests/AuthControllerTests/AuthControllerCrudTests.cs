@@ -65,9 +65,9 @@ public class AuthControllerCrudTests
             x.Hash(requestModel.password))
             .Returns(AuthControllerFakeData.FAKE_HASH_OUTPUT);
         emailServiceMock.Setup(x => 
-            x.SendEmail(It.IsAny<EmailIntent>()));
+            x.SendEmail(It.IsAny<EmailIntent>(), true));
         
-        (UserReadModel readModel, string jwt, string antifogeryToken, string antifogeryCookie, int userId) = await authController.RegisterNewUser(requestModel);
+        (UserReadModel readModel, string jwt, int userId) = await authController.RegisterNewUser(requestModel);
 
         Assert.Equal(requestModel.username, readModel.username);
         Assert.Equal(requestModel.email, readModel.email);
@@ -93,7 +93,7 @@ public class AuthControllerCrudTests
             x.GenerateJwt(It.IsAny<JwtPayload>()))
             .Returns(AuthControllerFakeData.FAKE_JWT);
         
-        (UserReadModel readModel, string jwt, string antifogeryToken, string sntifogeryCookie, int userId) = await authController.LoginUser(loginRequestModel);
+        (UserReadModel readModel, string jwt, int userId) = await authController.LoginUser(loginRequestModel);
         
         Assert.Equal(usuarioModel.nomeUsuario, readModel.username);
         Assert.Equal(usuarioModel.emailUsuario, readModel.email);

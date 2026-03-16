@@ -13,7 +13,9 @@ internal static class EnvVars
     private const string SMTP_EMAIL = "SMTP_EMAIL";
     private const string SMTP_PASSWORD = "SMTP_PASSWORD";
     private const string PASSWORD_SALT = "PASSWORD_SALT";
-    
+    private const string SUPABASE_URL = "SUPA_URL";
+    private const string SUPABASE_KEY = "SUPA_KEY";
+        
     public static string? GetApiKey() =>
         Environment.GetEnvironmentVariable(API_KEY);
     private static string? GetPostgresConnectionString() =>
@@ -30,6 +32,12 @@ internal static class EnvVars
         Environment.GetEnvironmentVariable(SMTP_PASSWORD);
     private static string? GetPasswordSalt() =>
         Environment.GetEnvironmentVariable(PASSWORD_SALT);
+    
+    public static string? GetSupabaseUrl() =>
+        Environment.GetEnvironmentVariable(SUPABASE_URL);
+    
+    public static string? GetSupabaseKey() =>
+            Environment.GetEnvironmentVariable(SUPABASE_KEY);
 
     public static EnvironmentService CreateEnvironmentServiceFromVariables() =>
         new()
@@ -41,6 +49,8 @@ internal static class EnvVars
             smtpPort = GetSmtpPort() ?? throw new ArgumentNullException(SMTP_PORT),
             smtpEmail = GetSmtpEmail() ?? throw new ArgumentNullException(SMTP_EMAIL),
             smtpPassword = GetSmtpPassword() ?? throw new ArgumentNullException(SMTP_PASSWORD),
-            passwordSalt = GetPasswordSalt() ?? throw new ArgumentNullException(PASSWORD_SALT)
+            passwordSalt = GetPasswordSalt() ?? throw new ArgumentNullException(PASSWORD_SALT),
+            supabaseUrl = GetSupabaseUrl() ?? throw new ArgumentNullException(SUPABASE_URL),
+            supabaseKey = GetSupabaseKey() ?? throw new ArgumentNullException(SUPABASE_KEY)
         };
 }

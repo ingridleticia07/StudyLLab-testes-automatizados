@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 using StudyLabAPI.Endpoints;
 using StudyLabAPI.Endpoints.AuthEndpoints;
@@ -13,8 +15,8 @@ ILogger serilog = new LoggerConfiguration()
     .Enrich.WithEnvironmentName()
     .WriteTo.Console()
     .CreateLogger();
-builder.Logging.ClearProviders()
-    .AddSerilog(serilog);
+
+builder.Logging.ClearProviders().AddSerilog(serilog);
 builder.Host.UseSerilog(serilog);
 
 builder.Services
@@ -34,31 +36,62 @@ builder.Services.AddStorageServices()
 
 builder.Services.AddAuth();
 
-builder.Services.AddAntiforgery(options =>
+
+// ========================================
+// 1. Forwarded Headers (Render + Cloudflare)
+// ========================================
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
-    options.HeaderName = "X-CSRF-TOKEN";
-    options.Cookie.Name = ".AspNetCore.Antiforgery.KeSRHT2WmJs";
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
 });
 
 WebApplication app = builder.Build();
 
-if(app.Environment.IsDevelopment())
+
+// ========================================
+// 2. ForwardedHeaders logo de início
+// ========================================
+app.UseForwardedHeaders();
+
+// Middleware que corrige o Scheme baseado no X-Forwarded-Proto
+app.Use((context, next) =>
 {
-    app
-        .UseSwagger()
-        .UseSwaggerUI();
+    var proto = context.Request.Headers["X-Forwarded-Proto"].FirstOrDefault();
+
+    if (!string.IsNullOrEmpty(proto))
+        context.Request.Scheme = proto;
+
+    return next();
+});
+
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
-app.UseAntiforgery();
+// ========================================
+// 3. CORS
+// ========================================
+app.UseCors(CorsPoliciesName.ALLOW_ALL_CORS_POLICY);
+
 
 app.MapPrometheusScrapingEndpoint();
-app
-    .UseCors(CorsPoliciesName.ALLOW_ALL_CORS_POLICY)
-    .UseAuthentication()
-    .UseAuthorization();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseStaticFiles();
 
+
+// ========================================
+// Endpoints
+// ========================================
 RouteGroupBuilder authGroup = app.MapGroup("auth")
     .AddEndpointFilter<ApiKeyFilter>()
     .RequireCors(CorsPoliciesName.ALLOW_ALL_CORS_POLICY)
@@ -86,7 +119,7 @@ forumGroup.MapForumEndpoints();
 RouteGroupBuilder materialGroup = app.MapGroup("material")
     .AddEndpointFilter<ApiKeyFilter>()
     .RequireCors(CorsPoliciesName.ALLOW_ALL_CORS_POLICY)
-    .WithTags("Material");
+    .WithTags("Material").DisableAntiforgery();
 materialGroup.MapMaterialEndpoints();
 
 RouteGroupBuilder utilsGroup = app.MapGroup("utils")

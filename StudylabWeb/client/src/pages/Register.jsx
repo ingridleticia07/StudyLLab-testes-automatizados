@@ -68,11 +68,7 @@ const Register = () => {
       setIsFormSubmited(false);
       setShowError(true);
       setLoader(false);
-      if (error.response?.data?.tipo === 2) {
-        setExceptionText("Esse email ou matrícula, já está existe no sistema!");
-      } else {
-        setExceptionText("Curso não encontrado!");
-      }
+      setExceptionText(error.response?.data?.message);
     }
   };
 
