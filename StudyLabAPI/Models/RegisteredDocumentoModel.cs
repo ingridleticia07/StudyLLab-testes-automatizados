@@ -6,7 +6,9 @@ namespace StudyLabAPI.Models
     public class RegisteredDocumentoModel
     {
         public int idDocumento { get; set; }
-
+        
+        public IFormFileCollection Files { get; set; }    
+        
         public string diretorioMaterial1 { get; set; }
 
         public string diretorioMaterial2 { get; set; }
