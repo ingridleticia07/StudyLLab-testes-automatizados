@@ -25,7 +25,7 @@ export async function handleLogin(email, password) {
     
     if (!isAuthenticated || isCookieLoginTokenValid == 0 || isNewUser == 1) {
 
-      const res = await login(email, password);
+      await login(email, password);
       
       let user = JSON.parse(localStorage.getItem("user"));
       
@@ -49,11 +49,20 @@ export async function handleLogin(email, password) {
     throw error;
   }
 }
-export function cleanUserCredentials(){
-  document.cookie.split(';').forEach(cookie => {
+
+export function cleanUserCredentials() {
+  const cookies = document.cookie.split(';');
+
+  cookies.forEach(cookie => {
     const [name] = cookie.trim().split('=');
-    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+
+    // Remove com domínio compartilhado
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.studyllab.com.br; Secure; SameSite=None`;
+
+    // Fallback (caso algum tenha sido criado sem domain)
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
   });
+
   sessionStorage.clear();
   localStorage.clear();
 }

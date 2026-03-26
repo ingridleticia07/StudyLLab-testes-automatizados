@@ -204,7 +204,7 @@ export async function authTokenIsValid() {
   }
 
   try {
-    const response = await instance.get("/utils/authenticated");
+    await instance.get("/utils/authenticated");
     return true;
   } catch (error) {
     return false;
@@ -218,12 +218,13 @@ export function updateUserAuthState() {
 }
 
 async function saveUserCredentials(tokenJwt, idUser, emailUser) {
+
   if (tokenJwt) {
 
     const expireDate = new Date();
     expireDate.setDate(expireDate.getDate() + 1);
     const expires = `expires=${expireDate.toUTCString()}`;
-    const domain = "domain=.studyllab.com.br";
+    const domain = "https://localhost";
     const path = "path=/";
 
     document.cookie = `id-user=${idUser}; ${path}; ${domain}; ${expires}; Secure; SameSite=None`;
