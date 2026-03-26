@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StudyLabAPI.Controllers;
 using StudyLabAPI.Middlewares.Auth;
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.Material.DTOs;
+using StudyLabAPI.Services.Application.Documento;
 using StudyLabAPI.Summaries;
 
 namespace StudyLabAPI.Endpoints
@@ -33,11 +34,11 @@ namespace StudyLabAPI.Endpoints
 
         private static async Task<IResult> CreateDocumento(HttpContext context,
         [FromForm] RegisteredDocumentoModel novoDocumento,
-        [FromServices] IDocumentoController controller)
+        [FromServices] IDocumentoService service)
         {
             try
             {
-                await controller.CreateDocumento(novoDocumento, novoDocumento.Files.ToList());
+                await service.CreateDocumento(novoDocumento, novoDocumento.Files.ToList());
             }
             catch (Exception e)
             {
@@ -53,13 +54,13 @@ namespace StudyLabAPI.Endpoints
             [FromQuery] int idDisciplina,
             [FromQuery] int idTopico,
             [FromQuery] bool isAnyStatus,
-            [FromServices] IDocumentoController controller)
+            [FromServices] IDocumentoService service)
         {
 
             DocumentoListResponse? result;
             try
             {
-                result = await controller.GetAllDocumentosByDisciplinaOrTopico(page, pageSize, idDisciplina, idTopico, isAnyStatus);
+                result = await service.GetAllDocumentosByDisciplinaOrTopico(page, pageSize, idDisciplina, idTopico, isAnyStatus);
             }
             catch (Exception e)
             {
@@ -72,13 +73,13 @@ namespace StudyLabAPI.Endpoints
         private static async Task<IResult> ListarDenunciasWithPagination(HttpContext context,
             [FromQuery] int page,
             [FromQuery] int pageSize,
-            [FromServices] IDocumentoController controller)
+            [FromServices] IDocumentoService service)
         {
 
             DenunciaListResponse? result;
             try
             {
-                result = await controller.GetAllDenuncias(page, pageSize);
+                result = await service.GetAllDenuncias(page, pageSize);
             }
             catch (Exception e)
             {
@@ -90,11 +91,11 @@ namespace StudyLabAPI.Endpoints
 
         private static async Task<IResult> DeleteDocumento(HttpContext context,
         [FromQuery] int idDocumento,int idUsuario,
-        [FromServices] IDocumentoController controller)
+        [FromServices] IDocumentoService service)
         {
             try
             {
-                await controller.DeleteDocumento(idDocumento, idUsuario);
+                await service.DeleteDocumento(idDocumento, idUsuario);
             }
             catch (Exception e)
             {
@@ -106,11 +107,11 @@ namespace StudyLabAPI.Endpoints
 
         private static async Task<IResult> CreateDenuncia(HttpContext context,
         [FromBody] RegisteredDocumentoModel documento,
-        [FromServices] IDocumentoController controller)
+        [FromServices] IDocumentoService service)
         {
             try
             {
-                await controller.CreateDenuncia(documento.idDocumento, documento.IdUsuario, documento.descricao);
+                await service.CreateDenuncia(documento.idDocumento, documento.IdUsuario, documento.descricao);
             }
             catch (Exception e)
             {
@@ -122,11 +123,11 @@ namespace StudyLabAPI.Endpoints
 
         private static async Task<IResult> UpdateDenunciaStatus(HttpContext context,
         [FromBody] DenunciaReadModel denunciaReadModel,
-        [FromServices] IDocumentoController controller)
+        [FromServices] IDocumentoService service)
         {
             try
             {
-                await controller.UpdateDenunciaStatus(denunciaReadModel);
+                await service.UpdateDenunciaStatus(denunciaReadModel);
             }
             catch (Exception e)
             {

@@ -31,7 +31,7 @@ builder.Services.AddStorageServices()
     .AddLocalServices()
     .AddMappers()
     .AddValidators()
-    .AddApiControllers()
+    .AddApiServices()
     .AddApiRepositories();
 
 builder.Services.AddAuth();

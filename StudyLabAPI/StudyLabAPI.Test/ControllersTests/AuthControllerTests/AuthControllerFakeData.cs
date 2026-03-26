@@ -1,5 +1,10 @@
 using StudyLabAPI.Models;
-using StudyLabAPI.Models.Enums;
+using StudyLabAPI.Models.Auth;
+using StudyLabAPI.Models.Auth.Enums;
+using StudyLabAPI.Models.Curso;
+using StudyLabAPI.Models.User;
+using StudyLabAPI.Models.User.DTOs;
+using StudyLabAPI.Models.User.Enums;
 
 namespace StudyLabAPI.Test.ControllersTests.AuthControllerTests;
 

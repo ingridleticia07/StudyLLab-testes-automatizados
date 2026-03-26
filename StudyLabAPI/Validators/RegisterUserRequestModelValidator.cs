@@ -1,5 +1,6 @@
 using FluentValidation;
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.User.DTOs;
 using StudyLabAPI.Validators.CustomValidators;
 
 namespace StudyLabAPI.Validators;

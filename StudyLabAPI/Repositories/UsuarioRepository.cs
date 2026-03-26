@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using StudyLabAPI.Context;
 using StudyLabAPI.Models;
-using StudyLabAPI.Models.Enums;
+using StudyLabAPI.Models.User;
+using StudyLabAPI.Models.User.Enums;
 
 namespace StudyLabAPI.Repositories;
 

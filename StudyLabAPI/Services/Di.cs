@@ -5,13 +5,19 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using StudyLabAPI.Context;
-using StudyLabAPI.Controllers;
 using StudyLabAPI.Mapper;
 using StudyLabAPI.Middlewares.Auth;
 using StudyLabAPI.Middlewares.Swagger;
 using StudyLabAPI.Models;
 using StudyLabAPI.Models.Options;
+using StudyLabAPI.Models.User.DTOs;
 using StudyLabAPI.Repositories;
+using StudyLabAPI.Services.Application.Auth;
+using StudyLabAPI.Services.Application.Disciplina;
+using StudyLabAPI.Services.Application.Documento;
+using StudyLabAPI.Services.Application.Forum;
+using StudyLabAPI.Services.Application.User;
+using StudyLabAPI.Services.Application.Utils;
 using StudyLabAPI.Services.Email;
 using StudyLabAPI.Services.Hash;
 using StudyLabAPI.Services.Jwt;
@@ -191,17 +197,17 @@ public static class Di
         return services;
     }
     /// <summary>
-    /// Adiciona controladores dos endpoints da API ao container de DI.
+    /// Adiciona serviços dos endpoints da API ao container de DI.
     /// </summary>
     /// <returns><see cref="IServiceCollection"/> para que outras chamadas possam ser encadeadas.</returns>
-    public static IServiceCollection AddApiControllers(this IServiceCollection services)
+    public static IServiceCollection AddApiServices(this IServiceCollection services)
     {
-        services.AddScoped<IUsuarioController, UsuarioController>();
-        services.AddScoped<IAuthController, AuthController>();
-        services.AddScoped<IDisciplinaController, DisciplinaController>();
-        services.AddScoped<IForumController, ForumController>();
-        services.AddScoped<IDocumentoController, DocumentoController>();
-        services.AddScoped<IUtilsController, UtilsController>();
+        services.AddScoped<IUsuarioService, UsuarioService>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IDisciplinaService, DisciplinaService>();
+        services.AddScoped<IForumService, ForumService>();
+        services.AddScoped<IDocumentoService, DocumentoService>();
+        services.AddScoped<IUtilsService, UtilsService>();
         return services;
     }
     

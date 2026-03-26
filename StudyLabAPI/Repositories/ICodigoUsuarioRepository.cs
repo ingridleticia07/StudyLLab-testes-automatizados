@@ -1,5 +1,7 @@
 using StudyLabAPI.Models;
-using StudyLabAPI.Models.Enums;
+using StudyLabAPI.Models.Auth;
+using StudyLabAPI.Models.Auth.Enums;
+using StudyLabAPI.Models.User;
 
 namespace StudyLabAPI.Repositories;
 

@@ -1,9 +1,10 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using StudyLabAPI.Controllers;
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Middlewares.Auth;
 using StudyLabAPI.Models;
+using StudyLabAPI.Models.User.DTOs;
+using StudyLabAPI.Services.Application.User;
 using StudyLabAPI.Summaries;
 
 namespace StudyLabAPI.Endpoints;
@@ -44,7 +45,7 @@ public static class UserEndpoints
     /// <param name="context">Contexto da requisição para pegar as informações de autenticação do usuário.</param>
     /// /// <param name="page">Número da pagina</param>
     /// <param name="pageSize">Tamanho de cada pagina</param>
-    /// <param name="controller">Controlador que irá gerenciar as necessidades da requisição.</param>
+    /// <param name="service">Controlador que irá gerenciar as necessidades da requisição.</param>
     /// <returns>Resposta da requisição.</returns>
     /// <permission cref="AuthorizationPolicies">Requisições devem estar autenticadas.
     /// Política: <see cref="AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_ADMIN_ROLE"/></permission>
@@ -54,13 +55,13 @@ public static class UserEndpoints
         [FromQuery] int pageSize,
         [FromQuery] int status,
         [FromQuery] int userType,
-        [FromServices] IUsuarioController controller,
+        [FromServices] IUsuarioService service,
         [FromQuery] bool onlyProfessor = false)
     {
         UsersListResponse result;
         try
         {
-            result = await controller.GetUsers(page, pageSize,userType,status, onlyProfessor);
+            result = await service.GetUsers(page, pageSize,userType,status, onlyProfessor);
         }
         catch (Exception e)
         {
@@ -75,19 +76,19 @@ public static class UserEndpoints
     /// <param name="context">Contexto da requisição para pegar as informações de autenticação do usuário.</param>
     /// <param name="id">ID do usuário</param>
     /// <param name="request">Informações que serão atualizadas do usuário, com os novos valores</param>
-    /// <param name="controller">Controlador que irá gerenciar as necessidades da requisição.</param>
+    /// <param name="service">Controlador que irá gerenciar as necessidades da requisição.</param>
     /// <returns>Resposta da requisição</returns>
     [ProducesResponseType(typeof(UserReadModel), 200)]
     private async static Task<IResult> PutUpdateUser(HttpContext context,
         [FromRoute] int id,
         [FromBody] UpdateUserRequestModel request,
-        [FromServices] IUsuarioController controller)
+        [FromServices] IUsuarioService service)
     {
         UserReadModel updatedUser;
 
         try
         {
-            updatedUser = await controller.UpdateUserById(id, request);
+            updatedUser = await service.UpdateUserById(id, request);
         }
         catch (ValidationException e)
         {
@@ -105,20 +106,20 @@ public static class UserEndpoints
     /// </summary>
     /// <param name="context">Contexto da requisição para pegar as informações de autenticação do usuário.</param>
     /// <param name="id">ID do usuário</param>
-    /// <param name="controller">Controlador que irá gerenciar as necessidades da requisição.</param>
+    /// <param name="service">Controlador que irá gerenciar as necessidades da requisição.</param>
     /// <returns>Resposta da requisição.</returns>
     /// <permission cref="AuthorizationPolicies">Requisições devem estar autenticadas.
     /// Política: <see cref="AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_ADMIN_ROLE"/></permission>
     [ProducesResponseType(typeof(int), 200)]
     private async static Task<IResult> DeleteUser(HttpContext context,
         [FromRoute] int id,
-        [FromServices] IUsuarioController controller)
+        [FromServices] IUsuarioService service)
     {
         int deletedId;
 
         try
         {
-            deletedId = await controller.DeleteUser(id);
+            deletedId = await service.DeleteUser(id);
         }
         catch (ValidationException e)
         {
@@ -137,13 +138,13 @@ public static class UserEndpoints
     /// Trata requisição de <c>/user/profile</c>
     /// </summary>
     /// <param name="context">Contexto da requisição para pegar as informações de autenticação do usuário.</param>
-    /// <param name="controller">Controlador que irá gerenciar as necessidades da requisição.</param>
+    /// <param name="service">Controlador que irá gerenciar as necessidades da requisição.</param>
     /// <returns>Resposta da requisição.</returns>
     /// <permission cref="AuthorizationPolicies">Requisições devem estar autenticadas.
     /// Política: <see cref="AuthorizationPolicies.REQUIRE_IDENTIFIER_AND_USER_ROLE"/></permission>
     [ProducesResponseType(typeof(UserReadModel), 200)]
     private async static Task<IResult> GetUserProfileInfo(HttpContext context,
-        [FromServices] IUsuarioController controller,
+        [FromServices] IUsuarioService service,
         [FromQuery] int idUsuario = 0)
     {
         int userId = 0;
@@ -156,7 +157,7 @@ public static class UserEndpoints
         UserReadModel? result;
         try
         {
-            result = await controller.GetUserInfoById(userId);
+            result = await service.GetUserInfoById(userId);
         }
         catch(UsuarioNotFoundException e)
         {

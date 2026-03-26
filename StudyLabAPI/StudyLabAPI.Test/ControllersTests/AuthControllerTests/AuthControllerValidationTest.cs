@@ -1,7 +1,8 @@
 using FluentValidation;
 using FluentValidation.Results;
 using StudyLabAPI.Models;
-using StudyLabAPI.Models.Enums;
+using StudyLabAPI.Models.User.DTOs;
+using StudyLabAPI.Models.User.Enums;
 using StudyLabAPI.Validators;
 
 namespace StudyLabAPI.Test.ControllersTests.AuthControllerTests;
