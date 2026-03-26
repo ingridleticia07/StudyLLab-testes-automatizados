@@ -223,9 +223,13 @@ async function saveUserCredentials(tokenJwt, idUser, emailUser) {
     const expireDate = new Date();
     expireDate.setDate(expireDate.getDate() + 1);
     const expires = `expires=${expireDate.toUTCString()}`;
-    document.cookie = `id-user=${idUser}; path=/; ${expires};`;
-    document.cookie = `email-user=${emailUser}; path=/; ${expires};`;
-    document.cookie = `${AUTH_TOKEN}=${tokenJwt}; path=/; ${expires};`;
+    const domain = "domain=.studyllab.com.br";
+    const path = "path=/";
+
+    document.cookie = `id-user=${idUser}; ${path}; ${domain}; ${expires}; Secure; SameSite=None`;
+    document.cookie = `email-user=${emailUser}; ${path}; ${domain}; ${expires}; Secure; SameSite=None`;
+    document.cookie = `${AUTH_TOKEN}=${tokenJwt}; ${path}; ${domain}; ${expires}; Secure; SameSite=None`;
+
     await saveUsersInfos(tokenJwt, idUser);
 
   } else {
@@ -265,9 +269,13 @@ function hasExpired(timestampStr, expiryHours = 24) {
 }
 
 export function logoutSession() {
+  const domain = "domain=.studyllab.com.br";
+  const path = "path=/";
+
   document.cookie.split(';').forEach(cookie => {
     const [name] = cookie.trim().split('=');
-    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; ${path}; ${domain}; Secure; SameSite=None`;
   });
 
   sessionStorage.clear();
