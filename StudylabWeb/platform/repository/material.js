@@ -46,10 +46,10 @@ export async function saveMaterial(respostaMaterialDTO) {
             MATERIAL_ENDPOINT + "/cadastrarDocumento",
             formData,
             {
-              headers: { 
-                  'Content-Type': 'multipart/form-data', // Important for sending FormData,
-                  'accept': 'application/json, text/plain, */*'
-              }
+                headers: { 
+                    'Content-Type': 'multipart/form-data', // Important for sending FormData,
+                    'accept': 'application/json, text/plain, */*'
+                }
             }
         );
 
