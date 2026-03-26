@@ -6,6 +6,8 @@ namespace StudyLabAPI.Models.Material.DTOs
     {
         public int idDocumento { get; init; }
 
+        public IFormFileCollection Files { get; set; }
+        
         public string diretorioMaterial1 { get; init; }
 
         public string diretorioMaterial2 { get; init; }

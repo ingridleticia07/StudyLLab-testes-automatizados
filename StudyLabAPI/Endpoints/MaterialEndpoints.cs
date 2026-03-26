@@ -34,12 +34,11 @@ namespace StudyLabAPI.Endpoints
 
         private static async Task<IResult> CreateDocumento(HttpContext context,
         [FromForm] RegisteredDocumentoModel novoDocumento,
-        [FromForm] IFormFileCollection file,
         [FromServices] IDocumentoService service)
         {
             try
             {
-                await service.CreateDocumento(novoDocumento, file.ToList());
+                await service.CreateDocumento(novoDocumento, novoDocumento.Files.ToList());
             }
             catch (Exception e)
             {
