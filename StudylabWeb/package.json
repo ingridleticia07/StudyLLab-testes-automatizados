@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "lucide-react": "^1.7.0",
     "rsuite": "^5.83.3"
   }
 }

@@ -8,6 +8,7 @@ import logo from './img/StudyLab.svg';
 import team from './img/team.svg';
 import laptop from './img/laptop.svg';
 import student from './img/student.svg';
+import Disciplinas from './img/Disciplinas.svg';
 
 import student0 from './img/Imgstudents/student0.svg';
 import student1 from './img/Imgstudents/student1.svg';
@@ -22,6 +23,7 @@ import student9 from './img/Imgstudents/student9.svg';
 import student10 from './img/Imgstudents/student10.svg';
 import student11 from './img/Imgstudents/student11.svg';
 
+
 export const icons = {
     at,
     eyeClose,
@@ -35,6 +37,7 @@ export const images = {
     team,
     laptop,
     student,
+    Disciplinas,
 };
 
 export const studentsImages = {
