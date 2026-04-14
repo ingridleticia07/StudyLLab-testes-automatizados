@@ -11,7 +11,7 @@ const Sidebar = ({ isMobile = false }) => {
     const confirmed = window.confirm('Clique em ok para sair!');
     if (confirmed) {
       logoutSession();
-      window.location.href = 'https://client.studyllab.com.br/';
+      window.location.href = 'https://studyllab.com.br/';
     }
   };
 

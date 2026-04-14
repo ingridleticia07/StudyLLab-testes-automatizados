@@ -224,7 +224,7 @@ async function saveUserCredentials(tokenJwt, idUser, emailUser) {
     const expireDate = new Date();
     expireDate.setDate(expireDate.getDate() + 1);
     const expires = `expires=${expireDate.toUTCString()}`;
-    const domain = "https://localhost";
+    const domain = ".studyllab.com.br";
     const path = "path=/";
 
     document.cookie = `id-user=${idUser}; ${path}; ${domain}; ${expires}; Secure; SameSite=None`;
