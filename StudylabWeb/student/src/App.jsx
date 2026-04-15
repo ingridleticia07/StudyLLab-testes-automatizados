@@ -34,7 +34,7 @@ function App() {
       setHasAlerted(true);
       alert('Sua sessão expirou. Logue novamente!');
       logoutSession();
-      window.location.href = 'https://client.studyllab.com.br/';
+      window.location.href = 'https://studyllab.com.br/';
     }
   }, [authStatus]);
 
