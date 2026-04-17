@@ -15,6 +15,7 @@ internal static class EnvVars
     private const string PASSWORD_SALT = "PASSWORD_SALT";
     private const string SUPABASE_URL = "SUPA_URL";
     private const string SUPABASE_KEY = "SUPA_KEY";
+    private const string SEND_MAIL_THROUGH_SMTP = "SEND_MAIL_THROUGH_SMTP";
         
     public static string? GetApiKey() =>
         Environment.GetEnvironmentVariable(API_KEY);
@@ -38,6 +39,16 @@ internal static class EnvVars
     
     public static string? GetSupabaseKey() =>
             Environment.GetEnvironmentVariable(SUPABASE_KEY);
+    
+    public static bool? GetSendMailThroughSmtp()
+    {
+        var value = Environment.GetEnvironmentVariable(SEND_MAIL_THROUGH_SMTP);
+
+        if (bool.TryParse(value, out var result))
+            return result;
+
+        return false;
+    }
 
     public static EnvironmentService CreateEnvironmentServiceFromVariables() =>
         new()
@@ -51,6 +62,7 @@ internal static class EnvVars
             smtpPassword = GetSmtpPassword() ?? throw new ArgumentNullException(SMTP_PASSWORD),
             passwordSalt = GetPasswordSalt() ?? throw new ArgumentNullException(PASSWORD_SALT),
             supabaseUrl = GetSupabaseUrl() ?? throw new ArgumentNullException(SUPABASE_URL),
-            supabaseKey = GetSupabaseKey() ?? throw new ArgumentNullException(SUPABASE_KEY)
+            supabaseKey = GetSupabaseKey() ?? throw new ArgumentNullException(SUPABASE_KEY),
+            sendMailThroughSmtp = GetSendMailThroughSmtp() ?? throw new ArgumentNullException(SEND_MAIL_THROUGH_SMTP)
         };
 }

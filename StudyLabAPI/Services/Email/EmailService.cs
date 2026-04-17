@@ -14,8 +14,8 @@ public class EmailService : IDisposable, IEmailService
     private readonly int _smtpPort;
     private readonly string _smtpEmail;
     private readonly string _smtpPassword;
-    private readonly string _supaUrl;
     private readonly string _supaKey;
+    private readonly bool _sendMailThroughSmtp;
 
     public EmailService(EnvironmentService environmentService)
     {
@@ -23,8 +23,8 @@ public class EmailService : IDisposable, IEmailService
         _smtpPort = int.Parse(environmentService.smtpPort);
         _smtpEmail = environmentService.smtpEmail;
         _smtpPassword = environmentService.smtpPassword;
-        _supaUrl = environmentService.supabaseUrl;
         _supaKey = environmentService.supabaseKey;
+        _sendMailThroughSmtp = environmentService.sendMailThroughSmtp;
         
         smtpClient = new(_smtpServer, _smtpPort)
         {
@@ -43,10 +43,11 @@ public class EmailService : IDisposable, IEmailService
             Body = emailBody,
             IsBodyHtml = true,
         };
-        if(useEdgeFunction)
-            await SendEmailViaSupabaseEdgeFunction(intent, emailBody);
-        else
+        
+        if(_sendMailThroughSmtp)
             await smtpClient.SendMailAsync(internalMailScope);
+        else
+            await SendEmailViaSupabaseEdgeFunction(intent, emailBody);
     }
     
     private async Task SendEmailViaSupabaseEdgeFunction(EmailIntent intent, string emailBody)

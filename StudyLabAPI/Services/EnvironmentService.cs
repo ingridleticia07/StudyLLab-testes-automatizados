@@ -14,4 +14,6 @@ public class EnvironmentService
     public required string supabaseUrl { get; init; }
     
     public required string supabaseKey { get; init; }
+    
+    public required bool sendMailThroughSmtp { get; init; }
 }

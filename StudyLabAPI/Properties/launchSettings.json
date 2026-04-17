@@ -24,7 +24,8 @@
         "SMTP_PASSWORD": "wgat snfx qcnq ydfb",
         "PASSWORD_SALT": "e47204df44254059b86dd41b5ba9eceae0",
         "SUPA_URL": "url",
-        "SUPA_KEY": "key"
+        "SUPA_KEY": "key",
+        "SEND_MAIL_THROUGH_SMTP": true
       }
     },
     "https(prod)": {
@@ -43,7 +44,8 @@
         "SMTP_PASSWORD": "wgat snfx qcnq ydfb",
         "PASSWORD_SALT": "e47204df44254059b86dd41b5ba9eceae0",
         "SUPA_URL": "url",
-        "SUPA_KEY": "key"
+        "SUPA_KEY": "key",
+        "SEND_MAIL_THROUGH_SMTP": true
       }
     }
   }
