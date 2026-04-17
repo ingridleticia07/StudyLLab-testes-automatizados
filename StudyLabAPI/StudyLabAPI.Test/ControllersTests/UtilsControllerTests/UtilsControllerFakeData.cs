@@ -15,6 +15,7 @@ public static class UtilsControllerFakeData
         postgresConnectionString = string.Empty,
         smtpServer = string.Empty,
         supabaseUrl = string.Empty,
-        supabaseKey = string.Empty
+        supabaseKey = string.Empty,
+        sendMailThroughSmtp = true
     };
 }
