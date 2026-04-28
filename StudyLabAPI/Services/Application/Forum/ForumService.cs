@@ -13,16 +13,16 @@ namespace StudyLabAPI.Services.Application.Forum
 {
     public class ForumService : IForumService
     {
-        private ITopicoDiscussaoRepository topicoDiscussaoRepository { get; }
+        private readonly ITopicoDiscussaoRepository topicoDiscussaoRepository { get; }
 
-        private IUsuarioRepository usuarioRepository { get; }
-        private ILogger logger { get; }
+        private readonly IUsuarioRepository usuarioRepository { get; }
+        private readonly ILogger logger { get; }
 
-        private IDisciplinaRepository DisciplinaRepository { get; }
+        private readonly IDisciplinaRepository DisciplinaRepository { get; }
 
-        private IRespostaForumRepository respostaforumRepository { get; }
+        private readonly IRespostaForumRepository respostaforumRepository { get; }
 
-        private IForumRepository forumRepository { get; }
+        private readonly IForumRepository forumRepository { get; }
 
         private readonly TopicoDiscussaoModelMapper _topicoModelMapper;
 

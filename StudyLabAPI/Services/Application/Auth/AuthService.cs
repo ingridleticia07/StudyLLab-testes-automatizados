@@ -25,21 +25,21 @@ namespace StudyLabAPI.Services.Application.Auth;
 /// </summary>
 public class AuthService : IAuthService
 {
-    private IUsuarioRepository usuarioRepository { get; }
-    private ICursoRepository cursoRepository { get; }
-    private ICodigoUsuarioRepository codigoUsuarioRepository { get; }
-    private UsuarioModelMapper usuarioModelMapper { get; }
-    private RegisterUserRequestModelMapper registerUserRequestModelMapper { get; }
-    private CodigoUsuarioModelMapper codigoUsuarioModelMapper { get; }
-    private ResetUserPasswordRequestModelMapper resetUserPasswordRequestModelMapper { get; }
-    private IJwtService jwtService { get; }
-    private IEmailService emailService { get; }
-    private IHashService hashService { get; }
-    private IValidator<RegisterUserRequestModel> registerUserRequestModelValidator { get; }
-    private IValidator<UserLoginRequestModel> userLoginRequestModelValidator { get; }
-    private IValidator<ConfirmUserEmailRequestModel> confirmUserEmailRequestModelValidator { get; }
-    private IValidator<ResetUserPasswordRequestModel> resetUserPasswordRequestModelValidator { get; }
-    private ILogger logger { get; }
+    private readonly IUsuarioRepository usuarioRepository { get; }
+    private readonly ICursoRepository cursoRepository { get; }
+    private readonly ICodigoUsuarioRepository codigoUsuarioRepository { get; }
+    private readonly UsuarioModelMapper usuarioModelMapper { get; }
+    private readonly RegisterUserRequestModelMapper registerUserRequestModelMapper { get; }
+    private readonly CodigoUsuarioModelMapper codigoUsuarioModelMapper { get; }
+    private readonly ResetUserPasswordRequestModelMapper resetUserPasswordRequestModelMapper { get; }
+    private readonly IJwtService jwtService { get; }
+    private readonly IEmailService emailService { get; }
+    private readonly IHashService hashService { get; }
+    private readonly IValidator<RegisterUserRequestModel> registerUserRequestModelValidator { get; }
+    private readonly IValidator<UserLoginRequestModel> userLoginRequestModelValidator { get; }
+    private readonly IValidator<ConfirmUserEmailRequestModel> confirmUserEmailRequestModelValidator { get; }
+    private readonly IValidator<ResetUserPasswordRequestModel> resetUserPasswordRequestModelValidator { get; }
+    private readonly ILogger logger { get; }
 
     public AuthService(IUsuarioRepository usuarioRepository, ICursoRepository cursoRepository,
         ICodigoUsuarioRepository codigoUsuarioRepository, UsuarioModelMapper usuarioModelMapper,
