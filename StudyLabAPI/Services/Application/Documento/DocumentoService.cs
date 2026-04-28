@@ -19,18 +19,18 @@ namespace StudyLabAPI.Services.Application.Documento
     public class DocumentoService : IDocumentoService
     {
 
-        private ITopicoDiscussaoRepository topicoDiscussaoRepository { get; }
+        private readonly ITopicoDiscussaoRepository topicoDiscussaoRepository { get; }
 
-        private IUsuarioRepository usuarioRepository { get; }
-        private ILogger logger { get; }
+        private readonly IUsuarioRepository usuarioRepository { get; }
+        private readonly ILogger logger { get; }
 
-        private IDisciplinaRepository DisciplinaRepository { get; }
+        private readonly IDisciplinaRepository DisciplinaRepository { get; }
 
-        private IRespostaForumRepository respostaforumRepository { get; }
+        private readonly IRespostaForumRepository respostaforumRepository { get; }
 
-        private IForumRepository forumRepository { get; }
+        private readonly IForumRepository forumRepository { get; }
 
-        private IDocumentoRepository documentoRepository { get; }
+        private readonly IDocumentoRepository documentoRepository { get; }
 
         private readonly DocumentoModelMapper _documentoModelMapper;
 
