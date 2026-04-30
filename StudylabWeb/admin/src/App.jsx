@@ -41,6 +41,7 @@ function App() {
       logoutSession();
       window.location.href = 'https://localhost:5174/';
     }
+      
   }, [authStatus]);
 
   return (
