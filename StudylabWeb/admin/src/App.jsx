@@ -41,6 +41,7 @@ function App() {
       logoutSession();
       window.location.href = 'https://studyllab.com.br/';
     }
+      
   }, [authStatus]);
 
   return (

@@ -14,7 +14,8 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.27.0",
     "react-toastify": "^10.0.6",
-    "rsuite": "^5.83.3"
+    "rsuite": "^5.83.3",
+    "lucide-react": "^1.7.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
