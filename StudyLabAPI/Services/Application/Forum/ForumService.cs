@@ -13,61 +13,56 @@ namespace StudyLabAPI.Services.Application.Forum
 {
     public class ForumService : IForumService
     {
-        private readonly ITopicoDiscussaoRepository topicoDiscussaoRepository { get; }
-
-        private readonly IUsuarioRepository usuarioRepository { get; }
-        private readonly ILogger logger { get; }
-
-        private readonly IDisciplinaRepository DisciplinaRepository { get; }
-
-        private readonly IRespostaForumRepository respostaforumRepository { get; }
-
-        private readonly IForumRepository forumRepository { get; }
-
+        private readonly ITopicoDiscussaoRepository _topicoDiscussaoRepository;
+        private readonly IUsuarioRepository _usuarioRepository;
+        private readonly ILogger _logger;
+        private readonly IDisciplinaRepository _disciplinaRepository;
+        private readonly IRespostaForumRepository _respostaForumRepository;
+        private readonly IForumRepository _forumRepository;
         private readonly TopicoDiscussaoModelMapper _topicoModelMapper;
-
         private readonly RespotaForumModelMapper _respostaForumModelMapper;
 
         public ForumService(TopicoDiscussaoModelMapper topicoDiscussaoModelMapper, RespotaForumModelMapper
             respostaForumModelMapper, ITopicoDiscussaoRepository topicoDiscussaoRepository,
-            IDisciplinaRepository DisciplinaRepository, IUsuarioRepository usuarioRepository,
+            IDisciplinaRepository disciplinaRepository, IUsuarioRepository usuarioRepository,
             IRespostaForumRepository respostaForumRepository, IForumRepository forumRepository, ILogger logger)
         {
-            this._topicoModelMapper = topicoDiscussaoModelMapper;
-            this._respostaForumModelMapper = respostaForumModelMapper;
-            this.topicoDiscussaoRepository = topicoDiscussaoRepository;
-            this.DisciplinaRepository = DisciplinaRepository;
-            this.usuarioRepository = usuarioRepository;
-            this.respostaforumRepository = respostaForumRepository;
-            this.forumRepository = forumRepository;
-            this.logger = logger;
+            _topicoModelMapper = topicoDiscussaoModelMapper;
+            _respostaForumModelMapper = respostaForumModelMapper;
+            _topicoDiscussaoRepository = topicoDiscussaoRepository;
+            _disciplinaRepository = disciplinaRepository;
+            _usuarioRepository = usuarioRepository;
+            _respostaForumRepository = respostaForumRepository;
+            _forumRepository = forumRepository;
+            _logger = logger;
         }
+
         public async Task<TopicoDiscussaoListResponse> GetTopicosDiscussaoLimitedByPageAndPageSize(int page, int pageSize, int idDisciplina = 0)
         {
-            logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
-            page, pageSize);
+            _logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
+                page, pageSize);
 
             PageValidator validator = new(page, pageSize);
 
             if (!validator.isValid)
             {
                 ValidationException exception = new(["Parâmetros de paginação inválidos"]);
-                logger.Error(exception, "Parâmetros de paginação inválidos");
+                _logger.Error(exception, "Parâmetros de paginação inválidos");
                 throw exception;
             }
 
-            logger.Information("Recuperando topicos da página Page[{Page}] PageSize[{PageSize}]",
+            _logger.Information("Recuperando topicos da página Page[{Page}] PageSize[{PageSize}]",
                 page, pageSize);
 
-            (var result, int resultCount, int topicosCount) = await topicoDiscussaoRepository
-            .GetTopicosAndCount(page, pageSize, idDisciplina);
+            (var result, int resultCount, int topicosCount) = await _topicoDiscussaoRepository
+                .GetTopicosAndCount(page, pageSize, idDisciplina);
 
             var topicosReadResult = result.Select(_topicoModelMapper.TopicoDiscussaoModelToDiscussaoReadModel)
                 .ToList();
 
-            logger.Information("Recuperado {Count} usuários da página Page[{Page}] PageSize[{PageSize}]",
+            _logger.Information("Recuperado {Count} usuários da página Page[{Page}] PageSize[{PageSize}]",
                 topicosReadResult.Count, page, pageSize);
-            logger.Information("Recuperando informações extras para a resposta");
+            _logger.Information("Recuperando informações extras para a resposta");
 
             int maxPage = topicosCount / pageSize;
             if (topicosCount % pageSize != 0)
@@ -84,14 +79,14 @@ namespace StudyLabAPI.Services.Application.Forum
 
         public async Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussao()
         {
-            List<TopicoDiscussaoModel?> topicosDiscussao = await topicoDiscussaoRepository.GetAllTopicosDiscussao();
+            List<TopicoDiscussaoModel?> topicosDiscussao = await _topicoDiscussaoRepository.GetAllTopicosDiscussao();
 
             return topicosDiscussao;
         }
 
         public async Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussaoByDisciplina(int idDisciplina)
         {
-            List<TopicoDiscussaoModel?> topicosDiscussao = await topicoDiscussaoRepository.GetAllTopicosDiscussaoByDisciplina(idDisciplina);
+            List<TopicoDiscussaoModel?> topicosDiscussao = await _topicoDiscussaoRepository.GetAllTopicosDiscussaoByDisciplina(idDisciplina);
 
             return topicosDiscussao;
         }
@@ -104,7 +99,7 @@ namespace StudyLabAPI.Services.Application.Forum
                 nomeTopico = topicoDiscussao.nomeTopico,
                 dataTopico = topicoDiscussao.dataTopico
             };
-            bool returnCheckTopicoDiscussaoExists = await topicoDiscussaoRepository.VerifyTopicoDiscussaoExists(topicoDiscussaoModel);
+            bool returnCheckTopicoDiscussaoExists = await _topicoDiscussaoRepository.VerifyTopicoDiscussaoExists(topicoDiscussaoModel);
             return returnCheckTopicoDiscussaoExists;
         }
 
@@ -116,19 +111,19 @@ namespace StudyLabAPI.Services.Application.Forum
                 nomeTopico = topicoDiscussao.nomeTopico,
                 dataTopico = topicoDiscussao.dataTopico
             };
-            bool returnCheckTopicoDiscussaoExists = await topicoDiscussaoRepository.VerifyTopicoDiscussaoExistsWithId(topicoDiscussaoModel);
+            bool returnCheckTopicoDiscussaoExists = await _topicoDiscussaoRepository.VerifyTopicoDiscussaoExistsWithId(topicoDiscussaoModel);
             return returnCheckTopicoDiscussaoExists;
         }
+
         public async Task<TopicoDiscussaoModel> CreateTopicoDiscussao(RegisteredTopicoDiscussaoRequestModel topicoDiscussao)
         {
-            //passar id 
             int disciplinaId = topicoDiscussao.disciplina;
 
             DisciplinaModel? relatedDisciplina =
-                await DisciplinaRepository.GetDisciplinaByIdForUpdateTopico(disciplinaId, true);
+                await _disciplinaRepository.GetDisciplinaByIdForUpdateTopico(disciplinaId, true);
 
             UsuarioModel? relatedUsuario =
-                await usuarioRepository.GetUsuarioById(topicoDiscussao.idUsuario, true);
+                await _usuarioRepository.GetUsuarioById(topicoDiscussao.idUsuario, true);
 
             if (relatedDisciplina is null)
             {
@@ -140,29 +135,28 @@ namespace StudyLabAPI.Services.Application.Forum
                 throw new Exception("Usuário não encontrado");
             }
 
-            TopicoDiscussaoModel NovotopicoDiscussao = new()
+            TopicoDiscussaoModel novoTopicoDiscussao = new()
             {
                 nomeTopico = topicoDiscussao.nomeTopico,
                 dataTopico = topicoDiscussao.dataTopico,
                 disciplina = relatedDisciplina,
                 usuario = relatedUsuario
             };
-            await topicoDiscussaoRepository.CreateTopicoDiscussao(NovotopicoDiscussao);
+            await _topicoDiscussaoRepository.CreateTopicoDiscussao(novoTopicoDiscussao);
+            await _topicoDiscussaoRepository.Flush();
 
-            await topicoDiscussaoRepository.Flush();
-
-            return (NovotopicoDiscussao);
+            return novoTopicoDiscussao;
         }
 
         public async Task<TopicoDiscussaoModel> UpdateTopicoDiscussao(RegisteredTopicoDiscussaoRequestModel topicoDiscussaoModel)
         {
             int disciplinaId = topicoDiscussaoModel.disciplina;
 
-            DisciplinaModel? relatedDisciplina = await DisciplinaRepository.GetDisciplinaByIdForUpdateTopico(disciplinaId);
+            DisciplinaModel? relatedDisciplina = await _disciplinaRepository.GetDisciplinaByIdForUpdateTopico(disciplinaId);
 
-            TopicoDiscussaoModel? topicoDiscussaoForUpdate = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoModel.idTopico);
+            TopicoDiscussaoModel? topicoDiscussaoForUpdate = await _topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoModel.idTopico);
 
-            UsuarioModel? usuario = await usuarioRepository.GetUsuarioById(topicoDiscussaoModel.idUsuario);
+            UsuarioModel? usuario = await _usuarioRepository.GetUsuarioById(topicoDiscussaoModel.idUsuario);
 
             if (relatedDisciplina is null)
             {
@@ -192,53 +186,51 @@ namespace StudyLabAPI.Services.Application.Forum
                 usuario = topicoDiscussaoForUpdate.usuario,
                 dataTopico = topicoDiscussaoModel.dataTopico
             };
-            await topicoDiscussaoRepository.UpdateTopicoDiscussao(topicoUpdated);
-            await topicoDiscussaoRepository.Flush();
+            await _topicoDiscussaoRepository.UpdateTopicoDiscussao(topicoUpdated);
+            await _topicoDiscussaoRepository.Flush();
 
-            return (topicoUpdated);
+            return topicoUpdated;
         }
 
         public async Task DeleteTopicoDiscussao(int idTopicoDiscussao)
         {
-            //verificar se disciplina existe, por meio do buscar disciplina
-            //para em caso de exstir, excluir a mesma
-            await topicoDiscussaoRepository.DeleteTopicoDiscussao(idTopicoDiscussao);
-            await topicoDiscussaoRepository.Flush();
+            await _topicoDiscussaoRepository.DeleteTopicoDiscussao(idTopicoDiscussao);
+            await _topicoDiscussaoRepository.Flush();
         }
 
         public async Task<List<RespostaForumModel?>> GetAllRespostasForum()
         {
-            List<RespostaForumModel> RespostaForumListado = await respostaforumRepository.GetAllRespostasForum();
+            List<RespostaForumModel> respostaForumListado = await _respostaForumRepository.GetAllRespostasForum();
 
-            return RespostaForumListado;
+            return respostaForumListado;
         }
 
         public async Task<RespostaForumListResponse> GetAllRespostasForumByDisciplinaOrTopico(int page, int pageSize, int? idDisciplina, int? idTopico)
         {
-            logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
-            page, pageSize);
+            _logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
+                page, pageSize);
 
             PageValidator validator = new(page, pageSize);
 
             if (!validator.isValid)
             {
                 ValidationException exception = new(["Parâmetros de paginação inválidos"]);
-                logger.Error(exception, "Parâmetros de paginação inválidos");
+                _logger.Error(exception, "Parâmetros de paginação inválidos");
                 throw exception;
             }
 
-            logger.Information("Recuperando topicos da página Page[{Page}] PageSize[{PageSize}]",
+            _logger.Information("Recuperando topicos da página Page[{Page}] PageSize[{PageSize}]",
                 page, pageSize);
 
-            (var result, int resultCount, int respostaForumCount) = await respostaforumRepository
-            .GetRespostaForumAndCount(page, pageSize, idDisciplina, idTopico);
+            (var result, int resultCount, int respostaForumCount) = await _respostaForumRepository
+                .GetRespostaForumAndCount(page, pageSize, idDisciplina, idTopico);
 
             var respostaForumReadResult = result.Select(_respostaForumModelMapper.RespotaForumModelMapperToRespostaForumReadModel)
                 .ToList();
 
-            logger.Information("Recuperado {Count} usuários da página Page[{Page}] PageSize[{PageSize}]",
+            _logger.Information("Recuperado {Count} usuários da página Page[{Page}] PageSize[{PageSize}]",
                 respostaForumReadResult.Count, page, pageSize);
-            logger.Information("Recuperando informações extras para a resposta");
+            _logger.Information("Recuperando informações extras para a resposta");
 
             int maxPage = respostaForumCount / pageSize;
             if (respostaForumCount % pageSize != 0)
@@ -261,15 +253,15 @@ namespace StudyLabAPI.Services.Application.Forum
                 resposta = respostaForum.resposta,
                 dataResposta = respostaForum.dataResposta
             };
-            bool returnCheckrespostaForumExists = await respostaforumRepository.VerifyRespostaForumExists(respostaForumModel);
-            return returnCheckrespostaForumExists;
+            bool returnCheckRespostaForumExists = await _respostaForumRepository.VerifyRespostaForumExists(respostaForumModel);
+            return returnCheckRespostaForumExists;
         }
 
         public async Task<bool> VerifyRespostaForumExistsWithId(RegisteredRespostaForumModel respostaForum)
         {
             int topicoId = respostaForum.topicoDiscussao;
 
-            TopicoDiscussaoModel? relatedTopico = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoId);
+            TopicoDiscussaoModel? relatedTopico = await _topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoId);
 
             if (relatedTopico is null)
             {
@@ -283,18 +275,20 @@ namespace StudyLabAPI.Services.Application.Forum
                 dataResposta = respostaForum.dataResposta,
                 topicoDiscussao = relatedTopico
             };
+            bool returnCheckRespostaForumExistsWithId = await _respostaForumRepository.VerifyRespostaForumExistsWithId(respostaForumModel);
+            return returnCheckRespostaForumExistsWithId;
+        }
 
         public async Task<RegisteredRespostaForumModel> CreateRespostaForum(RegisteredRespostaForumModel respostaForum)
         {
             int topicoDiscussaoId = respostaForum.topicoDiscussao;
-
-            int UsuarioId = respostaForum.usuario;
+            int usuarioId = respostaForum.usuario;
 
             TopicoDiscussaoModel? relatedTopicoDiscussao =
-                await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoId,true);
+                await _topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoId, true);
 
             UsuarioModel? relatedUsuario =
-                await usuarioRepository.GetUsuarioById(UsuarioId, true);
+                await _usuarioRepository.GetUsuarioById(usuarioId, true);
 
             if (relatedTopicoDiscussao is null)
             {
@@ -306,31 +300,29 @@ namespace StudyLabAPI.Services.Application.Forum
                 throw new Exception("Usuário não encontrado");
             }
 
-            RespostaForumModel NovoRespostaForum = new()
+            RespostaForumModel novoRespostaForum = new()
             {
                 resposta = respostaForum.resposta,
                 dataResposta = respostaForum.dataResposta,
                 topicoDiscussao = relatedTopicoDiscussao,
                 usuario = relatedUsuario
             };
-            await respostaforumRepository.CreateRespostaForum(NovoRespostaForum);
+            await _respostaForumRepository.CreateRespostaForum(novoRespostaForum);
+            await _respostaForumRepository.Flush();
 
-            await respostaforumRepository.Flush();
-
-            return (respostaForum);
+            return respostaForum;
         }
 
         public async Task<RespostaForumModel> UpdateRespostaForum(RegisteredRespostaForumModel respostaForum)
         {
             int topicoDiscussaoId = respostaForum.topicoDiscussao;
-
-            int UsuarioId = respostaForum.usuario;
+            int usuarioId = respostaForum.usuario;
 
             TopicoDiscussaoModel? relatedTopicoDiscussao =
-                await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoId);
+                await _topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoId);
 
             UsuarioModel? relatedUsuario =
-                await usuarioRepository.GetUsuarioById(UsuarioId);
+                await _usuarioRepository.GetUsuarioById(usuarioId);
 
             if (relatedTopicoDiscussao is null)
             {
@@ -355,42 +347,37 @@ namespace StudyLabAPI.Services.Application.Forum
                 topicoDiscussao = relatedTopicoDiscussao,
                 usuario = relatedUsuario
             };
-            await respostaforumRepository.UpdateRespostaForum(updatedRespostaForum);
-            await respostaforumRepository.Flush();
+            await _respostaForumRepository.UpdateRespostaForum(updatedRespostaForum);
+            await _respostaForumRepository.Flush();
 
-            return (updatedRespostaForum);
+            return updatedRespostaForum;
         }
 
         public async Task DeleteRespostaForum(int idRespostaForum, int idUsuario)
         {
-            RespostaForumModel? repostaForum = await respostaforumRepository.GetRespostaForumById(idRespostaForum);
+            RespostaForumModel? respostaForum = await _respostaForumRepository.GetRespostaForumById(idRespostaForum);
 
-            if (repostaForum is null)
+            if (respostaForum is null)
             {
                 throw new Exception("Resposta não encontrada");
             }
 
-            if (!repostaForum.usuario.tipoUsuario.Equals(UserRole.Admin) && repostaForum.usuario.idUsuario != idUsuario)
+            if (!respostaForum.usuario.tipoUsuario.Equals(UserRole.Admin) && respostaForum.usuario.idUsuario != idUsuario)
                 throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
 
-            await respostaforumRepository.DeleteRespostaForum(idRespostaForum);
-            await respostaforumRepository.Flush();
+            await _respostaForumRepository.DeleteRespostaForum(idRespostaForum);
+            await _respostaForumRepository.Flush();
         }
 
         public async Task<ForumModel> CreateForum(ResgisteredForumModel forum)
         {
-            //passar id 
             int respostaForumId = forum.respostaForum;
-
             int topicoDiscussaoId = forum.topicoDiscussao;
-
             int usuarioId = forum.usuario;
 
-            RespostaForumModel? relatedRespostaForum = await respostaforumRepository.GetRespostaForumById(respostaForumId);
-
-            TopicoDiscussaoModel? relatedTopicoDiscussao = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoId);
-
-            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId);
+            RespostaForumModel? relatedRespostaForum = await _respostaForumRepository.GetRespostaForumById(respostaForumId);
+            TopicoDiscussaoModel? relatedTopicoDiscussao = await _topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoId);
+            UsuarioModel? relatedUsuario = await _usuarioRepository.GetUsuarioById(usuarioId);
 
             if (relatedRespostaForum is null)
             {
@@ -407,23 +394,21 @@ namespace StudyLabAPI.Services.Application.Forum
                 throw new Exception("Usuário não encontrado");
             }
 
-            ForumModel NovoForum = new()
+            ForumModel novoForum = new()
             {
                 respostaForum = relatedRespostaForum,
                 usuario = relatedUsuario
             };
-            await forumRepository.CreateForum(NovoForum);
+            await _forumRepository.CreateForum(novoForum);
+            await _forumRepository.Flush();
 
-            await forumRepository.Flush();
-
-            return (NovoForum);
+            return novoForum;
         }
 
         public async Task<ForumModel> UpdateForum(ResgisteredForumModel forum)
         {
-            RespostaForumModel? relatedRespostaForum = await respostaforumRepository.GetRespostaForumById(forum.respostaForum);
-
-            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(forum.usuario);
+            RespostaForumModel? relatedRespostaForum = await _respostaForumRepository.GetRespostaForumById(forum.respostaForum);
+            UsuarioModel? relatedUsuario = await _usuarioRepository.GetUsuarioById(forum.usuario);
 
             if (relatedRespostaForum is null)
             {
@@ -445,41 +430,32 @@ namespace StudyLabAPI.Services.Application.Forum
                 usuario = relatedUsuario
             };
 
+            await _forumRepository.UpdateForum(forumForUpdate);
+            await _forumRepository.Flush();
 
-            await forumRepository.UpdateForum(forumForUpdate);
-
-            await forumRepository.Flush();
-
-            return (forumForUpdate);
+            return forumForUpdate;
         }
 
-            public async Task<List<ForumModel>> GetAllForums()
-            {
-                List<ForumModel> forumModelLista = await forumRepository.GetAllForums();
+        public async Task<List<ForumModel>> GetAllForums()
+        {
+            List<ForumModel> forumModelLista = await _forumRepository.GetAllForums();
 
-                return forumModelLista;
-            }
+            return forumModelLista;
+        }
 
         public async Task DeleteForum(ForumModel forum)
         {
-            //verificar se disciplina existe, por meio do buscar disciplina
-            //para em caso de exstir, excluir a mesma
-            await forumRepository.DeleteForum(forum.idForum);
-            await forumRepository.Flush();
-
+            await _forumRepository.DeleteForum(forum.idForum);
+            await _forumRepository.Flush();
         }
 
         public async Task<bool> VerifyForumCreated(ResgisteredForumModel forum)
         {
             int forumId = forum.respostaForum;
-
-            int topicoId = forum.topicoDiscussao;
-
             int usuarioId = forum.usuario;
 
-            RespostaForumModel? relatedRespostaForum = await respostaforumRepository.GetRespostaForumById(forumId);
-
-            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId);
+            RespostaForumModel? relatedRespostaForum = await _respostaForumRepository.GetRespostaForumById(forumId);
+            UsuarioModel? relatedUsuario = await _usuarioRepository.GetUsuarioById(usuarioId);
 
             if (relatedRespostaForum is null)
             {
@@ -496,21 +472,17 @@ namespace StudyLabAPI.Services.Application.Forum
                 respostaForum = relatedRespostaForum,
                 usuario = relatedUsuario
             };
-            bool returnCheckForumExists = await forumRepository.VerifyForumCreated(respostaForumModel);
+            bool returnCheckForumExists = await _forumRepository.VerifyForumCreated(respostaForumModel);
             return returnCheckForumExists;
         }
 
         public async Task<bool> VerifyForumCreatedWithId(ResgisteredForumModel forum)
         {
             int forumId = forum.respostaForum;
-
-            int topicoId = forum.topicoDiscussao;
-
             int usuarioId = forum.usuario;
 
-            RespostaForumModel? relatedRespostaForum = await respostaforumRepository.GetRespostaForumById(forumId);
-
-            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId);
+            RespostaForumModel? relatedRespostaForum = await _respostaForumRepository.GetRespostaForumById(forumId);
+            UsuarioModel? relatedUsuario = await _usuarioRepository.GetUsuarioById(usuarioId);
 
             if (relatedRespostaForum is null)
             {
@@ -528,23 +500,22 @@ namespace StudyLabAPI.Services.Application.Forum
                 respostaForum = relatedRespostaForum,
                 usuario = relatedUsuario
             };
-            bool returnCheckForumExists = await forumRepository.VerifyForumCreatedWithId(respostaForumModel);
+            bool returnCheckForumExists = await _forumRepository.VerifyForumCreatedWithId(respostaForumModel);
             return returnCheckForumExists;
         }
 
         public async Task<List<ForumModel?>> GetForumByTopico(RegisteredTopicoDiscussaoRequestModel topico)
         {
-            TopicoDiscussaoModel? relatedTopico = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topico.idTopico);
+            TopicoDiscussaoModel? relatedTopico = await _topicoDiscussaoRepository.GetTopicosDiscussaoById(topico.idTopico);
 
             if (relatedTopico is null)
             {
                 throw new Exception("Tópico não encontrado");
             }
 
-            List<ForumModel> forumLista = await forumRepository.GetForumByTopico(relatedTopico);
+            List<ForumModel> forumLista = await _forumRepository.GetForumByTopico(relatedTopico);
 
             return forumLista;
         }
-
     }
 }
