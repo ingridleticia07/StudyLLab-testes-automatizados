@@ -124,8 +124,21 @@ namespace StudyLabAPI.Services.Application.Forum
             //passar id 
             int disciplinaId = topicoDiscussao.disciplina;
 
-            DisciplinaModel? relatedDisciplina = await DisciplinaRepository.GetDisciplinaByIdForUpdateTopico(disciplinaId, true);
-            UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(topicoDiscussao.idUsuario, true);
+            DisciplinaModel? relatedDisciplina =
+                await DisciplinaRepository.GetDisciplinaByIdForUpdateTopico(disciplinaId, true);
+
+            UsuarioModel? relatedUsuario =
+                await usuarioRepository.GetUsuarioById(topicoDiscussao.idUsuario, true);
+
+            if (relatedDisciplina is null)
+            {
+                throw new Exception("Disciplina não encontrada");
+            }
+
+            if (relatedUsuario is null)
+            {
+                throw new Exception("Usuário não encontrado");
+            }
 
             TopicoDiscussaoModel NovotopicoDiscussao = new()
             {
@@ -149,10 +162,27 @@ namespace StudyLabAPI.Services.Application.Forum
 
             TopicoDiscussaoModel? topicoDiscussaoForUpdate = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoDiscussaoModel.idTopico);
 
-            UsuarioModel usuario = await usuarioRepository.GetUsuarioById(topicoDiscussaoModel.idUsuario);
+            UsuarioModel? usuario = await usuarioRepository.GetUsuarioById(topicoDiscussaoModel.idUsuario);
+
+            if (relatedDisciplina is null)
+            {
+                throw new Exception("Disciplina não encontrada");
+            }
+
+            if (topicoDiscussaoForUpdate is null)
+            {
+                throw new Exception("Tópico não encontrado");
+            }
+
+            if (usuario is null)
+            {
+                throw new Exception("Usuário não encontrado");
+            }
 
             if (!usuario.tipoUsuario.Equals(UserRole.Admin) && usuario.idUsuario != topicoDiscussaoModel.idUsuario)
+            {
                 throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
+            }
 
             TopicoDiscussaoModel topicoUpdated = new()
             {
@@ -241,6 +271,11 @@ namespace StudyLabAPI.Services.Application.Forum
 
             TopicoDiscussaoModel? relatedTopico = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topicoId);
 
+            if (relatedTopico is null)
+            {
+                throw new Exception("Tópico não encontrado");
+            }
+
             RespostaForumModel respostaForumModel = new()
             {
                 idResposta = respostaForum.idResposta,
@@ -248,9 +283,6 @@ namespace StudyLabAPI.Services.Application.Forum
                 dataResposta = respostaForum.dataResposta,
                 topicoDiscussao = relatedTopico
             };
-            bool returnCheckrespostaForumExistsWithId = await respostaforumRepository.VerifyRespostaForumExistsWithId(respostaForumModel);
-            return returnCheckrespostaForumExistsWithId;
-        }
 
         public async Task<RegisteredRespostaForumModel> CreateRespostaForum(RegisteredRespostaForumModel respostaForum)
         {
@@ -263,6 +295,16 @@ namespace StudyLabAPI.Services.Application.Forum
 
             UsuarioModel? relatedUsuario =
                 await usuarioRepository.GetUsuarioById(UsuarioId, true);
+
+            if (relatedTopicoDiscussao is null)
+            {
+                throw new Exception("Tópico não encontrado");
+            }
+
+            if (relatedUsuario is null)
+            {
+                throw new Exception("Usuário não encontrado");
+            }
 
             RespostaForumModel NovoRespostaForum = new()
             {
@@ -290,8 +332,20 @@ namespace StudyLabAPI.Services.Application.Forum
             UsuarioModel? relatedUsuario =
                 await usuarioRepository.GetUsuarioById(UsuarioId);
 
+            if (relatedTopicoDiscussao is null)
+            {
+                throw new Exception("Tópico não encontrado");
+            }
+
+            if (relatedUsuario is null)
+            {
+                throw new Exception("Usuário não encontrado");
+            }
+
             if (!relatedUsuario.tipoUsuario.Equals(UserRole.Admin) && relatedTopicoDiscussao.usuario.idUsuario != respostaForum.usuario)
+            {
                 throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
+            }
 
             RespostaForumModel updatedRespostaForum = new()
             {
@@ -309,7 +363,12 @@ namespace StudyLabAPI.Services.Application.Forum
 
         public async Task DeleteRespostaForum(int idRespostaForum, int idUsuario)
         {
-            RespostaForumModel repostaForum = await respostaforumRepository.GetRespostaForumById(idRespostaForum);
+            RespostaForumModel? repostaForum = await respostaforumRepository.GetRespostaForumById(idRespostaForum);
+
+            if (repostaForum is null)
+            {
+                throw new Exception("Resposta não encontrada");
+            }
 
             if (!repostaForum.usuario.tipoUsuario.Equals(UserRole.Admin) && repostaForum.usuario.idUsuario != idUsuario)
                 throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
@@ -333,6 +392,21 @@ namespace StudyLabAPI.Services.Application.Forum
 
             UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId);
 
+            if (relatedRespostaForum is null)
+            {
+                throw new Exception("Resposta não encontrada");
+            }
+
+            if (relatedTopicoDiscussao is null)
+            {
+                throw new Exception("Tópico não encontrado");
+            }
+
+            if (relatedUsuario is null)
+            {
+                throw new Exception("Usuário não encontrado");
+            }
+
             ForumModel NovoForum = new()
             {
                 respostaForum = relatedRespostaForum,
@@ -350,6 +424,16 @@ namespace StudyLabAPI.Services.Application.Forum
             RespostaForumModel? relatedRespostaForum = await respostaforumRepository.GetRespostaForumById(forum.respostaForum);
 
             UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(forum.usuario);
+
+            if (relatedRespostaForum is null)
+            {
+                throw new Exception("Resposta não encontrada");
+            }
+
+            if (relatedUsuario is null)
+            {
+                throw new Exception("Usuário não encontrado");
+            }
 
             if (!relatedRespostaForum.usuario.tipoUsuario.Equals(UserRole.Admin) && relatedRespostaForum.usuario.idUsuario != forum.usuario)
                 throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
@@ -369,13 +453,12 @@ namespace StudyLabAPI.Services.Application.Forum
             return (forumForUpdate);
         }
 
-        public async Task<List<ForumModel>> GetAllForums()
-        {
-            List<ForumModel> forumModelLista = await forumRepository.GetAllForums();
-            // You should map DisciplinaModel to DisciplinaReadModel and return the list
+            public async Task<List<ForumModel>> GetAllForums()
+            {
+                List<ForumModel> forumModelLista = await forumRepository.GetAllForums();
 
-            return forumModelLista;
-        }
+                return forumModelLista;
+            }
 
         public async Task DeleteForum(ForumModel forum)
         {
@@ -392,11 +475,21 @@ namespace StudyLabAPI.Services.Application.Forum
 
             int topicoId = forum.topicoDiscussao;
 
-            int usuarioId = forum.respostaForum;
+            int usuarioId = forum.usuario;
 
             RespostaForumModel? relatedRespostaForum = await respostaforumRepository.GetRespostaForumById(forumId);
 
             UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId);
+
+            if (relatedRespostaForum is null)
+            {
+                throw new Exception("Resposta não encontrada");
+            }
+
+            if (relatedUsuario is null)
+            {
+                throw new Exception("Usuário não encontrado");
+            }
 
             ForumModel respostaForumModel = new()
             {
@@ -413,11 +506,21 @@ namespace StudyLabAPI.Services.Application.Forum
 
             int topicoId = forum.topicoDiscussao;
 
-            int usuarioId = forum.respostaForum;
+            int usuarioId = forum.usuario;
 
             RespostaForumModel? relatedRespostaForum = await respostaforumRepository.GetRespostaForumById(forumId);
 
             UsuarioModel? relatedUsuario = await usuarioRepository.GetUsuarioById(usuarioId);
+
+            if (relatedRespostaForum is null)
+            {
+                throw new Exception("Resposta não encontrada");
+            }
+
+            if (relatedUsuario is null)
+            {
+                throw new Exception("Usuário não encontrado");
+            }
 
             ForumModel respostaForumModel = new()
             {
@@ -432,6 +535,11 @@ namespace StudyLabAPI.Services.Application.Forum
         public async Task<List<ForumModel?>> GetForumByTopico(RegisteredTopicoDiscussaoRequestModel topico)
         {
             TopicoDiscussaoModel? relatedTopico = await topicoDiscussaoRepository.GetTopicosDiscussaoById(topico.idTopico);
+
+            if (relatedTopico is null)
+            {
+                throw new Exception("Tópico não encontrado");
+            }
 
             List<ForumModel> forumLista = await forumRepository.GetForumByTopico(relatedTopico);
 
