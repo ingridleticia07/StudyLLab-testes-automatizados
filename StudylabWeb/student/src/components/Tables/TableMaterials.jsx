@@ -96,7 +96,7 @@ const TableMaterials = ({ data, currentPage, setCurrentPage, setIterationData,ha
                                 <td className='px-4 py-2 border-b'>
                                     {d.usuario.nomeUsuario}
                                 </td>
-                                <td className='px-4 py-2 border-b'>{tipoMaterial[d.tipoMaterial]}</td>
+                                <td className='px-4 py-2 border-b'>{tipoMaterial[d.tipoMaterial - 1]}</td>
                                 <td className='px-4 py-2 border-b'>
                                     <StatusTag status={d.status} />
                                 </td>
