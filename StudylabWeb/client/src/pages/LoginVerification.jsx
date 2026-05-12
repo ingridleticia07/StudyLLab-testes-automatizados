@@ -33,7 +33,7 @@ const LoginVerification = () => {
             try {
                 setIsLoading(true);
                 await activateUserWithCode(code);
-                window.location.href = 'https://localhost:5175/'
+                window.location.href = 'https://student.studyllab.com.br/'
                 //alterar a rota de navegação, para a dashboard de usuário, quando a mesma for criada.
                 setIsFormSubmited(false);
                 setShowError(false);
