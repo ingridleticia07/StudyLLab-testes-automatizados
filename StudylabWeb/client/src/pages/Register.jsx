@@ -217,7 +217,7 @@ const Register = () => {
             <div className="w-full text-center mt-5">
               <p>
                 Já tem uma conta?{' '}
-                <Link to="/" className="text-americanOrange-500 hover:underline">
+                <Link to="/login" className="text-americanOrange-500 hover:underline">
                   Entre aqui
                 </Link>
               </p>

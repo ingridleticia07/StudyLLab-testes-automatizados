@@ -8,6 +8,9 @@ import { icons } from '../assets/assets';
 import {activateUserWithCode, resendConfirmationEmail} from "../../../platform/repository/auth";
 import AlertRegisterUserError from '../components/Alerts/AlertRegisterUserError';
 import Loading from '../components/Loading/Loading';
+import {
+  STUDENT_ENDPOINT
+} from '../../../platform/repository/auth.js';
 
 const LoginVerification = () => {
     const [code, setCode] = useState('');
@@ -33,7 +36,7 @@ const LoginVerification = () => {
             try {
                 setIsLoading(true);
                 await activateUserWithCode(code);
-                window.location.href = 'https://student.studyllab.com.br/'
+                window.location.href = STUDENT_ENDPOINT;
                 //alterar a rota de navegação, para a dashboard de usuário, quando a mesma for criada.
                 setIsFormSubmited(false);
                 setShowError(false);
