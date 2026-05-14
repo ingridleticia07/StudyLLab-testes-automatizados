@@ -9,10 +9,15 @@ import { getUserInfo, cleanUserInfo } from "./user.js";
 import {cleanUserCredentials} from "../business/login";
 
 export const AUTH_TOKEN = "authToken";
+export const LAST_USER_LOGIN = "email-user";
+export const LOGIN_ENDPOINT = 'https://studyllab.com.br/login';
+export const STUDENT_ENDPOINT = 'https://student.studyllab.com.br/';
+export const ADMIN_ENDPOINT = 'https://admin.studyllab.com.br/';
+
 const AUTH_VARIABLE = "idUser";
 const AUTH_ENDPOINT = "/auth";
 const USER_INFO_STORAGE_KEY_TIME = "timeStorageKey";
-export const LAST_USER_LOGIN = "email-user";
+const domain = "domain=.studyllab.com.br";
 
 export async function login(email, password) {
   try {
@@ -224,7 +229,6 @@ async function saveUserCredentials(tokenJwt, idUser, emailUser) {
     const expireDate = new Date();
     expireDate.setDate(expireDate.getDate() + 1);
     const expires = `expires=${expireDate.toUTCString()}`;
-    const domain = "domain=.studyllab.com.br";
     const path = "path=/";
 
     document.cookie = `id-user=${idUser}; ${path}; ${domain}; ${expires}; Secure; SameSite=None`;
@@ -270,7 +274,6 @@ function hasExpired(timestampStr, expiryHours = 24) {
 }
 
 export function logoutSession() {
-  const domain = "domain=.studyllab.com.br";
   const path = "path=/";
 
   document.cookie.split(';').forEach(cookie => {

@@ -15,6 +15,7 @@ import {
   authTokenIsValid,
   saveDashboardSessionInfos,
   logoutSession,
+  LOGIN_ENDPOINT
 } from '../../platform/repository/auth.js';
 
 function App() {
@@ -39,7 +40,7 @@ function App() {
       setHasAlerted(true);
       alert('Sua sessão expirou. Logue novamente!');
       logoutSession();
-      window.location.href = 'https://studyllab.com.br/';
+      window.location.href = LOGIN_ENDPOINT;
     }
       
   }, [authStatus]);

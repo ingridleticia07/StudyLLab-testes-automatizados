@@ -13,10 +13,10 @@ const Navbar = () => {
                 <Link to="/inicio">Study<strong>Lab</strong></Link>
             </div>
             <div className=" hidden lg:flex items-center space-x-6 lg:text-sm xl:text-base " >
-                <NavLink to="/inicio" text="Início" link/>
+                <NavLink to="/" text="Início" link/>
                 <NavLink to="/sobre" text="Sobre" link/>
                 <NavLink to="/contato " text="Contato" link/>
-                <NavLink to="/" text="Entrar na Conta" login />
+                <NavLink to="/login" text="Entrar na Conta" login />
                 <NavLink to="/cadastro" text="Criar minha conta" cadastro />
             </div>
 

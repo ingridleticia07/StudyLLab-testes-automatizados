@@ -2,6 +2,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import SidebarItem from '../SidebarItem/SidebarItem';
 import { icons } from '../../assets/assets';
 import { logoutSession } from '../../../../platform/repository/auth';
+import {
+  LOGIN_ENDPOINT
+} from '../../../../platform/repository/auth.js';
 
 const Sidebar = ({ isMobile = false }) => {
   const location = useLocation();
@@ -11,7 +14,7 @@ const Sidebar = ({ isMobile = false }) => {
     const confirmed = window.confirm('Clique em ok para sair!');
     if (confirmed) {
       logoutSession();
-      window.location.href = 'https://studyllab.com.br/';
+      window.location.href = LOGIN_ENDPOINT;
     }
   };
 
