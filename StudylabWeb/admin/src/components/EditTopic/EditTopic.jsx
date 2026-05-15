@@ -172,6 +172,7 @@ const EditTopic = ({ handleCancel, setIterationData, currentPage,selectDisciplin
               type='submit'
               className='border-2 border-americanOrange-500 bg-americanOrange-500 text-white px-3 py-1 rounded-md hover:bg-americanOrange-600 hover:border-americanOrange-600'
               aria-label='Cadastrar nova disciplina'
+              disabled={state.showLoader}
             >
               Cadastrar
             </button>

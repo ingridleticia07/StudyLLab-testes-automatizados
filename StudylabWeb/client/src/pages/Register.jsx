@@ -7,6 +7,7 @@ import SelectField from '../components/SelectField/SelectField';
 import VisibilityButton from '../components/Buttons/VisibilityButton';
 import PasswordValidation from '../components/PasswordValidation/PasswordValidation';
 import Button from '../components/Buttons/Button';
+import ButtonActivate from '../components/Buttons/ButtonActivate';
 import AlertRegisterUserError from '../components/Alerts/AlertRegisterUserError';
 import Loading from '../components/Loading/Loading';
 import { register } from '../../../platform/repository/auth';
@@ -192,7 +193,7 @@ const Register = () => {
 
               <PasswordValidation password={password} />
 
-              <Button text="Continuar meu cadastro" type="submit" disabled={!isFormValid} />
+              <Button text="Continuar meu cadastro" type="submit" disabled={!isFormValid || showLoader} />
 
               <div className="flex gap-2 text-start w-full mt-3">
                 <input

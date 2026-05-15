@@ -51,10 +51,12 @@ const RegisterUserModal = ({ handleCancel , setIterationData, currentPage}) => {
   };
 
   const isEmailValid = formData.email.endsWith('@alu.ufc.br') || formData.email.endsWith('@ufc.br');
+  
   const isPasswordStrong = formData.senha.length >= 8 &&
-    /[A-Z]/.test(formData.senha) &&
-    /[a-z]/.test(formData.senha) &&
-    /[0-9]/.test(formData.senha);
+      /[A-Z]/.test(formData.senha) &&
+      /[a-z]/.test(formData.senha) &&
+      /[0-9]/.test(formData.senha);
+
   const isConfirmMatch = formData.senha === formData.confirmarSenha;
 
   const isFormValid = () => {
@@ -70,13 +72,14 @@ const RegisterUserModal = ({ handleCancel , setIterationData, currentPage}) => {
   };
 
   const handleSubmit = async (e) => {
+    alert(isPasswordStrong)
     e.preventDefault();
     setState((prev) => ({ ...prev, isSubmitting: true }));
 
     if (!isFormValid()) return;
 
     try {
-      console.log(formData.role)
+      
       setState((prev) => ({ ...prev, showLoader: true }));
       await registerAdminOrProf(
         formData.nome,
@@ -210,7 +213,7 @@ const RegisterUserModal = ({ handleCancel , setIterationData, currentPage}) => {
               icon={icons.padlock}
               maxLength={60}
             />
-            {requiredError(formData.senha.length > 0, '*Insira a senha')}
+            {requiredError(isPasswordStrong, '*A senha precisa ter no mínimo 8 caracteres e deve conter números e letras minúsculas e maiúsculas')}
           </div>
 
           <div className="flex flex-col md:flex-row items-center md:justify-end gap-3 md:gap-5 col-span-1 md:col-span-2 mt-3">
@@ -224,7 +227,11 @@ const RegisterUserModal = ({ handleCancel , setIterationData, currentPage}) => {
             </button>
             <button
               type="submit"
-              className="border-2 border-americanOrange-500 bg-americanOrange-500 text-white px-3 py-1 rounded-md hover:bg-americanOrange-600 hover:border-americanOrange-600"
+              className={`border-2 border-americanOrange-500 bg-americanOrange-500 text-white px-3 py-1 rounded-md hover:bg-americanOrange-600 hover:border-americanOrange-600 
+                ${state.showLoader 
+                    ? 'opacity-50 cursor-not-allowed' 
+                    : 'hover:bg-americanOrange-600'
+                }`}              
               aria-label="Cadastrar novo usuário"
             >
               Cadastrar

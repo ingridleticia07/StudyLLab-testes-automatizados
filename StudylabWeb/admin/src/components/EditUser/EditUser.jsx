@@ -25,6 +25,18 @@ const statusUserOptions = [
   {value:'false', label:'Inativo'}
 ];
 
+// Função para validar senha forte
+const isPasswordStrong = (password) => {
+  // Se a senha estiver vazia, não precisa validar (campo opcional)
+  if (password.length === 0) return true;
+  
+  // Se tiver conteúdo, valida os critérios
+  return password.length >= 8 &&
+    /[A-Z]/.test(password) &&
+    /[a-z]/.test(password) &&
+    /[0-9]/.test(password);
+};
+
 const EditUser = ({ row, handleClose, setIterationData }) => {
   
   const initialFormData = {
@@ -40,6 +52,7 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
   
   const [formData, setFormData] = useState(initialFormData);
   const [originalFormData] = useState(initialFormData);
+  const [passwordModified, setPasswordModified] = useState(false);
   
   const [state, setState] = useState({
     showError: false,
@@ -50,8 +63,19 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
   
   const handleChange = (field) => (e) => {
     setFormData({ ...formData, [field]: e.target.value });
+    
+    // Marcar se o campo de senha foi modificado
+    if (field === 'password') {
+      setPasswordModified(true);
+    }
   };
 
+  // Verifica se pelo menos um campo foi alterado
+  const hasChanges = () => {
+    return JSON.stringify(formData) !== JSON.stringify(originalFormData);
+  };
+
+  // Verifica se os campos obrigatórios estão preenchidos
   const isFormValid = () => {
     return (
       !isEmptyString(formData.nome) &&
@@ -62,11 +86,21 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
     );
   };
 
+  // Verifica se a senha é válida (se foi modificada)
+  const isPasswordValid = () => {
+    // Se a senha não foi modificada, é válida
+    if (!passwordModified) return true;
+    
+    // Se foi modificada, valida o formato
+    return isPasswordStrong(formData.password);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setState((prev) => ({ ...prev, isSubmitting: true, showError: false }));
 
-    if (JSON.stringify(formData) === JSON.stringify(originalFormData)) {
+    // Verifica se houve alguma alteração
+    if (!hasChanges()) {
       setState((prev) => ({
         ...prev,
         errorMessage: 'Nenhuma alteração detectada.',
@@ -76,6 +110,7 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
       return;
     }
 
+    // Verifica campos obrigatórios
     if (!isFormValid()) {
       setState((prev) => ({
         ...prev,
@@ -86,10 +121,27 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
       return;
     }
 
+    // Verifica se a senha é válida (se foi alterada)
+    if (!isPasswordValid()) {
+      setState((prev) => ({
+        ...prev,
+        errorMessage: 'A senha precisa ter no mínimo 8 caracteres e deve conter números, letras minúsculas e maiúsculas.',
+        showError: true,
+        isSubmitting: false,
+      }));
+      return;
+    }
+
     setState((prev) => ({ ...prev, showLoader: true }));
 
+    // Remove o campo password se estiver vazio para não enviar senha vazia
+    const dataToSubmit = { ...formData };
+    if (!dataToSubmit.password) {
+      delete dataToSubmit.password;
+    }
+
     try {
-      await changeUser(formData); // precisa existir no seu repo
+      await changeUser(dataToSubmit);
       setIterationData((prev) => prev + 1);
       handleClose();
     } catch (error) {
@@ -111,6 +163,7 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
       placeholder: 'Digite seu nome',
       value: formData.nome,
       type: 'text',
+      required: true,
     },
     {
       id: 'curso',
@@ -119,6 +172,7 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
       value: formData.curso,
       options: cursoOptions,
       type: 'select',
+      required: true,
     },
     {
       id: 'status',
@@ -136,6 +190,7 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
       placeholder: 'Matrícula/Siape',
       value: formData.matricula,
       type: 'text',
+      required: true,
     },
     {
       id: 'email',
@@ -144,6 +199,7 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
       placeholder: 'email@alu.ufc.br',
       value: formData.email,
       type: 'text',
+      required: true,
     },
     {
       id: 'password',
@@ -152,8 +208,10 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
       placeholder: 'Nova Senha',
       value: formData.password,
       type: 'text',
+      required: false, // Campo opcional
     }
   ];
+  
   return (
     <div className='fixed inset-0 flex items-center justify-center z-50 bg-opacity-30 bg-gray-300'>
       <div className='bg-white p-7 rounded-md shadow-lg w-full max-w-2xl'>
@@ -173,37 +231,64 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
 
           {fields.map((field) => (
             <div className="flex flex-col" key={field.id}>
-                {
-                    field.type == "text" &&(
-                      <InputField
-                        id={field.id}
-                        name={field.name}
-                        label={field.label}
-                        placeholder={field.placeholder}
-                        value={field.value}
-                        type={field.type}
-                        onChange={handleChange(field.name)}
-                    />
-                  )}
-                  {field.type != "text" &&(
-                      <SelectField
-                        id={field.id}
-                        name={field.name}
-                        label={field.label}
-                        options={field.options}
-                        value={field.value}
-                        onChange={handleChange(field.name)}
-                        fisrtField={field.fisrtField}
-                      />
-                  )
-                }
-                {isEmptyString(field.value) && state.isSubmitting && (
+              {field.type == "text" && (
+                <>
+                  <InputField
+                    id={field.id}
+                    name={field.name}
+                    label={field.label}
+                    placeholder={field.placeholder}
+                    value={field.value}
+                    type={field.type}
+                    onChange={handleChange(field.name)}
+                  />
+                  
+                  {/* Validação para campo de senha */}
+                  {field.name === 'password' && 
+                   passwordModified && 
+                   state.isSubmitting && 
+                   !isPasswordStrong(formData.password) && 
+                   formData.password.length > 0 && (
                     <h5 className='text-red-500 text-sm self-start'>
-                    *Insira {field.name.toLowerCase() === 'quantidade' ? 'a' : 'o'} {field.label.toLowerCase()}
+                      *A senha precisa ter no mínimo 8 caracteres e deve conter números e letras minúsculas e maiúsculas
                     </h5>
-                )}
+                  )}
+                  
+                  {/* Validação para campos obrigatórios (exceto senha que é opcional) */}
+                  {isEmptyString(field.value) && 
+                   state.isSubmitting && 
+                   field.required && (
+                    <h5 className='text-red-500 text-sm self-start'>
+                      *Insira {field.name.toLowerCase() === 'quantidade' ? 'a' : 'o'} {field.label.toLowerCase()}
+                    </h5>
+                  )}
+                </>
+              )}
+              
+              {field.type != "text" && (
+                <>
+                  <SelectField
+                    id={field.id}
+                    name={field.name}
+                    label={field.label}
+                    options={field.options}
+                    value={field.value}
+                    onChange={handleChange(field.name)}
+                    fisrtField={field.fisrtField}
+                  />
+                  
+                  {/* Validação para selects obrigatórios */}
+                  {isEmptyString(field.value) && 
+                   state.isSubmitting && 
+                   field.required && (
+                    <h5 className='text-red-500 text-sm self-start'>
+                      *Selecione {field.name.toLowerCase() === 'quantidade' ? 'a' : 'o'} {field.label.toLowerCase()}
+                    </h5>
+                  )}
+                </>
+              )}
             </div>
-        ))}
+          ))}
 
           <div className="flex flex-col md:flex-row items-center md:justify-end gap-3 md:gap-5 col-span-1 md:col-span-2">
             <button
@@ -218,6 +303,7 @@ const EditUser = ({ row, handleClose, setIterationData }) => {
               type='submit'
               className='border-2 border-americanOrange-500 bg-americanOrange-500 text-white px-3 py-1 rounded-md hover:bg-americanOrange-600 hover:border-americanOrange-600'
               aria-label='Salvar edição de usuário'
+              disabled={state.showLoader}
             >
               Salvar
             </button>
