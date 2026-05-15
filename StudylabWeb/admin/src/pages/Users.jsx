@@ -64,7 +64,7 @@ const Users = () => {
                             setUserStatusFilter={setUserStatusFilter}  
                             setUserTypeFilter={setUserTypeFilter}
                             setCurrentPage={setCurrentPage}
-/>
+                        />
                     </div>
 
                     <Button
