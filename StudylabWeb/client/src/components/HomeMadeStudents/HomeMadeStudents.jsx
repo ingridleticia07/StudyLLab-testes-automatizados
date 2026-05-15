@@ -49,6 +49,11 @@ const HomeMadeStudents = () => {
           <img src={studentsImages.student18} alt="Student 18" className="w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 xl:w-32 xl:h-32 rounded-full" />
           <img src={studentsImages.student19} alt="Student 19" className="w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 xl:w-32 xl:h-32 rounded-full" />
         </div>
+
+        <div className="flex justify-center gap-8 sm:gap-10 md:gap-12 xl:gap-16 xs:pr-11 sm:pr-16 md:pr-20 xl:pr-24">
+          <img src={studentsImages.student25} alt="Student 25" className="w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 xl:w-32 xl:h-32 rounded-full" />
+          <img src={studentsImages.student26} alt="Student 26" className="w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 xl:w-32 xl:h-32 rounded-full" />
+        </div>
       </div>
     </section>
   );

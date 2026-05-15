@@ -72,7 +72,6 @@ const RegisterUserModal = ({ handleCancel , setIterationData, currentPage}) => {
   };
 
   const handleSubmit = async (e) => {
-    alert(isPasswordStrong)
     e.preventDefault();
     setState((prev) => ({ ...prev, isSubmitting: true }));
 
