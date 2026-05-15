@@ -1,20 +1,30 @@
 import { useContext, useState } from 'react';
+
 import { icons } from '../../assets/assets';
+
 import Loading from '../Loading/Loading';
 import TableHead from './TableHead';
 import PopUp from '../PopUp/PopUp';
-
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import EditTopic from '../EditTopic/EditTopic';
-import { StudylabContext } from '../../context/StudylabContext';
-import {deleteTopicoDisciplina} from '../../../../platform/repository/topico';
-import { toast } from 'react-toastify';
 
-const TableTopics = ({ data, selectDisciplinas, currentPage, setCurrentPage, setIterationData, hasData }) => {
-    
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import { StudylabContext } from '../../context/StudylabContext';
+
+import { deleteTopicoDisciplina } from '../../../../platform/repository/topico';
+
+const TableTopics = ({
+    data,
+    selectDisciplinas,
+    currentPage,
+    setCurrentPage,
+    setIterationData,
+    hasData
+}) => {
+
     const headersColumns = [
-        'Tópico',
+        'tópico',
         'nome da disciplina',
         'data',
         'professor(a)',
@@ -25,124 +35,214 @@ const TableTopics = ({ data, selectDisciplinas, currentPage, setCurrentPage, set
     const [showPopUpDelete, setShowPopUpDelete] = useState(false);
     const [showPopUpEdit, setShowPopUpEdit] = useState(false);
     const [selectedItem, setSelectedItem] = useState();
+
     const { searchSubject } = useContext(StudylabContext);
-    const maxPage = data.maxPage;
-    
+
+    const maxPage = data?.maxPage || 1;
+
     const onEdit = (item) => {
         setShowPopUpEdit(true);
-        setSelectedItem({
-            item
-        });
+        setSelectedItem({ item });
     };
 
     const onDelete = (id, key, name) => {
         setShowPopUpDelete(true);
+
         setSelectedItem({
             id,
             key,
             name,
         });
     };
-    
+
     const handlePageChange = (newPage) => {
         if (newPage >= 1 && newPage <= maxPage) {
             setCurrentPage(newPage);
         }
     };
 
-    const handleDeleteRegister = async(identifier,key) => {
+    const handleDeleteRegister = async (identifier) => {
         try {
             await deleteTopicoDisciplina(identifier);
+
             setIterationData((prev) => prev + 1);
-            toast.success('Item Deletado', {
+
+            toast.success('Item deletado', {
                 theme: 'colored',
                 position: 'top-center',
                 autoClose: 1300,
-            })
+            });
+
         } catch (error) {
-            toast.success(error, {
+            toast.error(error?.message || 'Erro ao deletar tópico', {
                 theme: 'dark',
                 position: 'top-center',
-                autoClose: 1300,
+                autoClose: 4000,
             });
         }
-    }
+    };
 
     return (
-        <div className="overflow-auto max-h-[350px] rounded-md">
-            <table className="w-full min-w-full text-left border-separate border-spacing-0 table-auto">
-                <TableHead headers={headersColumns} />
-                {data.topicos && data.topicos.length > 0 ? (
-                    <tbody>
-                        {data.topicos.map((d, index) => (
-                            <tr key={index}>
-                                <td className='px-4 py-2 border-b'>
-                                    {d.nomeTopico}
-                                </td>
-                                <td className='px-4 py-2 border-b'>
-                                    {d.disciplina.nomeDisciplina}
-                                </td>
-                                <td className='px-4 py-2 border-b'>
-                                    {new Date(d.dataTopico).toLocaleDateString('pt-BR')}
-                                </td>
-                                <td className='px-4 py-2 border-b'>
-                                    {d.disciplina.professorDisciplina} 
-                                </td>
-                                <td className='px-4 py-2 border-b'>
-                                    {d.usuario.nomeUsuario}
-                                </td>
-                                <td className='px-4 py-2 border-b'>
-                                    <div className='flex gap-5'>
-                                        <button aria-label='editar disciplina'>
-                                            <img
-                                                src={icons.pencil}
-                                                alt='lapis'
+        <div className="flex flex-col max-h-full border rounded-xl overflow-hidden">
+
+            {/* Área scrollável — scroll fica confinado aqui */}
+            <div className="flex-1 overflow-auto min-h-0">
+
+                <table className="w-full min-w-[900px] table-fixed border-separate border-spacing-0">
+
+                    <TableHead headers={headersColumns} />
+
+                    {data?.topicos?.length > 0 ? (
+
+                        <tbody>
+
+                            {data.topicos.map((d, index) => (
+
+                                <tr
+                                    key={d.idTopico || index}
+                                    className="bg-white hover:bg-gray-50"
+                                >
+
+                                    <td className="px-4 py-3 border-b break-words">
+                                        {d.nomeTopico}
+                                    </td>
+
+                                    <td className="px-4 py-3 border-b break-words">
+                                        {d.disciplina?.nomeDisciplina || 'N/A'}
+                                    </td>
+
+                                    <td className="px-4 py-3 border-b">
+                                        {new Date(d.dataTopico).toLocaleDateString('pt-BR')}
+                                    </td>
+
+                                    <td className="px-4 py-3 border-b break-words">
+                                        {d.disciplina?.professorDisciplina || 'N/A'}
+                                    </td>
+
+                                    <td className="px-4 py-3 border-b break-words">
+                                        {d.usuario?.nomeUsuario || 'N/A'}
+                                    </td>
+
+                                    <td className="px-4 py-3 border-b">
+                                        <div className="flex items-center justify-center gap-4">
+
+                                            <button
+                                                aria-label="editar tópico"
                                                 onClick={() => onEdit(d)}
-                                            />
-                                        </button>
-                                        <button
-                                            aria-label='deletar tópico'
-                                            onClick={() =>
-                                                onDelete(
-                                                    d.idTopico,
-                                                    'topicos',
-                                                    d.nomeTopico
-                                                )
-                                            }
-                                        >
-                                            <img
-                                                src={icons.deleteIcon}
-                                                alt='lixeira'
-                                            />
-                                        </button>
+                                            >
+                                                <img
+                                                    src={icons.pencil}
+                                                    alt="lapis"
+                                                    className="w-5 h-5"
+                                                />
+                                            </button>
+
+                                            <button
+                                                aria-label="deletar tópico"
+                                                onClick={() =>
+                                                    onDelete(
+                                                        d.idTopico,
+                                                        'topicos',
+                                                        d.nomeTopico
+                                                    )
+                                                }
+                                            >
+                                                <img
+                                                    src={icons.deleteIcon}
+                                                    alt="lixeira"
+                                                    className="w-5 h-5"
+                                                />
+                                            </button>
+
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            ))}
+
+                        </tbody>
+
+                    ) : (
+
+                        <tbody>
+                            <tr>
+                                <td
+                                    colSpan={headersColumns.length}
+                                    className="h-[300px]"
+                                >
+                                    <div className="flex items-center justify-center h-full w-full">
+                                        <Loading hasData={hasData} />
                                     </div>
                                 </td>
                             </tr>
-                        ))}
-                    </tbody>
-                ) : (
-                    <Loading hasData={hasData}/>
-                )}
-                <tfoot>
-                    {maxPage > 1 && (
-                        <tr>
-                        <td colSpan={headersColumns.length} className="px-4 py-2 sticky bottom-0 bg-gray-100 shadow-md text-center">
-                            {Array.from({ length: maxPage }, (_, i) => (
+                        </tbody>
+
+                    )}
+
+                </table>
+
+            </div>
+
+            {/* Paginação — sempre visível, nunca some com o scroll */}
+            {maxPage > 1 && (
+
+                <div className="flex items-center justify-center gap-2 border-t bg-white p-4 flex-wrap shrink-0">
+
+                    <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className={`
+                            w-9 h-9 rounded-full border
+                            flex items-center justify-center
+                            transition-colors duration-200
+                            ${currentPage === 1
+                                ? 'opacity-40 cursor-not-allowed'
+                                : 'hover:bg-gray-100'}
+                        `}
+                        aria-label="Página anterior"
+                    >
+                        ←
+                    </button>
+
+                    {Array.from(
+                        { length: maxPage },
+                        (_, i) => (
                             <button
                                 key={i + 1}
                                 onClick={() => handlePageChange(i + 1)}
-                                className={`w-8 h-8 rounded-full mx-1 ${
-                                currentPage === i + 1 ? 'bg-blue-500 text-white' : 'hover:bg-gray-200'
-                                }`}
+                                className={`
+                                    w-9 h-9 rounded-full
+                                    flex items-center justify-center
+                                    transition-colors duration-200
+                                    ${currentPage === i + 1
+                                        ? 'bg-americanOrange-500 text-white'
+                                        : 'hover:bg-gray-100'}
+                                `}
+                                aria-label={`Ir para página ${i + 1}`}
                             >
                                 {i + 1}
                             </button>
-                            ))}
-                        </td>
-                        </tr>
+                        )
                     )}
-                </tfoot>
-            </table>
+
+                    <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === maxPage}
+                        className={`
+                            w-9 h-9 rounded-full border
+                            flex items-center justify-center
+                            transition-colors duration-200
+                            ${currentPage === maxPage
+                                ? 'opacity-40 cursor-not-allowed'
+                                : 'hover:bg-gray-100'}
+                        `}
+                        aria-label="Próxima página"
+                    >
+                        →
+                    </button>
+
+                </div>
+            )}
 
             {showPopUpDelete && (
                 <PopUp
@@ -151,6 +251,7 @@ const TableTopics = ({ data, selectDisciplinas, currentPage, setCurrentPage, set
                     handleDeleteConfirmation={handleDeleteRegister}
                 />
             )}
+
             {showPopUpEdit && (
                 <EditTopic
                     handleCancel={() => setShowPopUpEdit(false)}
@@ -160,7 +261,9 @@ const TableTopics = ({ data, selectDisciplinas, currentPage, setCurrentPage, set
                     selectedItem={selectedItem}
                 />
             )}
-            <ToastContainer className='capitalize' />
+
+            <ToastContainer className="capitalize" />
+
         </div>
     );
 };

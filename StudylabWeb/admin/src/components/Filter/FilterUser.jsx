@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { icons } from '../../assets/assets';
 
-const UserFilter = ({ setUserStatusFiler, setUserTypeFilter, setCurrentPage }) => {
+const FilterUser = ({ setUserStatusFilter, setUserTypeFilter, setCurrentPage }) => {
   const [showStatus, setShowStatus] = useState(false);
   const [showType, setShowType] = useState(false);
 
@@ -46,7 +46,7 @@ const UserFilter = ({ setUserStatusFiler, setUserTypeFilter, setCurrentPage }) =
     document.addEventListener('mousedown', handleClickOutside);
 
     // define "Todos" como já selecionado ao carregar
-    setUserStatusFiler(selectedStatus.value);
+    setUserStatusFilter(selectedStatus.value);
     setUserTypeFilter(selectedType.value);
 
     return () => {
@@ -58,7 +58,7 @@ const UserFilter = ({ setUserStatusFiler, setUserTypeFilter, setCurrentPage }) =
     if (prevStatusFilter.current !== status.value) setCurrentPage(1);
 
     setSelectedStatus(status);
-    setUserStatusFiler(status.value);
+    setUserStatusFilter(status.value);
     setShowStatus(false);
 
     prevStatusFilter.current = status.value;
@@ -106,7 +106,6 @@ const UserFilter = ({ setUserStatusFiler, setUserTypeFilter, setCurrentPage }) =
                 >
                   {status.name}
                 </a>
-
               ))}
             </div>
           </div>
@@ -152,4 +151,4 @@ const UserFilter = ({ setUserStatusFiler, setUserTypeFilter, setCurrentPage }) =
   );
 };
 
-export default UserFilter;
+export default FilterUser;

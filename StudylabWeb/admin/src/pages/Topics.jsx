@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
+
 import Breadcrumb from '../components/Breadcrumb/Breadcrumb';
 import Button from '../components/Buttons/Button';
 import TableTopics from '../components/Tables/TableTopics';
 import RegisterTopic from '../components/RegisterTopic/RegisterTopic';
+import SubjectFilter from '../components/Filter/FilterSubject';
+
 import { getAllTopicosDisciplinaWithPagination } from "../../../platform/repository/topico";
 import { getAllDisciplinas } from "../../../platform/repository/disciplina";
-import SubjectFilter from '../components/Filter/FilterSubject';
 
 const Topics = () => {
     const [showRegister, setShowRegister] = useState(false);
@@ -14,69 +16,81 @@ const Topics = () => {
     const [selectDisciplinas, setSelectDisciplinas] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [iterationData, setIterationData] = useState(0);
-    const [ hasData, SetHasData ] = useState(true);
+    const [hasData, setHasData] = useState(true);
 
     useEffect(() => {
         const getTopicosDisciplinas = async () => {
-            
             try {
-                
                 const idDisciplina = disciplinaFilter || 0;
                 let currentPageFilter = currentPage || 1;
 
-                let topicosList = await getAllTopicosDisciplinaWithPagination(currentPageFilter, 10,idDisciplina);
+                const topicosList = await getAllTopicosDisciplinaWithPagination(
+                    currentPageFilter,
+                    10,
+                    idDisciplina
+                );
+
                 setTopicos(topicosList);
-                if(topicosList.topicoCount == 0)
-                    SetHasData(false);
-                else
-                    SetHasData(true);
+                setHasData(topicosList.topicoCount > 0);
 
-                let selectDisciplinas = await getAllDisciplinas();
-                    let options = [
-
+                const selectDisciplinas = await getAllDisciplinas();
+                const options = [
                     {
-                        value:0,
-                        label:"Todas as disciplinas"
+                        value: 0,
+                        label: "Todas as disciplinas"
                     },
                     ...selectDisciplinas.map(t => ({
                         value: t.idDisciplina,
                         label: t.nomeDisciplina
-                    })),
+                    }))
                 ];
-                setSelectDisciplinas(options); 
-                if(currentPage > topicosList.maxPage || currentPage == 0){
-                    currentPageFilter = topicosList.maxPage;
-                    setCurrentPage(currentPageFilter)
+                setSelectDisciplinas(options);
+
+                if (
+                    topicosList.maxPage &&
+                    currentPage > topicosList.maxPage &&
+                    topicosList.maxPage > 0
+                ) {
+                    setCurrentPage(topicosList.maxPage);
                 }
 
             } catch (error) {
-                console.log(error);
+                console.error('Erro ao carregar tópicos:', error);
+                setHasData(false);
             }
         };
+
         getTopicosDisciplinas();
-        
     }, [currentPage, disciplinaFilter, iterationData]);
 
     return (
-        <div className="flex flex-col h-full">
-            <Breadcrumb page="Disciplina" />
-            
-            <section className='rounded-xl bg-white px-4'>
-                <div className="flex flex-col md:flex-row md:flex-wrap items-center gap-2 px-0 md:px-2 py-4">
-                    <div className="flex flex-col md:flex-row items-start md:items-center gap-1 md:gap-4 flex-shrink-0 w-full md:w-auto mb-2 md:mb-0">
-                        <h1 className="text-3xl font-bold">Tópicos</h1>
-                        <SubjectFilter setDisciplinaFilter={setDisciplinaFilter} disciplinas={selectDisciplinas} setCurrentPage={setCurrentPage}/>
-                    </div>
-                    
-                    <div className="w-full md:w-auto md:flex-grow md:flex md:justify-end">
-                        <Button
-                            text="Cadastrar Tópico"
-                            handleClick={() => setShowRegister(true)}
-                            className="w-full md:w-auto"
+        <div className="flex flex-col h-full overflow-hidden">
+            <Breadcrumb page="Tópicos" />
+
+            <section className="flex flex-col bg-white rounded-xl p-4 max-h-full overflow-hidden min-h-0">
+
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4 shrink-0">
+
+                    <div className="flex flex-col gap-2">
+                        <h1 className="text-3xl font-bold">
+                            Tópicos
+                        </h1>
+
+                        <SubjectFilter
+                            setDisciplinaFilter={setDisciplinaFilter}
+                            disciplinas={selectDisciplinas}
+                            setCurrentPage={setCurrentPage}
                         />
                     </div>
+
+                    <Button
+                        text="Cadastrar Tópico"
+                        handleClick={() => setShowRegister(true)}
+                        className="w-full lg:w-auto"
+                    />
                 </div>
-                <div className="overflow-x-auto px-2 sm:px-6">
+
+                <div className="min-h-0 overflow-hidden">
                     <TableTopics
                         data={topicos}
                         selectDisciplinas={selectDisciplinas}

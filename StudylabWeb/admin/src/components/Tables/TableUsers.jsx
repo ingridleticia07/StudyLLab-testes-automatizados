@@ -1,164 +1,260 @@
-import { icons } from '../../assets/assets';
-import TableFoot from './TableFoot';
-import TableHead from './TableHead';
-import Loading from '../Loading/Loading';
 import { useState } from 'react';
+
+import { icons } from '../../assets/assets';
+
+import Loading from '../Loading/Loading';
+import TableHead from './TableHead';
 import PopUp from '../PopUp/PopUp';
-
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import StatusTagUser from '../StatusTag/StatusTagUser';
-import { deleteUser} from "../../../../platform/repository/user";
 import EditUser from '../EditUser/EditUser';
+import StatusTagUser from '../StatusTag/StatusTagUser';
 
-const TableUsers = ({ data, currentPage, setCurrentPage, setIterationData,hasData }) => {
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import { deleteUser } from "../../../../platform/repository/user";
+
+const TableUsers = ({
+    data,
+    currentPage,
+    setCurrentPage,
+    setIterationData,
+    hasData
+}) => {
+
     const headersColumns = [
-        'matricula',
+        'matrícula',
         'usuário(a)',
-        'Tipo',
-        'Status',
+        'tipo',
+        'status',
         'curso',
         'email',
         'ações',
     ];
-    const tipoUser = ['Aluno','Admin','Professor'];
-    const [showPopUp, setShowPopUp] = useState(false);
+
+    const tipoUser = ['Aluno', 'Admin', 'Professor'];
+    const maxPage = data?.maxPage || 1;
+
+    const [showPopUpDelete, setShowPopUpDelete] = useState(false);
     const [showPopUpEdit, setShowPopUpEdit] = useState(false);
     const [selectedItem, setSelectedItem] = useState();
-    const maxPage = data.maxPage;
 
     const onEdit = (item) => {
         setShowPopUpEdit(true);
-        setSelectedItem({
-            item
-        });
+        setSelectedItem({ item });
     };
 
     const onDelete = (id, key, name) => {
-        
+        setShowPopUpDelete(true);
+
         setSelectedItem({
             id,
             key,
             name,
         });
-        setShowPopUp(true);
     };
-    
+
     const handlePageChange = (newPage) => {
         if (newPage >= 1 && newPage <= maxPage) {
             setCurrentPage(newPage);
         }
     };
-    
-    const handleDeleteRegister = async(identifier) => {
+
+    const handleDeleteRegister = async (identifier) => {
         try {
             await deleteUser(identifier);
+
             setIterationData((prev) => prev + 1);
+
+            toast.success('Usuário deletado', {
+                theme: 'colored',
+                position: 'top-center',
+                autoClose: 1300,
+            });
+
         } catch (error) {
-            console.log(error)
+            toast.error(error?.message || 'Erro ao deletar usuário', {
+                theme: 'dark',
+                position: 'top-center',
+                autoClose: 4000,
+            });
         }
-    }
+    };
+
     return (
-        <div className="overflow-auto max-h-[350px] rounded-md">
-            <table className="w-full min-w-full text-left border-separate border-spacing-0 table-auto">
-                <TableHead headers={headersColumns} />
-                {data.users && data.users.length > 0 ? (
+        <div className="flex flex-col max-h-full border rounded-xl overflow-hidden">
+
+            {/* Área scrollável — scroll fica confinado aqui */}
+            <div className="flex-1 overflow-auto min-h-0">
+
+                <table className="w-full min-w-[900px] table-fixed border-separate border-spacing-0">
+
+                    <TableHead headers={headersColumns} />
+
                     <tbody>
-                        {data.users.map((d, index) => (
-                            <tr key={index} className='capitalize'>
-                                <td className='px-4 py-2 border-b'>
-                                    {d.matricula}
-                                </td>
-                                <td className='px-4 py-2 border-b'>
-                                    {d.username}
-                                </td>
-                                <td className='px-4 py-2 border-b'>
-                                    {tipoUser[d.role]}
-                                </td>
-                                <td className='px-4 py-2 border-b'>
-                                    <StatusTagUser status={d.active}/>
-                                </td>
-                                <td className='px-4 py-2 border-b'>
-                                    {d.curso.nome}
-                                </td>
-                                <td className='px-4 py-2 border-b'>
-                                    {d.email}
-                                </td>
-                                <td className='px-4 py-2 border-b'>
-                                    <div className='flex gap-5'>
-                                        
-                                        {/*<button aria-label='bloquear aluno'>
-                                            <img
-                                                src={icons.block}
-                                                alt='bloqueio'
-                                            />
-                                        </button>*/}
-                                        {
-                                            d.role == 0 &&(
-                                                <button
-                                                    aria-label='excluir aluno'
-                                                    onClick={() =>
-                                                        onDelete(d.id, 'usuarios', d.username)
-                                                    }
-                                                >
-                                                    <img
-                                                        src={icons.deleteIcon}
-                                                        alt='lixeira'
-                                                    />
-                                                </button>
-                                            )
-                                        }
-                                        {
-                                            d.role == 0 &&(
-                                                <button
-                                                    aria-label='editar aluno'
-                                                    onClick={() =>
-                                                        onEdit(d)
-                                                    }
-                                                >
-                                                    <img
-                                                        src={icons.pencil}
-                                                        alt='editar'
-                                                    />
-                                                </button>
-                                            )
-                                        }
-                                    </div>
+
+                        {data?.users?.length > 0 ? (
+
+                            data.users.map((d, index) => (
+
+                                <tr
+                                    key={d.id || index}
+                                    className="bg-white hover:bg-gray-50 capitalize"
+                                >
+
+                                    <td className="px-4 py-3 border-b">
+                                        {d.matricula}
+                                    </td>
+
+                                    <td className="px-4 py-3 border-b break-words">
+                                        {d.username}
+                                    </td>
+
+                                    <td className="px-4 py-3 border-b">
+                                        {tipoUser[d.role] || 'N/A'}
+                                    </td>
+
+                                    <td className="px-4 py-3 border-b">
+                                        <StatusTagUser status={d.active} />
+                                    </td>
+
+                                    <td className="px-4 py-3 border-b break-words">
+                                        {d.curso?.nome || 'N/A'}
+                                    </td>
+
+                                    <td className="px-4 py-3 border-b break-words">
+                                        {d.email}
+                                    </td>
+
+                                    <td className="px-4 py-3 border-b">
+                                        <div className="flex items-center justify-center gap-4">
+
+                                            {d.role === 0 && (
+                                                <>
+                                                    <button
+                                                        aria-label="editar usuário"
+                                                        onClick={() => onEdit(d)}
+                                                    >
+                                                        <img
+                                                            src={icons.pencil}
+                                                            alt="editar"
+                                                            className="w-5 h-5"
+                                                        />
+                                                    </button>
+
+                                                    <button
+                                                        aria-label="deletar usuário"
+                                                        onClick={() =>
+                                                            onDelete(
+                                                                d.id,
+                                                                'usuarios',
+                                                                d.username
+                                                            )
+                                                        }
+                                                    >
+                                                        <img
+                                                            src={icons.deleteIcon}
+                                                            alt="lixeira"
+                                                            className="w-5 h-5"
+                                                        />
+                                                    </button>
+                                                </>
+                                            )}
+
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            ))
+
+                        ) : (
+
+                            // CORREÇÃO AQUI: Loading dentro de uma única célula
+                            <tr>
+                                <td 
+                                    colSpan={headersColumns.length} 
+                                    className="text-center py-10"
+                                >
+                                    <Loading hasData={hasData} />
                                 </td>
                             </tr>
-                        ))}
-                    </tbody>
-                ) : (
-                    <Loading hasData={hasData}/>
-                )}
-                <tfoot>
-                    {maxPage > 1 && (
-                        <tr>
-                            <td colSpan={headersColumns.length} className="px-4 py-2 sticky bottom-0 bg-gray-100 shadow-md text-center">
-                                {Array.from({ length: maxPage }, (_, i) => (
-                                <button
-                                    key={i + 1}
-                                    onClick={() => handlePageChange(i + 1)}
-                                    className={`w-8 h-8 rounded-full mx-1 ${
-                                    currentPage === i + 1 ? 'bg-blue-500 text-white' : 'hover:bg-gray-200'
-                                    }`}
-                                >
-                                    {i + 1}
-                                </button>
-                                ))}
-                            </td>
-                        </tr>
-                    )}
-                </tfoot>
-            </table>
 
-            {showPopUp && (
+                        )}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {/* Paginação — sempre visível, nunca some com o scroll */}
+            {maxPage > 1 && (
+
+                <div className="flex items-center justify-center gap-2 border-t bg-white p-4 flex-wrap shrink-0">
+
+                    <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className={`
+                            w-9 h-9 rounded-full border
+                            flex items-center justify-center
+                            transition-colors duration-200
+                            ${currentPage === 1
+                                ? 'opacity-40 cursor-not-allowed'
+                                : 'hover:bg-gray-100'}
+                        `}
+                        aria-label="Página anterior"
+                    >
+                        ←
+                    </button>
+
+                    {Array.from(
+                        { length: maxPage },
+                        (_, i) => (
+                            <button
+                                key={i + 1}
+                                onClick={() => handlePageChange(i + 1)}
+                                className={`
+                                    w-9 h-9 rounded-full
+                                    flex items-center justify-center
+                                    transition-colors duration-200
+                                    ${currentPage === i + 1
+                                        ? 'bg-americanOrange-500 text-white'
+                                        : 'hover:bg-gray-100'}
+                                `}
+                                aria-label={`Ir para página ${i + 1}`}
+                            >
+                                {i + 1}
+                            </button>
+                        )
+                    )}
+
+                    <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === maxPage}
+                        className={`
+                            w-9 h-9 rounded-full border
+                            flex items-center justify-center
+                            transition-colors duration-200
+                            ${currentPage === maxPage
+                                ? 'opacity-40 cursor-not-allowed'
+                                : 'hover:bg-gray-100'}
+                        `}
+                        aria-label="Próxima página"
+                    >
+                        →
+                    </button>
+
+                </div>
+            )}
+
+            {showPopUpDelete && (
                 <PopUp
                     itemDelete={selectedItem}
-                    handleClose={() => setShowPopUp(false)}
+                    handleClose={() => setShowPopUpDelete(false)}
                     handleDeleteConfirmation={handleDeleteRegister}
                 />
             )}
+
             {showPopUpEdit && (
                 <EditUser
                     handleClose={() => setShowPopUpEdit(false)}
@@ -166,7 +262,9 @@ const TableUsers = ({ data, currentPage, setCurrentPage, setIterationData,hasDat
                     setIterationData={setIterationData}
                 />
             )}
-            <ToastContainer className='capitalize'/>
+
+            <ToastContainer className="capitalize" />
+
         </div>
     );
 };
