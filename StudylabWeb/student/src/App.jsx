@@ -40,20 +40,20 @@ function App() {
   }, [authStatus]);
 
   return (
-    <div className="min-h-screen bg-slate-200 flex flex-col md:flex-row">
+    <div className="h-screen bg-slate-200 flex flex-col md:flex-row overflow-hidden">
       {/* Sidebar no topo em mobile */}
       <div className="md:hidden fixed top-0 left-0 w-full z-50">
         <Sidebar isMobile />
       </div>
 
       {/* Menu lateral + Sidebar em desktop */}
-      <div className="hidden md:flex md:flex-col">
+      <div className="hidden md:flex md:flex-col shrink-0">
         <Menu />
         <Sidebar />
       </div>
 
       {/* Conteúdo principal */}
-      <main className="w-full mt-20 md:mt-28 px-4 overflow-x-auto">
+      <main className="flex-1 flex flex-col mt-20 md:mt-28 px-4 pb-20 md:pb-4 min-h-0 overflow-hidden">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/conteudos" element={<Materials />} />
