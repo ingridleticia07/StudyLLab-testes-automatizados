@@ -11,7 +11,7 @@ const Loading = ({ hasData }) => {
         
         const timeout = setTimeout(() => {
             setShowMessage(true);
-        }, 7000);
+        }, 2500);
 
         return () => clearTimeout(timeout);
     }, [hasData]);

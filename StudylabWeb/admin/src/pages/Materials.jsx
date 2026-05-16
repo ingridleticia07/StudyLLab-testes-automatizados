@@ -26,7 +26,7 @@ const Materials = () => {
         const getAllConteudos = async () => {
             try {
                 const idDisciplina = disciplinaFilter || 0;
-                const idTopico = topicoFilter || 0;
+                const idTopico = disciplinaFilter === 0 || !topicoFilter ? 0 : topicoFilter;
                 let currentPageFilter = currentPage || 1;
 
                 let conteudoList = await getMaterialByDisciplinaOrTopico(
@@ -59,7 +59,7 @@ const Materials = () => {
                 } else {
                     topicoList = await getAllTopicosDisciplina();
                 }
-
+                
                 let optionsTopico = [
                     {
                         value: 0,
@@ -109,7 +109,7 @@ const Materials = () => {
                                 setCurrentPage={setCurrentPage}
                             />
 
-                            {disciplinaFilter !== '' && (
+                            {disciplinaFilter !== '' && disciplinaFilter !== 0 &&(
                                 <FilterTopic
                                     setTopicoFilter={setTopicoFilter}
                                     topicos={selectedTopicos}
