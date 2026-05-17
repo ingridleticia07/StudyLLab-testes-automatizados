@@ -27,7 +27,7 @@ public interface ITopicoDiscussaoRepository
     /// ela retorna o modelo do tópico de discução correspondente ao ID</returns>
     public Task<TopicoDiscussaoModel?> GetTopicosDiscussaoById(int id, bool isAnyAsync = false);
 
-    public Task<bool> VerifyTopicoDiscussaoExists(TopicoDiscussaoModel topicoDiscussao);
+    public Task<bool> VerifyTopicoDiscussaoExists(TopicoDiscussaoModel topicoDiscussao, int idDisciplina = 0);
     /// <summary>
     /// Verifica se um tópico de discussão existe pelo ID
     /// </summary>

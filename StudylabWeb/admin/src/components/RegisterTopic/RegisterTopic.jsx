@@ -5,6 +5,7 @@ import AlertError from '../../components/Alerts/AlertErro';
 import Loading from '../../components/Loading/LoadingForm';
 import { isEmptyString } from '../../../../common/services/validation';
 import { createTopico } from '../../../../platform/repository/topico';
+import {toast } from 'react-toastify';
 
 export function getCookie(name) {
   const cookies = document.cookie.split('; ');
@@ -68,6 +69,13 @@ const RegisterTopic = ({ handleCancel, setIterationData, currentPage,selectDisci
       setIterationData((prev) => prev + 1);
 
       handleCancel();
+
+      toast.success('Tópico cadastrado com sucesso!', {
+          theme: 'colored',
+          position: 'top-center',
+          autoClose: 1300,
+      });
+
     } catch (error) {
       setState((prev) => ({
         ...prev,

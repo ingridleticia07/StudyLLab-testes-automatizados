@@ -5,6 +5,7 @@ import AlertError from '../../components/Alerts/AlertErro';
 import Loading from '../../components/Loading/LoadingForm';
 import { isEmptyString } from '../../../../common/services/validation';
 import { updateTopico} from '../../../../platform/repository/topico';
+import {toast } from 'react-toastify';
 
 export function getCookie(name) {
   const cookies = document.cookie.split('; ');
@@ -69,6 +70,12 @@ const EditTopic = ({ handleCancel, setIterationData, currentPage,selectDisciplin
       await updateTopico(topicoDTO);
       
       setIterationData((prev) => prev + 1);
+      
+      toast.success('Tópico alterado com sucesso!', {
+          theme: 'colored',
+          position: 'top-center',
+          autoClose: 1300,
+      });
 
       handleCancel();
     } catch (error) {

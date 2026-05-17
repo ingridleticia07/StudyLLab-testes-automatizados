@@ -133,17 +133,21 @@ namespace StudyLabAPI.Repositories
             return topicoDiscussaoModel;
         }
 
-        public async Task<bool> VerifyTopicoDiscussaoExists(TopicoDiscussaoModel topicoDiscussao)
+        public async Task<bool> VerifyTopicoDiscussaoExists(TopicoDiscussaoModel topicoDiscussao, int idDisciplina = 0)
         {
-            //TODO: Provalvemente seja melhor usa AnyAsync
-            var existingTopicoDiscussao = await dbContext.discussao
-                .Where(QueryValue => QueryValue.nomeTopico == topicoDiscussao.nomeTopico)
-                .AnyAsync();
-
+            var query = dbContext.discussao
+                .Where(q => q.nomeTopico == topicoDiscussao.nomeTopico);
+            
+            if (idDisciplina != 0)
+            {
+                query = query.Where(q => q.disciplina.idDisciplina == idDisciplina);
+            }
+            
+            var existingTopicoDiscussao = await query.AnyAsync();
+            
             return existingTopicoDiscussao;
         }
-
-        //TODO: Mesma coisa do GetTopicosDiscussaoById
+        
         public async Task<bool> VerifyTopicoDiscussaoExistsWithId(TopicoDiscussaoModel topicoDiscussao)
         {
             bool existingTopicoDiscussao = await dbContext.discussao
