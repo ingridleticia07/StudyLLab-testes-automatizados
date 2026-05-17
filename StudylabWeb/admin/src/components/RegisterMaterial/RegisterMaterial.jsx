@@ -141,6 +141,7 @@ const RegisterMaterial = ({ handleCancel,selectedTopicos, setCurrentPage, setIte
                                 className='w-full sm:w-auto border-2 border-americanOrange-500 bg-americanOrange-500 text-white px-4 sm:px-3 py-2 sm:py-1 rounded-md hover:bg-americanOrange-600 hover:border-americanOrange-600 transition-colors'
                                 type='submit'
                                 aria-label='Cadastrar nova disciplina'
+                                disabled={showLoader}
                             >
                                 Cadastrar
                             </button>

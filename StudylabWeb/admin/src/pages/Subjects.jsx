@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+
 import Breadcrumb from '../components/Breadcrumb/Breadcrumb';
 import Button from '../components/Buttons/Button';
 import TableSubjects from '../components/Tables/TableSubjects';
 import RegisterSubject from '../components/RegisterSubject/RegisterSubject';
-import { getAllDisciplinasWithPagination } from "../../../platform/repository/disciplina";
 import Filter from '../components/Filter/Filter';
+
+import { getAllDisciplinasWithPagination } from "../../../platform/repository/disciplina";
 
 const Subjects = () => {
     const [showRegister, setShowRegister] = useState(false);
@@ -12,56 +14,68 @@ const Subjects = () => {
     const [disciplinas, setDisciplinas] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [iterationData, setIterationData] = useState(0);
-    const [ hasData, SetHasData ] = useState(true);
+    const [hasData, setHasData] = useState(true);
 
     useEffect(() => {
         const getDataDisciplinas = async () => {
-            
             try {
-                
                 const idCurso = cursoFilter || 0;
                 let currentPageFilter = currentPage || 1;
 
-                let disciplinasList = await getAllDisciplinasWithPagination(currentPageFilter, 10, idCurso);
-                
-                setDisciplinas(disciplinasList);
-                if(disciplinasList.disciplinaCount == 0)
-                    SetHasData(false);
-                else
-                    SetHasData(true);
+                const disciplinasList =
+                    await getAllDisciplinasWithPagination(
+                        currentPageFilter,
+                        10,
+                        idCurso
+                    );
 
-                if(currentPage > disciplinasList.maxPage || currentPage == 0){
-                    currentPageFilter = disciplinasList.maxPage;
-                    setCurrentPage(currentPageFilter)
+                setDisciplinas(disciplinasList);
+
+                setHasData(disciplinasList.disciplinaCount > 0);
+
+                if (
+                    currentPage > disciplinasList.maxPage &&
+                    disciplinasList.maxPage > 0
+                ) {
+                    setCurrentPage(disciplinasList.maxPage);
                 }
+
             } catch (error) {
                 console.log(error);
             }
         };
+
         getDataDisciplinas();
-        
     }, [currentPage, cursoFilter, iterationData]);
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full overflow-hidden">
             <Breadcrumb page="Disciplina" />
-            
-            <section className='rounded-xl bg-white px-4 '>
-                <div className="flex flex-wrap items-center gap-2 px-0 md:px-4 py-4">
-                    <div className="flex flex-col md:flex-row items-start md:items-center gap-1 flex-shrink-0 w-full md:w-auto">
-                        <h1 className="text-3xl font-bold">Disciplinas</h1>
-                        <Filter data={disciplinas} setCursoFilter={setCursoFilter} setCurrentPage={setCurrentPage}/>
-                    </div>
-                    
-                    <div className="w-full sm:w-auto sm:flex-grow sm:flex sm:justify-end"> {/* Added mt-4 for some top margin and px for horizontal padding */}
-                        <Button
-                            text="Cadastrar Disciplina"
-                            handleClick={() => setShowRegister(true)}
-                            className="w-full sm:w-auto"
+
+            <section className="flex flex-col bg-white rounded-xl p-4 max-h-full overflow-hidden min-h-0">
+
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4 shrink-0">
+
+                    <div className="flex flex-col gap-2">
+                        <h1 className="text-3xl font-bold">
+                            Disciplinas
+                        </h1>
+
+                        <Filter
+                            data={disciplinas}
+                            setCursoFilter={setCursoFilter}
+                            setCurrentPage={setCurrentPage}
                         />
                     </div>
+
+                    <Button
+                        text="Cadastrar Disciplina"
+                        handleClick={() => setShowRegister(true)}
+                        className="w-full lg:w-auto"
+                    />
                 </div>
-                <div className="overflow-x-auto px-2 sm:px-6">
+
+                <div className="min-h-0 overflow-hidden">
                     <TableSubjects
                         data={disciplinas}
                         setDisciplinas={setDisciplinas}

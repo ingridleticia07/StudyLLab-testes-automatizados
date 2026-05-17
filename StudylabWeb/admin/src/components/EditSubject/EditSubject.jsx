@@ -194,6 +194,7 @@ const EditSubject = ({ row, handleClose, setDisciplinas, currentPage, setIterati
               type='submit'
               className='border-2 border-americanOrange-500 bg-americanOrange-500 text-white px-3 py-1 rounded-md hover:bg-americanOrange-600 hover:border-americanOrange-600'
               aria-label='Salvar edição da disciplina'
+              disabled={state.showLoader}
             >
               Salvar
             </button>

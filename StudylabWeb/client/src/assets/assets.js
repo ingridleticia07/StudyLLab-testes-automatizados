@@ -36,6 +36,8 @@ import student21 from './img/Imgstudents/student21.png';
 import student22 from './img/Imgstudents/student22.png';
 import student23 from './img/Imgstudents/student23.png';
 import student24 from './img/Imgstudents/student24.png';
+import student25 from './img/Imgstudents/student25.png';
+import student26 from './img/Imgstudents/student26.png';
 
 
 export const icons = {
@@ -80,5 +82,7 @@ export const studentsImages = {
     student21,
     student22,
     student23,
-    student24
+    student24,
+    student25,
+    student26
 };
