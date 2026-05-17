@@ -10,25 +10,66 @@ import { getAllDisciplinas } from "../../../platform/repository/disciplina";
 import { getAllTopicosDisciplina, getAllTopicosDisciplinaByDisciplina } from "../../../platform/repository/topico";
 
 const Materials = () => {
+
     const [hasData, setHasData] = useState(true);
     const [disciplinaFilter, setDisciplinaFilter] = useState('');
     const [selectDisciplinas, setSelectDisciplinas] = useState([]);
-    const [topicoFilter, setTopicoFilter] = useState('');
+    const [topicoFilter, setTopicoFilter] = useState(0);
     const [selectedTopicos, setSelectedTopicos] = useState([]);
     const [conteudo, setConteudo] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [iterationData, setIterationData] = useState(0);
 
+    // Busca disciplinas apenas uma vez na montagem
     useEffect(() => {
-        const getAllConteudos = async () => {
+        const loadDisciplinas = async () => {
+            try {
+                const list = await getAllDisciplinas();
+                setSelectDisciplinas([
+                    { value: 0, label: "Todas as disciplinas" },
+                    ...list.map(t => ({
+                        value: t.idDisciplina,
+                        label: t.nomeDisciplina
+                    }))
+                ]);
+            } catch (error) {
+                console.error('Erro ao carregar disciplinas:', error);
+            }
+        };
+        loadDisciplinas();
+    }, []);
+
+    // Busca tópicos apenas quando a disciplina muda
+    useEffect(() => {
+        const loadTopicos = async () => {
+            try {
+                const list = disciplinaFilter
+                    ? await getAllTopicosDisciplinaByDisciplina(disciplinaFilter)
+                    : await getAllTopicosDisciplina();
+
+                setSelectedTopicos([
+                    { value: 0, label: "Todos os tópicos" },
+                    ...list.map(t => ({
+                        value: t.idTopico,
+                        label: t.nomeTopico
+                    }))
+                ]);
+            } catch (error) {
+                console.error('Erro ao carregar tópicos:', error);
+            }
+        };
+        loadTopicos();
+    }, [disciplinaFilter]);
+
+    // Busca materiais quando filtros, página ou iterationData mudam
+    useEffect(() => {
+        const loadMateriais = async () => {
             try {
                 const idDisciplina = disciplinaFilter || 0;
-                const idTopico = disciplinaFilter === 0 || !topicoFilter ? 0 : topicoFilter;
-                
-                let currentPageFilter = currentPage || 1;
+                const idTopico = !disciplinaFilter || !topicoFilter ? 0 : topicoFilter;
 
-                let conteudoList = await getMaterialByDisciplinaOrTopico(
-                    currentPageFilter,
+                const conteudoList = await getMaterialByDisciplinaOrTopico(
+                    currentPage || 1,
                     10,
                     idDisciplina,
                     idTopico
@@ -37,39 +78,6 @@ const Materials = () => {
                 setConteudo(conteudoList);
                 setHasData(conteudoList.documentoForumCount > 0);
 
-                let selectDisciplinas = await getAllDisciplinas();
-                let options = [
-                    {
-                        value: 0,
-                        label: "Todas as disciplinas"
-                    },
-                    ...selectDisciplinas.map(t => ({
-                        value: t.idDisciplina,
-                        label: t.nomeDisciplina
-                    }))
-                ];
-                setSelectDisciplinas(options);
-
-                let topicoList;
-
-                if (disciplinaFilter && disciplinaFilter !== '') {
-                    topicoList = await getAllTopicosDisciplinaByDisciplina(disciplinaFilter);
-                } else {
-                    topicoList = await getAllTopicosDisciplina();
-                }
-
-                let optionsTopico = [
-                    {
-                        value: 0,
-                        label: "Todos os tópicos"
-                    },
-                    ...topicoList.map(t => ({
-                        value: t.idTopico,
-                        label: t.nomeTopico
-                    }))
-                ];
-                setSelectedTopicos(optionsTopico);
-
                 if (
                     conteudoList.maxPage &&
                     currentPage > conteudoList.maxPage &&
@@ -77,15 +85,13 @@ const Materials = () => {
                 ) {
                     setCurrentPage(conteudoList.maxPage);
                 }
-
             } catch (error) {
                 console.error('Erro ao carregar conteúdos:', error);
                 setHasData(false);
             }
         };
-
-        getAllConteudos();
-    }, [currentPage, disciplinaFilter, iterationData, topicoFilter]);
+        loadMateriais();
+    }, [currentPage, disciplinaFilter, topicoFilter, iterationData]);
 
     return (
         <div className="flex flex-col h-full overflow-hidden">
@@ -101,6 +107,7 @@ const Materials = () => {
                     <div className="flex flex-col sm:flex-row gap-2">
                         <SubjectFilter
                             setDisciplinaFilter={setDisciplinaFilter}
+                            setTopicoFilter={setTopicoFilter}
                             disciplinas={selectDisciplinas}
                             setCurrentPage={setCurrentPage}
                         />
@@ -110,6 +117,7 @@ const Materials = () => {
                                 setTopicoFilter={setTopicoFilter}
                                 topicos={selectedTopicos}
                                 setCurrentPage={setCurrentPage}
+                                topicoFilter={topicoFilter}
                             />
                         )}
                     </div>

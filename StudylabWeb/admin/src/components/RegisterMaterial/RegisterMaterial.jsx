@@ -4,15 +4,16 @@ import { saveMaterial } from '../../../../platform/repository/material';
 import Loading from '../../components/Loading/LoadingForm';
 import FilterTopic from '../../components/Filter/FilterTopic';
 import SelectField from '../SelectField/SelectField';
-import {toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
-const RegisterMaterial = ({ handleCancel,selectedTopicos, setCurrentPage, setIterationData}) => {
+const RegisterMaterial = ({ handleCancel, selectedTopicos, setCurrentPage, setIterationData }) => {
     const [selectedFiles, setSelectedFiles] = useState([]);
-    const [topico, setTopico] = useState('');
-    const [isSubmitting, SetIsSubmitting] = useState(false);
+    const [topico, setTopico] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [typeMaterial, setTypeMaterial] = useState('');
-    const [topicos, SetTopicos] = useState(selectedTopicos.slice(1));
-    const [showLoader,setShowLoader] = useState(false);
+    const [topicos] = useState(selectedTopicos.slice(1));
+    const [showLoader, setShowLoader] = useState(false);
+
     const typeOption = [
         { value: '1', label: 'Prova' },
         { value: '2', label: 'Trabalho' },
@@ -23,10 +24,6 @@ const RegisterMaterial = ({ handleCancel,selectedTopicos, setCurrentPage, setIte
         { value: '7', label: 'Outros' }
     ];
 
-    const handleChange = (field) => (e) => {
-        setTypeMaterial(e.target.value);
-    };
-
     function getCookie(name) {
         const cookies = document.cookie.split('; ');
         const cookie = cookies.find(row => row.startsWith(`${name}=`));
@@ -34,31 +31,31 @@ const RegisterMaterial = ({ handleCancel,selectedTopicos, setCurrentPage, setIte
     }
 
     const handleFileChange = (e) => {
-        setSelectedFiles(Array.from(e.target.files)); // Converte FileList em array
+        setSelectedFiles(Array.from(e.target.files));
     };
 
     const handleSubmit = async (e) => {
-        SetIsSubmitting(true);
         e.preventDefault();
+        setIsSubmitting(true);
 
-        if (selectedFiles.length == 0 || topico.length == 0 || typeMaterial.length == 0) {
+        if (!selectedFiles.length || !topico || !typeMaterial) {
             return;
         }
 
         setShowLoader(true);
 
-        let idUser = getCookie('id-user');
+        const idUser = getCookie('id-user');
 
         const materialDTO = {
-            Idtopico:topico,
-            TipoMaterial:typeMaterial,
-            File:selectedFiles,
-            IdUsuario:idUser
+            Idtopico: topico,
+            TipoMaterial: typeMaterial,
+            File: selectedFiles,
+            IdUsuario: idUser
         };
 
         try {
             await saveMaterial(materialDTO);
-            setIterationData(prev => prev+1);
+            setIterationData(prev => prev + 1);
             toast.success('Upload realizado com sucesso!', {
                 theme: 'colored',
                 position: 'top-center',
@@ -66,13 +63,12 @@ const RegisterMaterial = ({ handleCancel,selectedTopicos, setCurrentPage, setIte
             });
             handleCancel();
         } catch (error) {
-            
             toast.error('Erro no upload!', {
                 theme: 'colored',
                 position: 'top-center',
                 autoClose: 1300,
             });
-        }finally{
+        } finally {
             setShowLoader(false);
         }
     };
@@ -92,11 +88,11 @@ const RegisterMaterial = ({ handleCancel,selectedTopicos, setCurrentPage, setIte
                             label='Selecione os arquivos'
                             placeholder='Selecione os arquivos'
                             onChange={handleFileChange}
-                            multiple // permite múltiplos arquivos
+                            multiple
                         />
                         {!selectedFiles.length && isSubmitting && (
                             <h5 className="text-red-500 text-sm self-start">
-                            *Insira ao menos um arquivo, até 3 imagens ou 1 pdf.
+                                *Insira ao menos um arquivo, até 3 imagens ou 1 pdf.
                             </h5>
                         )}
 
@@ -108,26 +104,31 @@ const RegisterMaterial = ({ handleCancel,selectedTopicos, setCurrentPage, setIte
                                 fisrtField='tipo de material'
                                 options={typeOption}
                                 value={typeMaterial}
-                                onChange={handleChange('typeMaterial')}
+                                onChange={(e) => setTypeMaterial(e.target.value)}
                             />
-                            {typeMaterial.length <= 0 && isSubmitting && (
+                            {!typeMaterial && isSubmitting && (
                                 <h5 className="text-red-500 text-sm self-start">
-                                *Insira o tipo de material.
+                                    *Insira o tipo de material.
                                 </h5>
                             )}
                         </div>
-                        
+
                         <div className="flex flex-col">
                             <label className='font-bold text-gray-500 mb-2'>Selecione o tópico:</label>
-                            <FilterTopic setTopicoFilter={setTopico} topicos={topicos} setCurrentPage={setCurrentPage}/>
-                            
-                            {topico.length <= 0 && isSubmitting && (
+                            <FilterTopic
+                                setTopicoFilter={setTopico}
+                                topicos={topicos}
+                                setCurrentPage={setCurrentPage}
+                                topicoFilter={topico}       // ← controlado
+                                copulateTopico={true}
+                            />
+                            {!topico && isSubmitting && (
                                 <h5 className="text-red-500 text-sm self-start mt-1">
-                                *Insira o tópico.
+                                    *Insira o tópico.
                                 </h5>
                             )}
                         </div>
-                        
+
                         <div className='flex flex-col sm:flex-row items-center justify-end gap-3 sm:gap-5 pt-2'>
                             <button
                                 type='button'
