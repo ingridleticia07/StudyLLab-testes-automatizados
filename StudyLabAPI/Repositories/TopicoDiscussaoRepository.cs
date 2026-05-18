@@ -38,7 +38,7 @@ namespace StudyLabAPI.Repositories
         }
 
         public async Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussao() =>
-            await dbContext.discussao.Include(r => r.usuario).ToListAsync();
+            await dbContext.discussao.Include(r => r.usuario).Include(r => r.disciplina).ToListAsync();
 
         private async Task<IList<TopicoDiscussaoModel>> GetTopicoWFactory(int page, int pageSize, int idDisciplina = 0)
         {

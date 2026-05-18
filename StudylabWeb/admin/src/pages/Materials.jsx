@@ -53,7 +53,9 @@ const Materials = () => {
                     { value: 0, label: "Todos os tópicos" },
                     ...list.map(t => ({
                         value: t.idTopico,
-                        label: t.nomeTopico
+                        label: disciplinaFilter == 0 && t.disciplina?.nomeDisciplina
+                                ? `${t.nomeTopico} - ${t.disciplina.nomeDisciplina}`
+                                : t.nomeTopico,
                     }))
                 ]);
             } catch (error) {

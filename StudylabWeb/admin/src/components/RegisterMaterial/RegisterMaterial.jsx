@@ -7,6 +7,7 @@ import SelectField from '../SelectField/SelectField';
 import { toast } from 'react-toastify';
 
 const RegisterMaterial = ({ handleCancel, selectedTopicos, setCurrentPage, setIterationData }) => {
+    
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [topico, setTopico] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
