@@ -4,11 +4,11 @@ import { SelectPicker, CustomProvider } from 'rsuite';
 import 'rsuite/dist/rsuite.min.css';
 import { ptBR } from 'rsuite/esm/locales';
 
-const SubjectFilter = ({ setDisciplinaFilter, setTopicoFilter, disciplinas, setCurrentPage }) => {
+const SubjectFilter = ({ setDisciplinaFilter, setTopicoFilter = null, disciplinas, setCurrentPage }) => {
 
     const handleDisciplinaSelect = (disciplina) => {
         setCurrentPage(1);
-        setTopicoFilter(0);
+        setTopicoFilter?.(0);
         setDisciplinaFilter(disciplina);
     };
 

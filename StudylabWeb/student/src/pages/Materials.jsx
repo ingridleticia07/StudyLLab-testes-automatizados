@@ -18,7 +18,7 @@ const Materials = () => {
     const [selectedTopicos, setSelectedTopicos] = useState([]);
     const [conteudo, setConteudo] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [iterationData, setIterationData] = useState(0);
+    const [refreshKey, setRefreshKey] = useState(0); // força re-fetch da tabela
 
     // Busca disciplinas apenas uma vez na montagem
     useEffect(() => {
@@ -61,7 +61,7 @@ const Materials = () => {
         loadTopicos();
     }, [disciplinaFilter]);
 
-    // Busca materiais quando filtros, página ou iterationData mudam
+    // Busca materiais quando filtros, página ou refreshKey mudam
     useEffect(() => {
         const loadMateriais = async () => {
             try {
@@ -69,7 +69,7 @@ const Materials = () => {
                 const idTopico = !disciplinaFilter || !topicoFilter ? 0 : topicoFilter;
 
                 const conteudoList = await getMaterialByDisciplinaOrTopico(
-                    currentPage || 1,
+                    currentPage,
                     10,
                     idDisciplina,
                     idTopico
@@ -91,7 +91,7 @@ const Materials = () => {
             }
         };
         loadMateriais();
-    }, [currentPage, disciplinaFilter, topicoFilter, iterationData]);
+    }, [currentPage, disciplinaFilter, topicoFilter, refreshKey]);
 
     return (
         <div className="flex flex-col h-full overflow-hidden">
@@ -128,7 +128,7 @@ const Materials = () => {
                         data={conteudo}
                         currentPage={currentPage}
                         setCurrentPage={setCurrentPage}
-                        setIterationData={setIterationData}
+                        setIterationData={setRefreshKey}
                         hasData={hasData}
                     />
                 </div>

@@ -38,7 +38,7 @@ namespace StudyLabAPI.Repositories
         }
 
         public async Task<List<TopicoDiscussaoModel?>> GetAllTopicosDiscussao() =>
-            await dbContext.discussao.Include(r => r.usuario).Include(r => r.disciplina).ToListAsync();
+            await dbContext.discussao.Include(r => r.disciplina).ToListAsync();
 
         private async Task<IList<TopicoDiscussaoModel>> GetTopicoWFactory(int page, int pageSize, int idDisciplina = 0)
         {
@@ -101,9 +101,7 @@ namespace StudyLabAPI.Repositories
                     },
                     usuario = new UsuarioModel
                     {
-                        idUsuario = f.usuario.idUsuario,
-                        nomeUsuario = f.usuario.nomeUsuario,
-                        emailUsuario = f.usuario.emailUsuario
+                        idUsuario = f.usuario.idUsuario
                     }
                 }).ToListAsync();
             
