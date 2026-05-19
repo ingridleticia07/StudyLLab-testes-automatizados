@@ -104,9 +104,15 @@ namespace StudyLabAPI.Repositories.Material
 
             denunciaForUpdate.statusDenuncia = denuncia.statusDenuncia;
 
-            DocumentoModel documentoForUpdate = await dbContext.documento.FindAsync(denunciaForUpdate.documento.idDocumento);
+            if (denunciaForUpdate.documento != null)
+            {
+                DocumentoModel documentoForUpdate = await dbContext.documento.FindAsync(denunciaForUpdate.documento.idDocumento);
 
-            documentoForUpdate.status = denuncia.statusDocumento;
+                if (documentoForUpdate != null)
+                {
+                    documentoForUpdate.status = denuncia.statusDocumento;
+                }
+            }
         }
 
         public Task<IList<DocumentoModel>> GetAllDocumentos(int page, int pageSize, int? idDisciplina, int? idTopico, bool isAnyStatus) =>
