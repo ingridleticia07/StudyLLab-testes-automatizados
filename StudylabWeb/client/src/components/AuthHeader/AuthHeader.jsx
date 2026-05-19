@@ -3,7 +3,7 @@ const AuthHeader = ({ infoText, color= 'text-americanOrange-500' }) => {
         <header className='text-center'>
             <h1 className={`text-center text-4xl font-urbanist ${color}`}>
                 Study
-                <span className='font-bold'>Lab</span>
+                <span className='font-bold'>LLab</span>
             </h1>
             <h2 className='text-lg font-bold text-center text-gray-600 my-6'>
                 {infoText}
