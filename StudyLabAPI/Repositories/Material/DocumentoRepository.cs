@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using StudyLabAPI.Context;
 using StudyLabAPI.Models;
 using StudyLabAPI.Models.Disciplina;
@@ -8,7 +8,7 @@ using StudyLabAPI.Models.Material.DTOs;
 using StudyLabAPI.Models.Material.Enums;
 using StudyLabAPI.Models.User;
 
-namespace StudyLabAPI.Repositories
+namespace StudyLabAPI.Repositories.Material
 {
     public class DocumentoRepository : IDocumentoRepository
     {
@@ -124,7 +124,7 @@ namespace StudyLabAPI.Repositories
                 query = query.Where(f => f.status == StatusDocumento.Aprovado);
             }
         
-            // filtro por disciplina e/ou tópico
+            // filtro por disciplina e/ou t�pico
             if (idDisciplina != null && idDisciplina != 0 && idTopico != null && idTopico != 0)
             {
                 query = query.Where(f => f.topico.idTopico == idTopico &&
@@ -138,7 +138,7 @@ namespace StudyLabAPI.Repositories
                     (idDisciplina != null && idDisciplina != 0 && f.topico.disciplina.idDisciplina == idDisciplina));
             }
         
-            // paginação e projeção: só traz os campos que você realmente usa
+            // pagina��o e proje��o: s� traz os campos que voc� realmente usa
             var documentos = await query
                 .OrderByDescending(f => f.idDocumento)
                 .Skip((page - 1) * pageSize)
@@ -169,7 +169,7 @@ namespace StudyLabAPI.Repositories
                     {
                         idUsuario = f.usuario.idUsuario,
                         nomeUsuario = f.usuario.nomeUsuario,
-                        // dados sensíveis ficam nulos
+                        // dados sens�veis ficam nulos
                         emailUsuario = null,
                         matricula = null,
                         senhaUsuario = null,

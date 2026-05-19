@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using StudyLabAPI.Context;
 using StudyLabAPI.Models;
 using StudyLabAPI.Models.Forum;
 
-namespace StudyLabAPI.Repositories
+namespace StudyLabAPI.Repositories.Forum
 {
     public class ForumRepository : IForumRepository
     {

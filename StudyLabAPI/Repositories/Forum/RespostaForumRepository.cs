@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using StudyLabAPI.Context;
 using StudyLabAPI.Models;
 using StudyLabAPI.Models.Forum;
 using StudyLabAPI.Models.User;
 
-namespace StudyLabAPI.Repositories
+namespace StudyLabAPI.Repositories.Forum
 {
     public class RespostaForumRepository : IRespostaForumRepository
     {

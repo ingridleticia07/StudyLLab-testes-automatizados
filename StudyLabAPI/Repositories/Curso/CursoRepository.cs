@@ -2,7 +2,7 @@ using StudyLabAPI.Context;
 using StudyLabAPI.Models;
 using StudyLabAPI.Models.Curso;
 
-namespace StudyLabAPI.Repositories;
+
 
 /// <summary>
 /// Implementação genérica do repositório <see cref="ICursoRepository"/>.

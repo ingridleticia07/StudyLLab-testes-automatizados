@@ -6,7 +6,7 @@ using StudyLabAPI.Models.Auth.Enums;
 using StudyLabAPI.Models.User;
 using StudyLabAPI.Utils.Extensions;
 
-namespace StudyLabAPI.Repositories;
+
 
 public class CodigoUsuarioRepository : ICodigoUsuarioRepository
 {

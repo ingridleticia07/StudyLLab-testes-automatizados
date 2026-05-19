@@ -1,4 +1,4 @@
-﻿using StudyLabAPI.Exceptions;
+using StudyLabAPI.Exceptions;
 using StudyLabAPI.Mapper;
 using StudyLabAPI.Models.Forum;
 using StudyLabAPI.Models.Material;
@@ -6,7 +6,12 @@ using StudyLabAPI.Models.Material.DTOs;
 using StudyLabAPI.Models.Material.Enums;
 using StudyLabAPI.Models.User;
 using StudyLabAPI.Models.User.Enums;
-using StudyLabAPI.Repositories;
+using StudyLabAPI.Repositories.Auth;
+using StudyLabAPI.Repositories.Curso;
+using StudyLabAPI.Repositories.Disciplina;
+using StudyLabAPI.Repositories.Forum;
+using StudyLabAPI.Repositories.Material;
+using StudyLabAPI.Repositories.User;
 using StudyLabAPI.Validators.CustomValidators.RequestQuery;
 using Supabase;
 using ILogger = Serilog.ILogger;
@@ -174,7 +179,7 @@ namespace StudyLabAPI.Services.Application.Documento
 
             if (documento.usuario.tipoUsuario.Equals(UserRole.User)
                 && documento.usuario.idUsuario != idUsuario)
-                throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
+                throw new ArgumentException("usu�rio n�o tem permiss�o para excluir esse documento.");
 
             await DeleteFromSupabaseAsync(documento.diretorioMaterial1, documento.diretorioMaterial2);
 
@@ -264,19 +269,19 @@ namespace StudyLabAPI.Services.Application.Documento
 
         public async Task<DocumentoListResponse> GetAllDocumentosByDisciplinaOrTopico(int page, int pageSize, int? idDisciplina, int? idTopico, bool isAnyStatus)
         {
-            _logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
+            _logger.Information("Validando par�metros de pagina��o: Page[{Page}] PageSize[{PageSize}]",
                 page, pageSize);
 
             PageValidator validator = new(page, pageSize);
 
             if (!validator.isValid)
             {
-                ValidationException exception = new(["Parâmetros de paginação inválidos"]);
-                _logger.Error(exception, "Parâmetros de paginação inválidos");
+                ValidationException exception = new(["Par�metros de pagina��o inv�lidos"]);
+                _logger.Error(exception, "Par�metros de pagina��o inv�lidos");
                 throw exception;
             }
 
-            _logger.Information("Recuperando topicos da página Page[{Page}] PageSize[{PageSize}]",
+            _logger.Information("Recuperando topicos da p�gina Page[{Page}] PageSize[{PageSize}]",
                 page, pageSize);
 
             (var result, int resultCount, int documentoCount) = await _documentoRepository
@@ -285,9 +290,9 @@ namespace StudyLabAPI.Services.Application.Documento
             var documentoReadResult = result.Select(_documentoModelMapper.DocumentoModelMapperToDocumentoReadModel)
                 .ToList();
 
-            _logger.Information("Recuperado {Count} usuários da página Page[{Page}] PageSize[{PageSize}]",
+            _logger.Information("Recuperado {Count} usu�rios da p�gina Page[{Page}] PageSize[{PageSize}]",
                 documentoReadResult.Count, page, pageSize);
-            _logger.Information("Recuperando informações extras para a resposta");
+            _logger.Information("Recuperando informa��es extras para a resposta");
 
             int maxPage = documentoCount / pageSize;
             if (documentoCount % pageSize != 0)
@@ -304,19 +309,19 @@ namespace StudyLabAPI.Services.Application.Documento
 
         public async Task<DenunciaListResponse> GetAllDenuncias(int page, int pageSize)
         {
-            _logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
+            _logger.Information("Validando par�metros de pagina��o: Page[{Page}] PageSize[{PageSize}]",
                 page, pageSize);
 
             PageValidator validator = new(page, pageSize);
 
             if (!validator.isValid)
             {
-                ValidationException exception = new(["Parâmetros de paginação inválidos"]);
-                _logger.Error(exception, "Parâmetros de paginação inválidos");
+                ValidationException exception = new(["Par�metros de pagina��o inv�lidos"]);
+                _logger.Error(exception, "Par�metros de pagina��o inv�lidos");
                 throw exception;
             }
 
-            _logger.Information("Recuperando topicos da página Page[{Page}] PageSize[{PageSize}]",
+            _logger.Information("Recuperando topicos da p�gina Page[{Page}] PageSize[{PageSize}]",
                 page, pageSize);
 
             (var result, int resultCount, int denunciaCount) = await _documentoRepository
@@ -325,9 +330,9 @@ namespace StudyLabAPI.Services.Application.Documento
             var denunciaReadResult = result.Select(_denunciaModelMapper.DenunciaModelMapperToDenunciaReadModel)
                 .ToList();
 
-            _logger.Information("Recuperado {Count} usuários da página Page[{Page}] PageSize[{PageSize}]",
+            _logger.Information("Recuperado {Count} usu�rios da p�gina Page[{Page}] PageSize[{PageSize}]",
                 denunciaReadResult.Count, page, pageSize);
-            _logger.Information("Recuperando informações extras para a resposta");
+            _logger.Information("Recuperando informa��es extras para a resposta");
 
             int maxPage = denunciaCount / pageSize;
             if (denunciaCount % pageSize != 0)

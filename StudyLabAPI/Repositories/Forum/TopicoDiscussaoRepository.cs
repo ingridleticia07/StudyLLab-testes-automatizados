@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using StudyLabAPI.Context;
 using StudyLabAPI.Models;
 using System.Runtime.CompilerServices;
@@ -6,7 +6,7 @@ using StudyLabAPI.Models.Disciplina;
 using StudyLabAPI.Models.Forum;
 using StudyLabAPI.Models.User;
 
-namespace StudyLabAPI.Repositories
+namespace StudyLabAPI.Repositories.Forum
 {
     public class TopicoDiscussaoRepository : ITopicoDiscussaoRepository
     {

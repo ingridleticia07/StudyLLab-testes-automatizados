@@ -4,7 +4,7 @@ using StudyLabAPI.Models;
 using StudyLabAPI.Models.User;
 using StudyLabAPI.Models.User.Enums;
 
-namespace StudyLabAPI.Repositories;
+
 
 /// <summary>
 /// Implementação genéricas do repositório <see cref="IUsuarioRepository"/>.

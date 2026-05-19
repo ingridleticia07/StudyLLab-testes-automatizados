@@ -1,6 +1,11 @@
 using StudyLabAPI.Exceptions;
 using StudyLabAPI.Models.User.DTOs;
-using StudyLabAPI.Repositories;
+using StudyLabAPI.Repositories.Auth;
+using StudyLabAPI.Repositories.Curso;
+using StudyLabAPI.Repositories.Disciplina;
+using StudyLabAPI.Repositories.Forum;
+using StudyLabAPI.Repositories.Material;
+using StudyLabAPI.Repositories.User;
 using StudyLabAPI.Services.Jwt;
 using StudyLabAPI.Validators;
 
