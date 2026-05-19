@@ -1,10 +1,10 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using StudyLabAPI.Context;
 using StudyLabAPI.Models;
 using StudyLabAPI.Models.Curso;
 using StudyLabAPI.Models.Disciplina;
 
-namespace StudyLabAPI.Repositories.Disciplina
+namespace StudyLabAPI.Repositories
 {
     public class DisciplinaRepository : IDisciplinaRepository
     {

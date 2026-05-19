@@ -1,7 +1,7 @@
 using StudyLabAPI.Models;
 using StudyLabAPI.Models.Curso;
 
-
+namespace StudyLabAPI.Repositories;
 
 /// <summary>
 /// Camada de acesso a dados para a tabela <see cref="CursoModel"/>.

@@ -1,15 +1,10 @@
-using StudyLabAPI.Mapper;
+﻿using StudyLabAPI.Mapper;
 using StudyLabAPI.Models.Disciplina;
 using StudyLabAPI.Models.Forum;
 using StudyLabAPI.Models.Forum.DTOs;
 using StudyLabAPI.Models.User;
 using StudyLabAPI.Models.User.Enums;
-using StudyLabAPI.Repositories.Auth;
-using StudyLabAPI.Repositories.Curso;
-using StudyLabAPI.Repositories.Disciplina;
-using StudyLabAPI.Repositories.Forum;
-using StudyLabAPI.Repositories.Material;
-using StudyLabAPI.Repositories.User;
+using StudyLabAPI.Repositories;
 using StudyLabAPI.Validators.CustomValidators.RequestQuery;
 using ILogger = Serilog.ILogger;
 using ValidationException = StudyLabAPI.Exceptions.ValidationException;
@@ -44,19 +39,19 @@ namespace StudyLabAPI.Services.Application.Forum
 
         public async Task<TopicoDiscussaoListResponse> GetTopicosDiscussaoLimitedByPageAndPageSize(int page, int pageSize, int idDisciplina = 0)
         {
-            _logger.Information("Validando par�metros de pagina��o: Page[{Page}] PageSize[{PageSize}]",
+            _logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
                 page, pageSize);
 
             PageValidator validator = new(page, pageSize);
 
             if (!validator.isValid)
             {
-                ValidationException exception = new(["Par�metros de pagina��o inv�lidos"]);
-                _logger.Error(exception, "Par�metros de pagina��o inv�lidos");
+                ValidationException exception = new(["Parâmetros de paginação inválidos"]);
+                _logger.Error(exception, "Parâmetros de paginação inválidos");
                 throw exception;
             }
 
-            _logger.Information("Recuperando topicos da p�gina Page[{Page}] PageSize[{PageSize}]",
+            _logger.Information("Recuperando topicos da página Page[{Page}] PageSize[{PageSize}]",
                 page, pageSize);
 
             (var result, int resultCount, int topicosCount) = await _topicoDiscussaoRepository
@@ -65,9 +60,9 @@ namespace StudyLabAPI.Services.Application.Forum
             var topicosReadResult = result.Select(_topicoModelMapper.TopicoDiscussaoModelToDiscussaoReadModel)
                 .ToList();
 
-            _logger.Information("Recuperado {Count} usu�rios da p�gina Page[{Page}] PageSize[{PageSize}]",
+            _logger.Information("Recuperado {Count} usuários da página Page[{Page}] PageSize[{PageSize}]",
                 topicosReadResult.Count, page, pageSize);
-            _logger.Information("Recuperando informa��es extras para a resposta");
+            _logger.Information("Recuperando informações extras para a resposta");
 
             int maxPage = topicosCount / pageSize;
             if (topicosCount % pageSize != 0)
@@ -132,12 +127,12 @@ namespace StudyLabAPI.Services.Application.Forum
 
             if (relatedDisciplina is null)
             {
-                throw new Exception("Disciplina n�o encontrada");
+                throw new Exception("Disciplina não encontrada");
             }
 
             if (relatedUsuario is null)
             {
-                throw new Exception("Usu�rio n�o encontrado");
+                throw new Exception("Usuário não encontrado");
             }
 
             TopicoDiscussaoModel novoTopicoDiscussao = new()
@@ -165,22 +160,22 @@ namespace StudyLabAPI.Services.Application.Forum
 
             if (relatedDisciplina is null)
             {
-                throw new Exception("Disciplina n�o encontrada");
+                throw new Exception("Disciplina não encontrada");
             }
 
             if (topicoDiscussaoForUpdate is null)
             {
-                throw new Exception("T�pico n�o encontrado");
+                throw new Exception("Tópico não encontrado");
             }
 
             if (usuario is null)
             {
-                throw new Exception("Usu�rio n�o encontrado");
+                throw new Exception("Usuário não encontrado");
             }
 
             if (!usuario.tipoUsuario.Equals(UserRole.Admin) && usuario.idUsuario != topicoDiscussaoModel.idUsuario)
             {
-                throw new ArgumentException("usu�rio n�o tem permiss�o para excluir esse documento.");
+                throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
             }
 
             TopicoDiscussaoModel topicoUpdated = new()
@@ -212,19 +207,19 @@ namespace StudyLabAPI.Services.Application.Forum
 
         public async Task<RespostaForumListResponse> GetAllRespostasForumByDisciplinaOrTopico(int page, int pageSize, int? idDisciplina, int? idTopico)
         {
-            _logger.Information("Validando par�metros de pagina��o: Page[{Page}] PageSize[{PageSize}]",
+            _logger.Information("Validando parâmetros de paginação: Page[{Page}] PageSize[{PageSize}]",
                 page, pageSize);
 
             PageValidator validator = new(page, pageSize);
 
             if (!validator.isValid)
             {
-                ValidationException exception = new(["Par�metros de pagina��o inv�lidos"]);
-                _logger.Error(exception, "Par�metros de pagina��o inv�lidos");
+                ValidationException exception = new(["Parâmetros de paginação inválidos"]);
+                _logger.Error(exception, "Parâmetros de paginação inválidos");
                 throw exception;
             }
 
-            _logger.Information("Recuperando topicos da p�gina Page[{Page}] PageSize[{PageSize}]",
+            _logger.Information("Recuperando topicos da página Page[{Page}] PageSize[{PageSize}]",
                 page, pageSize);
 
             (var result, int resultCount, int respostaForumCount) = await _respostaForumRepository
@@ -233,9 +228,9 @@ namespace StudyLabAPI.Services.Application.Forum
             var respostaForumReadResult = result.Select(_respostaForumModelMapper.RespotaForumModelMapperToRespostaForumReadModel)
                 .ToList();
 
-            _logger.Information("Recuperado {Count} usu�rios da p�gina Page[{Page}] PageSize[{PageSize}]",
+            _logger.Information("Recuperado {Count} usuários da página Page[{Page}] PageSize[{PageSize}]",
                 respostaForumReadResult.Count, page, pageSize);
-            _logger.Information("Recuperando informa��es extras para a resposta");
+            _logger.Information("Recuperando informações extras para a resposta");
 
             int maxPage = respostaForumCount / pageSize;
             if (respostaForumCount % pageSize != 0)
@@ -270,7 +265,7 @@ namespace StudyLabAPI.Services.Application.Forum
 
             if (relatedTopico is null)
             {
-                throw new Exception("T�pico n�o encontrado");
+                throw new Exception("Tópico não encontrado");
             }
 
             RespostaForumModel respostaForumModel = new()
@@ -297,12 +292,12 @@ namespace StudyLabAPI.Services.Application.Forum
 
             if (relatedTopicoDiscussao is null)
             {
-                throw new Exception("T�pico n�o encontrado");
+                throw new Exception("Tópico não encontrado");
             }
 
             if (relatedUsuario is null)
             {
-                throw new Exception("Usu�rio n�o encontrado");
+                throw new Exception("Usuário não encontrado");
             }
 
             RespostaForumModel novoRespostaForum = new()
@@ -331,17 +326,17 @@ namespace StudyLabAPI.Services.Application.Forum
 
             if (relatedTopicoDiscussao is null)
             {
-                throw new Exception("T�pico n�o encontrado");
+                throw new Exception("Tópico não encontrado");
             }
 
             if (relatedUsuario is null)
             {
-                throw new Exception("Usu�rio n�o encontrado");
+                throw new Exception("Usuário não encontrado");
             }
 
             if (!relatedUsuario.tipoUsuario.Equals(UserRole.Admin) && relatedTopicoDiscussao.usuario.idUsuario != respostaForum.usuario)
             {
-                throw new ArgumentException("usu�rio n�o tem permiss�o para excluir esse documento.");
+                throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
             }
 
             RespostaForumModel updatedRespostaForum = new()
@@ -364,11 +359,11 @@ namespace StudyLabAPI.Services.Application.Forum
 
             if (respostaForum is null)
             {
-                throw new Exception("Resposta n�o encontrada");
+                throw new Exception("Resposta não encontrada");
             }
 
             if (!respostaForum.usuario.tipoUsuario.Equals(UserRole.Admin) && respostaForum.usuario.idUsuario != idUsuario)
-                throw new ArgumentException("usu�rio n�o tem permiss�o para excluir esse documento.");
+                throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
 
             await _respostaForumRepository.DeleteRespostaForum(idRespostaForum);
             await _respostaForumRepository.Flush();
@@ -386,17 +381,17 @@ namespace StudyLabAPI.Services.Application.Forum
 
             if (relatedRespostaForum is null)
             {
-                throw new Exception("Resposta n�o encontrada");
+                throw new Exception("Resposta não encontrada");
             }
 
             if (relatedTopicoDiscussao is null)
             {
-                throw new Exception("T�pico n�o encontrado");
+                throw new Exception("Tópico não encontrado");
             }
 
             if (relatedUsuario is null)
             {
-                throw new Exception("Usu�rio n�o encontrado");
+                throw new Exception("Usuário não encontrado");
             }
 
             ForumModel novoForum = new()
@@ -417,16 +412,16 @@ namespace StudyLabAPI.Services.Application.Forum
 
             if (relatedRespostaForum is null)
             {
-                throw new Exception("Resposta n�o encontrada");
+                throw new Exception("Resposta não encontrada");
             }
 
             if (relatedUsuario is null)
             {
-                throw new Exception("Usu�rio n�o encontrado");
+                throw new Exception("Usuário não encontrado");
             }
 
             if (!relatedRespostaForum.usuario.tipoUsuario.Equals(UserRole.Admin) && relatedRespostaForum.usuario.idUsuario != forum.usuario)
-                throw new ArgumentException("usu�rio n�o tem permiss�o para excluir esse documento.");
+                throw new ArgumentException("usuário não tem permissão para excluir esse documento.");
 
             ForumModel forumForUpdate = new()
             {
@@ -464,12 +459,12 @@ namespace StudyLabAPI.Services.Application.Forum
 
             if (relatedRespostaForum is null)
             {
-                throw new Exception("Resposta n�o encontrada");
+                throw new Exception("Resposta não encontrada");
             }
 
             if (relatedUsuario is null)
             {
-                throw new Exception("Usu�rio n�o encontrado");
+                throw new Exception("Usuário não encontrado");
             }
 
             ForumModel respostaForumModel = new()
@@ -491,12 +486,12 @@ namespace StudyLabAPI.Services.Application.Forum
 
             if (relatedRespostaForum is null)
             {
-                throw new Exception("Resposta n�o encontrada");
+                throw new Exception("Resposta não encontrada");
             }
 
             if (relatedUsuario is null)
             {
-                throw new Exception("Usu�rio n�o encontrado");
+                throw new Exception("Usuário não encontrado");
             }
 
             ForumModel respostaForumModel = new()
@@ -515,7 +510,7 @@ namespace StudyLabAPI.Services.Application.Forum
 
             if (relatedTopico is null)
             {
-                throw new Exception("T�pico n�o encontrado");
+                throw new Exception("Tópico não encontrado");
             }
 
             List<ForumModel> forumLista = await _forumRepository.GetForumByTopico(relatedTopico);

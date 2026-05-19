@@ -1,13 +1,8 @@
-using StudyLabAPI.Mapper;
+Ôªøusing StudyLabAPI.Mapper;
 using StudyLabAPI.Models.Curso;
 using StudyLabAPI.Models.Disciplina;
 using StudyLabAPI.Models.Disciplina.DTOs;
-using StudyLabAPI.Repositories.Auth;
-using StudyLabAPI.Repositories.Curso;
-using StudyLabAPI.Repositories.Disciplina;
-using StudyLabAPI.Repositories.Forum;
-using StudyLabAPI.Repositories.Material;
-using StudyLabAPI.Repositories.User;
+using StudyLabAPI.Repositories;
 using StudyLabAPI.Validators.CustomValidators.RequestQuery;
 using ILogger = Serilog.ILogger;
 using ValidationException = StudyLabAPI.Exceptions.ValidationException;
@@ -60,19 +55,19 @@ namespace StudyLabAPI.Services.Application.Disciplina
         } 
         public async Task<DisciplinaListResponse> GetAllDisciplinasWithPagination(int page,int pageSize, int idCurso)
         {
-            logger.Information("Validando par‚metros de paginaÁ„o: Page[{Page}] PageSize[{PageSize}]",
+            logger.Information("Validando par√¢metros de pagina√ß√£o: Page[{Page}] PageSize[{PageSize}]",
             page, pageSize);
 
             PageValidator validator = new(page, pageSize);
 
             if (!validator.isValid)
             {
-                ValidationException exception = new(["Par‚metros de paginaÁ„o inv·lidos"]);
-                logger.Error(exception, "Par‚metros de paginaÁ„o inv·lidos");
+                ValidationException exception = new(["Par√¢metros de pagina√ß√£o inv√°lidos"]);
+                logger.Error(exception, "Par√¢metros de pagina√ß√£o inv√°lidos");
                 throw exception;
             }
 
-            logger.Information("Recuperando disciplinas da p·gina Page[{Page}] PageSize[{PageSize}]",
+            logger.Information("Recuperando disciplinas da p√°gina Page[{Page}] PageSize[{PageSize}]",
                 page, pageSize);
 
             (var result, int resultCount, int disciplinaCount) = await disciplinaRepository
@@ -81,9 +76,9 @@ namespace StudyLabAPI.Services.Application.Disciplina
             var disciplinaReadResult = result.Select(_disciplinaModelMapper.DisciplinaModelToDisciplinaReadModel)
                 .ToList();
 
-            logger.Information("Recuperado {Count} usu·rios da p·gina Page[{Page}] PageSize[{PageSize}]",
+            logger.Information("Recuperado {Count} usu√°rios da p√°gina Page[{Page}] PageSize[{PageSize}]",
                 disciplinaReadResult.Count, page, pageSize);
-            logger.Information("Recuperando informaÁıes extras para a resposta");
+            logger.Information("Recuperando informa√ß√µes extras para a resposta");
 
             int maxPage = disciplinaCount / pageSize;
             if (disciplinaCount % pageSize != 0)

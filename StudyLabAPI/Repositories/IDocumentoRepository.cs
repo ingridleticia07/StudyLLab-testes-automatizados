@@ -1,9 +1,9 @@
-using StudyLabAPI.Models;
+﻿using StudyLabAPI.Models;
 using StudyLabAPI.Models.Forum;
 using StudyLabAPI.Models.Material;
 using StudyLabAPI.Models.Material.DTOs;
 
-namespace StudyLabAPI.Repositories.Material
+namespace StudyLabAPI.Repositories
 {
     public interface IDocumentoRepository
     {

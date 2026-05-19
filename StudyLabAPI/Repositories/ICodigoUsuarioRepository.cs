@@ -3,7 +3,7 @@ using StudyLabAPI.Models.Auth;
 using StudyLabAPI.Models.Auth.Enums;
 using StudyLabAPI.Models.User;
 
-
+namespace StudyLabAPI.Repositories;
 
 /// <summary>
 /// Camada de acesso a dados para a tabela <see cref="CodigoUsuarioModel"/>.

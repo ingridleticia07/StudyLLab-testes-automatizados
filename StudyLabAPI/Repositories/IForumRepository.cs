@@ -1,7 +1,7 @@
-using StudyLabAPI.Models;
+﻿using StudyLabAPI.Models;
 using StudyLabAPI.Models.Forum;
 
-namespace StudyLabAPI.Repositories.Forum
+namespace StudyLabAPI.Repositories
 {
     public interface IForumRepository
     {

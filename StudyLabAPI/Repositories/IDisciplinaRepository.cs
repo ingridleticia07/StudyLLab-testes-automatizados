@@ -1,7 +1,7 @@
-using StudyLabAPI.Models;
+﻿using StudyLabAPI.Models;
 using StudyLabAPI.Models.Disciplina;
 
-
+namespace StudyLabAPI.Repositories;
 
 /// <summary>
 /// Camada de acesso a dados para a tabela <see cref="DisciplinaModel"/>.
@@ -23,7 +23,7 @@ public interface IDisciplinaRepository
     /// <param name="disciplina">Modelo da disciplina</param>
     /// <returns>Representa uma tarefa asincrona do banco,
     /// ela retorna <c>true</c> se a disciplina existir no banco,
-    /// caso contr�rio, retorna <c>false</c></returns>
+    /// caso contrário, retorna <c>false</c></returns>
     public Task<bool> VerifyDisciplinaCreated(DisciplinaModel disciplina);
     /// <summary>
     /// Verfica se uma disciplina existe no banco, exceto pelo ID.
@@ -31,10 +31,10 @@ public interface IDisciplinaRepository
     /// <param name="disciplina">Modelo da disciplina</param>
     /// <returns>Representa uma tarefa asincrona do banco,
     /// ela retorna <c>true</c> se a disciplina existir no banco,
-    /// caso contr�rio, retorna <c>false</c></returns>
+    /// caso contrário, retorna <c>false</c></returns>
     public Task<bool> VerifyDisciplinaCreatedWithId(int disciplinaId);
     /// <summary>
-    /// Recupera as disciplinas no banco com pagina��o.
+    /// Recupera as disciplinas no banco com paginação.
     /// </summary>
     /// <returns>Representa uma tarefa asincrona do banco,
     /// ela retorna uma <see cref="List{T}"/> contendo todas as disciplinas</returns>
@@ -55,10 +55,10 @@ public interface IDisciplinaRepository
 
     public Task CreateDisciplina(DisciplinaModel disciplinaModel);
     /// <summary>
-    /// Atualiza uma disciplina existente com novas informa��es
+    /// Atualiza uma disciplina existente com novas informações
     /// </summary>
-    /// <param name="disciplinaModel">Modelo da disciplina com o ID que j� esta cadastrado
-    /// mas com as novas informa��es</param>
+    /// <param name="disciplinaModel">Modelo da disciplina com o ID que já esta cadastrado
+    /// mas com as novas informações</param>
     /// <returns>Representa uma tarefa asincrona do banco</returns>
     public Task UpdateDisciplina(DisciplinaModel disciplinaModel);
     /// <summary>
@@ -68,7 +68,7 @@ public interface IDisciplinaRepository
     /// <returns>Representa uma tarefa asincrona do banco</returns>
     public Task DeleteDisciplina(int idDisciplina);
     /// <summary>
-    /// Salva todas as altera��es feitas no banco.
+    /// Salva todas as alterações feitas no banco.
     /// </summary>
     /// <returns>Representa uma tarefa asincrona do banco</returns>
     public Task Flush();

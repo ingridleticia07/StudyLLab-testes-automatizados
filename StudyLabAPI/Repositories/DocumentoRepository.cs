@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using StudyLabAPI.Context;
 using StudyLabAPI.Models;
 using StudyLabAPI.Models.Disciplina;
@@ -8,7 +8,7 @@ using StudyLabAPI.Models.Material.DTOs;
 using StudyLabAPI.Models.Material.Enums;
 using StudyLabAPI.Models.User;
 
-namespace StudyLabAPI.Repositories.Material
+namespace StudyLabAPI.Repositories
 {
     public class DocumentoRepository : IDocumentoRepository
     {
@@ -104,15 +104,9 @@ namespace StudyLabAPI.Repositories.Material
 
             denunciaForUpdate.statusDenuncia = denuncia.statusDenuncia;
 
-            if (denunciaForUpdate.documento != null)
-            {
-                DocumentoModel documentoForUpdate = await dbContext.documento.FindAsync(denunciaForUpdate.documento.idDocumento);
+            DocumentoModel documentoForUpdate = await dbContext.documento.FindAsync(denunciaForUpdate.documento.idDocumento);
 
-                if (documentoForUpdate != null)
-                {
-                    documentoForUpdate.status = denuncia.statusDocumento;
-                }
-            }
+            documentoForUpdate.status = denuncia.statusDocumento;
         }
 
         public Task<IList<DocumentoModel>> GetAllDocumentos(int page, int pageSize, int? idDisciplina, int? idTopico, bool isAnyStatus) =>
@@ -130,7 +124,7 @@ namespace StudyLabAPI.Repositories.Material
                 query = query.Where(f => f.status == StatusDocumento.Aprovado);
             }
         
-            // filtro por disciplina e/ou t�pico
+            // filtro por disciplina e/ou tópico
             if (idDisciplina != null && idDisciplina != 0 && idTopico != null && idTopico != 0)
             {
                 query = query.Where(f => f.topico.idTopico == idTopico &&
@@ -144,7 +138,7 @@ namespace StudyLabAPI.Repositories.Material
                     (idDisciplina != null && idDisciplina != 0 && f.topico.disciplina.idDisciplina == idDisciplina));
             }
         
-            // pagina��o e proje��o: s� traz os campos que voc� realmente usa
+            // paginação e projeção: só traz os campos que você realmente usa
             var documentos = await query
                 .OrderByDescending(f => f.idDocumento)
                 .Skip((page - 1) * pageSize)
@@ -175,7 +169,7 @@ namespace StudyLabAPI.Repositories.Material
                     {
                         idUsuario = f.usuario.idUsuario,
                         nomeUsuario = f.usuario.nomeUsuario,
-                        // dados sens�veis ficam nulos
+                        // dados sensíveis ficam nulos
                         emailUsuario = null,
                         matricula = null,
                         senhaUsuario = null,

@@ -1,7 +1,7 @@
-using StudyLabAPI.Models;
+﻿using StudyLabAPI.Models;
 using StudyLabAPI.Models.Forum;
 
-
+namespace StudyLabAPI.Repositories;
 
 /// <summary>
 /// Camada de acesso a dados para o <see cref="RespostaForumModel"/>
@@ -23,7 +23,7 @@ public interface IRespostaForumRepository
     /// </summary>
     /// <param name="id">ID da resposta do forum</param>
     /// <returns>Representa uma tarefa asincrona do banco,
-    /// ela retorna o modelo encontrado da reposta do forum, caso contr�rio,
+    /// ela retorna o modelo encontrado da reposta do forum, caso contrário,
     /// ele vai retornar <c>null</c></returns>
     public Task<RespostaForumModel?> GetRespostaForumById(int id);
     /// <summary>
@@ -31,14 +31,14 @@ public interface IRespostaForumRepository
     /// </summary>
     /// <param name="respostaForum">Modelo da resposta do forum</param>
     /// <returns>Representa uma tarefa asincrona do banco,
-    /// ela retorna <c>true</c> se existir, caso contr�rio, <c>false</c></returns>
+    /// ela retorna <c>true</c> se existir, caso contrário, <c>false</c></returns>
     public Task<bool> VerifyRespostaForumExists(RespostaForumModel respostaForum);
     /// <summary>
     /// Verifica se uma resposta de forum existe pelo ID
     /// </summary>
-    /// <param name="respostaForum">Reposta do forum com o ID de um j� existente</param>
+    /// <param name="respostaForum">Reposta do forum com o ID de um já existente</param>
     /// <returns>Representa uma tarefa asincrona do banco,
-    /// ela retorna <c>true</c> se existir, caso contr�rio, <c>false</c></returns>
+    /// ela retorna <c>true</c> se existir, caso contrário, <c>false</c></returns>
     public Task<bool> VerifyRespostaForumExistsWithId(RespostaForumModel respostaForum);
     /// <summary>
     /// Cadastra uma nova resposta de forum
@@ -47,10 +47,10 @@ public interface IRespostaForumRepository
     /// <returns>Representa uma tarefa asincrona do banco</returns>
     public Task CreateRespostaForum(RespostaForumModel respostaForum);
     /// <summary>
-    /// Atualiza uma resposta de forum existente com novas informa��es
+    /// Atualiza uma resposta de forum existente com novas informações
     /// </summary>
-    /// <param name="respostaForum">Modelo da resposta do forum com o ID de um j� existente
-    /// com novas informa��es</param>
+    /// <param name="respostaForum">Modelo da resposta do forum com o ID de um já existente
+    /// com novas informações</param>
     /// <returns>Representa uma tarefa asincrona do banco</returns>
     public Task UpdateRespostaForum(RespostaForumModel respostaForum);
     /// <summary>
@@ -60,7 +60,7 @@ public interface IRespostaForumRepository
     /// <returns>Representa uma tarefa asincrona do banco</returns>
     public Task DeleteRespostaForum(int idRespostaForum);
     /// <summary>
-    /// Salva as altera��es feitas no banco
+    /// Salva as alterações feitas no banco
     /// </summary>
     /// <returns>Representa uma tarefa asincrona do banco</returns>
     public Task Flush();
