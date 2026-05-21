@@ -101,7 +101,8 @@ namespace StudyLabAPI.Repositories
                     },
                     usuario = new UsuarioModel
                     {
-                        idUsuario = f.usuario.idUsuario
+                        idUsuario = f.usuario.idUsuario,
+                        nomeUsuario = f.usuario.nomeUsuario
                     }
                 }).ToListAsync();
             
