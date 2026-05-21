@@ -131,24 +131,16 @@ namespace StudyLabAPI.Endpoints
             [FromBody] RegisteredTopicoDiscussaoRequestModel novoTopico,
             [FromServices] IForumService service)
         {
-            var checkIfTopicoDiscussaoExists = await service.VerifyTopicoDiscussaoExists(novoTopico);
+            
+            try
+            {
+                await service.CreateTopicoDiscussao(novoTopico);
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest(e.Message);
+            }
 
-            if(checkIfTopicoDiscussaoExists == false)
-            {
-                try
-                {
-                    await service.CreateTopicoDiscussao(novoTopico);
-                }
-                catch (Exception e)
-                {
-                    return Results.BadRequest(e.Message);
-                }
-            }
-            else
-            {
-                return Results.Content("Tópico discussão existente", 
-                    statusCode: StatusCodes.Status409Conflict);
-            }
             return Results.Ok(novoTopico);
         }
         
@@ -157,26 +149,15 @@ namespace StudyLabAPI.Endpoints
         [FromBody] RegisteredTopicoDiscussaoRequestModel topicoDiscussaoUpdate,
         [FromServices] IForumService service)
         {
-            var checkIfTopicoDiscussaoExists = await service.VerifyTopicoDiscussaoExistsWithId(topicoDiscussaoUpdate);
-
-            if (checkIfTopicoDiscussaoExists == false)
+            try
             {
-                try
-                {
-                    await service.UpdateTopicoDiscussao(topicoDiscussaoUpdate);
-                }
-                catch (Exception e)
-                {
-                    return Results.BadRequest(e.Message);
-                }
+                await service.UpdateTopicoDiscussao(topicoDiscussaoUpdate);
             }
-            else
+            catch (Exception e)
             {
-                return Results.Content("Tópico discussão existente", 
-                    statusCode: StatusCodes.Status409Conflict);
+                return Results.BadRequest(e.Message);
             }
-
-
+                
             return Results.Ok(topicoDiscussaoUpdate);
         }
         

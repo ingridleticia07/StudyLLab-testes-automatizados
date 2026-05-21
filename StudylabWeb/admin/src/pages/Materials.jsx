@@ -16,21 +16,64 @@ const Materials = () => {
     const [hasData, setHasData] = useState(true);
     const [disciplinaFilter, setDisciplinaFilter] = useState('');
     const [selectDisciplinas, setSelectDisciplinas] = useState([]);
-    const [topicoFilter, setTopicoFilter] = useState('');
+    const [topicoFilter, setTopicoFilter] = useState(0);
     const [selectedTopicos, setSelectedTopicos] = useState([]);
     const [conteudo, setConteudo] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [iterationData, setIterationData] = useState(0);
+    const [refreshKey, setRefreshKey] = useState(0); // força re-fetch da tabela
 
+    // Busca disciplinas apenas uma vez na montagem
     useEffect(() => {
-        const getAllConteudos = async () => {
+        const loadDisciplinas = async () => {
+            try {
+                const list = await getAllDisciplinas();
+                setSelectDisciplinas([
+                    { value: 0, label: "Todas as disciplinas" },
+                    ...list.map(t => ({
+                        value: t.idDisciplina,
+                        label: t.nomeDisciplina
+                    }))
+                ]);
+            } catch (error) {
+                console.error('Erro ao carregar disciplinas:', error);
+            }
+        };
+        loadDisciplinas();
+    }, []);
+
+    // Busca tópicos apenas quando a disciplina muda
+    useEffect(() => {
+        const loadTopicos = async () => {
+            try {
+                const list = disciplinaFilter
+                    ? await getAllTopicosDisciplinaByDisciplina(disciplinaFilter)
+                    : await getAllTopicosDisciplina();
+
+                setSelectedTopicos([
+                    { value: 0, label: "Todos os tópicos" },
+                    ...list.map(t => ({
+                        value: t.idTopico,
+                        label: !disciplinaFilter && t.disciplina?.nomeDisciplina
+                            ? `${t.nomeTopico} - ${t.disciplina.nomeDisciplina}`
+                            : t.nomeTopico,
+                    }))
+                ]);
+            } catch (error) {
+                console.error('Erro ao carregar tópicos:', error);
+            }
+        };
+        loadTopicos();
+    }, [disciplinaFilter]);
+
+    // Busca materiais quando filtros, página ou refreshKey mudam
+    useEffect(() => {
+        const loadMateriais = async () => {
             try {
                 const idDisciplina = disciplinaFilter || 0;
-                const idTopico = disciplinaFilter === 0 || !topicoFilter ? 0 : topicoFilter;
-                let currentPageFilter = currentPage || 1;
+                const idTopico = !disciplinaFilter || !topicoFilter ? 0 : topicoFilter;
 
-                let conteudoList = await getMaterialByDisciplinaOrTopico(
-                    currentPageFilter,
+                const conteudoList = await getMaterialByDisciplinaOrTopico(
+                    currentPage,
                     10,
                     idDisciplina,
                     idTopico
@@ -39,39 +82,6 @@ const Materials = () => {
                 setConteudo(conteudoList);
                 setHasData(conteudoList.documentoForumCount > 0);
 
-                let selectDisciplinas = await getAllDisciplinas();
-                let options = [
-                    {
-                        value: 0,
-                        label: "Todas as disciplinas"
-                    },
-                    ...selectDisciplinas.map(t => ({
-                        value: t.idDisciplina,
-                        label: t.nomeDisciplina
-                    }))
-                ];
-                setSelectDisciplinas(options);
-
-                let topicoList;
-
-                if (disciplinaFilter && disciplinaFilter !== '') {
-                    topicoList = await getAllTopicosDisciplinaByDisciplina(disciplinaFilter);
-                } else {
-                    topicoList = await getAllTopicosDisciplina();
-                }
-                
-                let optionsTopico = [
-                    {
-                        value: 0,
-                        label: "Todos os tópicos"
-                    },
-                    ...topicoList.map(t => ({
-                        value: t.idTopico,
-                        label: t.nomeTopico
-                    }))
-                ];
-                setSelectedTopicos(optionsTopico);
-
                 if (
                     conteudoList.maxPage &&
                     currentPage > conteudoList.maxPage &&
@@ -79,15 +89,13 @@ const Materials = () => {
                 ) {
                     setCurrentPage(conteudoList.maxPage);
                 }
-
             } catch (error) {
                 console.error('Erro ao carregar conteúdos:', error);
                 setHasData(false);
             }
         };
-
-        getAllConteudos();
-    }, [currentPage, disciplinaFilter, iterationData, topicoFilter]);
+        loadMateriais();
+    }, [currentPage, disciplinaFilter, topicoFilter, refreshKey]);
 
     return (
         <div className="flex flex-col h-full overflow-hidden">
@@ -105,15 +113,17 @@ const Materials = () => {
                         <div className="flex flex-col sm:flex-row gap-2">
                             <SubjectFilter
                                 setDisciplinaFilter={setDisciplinaFilter}
+                                setTopicoFilter={setTopicoFilter}
                                 disciplinas={selectDisciplinas}
                                 setCurrentPage={setCurrentPage}
                             />
 
-                            {disciplinaFilter !== '' && disciplinaFilter !== 0 &&(
+                            {disciplinaFilter !== '' && disciplinaFilter !== 0 && (
                                 <FilterTopic
                                     setTopicoFilter={setTopicoFilter}
                                     topicos={selectedTopicos}
                                     setCurrentPage={setCurrentPage}
+                                    topicoFilter={topicoFilter}
                                 />
                             )}
                         </div>
@@ -131,7 +141,7 @@ const Materials = () => {
                         data={conteudo}
                         currentPage={currentPage}
                         setCurrentPage={setCurrentPage}
-                        setIterationData={setIterationData}
+                        setIterationData={setRefreshKey}
                         hasData={hasData}
                     />
                 </div>
@@ -142,7 +152,7 @@ const Materials = () => {
                     handleCancel={() => setShowRegister(false)}
                     selectedTopicos={selectedTopicos}
                     setCurrentPage={setCurrentPage}
-                    setIterationData={setIterationData}
+                    setIterationData={setRefreshKey}
                 />
             )}
         </div>

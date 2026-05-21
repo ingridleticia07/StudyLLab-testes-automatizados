@@ -99,7 +99,8 @@ namespace StudyLabAPI.Services.Application.Forum
                 nomeTopico = topicoDiscussao.nomeTopico,
                 dataTopico = topicoDiscussao.dataTopico
             };
-            bool returnCheckTopicoDiscussaoExists = await _topicoDiscussaoRepository.VerifyTopicoDiscussaoExists(topicoDiscussaoModel);
+            
+            bool returnCheckTopicoDiscussaoExists = await _topicoDiscussaoRepository.VerifyTopicoDiscussaoExists(topicoDiscussaoModel, topicoDiscussao.disciplina);
             return returnCheckTopicoDiscussaoExists;
         }
 
@@ -117,6 +118,11 @@ namespace StudyLabAPI.Services.Application.Forum
 
         public async Task<TopicoDiscussaoModel> CreateTopicoDiscussao(RegisteredTopicoDiscussaoRequestModel topicoDiscussao)
         {
+            var checkIfTopicoDiscussaoExists = await VerifyTopicoDiscussaoExists(topicoDiscussao);
+                        
+            if(checkIfTopicoDiscussaoExists == true)
+                throw new Exception("Tópico discussão existente");
+                        
             int disciplinaId = topicoDiscussao.disciplina;
 
             DisciplinaModel? relatedDisciplina =
@@ -141,15 +147,21 @@ namespace StudyLabAPI.Services.Application.Forum
                 dataTopico = topicoDiscussao.dataTopico,
                 disciplina = relatedDisciplina,
                 usuario = relatedUsuario
-            };
+            }; 
+            
             await _topicoDiscussaoRepository.CreateTopicoDiscussao(novoTopicoDiscussao);
             await _topicoDiscussaoRepository.Flush();
-
+    
             return novoTopicoDiscussao;
         }
 
         public async Task<TopicoDiscussaoModel> UpdateTopicoDiscussao(RegisteredTopicoDiscussaoRequestModel topicoDiscussaoModel)
         {
+            var checkIfTopicoDiscussaoExists = await VerifyTopicoDiscussaoExists(topicoDiscussaoModel);
+                                    
+            if(checkIfTopicoDiscussaoExists == true)
+                throw new Exception("Tópico discussão existente");
+            
             int disciplinaId = topicoDiscussaoModel.disciplina;
 
             DisciplinaModel? relatedDisciplina = await _disciplinaRepository.GetDisciplinaByIdForUpdateTopico(disciplinaId);

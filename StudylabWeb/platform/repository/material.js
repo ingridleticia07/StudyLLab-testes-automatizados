@@ -38,9 +38,7 @@ export async function saveMaterial(respostaMaterialDTO) {
     formData.append('Idtopico', respostaMaterialDTO.Idtopico);
     formData.append('TipoMaterial', respostaMaterialDTO.TipoMaterial);
     formData.append('IdUsuario', respostaMaterialDTO.IdUsuario);
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
-  }
+    
       try {
         const response = await instance.post(
             MATERIAL_ENDPOINT + "/cadastrarDocumento",
