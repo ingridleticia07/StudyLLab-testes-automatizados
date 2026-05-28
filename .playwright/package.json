@@ -1,0 +1,28 @@
+{
+  "name": "testes-automatizados-studylab",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test --project=chromium",
+    "test:ci": "playwright test --project=chromium",
+    "test:auth": "playwright test tests/auth/auth.spec.js --project=chromium",
+    "test:auth:headed": "playwright test tests/auth/auth.spec.js --project=chromium --headed",
+    "test:users": "playwright test tests/users/users.spec.js --project=chromium",
+    "test:users:headed": "playwright test tests/users/users.spec.js --project=chromium --headed",
+    "test:subjects": "playwright test tests/subjects/subjects.spec.js --project=chromium",
+    "test:subjects:headed": "playwright test tests/subjects/subjects.spec.js --project=chromium --headed",
+    "test:topics": "playwright test tests/topics/topics.spec.js --project=chromium",
+    "test:topics:headed": "playwright test tests/topics/topics.spec.js --project=chromium --headed",
+    "test:contents": "playwright test tests/contents/contents.spec.js --project=chromium",
+    "test:contents:headed": "playwright test tests/contents/contents.spec.js --project=chromium --headed"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.6.0"
+  }
+}

@@ -1,0 +1,7 @@
+node_modules/
+test-results/
+playwright-report/
+ci-metrics/
+blob-report/
+.auth/
+.cache/
