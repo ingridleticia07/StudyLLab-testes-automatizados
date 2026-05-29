@@ -216,5 +216,44 @@ test('AUTH-001 - login com credenciais validas', async () => {
     });
   });
 
+  test('AUTH-011 - logout com sucesso', async ({ page }) => {
+    await test.step('Given that the user is authenticated in the admin area', async () => {
+      await loginThroughPortal(loginPage, authFixture);
+    });
+
+    await test.step('When the user clicks the logout button and confirms the native dialog', async () => {
+      let dialogMessage = '';
+      page.once('dialog', async (dialog) => {
+        dialogMessage = dialog.message();
+        await dialog.accept();
+      });
+      
+      await loginPage.clickSidebarLogout();
+      expect(dialogMessage).toBe(authFixture.messages.logoutConfirmation);
+    });
+
+    await test.step('Then the system should end the session and redirect the user to the login page', async () => {
+      await expect(loginPage.heading).toBeVisible({ timeout: 20000 });
+      await expect(loginPage.dashboardRoot).toBeHidden();
+      await expect(page).toHaveURL(authFixture.baseURL);
+    });
+  });
+
+  test('AUTH-012 - acessar direto com a URL sem realizar login', async ({ page }) => {
+    await test.step('Given that the user is not authenticated', async () => {
+      await loginPage.goto(authFixture.baseURL);
+    });
+
+    await test.step('When the user tries to access the admin URL directly', async () => {
+      await loginPage.gotoAdmin(authFixture.adminURL);
+    });
+
+    await test.step('Then the system should redirect the user to the login page', async () => {
+      await expect(loginPage.heading).toBeVisible({ timeout: 20000 });
+      await expect(page).toHaveURL(authFixture.baseURL, { timeout: 20000 });
+      await expect(loginPage.dashboardRoot).toBeHidden();
+    });
+  });
+
 
 });
