@@ -284,5 +284,101 @@ test.describe('Testes de Usuarios', () => {
     await usersPage.selectTypeOption(usersFixture.filters.type.all);
   });
 
-  
+  test('USER-001 - acessar tela de usuarios', async () => {
+    await test.step('Given that the admin user is on the initial admin page', async () => {
+      await usersPage.goto(authFixture.adminURL);
+    });
+
+    await test.step('When the user clicks the users option in the sidebar', async () => {
+      await usersPage.openFromSidebar();
+    });
+
+    await test.step('Then the users screen should be displayed with listing and actions', async () => {
+      await expect(usersPage.heading).toBeVisible();
+      await expect(usersPage.table).toBeVisible();
+      await expect(usersPage.registerUserButtons.first()).toBeVisible();
+    });
+  });
+
+  test('USER-002 - listagem paginada de usuarios', async () => {
+    await test.step('Given that the admin user is authenticated and on the users page', async () => {
+      await expect(usersPage.heading).toBeVisible();
+      await expect(usersPage.table).toBeVisible();
+    });
+
+    await test.step('When the first page is loaded and the user navigates to another available page', async () => {
+      expect(await usersPage.getVisibleRowsCount()).toBeGreaterThan(0);
+
+      const paginationCount = await usersPage.paginationButtons.count();
+      if (paginationCount > 1) {
+        await usersPage.goToPage(2);
+      }
+    });
+
+    await test.step('Then the system should keep the user list paginated and populated', async () => {
+      await expect(usersPage.table).toBeVisible();
+      expect(await usersPage.getVisibleRowsCount()).toBeGreaterThan(0);
+    });
+  });
+
+  test('USER-003 - filtro por status ativo', async () => {
+    await test.step('Given that the admin user is on the users page', async () => {
+      await expect(usersPage.heading).toBeVisible();
+    });
+
+    await test.step('When the status filter is changed to active', async () => {
+      await usersPage.selectStatusOption(usersFixture.filters.status.active);
+    });
+
+    await test.step('Then the system should display only active users in the current list', async () => {
+      expect(await usersPage.getStatusFilterLabel()).toContain(usersFixture.filters.status.active);
+      await expectAllColumnValuesToMatch(3, usersFixture.filters.status.active);
+    });
+  });
+
+  test('USER-004 - filtro por status inativo', async () => {
+    await test.step('Given that the admin user is on the users page', async () => {
+      await expect(usersPage.heading).toBeVisible();
+    });
+
+    await test.step('When the status filter is changed to inactive', async () => {
+      await usersPage.selectStatusOption(usersFixture.filters.status.inactive);
+    });
+
+    await test.step('Then the system should display only inactive users in the current list', async () => {
+      expect(await usersPage.getStatusFilterLabel()).toContain(usersFixture.filters.status.inactive);
+      await expectAllColumnValuesToMatch(3, usersFixture.filters.status.inactive);
+    });
+  });
+
+  test('USER-005 - filtro por todos os tipos de usuario', async () => {
+    await test.step('Given that the admin user is on the users page', async () => {
+      await expect(usersPage.heading).toBeVisible();
+    });
+
+    await test.step('When the type filter is changed to all user types', async () => {
+      await usersPage.selectTypeOption(usersFixture.filters.type.all);
+    });
+
+    await test.step('Then the system should keep the list visible for all user types', async () => {
+      expect(await usersPage.getTypeFilterLabel()).toContain(usersFixture.filters.type.all);
+      expect(await usersPage.getVisibleRowsCount()).toBeGreaterThan(0);
+    });
+  });
+
+  test('USER-006 - filtro por usuarios Admin', async () => {
+    await test.step('Given that the admin user is on the users page', async () => {
+      await expect(usersPage.heading).toBeVisible();
+    });
+
+    await test.step('When the type filter is changed to Admin', async () => {
+      await usersPage.selectTypeOption(usersFixture.filters.type.admin);
+    });
+
+    await test.step('Then the system should display only admin users in the current list', async () => {
+      expect(await usersPage.getTypeFilterLabel()).toContain(usersFixture.filters.type.admin);
+      await expectAllColumnValuesToMatch(2, usersFixture.filters.type.admin);
+    });
+  });
+
 });
