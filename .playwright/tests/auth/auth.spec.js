@@ -172,5 +172,49 @@ test('AUTH-001 - login com credenciais validas', async () => {
     });
   });
 
+  test('AUTH-009 - login com email com caracteres especiais', async () => {
+    await test.step('Given that the user is on the login page', async () => {
+      await loginPage.goto(authFixture.baseURL);
+      await expect(loginPage.heading).toBeVisible();
+    });
+
+    await test.step('When the user enters an email with invalid special characters', async () => {
+      await loginPage.fillEmail(authFixture.invalid.specialCharsEmail);
+      await loginPage.fillPassword(authFixture.admin.password);
+      await loginPage.submit();
+    });
+
+    await test.step('Then the browser should block the submission and keep the user on the login page', async () => {
+      expect(await loginPage.isEmailValid()).toBeFalsy();
+      expect(await loginPage.getEmailValidationMessage()).not.toBe('');
+      await expect(loginPage.heading).toBeVisible();
+      await expect(loginPage.errorAlert).toBeHidden();
+    });
+  });
+
+  test('AUTH-010 - login com email contendo espacos em branco', async () => {
+    await test.step('Given that the user is on the login page', async () => {
+      await loginPage.goto(authFixture.baseURL);
+      await expect(loginPage.heading).toBeVisible();
+    });
+
+    await test.step('When the user enters a valid institutional email with leading and trailing spaces', async () => {
+      await loginPage.login(authFixture.invalid.spacedEmail, authFixture.admin.password);
+      await loginPage.waitForIdleAfterSubmit(20000);
+    });
+
+    await test.step('Then the system should trim the email and authenticate the user successfully', async () => {
+      await expect(loginPage.loadingIndicator).toBeHidden({ timeout: 20000 });
+
+      const stillOnLoginScreen = await loginPage.isLoginScreenVisible();
+      const hasInlineError = await loginPage.hasInlineError();
+      const currentUrl = await loginPage.getCurrentUrl();
+
+      expect.soft(stillOnLoginScreen, 'Nao deveria permanecer na tela de login apos o trim do email.').toBeFalsy();
+      expect.soft(hasInlineError, 'Nao deveria exibir erro inline apos o trim do email.').toBeFalsy();
+      expect.soft(currentUrl, 'A URL deveria mudar apos login com email contendo espacos em branco.').not.toBe(authFixture.baseURL);
+    });
+  });
+
 
 });
