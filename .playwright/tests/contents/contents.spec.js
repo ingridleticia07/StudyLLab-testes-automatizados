@@ -413,5 +413,87 @@ test.describe('Testes de Conteúdos', () => {
     await ensureAdminUserCookie();
   });
 
+  test('CONT-001 - cadastro de documento PDF', async () => {
+    const topic = await createSupportTopic(primarySubject, 'Conteudo PDF');
+    let createdContent;
+
+    await test.step('Given that the admin user is on the contents page with a valid topic available', async () => {
+      await expect(materialsPage.heading).toBeVisible();
+    });
+
+    await test.step('When the user registers a new PDF content', async () => {
+      createdContent = await createMaterialViaUi({
+        topicName: topic.name,
+        subjectName: primarySubject.name,
+        filePaths: [contentsFixture.files.pdf],
+        typeValue: contentsFixture.materialTypes.artigo.value,
+      });
+      await registerMaterialForCleanup({
+        subjectName: primarySubject.name,
+        topicName: topic.name,
+      });
+    });
+
+    await test.step('Then the upload should be submitted successfully', async () => {
+      expect(createdContent.uploadResponse.status()).toBe(200);
+      await expect(materialsPage.registerModalHeading).toBeHidden();
+    });
+  });
+
+  test('CONT-002 - cadastro de uma imagem', async () => {
+    const topic = await createSupportTopic(primarySubject, 'Conteudo Imagem 1');
+    let createdContent;
+
+    await test.step('Given that the admin user has a valid topic available for content upload', async () => {
+      await expect(materialsPage.heading).toBeVisible();
+    });
+
+    await test.step('When the user registers a new content with one image file', async () => {
+      createdContent = await createMaterialViaUi({
+        topicName: topic.name,
+        subjectName: primarySubject.name,
+        filePaths: [contentsFixture.files.image1],
+        typeValue: contentsFixture.materialTypes.trabalho.value,
+      });
+      await registerMaterialForCleanup({
+        subjectName: primarySubject.name,
+        topicName: topic.name,
+      });
+    });
+
+    await test.step('Then the upload should be submitted successfully', async () => {
+      expect(createdContent.uploadResponse.status()).toBe(200);
+      await expect(materialsPage.registerModalHeading).toBeHidden();
+    });
+  });
+
+  test('CONT-003 - cadastro de duas imagens', async () => {
+    const topic = await createSupportTopic(primarySubject, 'Conteudo Imagem 2');
+    let createdContent;
+
+    await test.step('Given that the admin user has a valid topic available for multi-image upload', async () => {
+      await expect(materialsPage.heading).toBeVisible();
+    });
+
+    await test.step('When the user registers a new content with two image files', async () => {
+      createdContent = await createMaterialViaUi({
+        topicName: topic.name,
+        subjectName: primarySubject.name,
+        filePaths: [contentsFixture.files.image1, contentsFixture.files.image2],
+        typeValue: contentsFixture.materialTypes.pesquisa.value,
+      });
+      await registerMaterialForCleanup({
+        subjectName: primarySubject.name,
+        topicName: topic.name,
+      });
+    });
+
+    await test.step('Then the upload should be submitted successfully', async () => {
+      expect(createdContent.uploadResponse.status()).toBe(200);
+      await expect(materialsPage.registerModalHeading).toBeHidden();
+    });
+  });
+
+
   
 });
