@@ -494,4 +494,117 @@ test('USER-010 - exclusao de usuario', async ({ browser }) => {
     });
   });
 
+  test('USER-012 - cadastro com nome vazio', async () => {
+    await test.step('Given that the register user modal is open', async () => {
+      await usersPage.openRegisterModal();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user submits the form without filling the name field', async () => {
+      await fillRegisterFormExcept('name');
+      await usersPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should display the required validation message for name', async () => {
+      await expect(usersPage.page.getByText(usersFixture.messages.requiredName, { exact: true })).toBeVisible();
+    });
+  });
+
+  test('USER-013 - cadastro com curso nao selecionado', async () => {
+    await test.step('Given that the register user modal is open', async () => {
+      await usersPage.openRegisterModal();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user submits the form without selecting the course', async () => {
+      await fillRegisterFormExcept('course');
+      await usersPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should display the required validation message for course', async () => {
+      await expect(usersPage.page.getByText(usersFixture.messages.requiredCourse, { exact: true })).toBeVisible();
+    });
+  });
+
+  test('USER-014 - cadastro com tipo de usuario nao selecionado', async () => {
+    await test.step('Given that the register user modal is open', async () => {
+      await usersPage.openRegisterModal();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user submits the form without selecting the user type', async () => {
+      await fillRegisterFormExcept('role');
+      await usersPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should display the required validation message for user type', async () => {
+      await expect(usersPage.page.getByText(usersFixture.messages.requiredRole, { exact: true })).toBeVisible();
+    });
+  });
+
+  test('USER-015 - cadastro com matricula/siape vazia', async () => {
+    await test.step('Given that the register user modal is open', async () => {
+      await usersPage.openRegisterModal();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user submits the form without filling the matricula field', async () => {
+      await fillRegisterFormExcept('matricula');
+      await usersPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should display the required validation message for matricula', async () => {
+      await expect(usersPage.page.getByText(usersFixture.messages.requiredMatricula, { exact: true })).toBeVisible();
+    });
+  });
+
+  test('USER-016 - cadastro com email institucional vazio', async () => {
+    await test.step('Given that the register user modal is open', async () => {
+      await usersPage.openRegisterModal();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user submits the form without filling the institutional email', async () => {
+      await fillRegisterFormExcept('email');
+      await usersPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should display the required validation message for email', async () => {
+      await expect(usersPage.page.getByText(usersFixture.messages.requiredEmailInstitutional, { exact: true })).toBeVisible();
+    });
+  });
+
+  test('USER-017 - cadastro com senha vazia', async () => {
+    await test.step('Given that the register user modal is open', async () => {
+      await usersPage.openRegisterModal();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user submits the form without filling the password', async () => {
+      await fillRegisterFormExcept('password');
+      await usersPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should display the required validation message for password', async () => {
+      await expect(usersPage.page.getByText(usersFixture.messages.requiredPassword, { exact: true })).toBeVisible();
+    });
+  });
+
+  test('USER-018 - cadastro com email fora do dominio institucional', async () => {
+    await test.step('Given that the register user modal is open', async () => {
+      await usersPage.openRegisterModal();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user fills the form with a non-institutional email', async () => {
+      await fillRegisterFormExcept(null, { email: usersFixture.register.invalidEmail });
+      await usersPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should display the institutional email validation message', async () => {
+      await expect(usersPage.page.getByText(usersFixture.messages.requiredEmailInstitutional, { exact: true })).toBeVisible();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+    });
+  });
+
 });
