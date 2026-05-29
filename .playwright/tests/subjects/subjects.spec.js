@@ -714,5 +714,140 @@ test.describe('Testes de Disciplinas', () => {
     });
   });
 
+  test('DISC-020 - filtrar disciplinas por Engenharia de Software', async () => {
+    await test.step('Given that the admin user is on the subjects page', async () => {
+      await expect(subjectsPage.heading).toBeVisible();
+    });
+
+    await test.step('When the course filter is changed to Engenharia de Software', async () => {
+      await subjectsPage.selectCourseFilter(subjectsFixture.filters.software);
+    });
+
+    await test.step('Then the listing should keep the selected filter label and display only matching courses on screen', async () => {
+      expect(normalizeText(await subjectsPage.getCourseFilterLabel())).toContain(normalizeText(subjectsFixture.filters.software));
+      const courseTexts = await subjectsPage.getColumnTexts(3);
+      if (courseTexts.length > 0) {
+        for (const courseText of courseTexts) {
+          expect.soft(normalizeText(courseText)).toContain(normalizeText(subjectsFixture.filters.software));
+        }
+      }
+    });
+  });
+
+  test('DISC-021 - filtrar disciplinas por Ciência da Computação', async () => {
+    await test.step('Given that the admin user is on the subjects page', async () => {
+      await expect(subjectsPage.heading).toBeVisible();
+    });
+
+    await test.step('When the course filter is changed to Ciência da Computação', async () => {
+      await subjectsPage.selectCourseFilter(subjectsFixture.filters.computing);
+    });
+
+    await test.step('Then the listing should keep the selected filter label and display only matching courses on screen', async () => {
+      expect(normalizeText(await subjectsPage.getCourseFilterLabel())).toContain(normalizeText(subjectsFixture.filters.computing));
+      const courseTexts = await subjectsPage.getColumnTexts(3);
+      if (courseTexts.length > 0) {
+        for (const courseText of courseTexts) {
+          expect.soft(normalizeText(courseText)).toContain(normalizeText(subjectsFixture.filters.computing));
+        }
+      }
+    });
+  });
+
+  test('DISC-022 - filtrar disciplinas por Engenharia Civil', async () => {
+    await test.step('Given that the admin user is on the subjects page', async () => {
+      await expect(subjectsPage.heading).toBeVisible();
+    });
+
+    await test.step('When the course filter is changed to Engenharia Civil', async () => {
+      await subjectsPage.selectCourseFilter(subjectsFixture.filters.civil);
+    });
+
+    await test.step('Then the listing should keep the selected filter label and display only matching courses on screen', async () => {
+      expect(normalizeText(await subjectsPage.getCourseFilterLabel())).toContain(normalizeText(subjectsFixture.filters.civil));
+      const courseTexts = await subjectsPage.getColumnTexts(3);
+      if (courseTexts.length > 0) {
+        for (const courseText of courseTexts) {
+          expect.soft(normalizeText(courseText)).toContain(normalizeText(subjectsFixture.filters.civil));
+        }
+      }
+    });
+  });
+
+  test('DISC-023 - filtrar disciplinas por Engenharia de Produção', async () => {
+    await test.step('Given that the admin user is on the subjects page', async () => {
+      await expect(subjectsPage.heading).toBeVisible();
+    });
+
+    await test.step('When the course filter is changed to Engenharia de Produção', async () => {
+      await subjectsPage.selectCourseFilter(subjectsFixture.filters.production);
+    });
+
+    await test.step('Then the listing should keep the selected filter label and display only matching courses on screen', async () => {
+      expect(normalizeText(await subjectsPage.getCourseFilterLabel())).toContain(normalizeText(subjectsFixture.filters.production));
+      const courseTexts = await subjectsPage.getColumnTexts(3);
+      if (courseTexts.length > 0) {
+        for (const courseText of courseTexts) {
+          expect.soft(normalizeText(courseText)).toContain(normalizeText(subjectsFixture.filters.production));
+        }
+      }
+    });
+  });
+
+  test('DISC-024 - filtrar disciplinas por Engenharia Mecânica', async () => {
+    await test.step('Given that the admin user is on the subjects page', async () => {
+      await expect(subjectsPage.heading).toBeVisible();
+    });
+
+    await test.step('When the course filter is changed to Engenharia Mecânica', async () => {
+      await subjectsPage.selectCourseFilter(subjectsFixture.filters.mechanics);
+    });
+
+    await test.step('Then the listing should keep the selected filter label and display only matching courses on screen', async () => {
+      expect(normalizeText(await subjectsPage.getCourseFilterLabel())).toContain(normalizeText(subjectsFixture.filters.mechanics));
+      const courseTexts = await subjectsPage.getColumnTexts(3);
+      if (courseTexts.length > 0) {
+        for (const courseText of courseTexts) {
+          expect.soft(normalizeText(courseText)).toContain(normalizeText(subjectsFixture.filters.mechanics));
+        }
+      }
+    });
+  });
+
+  test('DISC-025 - selecionar todos os cursos no filtro', async () => {
+    await test.step('Given that the admin user is on the subjects page', async () => {
+      await expect(subjectsPage.heading).toBeVisible();
+    });
+
+    await test.step('When the course filter is changed to all courses', async () => {
+      await subjectsPage.selectCourseFilter(subjectsFixture.filters.all);
+    });
+
+    await test.step('Then the list should display the general subjects listing', async () => {
+      expect(await subjectsPage.getCourseFilterLabel()).toContain(subjectsFixture.filters.all);
+      expect(await subjectsPage.getVisibleRowsCount()).toBeGreaterThan(0);
+    });
+  });
+
+  test('DISC-026 - trocar filtro entre cursos diferentes', async () => {
+    let firstFilterRows = [];
+
+    await test.step('Given that the admin user is on the subjects page', async () => {
+      await expect(subjectsPage.heading).toBeVisible();
+    });
+
+    await test.step('When the user filters first by Engenharia de Software and then by Engenharia Civil', async () => {
+      await subjectsPage.selectCourseFilter(subjectsFixture.filters.software);
+      firstFilterRows = await subjectsPage.getColumnTexts(0);
+      await subjectsPage.selectCourseFilter(subjectsFixture.filters.civil);
+    });
+
+    await test.step('Then the listing should update to reflect the last selected course', async () => {
+      expect(await subjectsPage.getCourseFilterLabel()).toContain(subjectsFixture.filters.civil);
+      const secondFilterRows = await subjectsPage.getColumnTexts(0);
+      expect.soft(JSON.stringify(secondFilterRows), 'A troca de filtros deveria atualizar a listagem.').not.toBe(JSON.stringify(firstFilterRows));
+    });
+  });
+
 
 });
