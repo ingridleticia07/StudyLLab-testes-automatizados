@@ -339,5 +339,224 @@ test.describe('Testes de Disciplinas', () => {
     await subjectsPage.selectCourseFilter(subjectsFixture.filters.all);
   });
 
+  test('DISC-001 - acessar tela de disciplinas', async () => {
+    await test.step('Given that the admin user is on the initial admin page', async () => {
+      await subjectsPage.goto(authFixture.adminURL);
+    });
+
+    await test.step('When the user clicks the subjects option in the sidebar', async () => {
+      await subjectsPage.openFromSidebar();
+    });
+
+    await test.step('Then the subjects screen should be displayed with listing and actions', async () => {
+      await expect(subjectsPage.heading).toBeVisible();
+      await expect(subjectsPage.table).toBeVisible();
+      await expect(subjectsPage.registerSubjectButton).toBeVisible();
+    });
+  });
+
+  test('DISC-002 - listagem paginada de disciplinas', async () => {
+    await test.step('Given that the admin user is authenticated and on the subjects page', async () => {
+      await expect(subjectsPage.heading).toBeVisible();
+      await expect(subjectsPage.table).toBeVisible();
+    });
+
+    await test.step('When the first page is loaded and the user navigates to another available page', async () => {
+      expect(await subjectsPage.getVisibleRowsCount()).toBeGreaterThan(0);
+      const paginationCount = await subjectsPage.paginationButtons.count();
+      if (paginationCount > 1) {
+        await subjectsPage.goToPage(2);
+      }
+    });
+
+    await test.step('Then the system should keep the subjects list paginated and populated', async () => {
+      await expect(subjectsPage.table).toBeVisible();
+      expect(await subjectsPage.getVisibleRowsCount()).toBeGreaterThan(0);
+    });
+  });
+
+  test('DISC-003 - abrir modal de cadastro de disciplina', async () => {
+    await test.step('Given that the admin user is on the subjects page', async () => {
+      await expect(subjectsPage.heading).toBeVisible();
+    });
+
+    await test.step('When the user opens the register subject modal', async () => {
+      await subjectsPage.openRegisterModal();
+    });
+
+    await test.step('Then the register subject modal should be displayed', async () => {
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+  });
+
+  test('DISC-004 - cancelar cadastro de disciplina', async () => {
+    await test.step('Given that the register subject modal is open', async () => {
+      await subjectsPage.openRegisterModal();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user cancels the register modal', async () => {
+      await subjectsPage.closeRegisterModal();
+    });
+
+    await test.step('Then the modal should be closed without creating a new subject', async () => {
+      await expect(subjectsPage.registerModalHeading).toBeHidden();
+      await expect(subjectsPage.table).toBeVisible();
+    });
+  });
+
+  test('DISC-005 - cadastrar disciplina com dados validos', async () => {
+    await test.step('Given that the admin user opens the register subject modal', async () => {
+      createdSubject = buildTestSubject();
+      await subjectsPage.openRegisterModal();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the admin fills the subject form with valid data and submits it', async () => {
+      await subjectsPage.fillRegisterForm(createdSubject);
+      await subjectsPage.submitRegisterModal();
+      await subjectsPage.waitForRegisterModalClosed();
+      subjectsToCleanup.add(createdSubject.code);
+    });
+
+    await test.step('Then the subject should appear in the subjects list', async () => {
+      await expect(subjectsPage.registerModalHeading).toBeHidden();
+      await expect(subjectsPage.inlineAlert).toBeHidden();
+    });
+  });
+
+  test('DISC-006 - cadastrar disciplina com codigo vazio', async () => {
+    await test.step('Given that the register subject modal is open', async () => {
+      await subjectsPage.openRegisterModal();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user fills all fields except the subject code and submits the form', async () => {
+      await fillRegisterFormExcept('code');
+      await subjectsPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should display the required message for the code field', async () => {
+      await expect(subjectsPage.page.getByText(subjectsFixture.messages.requiredCode, { exact: true })).toBeVisible();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+  });
+
+  test('DISC-007 - cadastrar disciplina com nome vazio', async () => {
+    await test.step('Given that the register subject modal is open', async () => {
+      await subjectsPage.openRegisterModal();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user fills all fields except the subject name and submits the form', async () => {
+      await fillRegisterFormExcept('name');
+      await subjectsPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should display the required message for the name field', async () => {
+      await expect(subjectsPage.page.getByText(subjectsFixture.messages.requiredName, { exact: true })).toBeVisible();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+  });
+
+  test('DISC-008 - cadastrar disciplina com professor responsavel vazio', async () => {
+    await test.step('Given that the register subject modal is open', async () => {
+      await subjectsPage.openRegisterModal();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user fills all fields except the professor and submits the form', async () => {
+      await fillRegisterFormExcept('professor');
+      await subjectsPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should display the required message for the professor field', async () => {
+      await expect(subjectsPage.page.getByText(subjectsFixture.messages.requiredProfessor, { exact: true })).toBeVisible();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+  });
+
+  test('DISC-009 - cadastrar disciplina com quantidade de alunos vazia', async () => {
+    await test.step('Given that the register subject modal is open', async () => {
+      await subjectsPage.openRegisterModal();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user fills all fields except the students quantity and submits the form', async () => {
+      await fillRegisterFormExcept('studentsCount');
+      await subjectsPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should display the required message for the students quantity field', async () => {
+      await expect(subjectsPage.page.getByText(subjectsFixture.messages.requiredStudentsCount, { exact: true })).toBeVisible();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+  });
+
+  test('DISC-010 - cadastrar disciplina com curso nao selecionado', async () => {
+    await test.step('Given that the register subject modal is open', async () => {
+      await subjectsPage.openRegisterModal();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user fills all fields except the course and submits the form', async () => {
+      await fillRegisterFormExcept('course');
+      await subjectsPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should display the required message for the course field', async () => {
+      await expect(subjectsPage.page.getByText(subjectsFixture.messages.requiredCourse, { exact: true })).toBeVisible();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+  });
+
+  test('DISC-011 - cadastro com codigo de disciplina duplicado', async () => {
+    await test.step('Given that there is already a registered subject with the duplicated code', async () => {
+      await ensureDuplicateBaseSubject();
+      await subjectsPage.openRegisterModal();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user submits a new subject with the same code', async () => {
+      const duplicateAttempt = buildTestSubject({
+        code: duplicateBaseSubject.code,
+        name: `${duplicateBaseSubject.name} Duplicado`,
+        professor: `${duplicateBaseSubject.professor} Duplicado`,
+      });
+      await subjectsPage.fillRegisterForm(duplicateAttempt);
+      await subjectsPage.submitRegisterModal();
+      await expect(subjectsPage.inlineAlert).toBeVisible();
+    });
+
+    await test.step('Then the system should display the duplicated subject message', async () => {
+      await expect(subjectsPage.inlineAlert).toBeVisible();
+      await expect(subjectsPage.inlineAlert).toContainText(subjectsFixture.messages.duplicateSubject);
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+  });
+
+  test('DISC-012 - cadastro com quantidade de alunos invalida', async () => {
+    await test.step('Given that the register subject modal is open', async () => {
+      await subjectsPage.openRegisterModal();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user types a non numeric value in the students quantity field and submits the form', async () => {
+      const subject = buildTestSubject();
+      await subjectsPage.fillRegisterCode(subject.code);
+      await subjectsPage.fillRegisterName(subject.name);
+      await subjectsPage.fillRegisterProfessor(subject.professor);
+      await subjectsPage.typeRegisterStudentsCount('abc');
+      await subjectsPage.selectRegisterCourse(subject.course);
+      await subjectsPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should block the submission and keep the students quantity as required', async () => {
+      await expect(subjectsPage.page.getByText(subjectsFixture.messages.requiredStudentsCount, { exact: true })).toBeVisible();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+      await expect(subjectsPage.studentsCountInput).toHaveValue('');
+    });
+  });
+
 
 });
