@@ -502,6 +502,207 @@ test.describe('Testes de Topicos', () => {
     await ensureAdminUserCookie();
   });
 
+  test('TOP-001 - acessar tela de topicos', async () => {
+    await test.step('Given that the admin user is on the initial admin page', async () => {
+      await topicsPage.goto(authFixture.adminURL);
+    });
+
+    await test.step('When the user clicks the topics option in the sidebar', async () => {
+      await topicsPage.openFromSidebar();
+    });
+
+    await test.step('Then the topics screen should be displayed with listing, filter and actions', async () => {
+      await expect(topicsPage.heading).toBeVisible();
+      await expect(topicsPage.table).toBeVisible();
+      await expect(topicsPage.filterButton).toBeVisible();
+      await expect(topicsPage.registerTopicButton).toBeVisible();
+    });
+  });
+
+  test('TOP-002 - abrir modal de cadastro de topico', async () => {
+    await test.step('Given that the admin user is on the topics page', async () => {
+      await expect(topicsPage.heading).toBeVisible();
+    });
+
+    await test.step('When the user opens the register topic modal', async () => {
+      await topicsPage.openRegisterModal();
+    });
+
+    await test.step('Then the register topic modal should be displayed', async () => {
+      await expect(topicsPage.registerModalHeading).toBeVisible();
+    });
+  });
+
+  test('TOP-003 - paginacao de topicos', async () => {
+    await test.step('Given that the admin user is authenticated on the topics page', async () => {
+      await expect(topicsPage.heading).toBeVisible();
+      await expect(topicsPage.table).toBeVisible();
+    });
+
+    await test.step('When the first page is loaded and the user navigates to another available page', async () => {
+      expect(await topicsPage.getVisibleRowsCount()).toBeGreaterThan(0);
+
+      const paginationCount = await topicsPage.paginationButtons.count();
+      if (paginationCount > 1) {
+        await topicsPage.goToPage(2);
+      }
+    });
+
+    await test.step('Then the system should keep the topics list paginated and populated', async () => {
+      await expect(topicsPage.table).toBeVisible();
+      expect(await topicsPage.getVisibleRowsCount()).toBeGreaterThan(0);
+    });
+  });
+
+  test('TOP-004 - fechar modal de cadastro pelo botao cancelar', async () => {
+    await test.step('Given that the register topic modal is open', async () => {
+      await topicsPage.openRegisterModal();
+      await expect(topicsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user cancels the register modal', async () => {
+      await topicsPage.closeRegisterModal();
+    });
+
+    await test.step('Then the modal should be closed without creating a new topic', async () => {
+      await expect(topicsPage.registerModalHeading).toBeHidden();
+      await expect(topicsPage.table).toBeVisible();
+    });
+  });
+
+  test('TOP-005 - cadastrar topico com dados validos', async () => {
+    await test.step('Given that there is a test subject available and the register topic modal is open', async () => {
+      await ensurePrimarySubjectCreated();
+      createdTopic = buildTestTopic({
+        name: `Topico automação ${Date.now().toString().slice(-5)}`,
+        subjectName: primarySubject.name,
+      });
+      await topicsPage.openRegisterModal();
+      await expect(topicsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the admin fills the topic form with valid data and submits it', async () => {
+      await topicsPage.fillTopicName(createdTopic.name);
+      await topicsPage.selectModalSubject(createdTopic.subjectName);
+      await topicsPage.submitRegisterModal();
+      await topicsPage.waitForRegisterModalClosed();
+      registerTopicForCleanup(createdTopic);
+    });
+
+    await test.step('Then the topic should be created and displayed in the listing', async () => {
+      await expect(topicsPage.registerModalHeading).toBeHidden();
+      await assertTopicVisibleOnList(createdTopic);
+    });
+  });
+
+  test('TOP-006 - cadastro com nome do topico vazio', async () => {
+    await test.step('Given that the register topic modal is open', async () => {
+      await ensureTestSubjectsCreated();
+      await topicsPage.openRegisterModal();
+      await expect(topicsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user submits the form without filling the topic name', async () => {
+      await topicsPage.selectModalSubject(primarySubject.name);
+      await topicsPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should display the required validation message for topic name', async () => {
+      await expect(topicsPage.page.getByText(topicsFixture.messages.requiredName, { exact: true })).toBeVisible();
+      await expect(topicsPage.registerModalHeading).toBeVisible();
+    });
+  });
+
+  test('TOP-007 - cadastro com disciplina nao selecionada', async () => {
+    await test.step('Given that the register topic modal is open', async () => {
+      await topicsPage.openRegisterModal();
+      await expect(topicsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user submits the form without selecting the subject', async () => {
+      await topicsPage.fillTopicName(`Sem Disciplina ${Date.now().toString().slice(-4)}`);
+      await topicsPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should display the required validation message for subject', async () => {
+      await expect(topicsPage.page.getByText(topicsFixture.messages.requiredSubject, { exact: true })).toBeVisible();
+      await expect(topicsPage.registerModalHeading).toBeVisible();
+    });
+  });
+
+  test('TOP-008 - cadastro com nome do topico contendo apenas espacos', async () => {
+
+    await test.step('Given that the register topic modal is open', async () => {
+      await ensureTestSubjectsCreated();
+      await topicsPage.openRegisterModal();
+      await expect(topicsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user fills the topic name with only spaces and submits the form', async () => {
+      await topicsPage.fillTopicName('   ');
+      await topicsPage.selectModalSubject(primarySubject.name);
+      await topicsPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should block the form and display the topic name validation message', async () => {
+      await expect(topicsPage.page.getByText(topicsFixture.messages.requiredName, { exact: true })).toBeVisible();
+      await expect(topicsPage.registerModalHeading).toBeVisible();
+    });
+  });
+
+  test('TOP-009 - cadastro de topico duplicado na mesma disciplina', async () => {
+    await test.step('Given that a topic with the same name already exists in the same subject', async () => {
+      await ensurePrimarySubjectCreated();
+      createdTopic = buildTestTopic({
+        name: `Topico Duplicado ${Date.now().toString().slice(-5)}`,
+        subjectName: primarySubject.name,
+      });
+      await createAndAssertTopic(createdTopic);
+      await topicsPage.openRegisterModal();
+      await expect(topicsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user submits another topic with the same name in the same subject', async () => {
+      await topicsPage.fillTopicName(createdTopic.name);
+      await topicsPage.selectModalSubject(primarySubject.name);
+      await topicsPage.submitRegisterModal();
+      await expect(topicsPage.inlineAlert).toBeVisible();
+    });
+
+    await test.step('Then the system should display the duplicate topic message and keep the modal open', async () => {
+      await assertTopicRegisterBlocked();
+    });
+  });
+
+  test('TOP-010 - cadastro de topico com nome ja existente em disciplina diferente', async () => {
+    let crossSubjectTopic;
+
+    await test.step('Given that there is already a topic with this name in another subject', async () => {
+      await ensureTestSubjectsCreated();
+      createdTopic = buildTestTopic({
+        name: `Topico Duplicado ${Date.now().toString().slice(-5)}`,
+        subjectName: primarySubject.name,
+      });
+      await createAndAssertTopic(createdTopic);
+      crossSubjectTopic = buildTestTopic({
+        name: createdTopic.name,
+        subjectName: alternateSubject.name,
+      });
+      await topicsPage.openRegisterModal();
+      await expect(topicsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user submits the same topic name under a different subject', async () => {
+      await topicsPage.fillTopicName(crossSubjectTopic.name);
+      await topicsPage.selectModalSubject(crossSubjectTopic.subjectName);
+      await topicsPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should display the generic register error and keep the modal open', async () => {
+      await assertTopicRegisterBlocked();
+    });
+  });
+
 
 });
 
