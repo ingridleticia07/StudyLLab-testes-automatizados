@@ -661,32 +661,198 @@ test.describe('Testes de Conteúdos', () => {
     });
   });
 
-test('CONT-021 - cancelar cadastro de conteúdo', async () => {
-    const topic = await createSupportTopic(primarySubject, 'Conteudo Cancel');
+  test('CONT-015 - cadastrar conteúdo com mais de duas imagens', async () => {
+    const topic = await createSupportTopic(primarySubject, 'Conteudo Too Many Images');
     await reloadMaterialsPage();
     await materialsPage.selectSubjectFilter(primarySubject.name);
     await materialsPage.page.waitForTimeout(1000);
+    let uploadResponse;
+    let successToastWasShown = false;
 
-    await test.step('Given that the content register modal is open', async () => {
+    await test.step('Given that the content register modal is open with a valid topic available', async () => {
       await materialsPage.openRegisterModal();
       await expect(materialsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user tries to register a content with more than two images', async () => {
+      const uploadResponsePromise = materialsPage.page.waitForResponse((response) =>
+        response.url().includes('/material/cadastrarDocumento') && response.request().method() === 'POST',
+      );
+      const successToastPromise = materialsPage.page
+        .getByText(contentsFixture.messages.uploadSuccess, { exact: false })
+        .waitFor({ state: 'visible', timeout: 3000 })
+        .then(() => true)
+        .catch(() => false);
+
       await materialsPage.fillRegisterForm({
         topicName: topic.name,
-        filePaths: [contentsFixture.files.image1],
+        filePaths: [
+          contentsFixture.files.image1,
+          contentsFixture.files.image2,
+          contentsFixture.files.image3,
+        ],
         typeValue: contentsFixture.materialTypes.prova.value,
       });
+      await materialsPage.submitRegisterModal();
+      uploadResponse = await uploadResponsePromise;
+      successToastWasShown = await successToastPromise;
     });
 
-    await test.step('When the user cancels the content registration', async () => {
-      await materialsPage.closeRegisterModal();
-    });
-
-    await test.step('Then the modal should be closed without creating a new content', async () => {
-      await expect(materialsPage.registerModalHeading).toBeHidden();
-      await expect(materialsPage.table).toBeVisible();
-      await expect(materialsPage.page.getByText(contentsFixture.messages.uploadSuccess, { exact: false })).toHaveCount(0);
+    await test.step('Then the content should not be created successfully', async () => {
+      expect(uploadResponse.status()).toBe(400);
+      expect(successToastWasShown,'O sistema não deveria exibir mensagem de sucesso quando o upload com mais de duas imagens retorna erro.',).toBeFalsy();
     });
   });
 
+  test('CONT-016 - cadastrar conteúdo com PDF e imagem no mesmo envio', async () => {
+    const topic = await createSupportTopic(primarySubject, 'Conteudo Mixed Upload');
+    await reloadMaterialsPage();
+    await materialsPage.selectSubjectFilter(primarySubject.name);
+    await materialsPage.page.waitForTimeout(1000);
+    let uploadResponse;
+    let successToastWasShown = false;
+
+    await test.step('Given that the content register modal is open with a valid topic available', async () => {
+      await materialsPage.openRegisterModal();
+      await expect(materialsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user tries to register a content with a PDF and an image in the same upload', async () => {
+      const uploadResponsePromise = materialsPage.page.waitForResponse((response) =>
+        response.url().includes('/material/cadastrarDocumento') && response.request().method() === 'POST',
+      );
+      const successToastPromise = materialsPage.page
+        .getByText(contentsFixture.messages.uploadSuccess, { exact: false })
+        .waitFor({ state: 'visible', timeout: 3000 })
+        .then(() => true)
+        .catch(() => false);
+
+      await materialsPage.fillRegisterForm({
+        topicName: topic.name,
+        filePaths: [contentsFixture.files.pdf, contentsFixture.files.image1],
+        typeValue: contentsFixture.materialTypes.artigo.value,
+      });
+      await materialsPage.submitRegisterModal();
+      uploadResponse = await uploadResponsePromise;
+      successToastWasShown = await successToastPromise;
+    });
+
+    await test.step('Then the content should not be created successfully', async () => {
+      expect(uploadResponse.status()).toBe(400);
+      expect(successToastWasShown,'O sistema não deveria exibir mensagem de sucesso quando o upload com PDF e imagem retorna erro.',).toBeFalsy();
+    });
+  });
+
+  test('CONT-017 - cadastrar conteúdo com arquivo acima de 2 MB', async () => {
+    const topic = await createSupportTopic(primarySubject, 'Conteudo Oversized');
+    await reloadMaterialsPage();
+    await materialsPage.selectSubjectFilter(primarySubject.name);
+    await materialsPage.page.waitForTimeout(1000);
+    let uploadResponse;
+    let successToastWasShown = false;
+
+    await test.step('Given that the content register modal is open with a valid topic available', async () => {
+      await materialsPage.openRegisterModal();
+      await expect(materialsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user tries to register a content with an oversized file', async () => {
+      const uploadResponsePromise = materialsPage.page.waitForResponse((response) =>
+        response.url().includes('/material/cadastrarDocumento') && response.request().method() === 'POST',
+      { timeout: 15000 }).catch(() => null);
+      const successToastPromise = materialsPage.page
+        .getByText(contentsFixture.messages.uploadSuccess, { exact: false })
+        .waitFor({ state: 'visible', timeout: 5000 })
+        .then(() => true)
+        .catch(() => false);
+
+      await materialsPage.fillRegisterForm({
+        topicName: topic.name,
+        filePaths: [contentsFixture.files.oversizedImage],
+        typeValue: contentsFixture.materialTypes.prova.value,
+      });
+      await materialsPage.submitRegisterModal();
+      [uploadResponse, successToastWasShown] = await Promise.all([
+        uploadResponsePromise,
+        successToastPromise,
+      ]);
+    });
+
+    await test.step('Then the content should not be created successfully', async () => {
+      if (uploadResponse) {
+        expect(uploadResponse.status()).toBe(400);
+      }
+      expect(successToastWasShown,'O sistema n?o deveria exibir mensagem de sucesso quando o upload com arquivo acima de 2 MB retorna erro.',).toBeFalsy();
+    });
+
+  });
+
+  test('CONT-018 - cadastrar conteúdo com formato de arquivo não suportado', async () => {
+    const topic = await createSupportTopic(primarySubject, 'Conteudo Unsupported');
+    await reloadMaterialsPage();
+    await materialsPage.selectSubjectFilter(primarySubject.name);
+    await materialsPage.page.waitForTimeout(1000);
+    let uploadResponse;
+    let successToastWasShown = false;
+
+    await test.step('Given that the content register modal is open with a valid topic available', async () => {
+      await materialsPage.openRegisterModal();
+      await expect(materialsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user tries to register a content with an unsupported file type', async () => {
+      const uploadResponsePromise = materialsPage.page.waitForResponse((response) =>
+        response.url().includes('/material/cadastrarDocumento') && response.request().method() === 'POST',
+      );
+      const successToastPromise = materialsPage.page
+        .getByText(contentsFixture.messages.uploadSuccess, { exact: false })
+        .waitFor({ state: 'visible', timeout: 3000 })
+        .then(() => true)
+        .catch(() => false);
+
+      await materialsPage.fillRegisterForm({
+        topicName: topic.name,
+        filePaths: [contentsFixture.files.unsupported],
+        typeValue: contentsFixture.materialTypes.outros.value,
+      });
+      await materialsPage.submitRegisterModal();
+      uploadResponse = await uploadResponsePromise;
+      successToastWasShown = await successToastPromise;
+    });
+
+    await test.step('Then the content should not be created successfully', async () => {
+      expect(uploadResponse.status()).toBe(400);
+      expect(
+        successToastWasShown,'O sistema não deveria exibir mensagem de sucesso quando o upload com formato não suportado retorna erro.',).toBeFalsy();
+    });
+  });
+
+
+  test('CONT-021 - cancelar cadastro de conteúdo', async () => {
+      const topic = await createSupportTopic(primarySubject, 'Conteudo Cancel');
+      await reloadMaterialsPage();
+      await materialsPage.selectSubjectFilter(primarySubject.name);
+      await materialsPage.page.waitForTimeout(1000);
+
+      await test.step('Given that the content register modal is open', async () => {
+        await materialsPage.openRegisterModal();
+        await expect(materialsPage.registerModalHeading).toBeVisible();
+        await materialsPage.fillRegisterForm({
+          topicName: topic.name,
+          filePaths: [contentsFixture.files.image1],
+          typeValue: contentsFixture.materialTypes.prova.value,
+        });
+      });
+
+      await test.step('When the user cancels the content registration', async () => {
+        await materialsPage.closeRegisterModal();
+      });
+
+      await test.step('Then the modal should be closed without creating a new content', async () => {
+        await expect(materialsPage.registerModalHeading).toBeHidden();
+        await expect(materialsPage.table).toBeVisible();
+        await expect(materialsPage.page.getByText(contentsFixture.messages.uploadSuccess, { exact: false })).toHaveCount(0);
+      });
+    });
 
 });
