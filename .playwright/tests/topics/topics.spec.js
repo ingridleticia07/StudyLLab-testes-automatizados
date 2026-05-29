@@ -861,6 +861,149 @@ test.describe('Testes de Topicos', () => {
     });
   });
 
+  test('TOP-017 - editar topico deixando nome vazio', async () => {
+    let topicToEdit;
+
+    await test.step('Given that the edit modal is open for the created topic', async () => {
+      await ensurePrimarySubjectCreated();
+      topicToEdit = buildTestTopic({
+        name: `Tópico Nome Obrigatorio ${Date.now().toString().slice(-5)}`,
+        subjectName: primarySubject.name,
+      });
+      await createAndAssertTopic(topicToEdit);
+      await topicsPage.openEditTopicByName(topicToEdit.name, topicToEdit.subjectName);
+      await expect(topicsPage.editModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user clears the topic name and tries to save the modal', async () => {
+      await topicsPage.clearTopicName();
+      await topicsPage.saveEditModal();
+    });
+
+    await test.step('Then the system should display the required validation message and keep the modal open', async () => {
+      await expect(topicsPage.page.getByText(topicsFixture.messages.requiredName, { exact: true })).toBeVisible();
+      await expect(topicsPage.editModalHeading).toBeVisible();
+      await topicsPage.closeEditModal();
+    });
+  });
+
+  test('TOP-018 - editar topico para nome duplicado na mesma disciplina', async () => {
+    let topicToEdit;
+    let duplicateTopic;
+
+    await test.step('Given that another topic exists in the same subject to create a duplicate conflict', async () => {
+      await ensurePrimarySubjectCreated();
+      topicToEdit = buildTestTopic({
+        name: `Tópico Editar Base ${Date.now().toString().slice(-5)}`,
+        subjectName: primarySubject.name,
+      });
+      duplicateTopic = buildTestTopic({
+        name: `Tópico Editar Duplicado ${Date.now().toString().slice(-5)}`,
+        subjectName: primarySubject.name,
+      });
+      await createAndAssertTopic(topicToEdit);
+      await createAndAssertTopic(duplicateTopic);
+      await topicsPage.openEditTopicByName(topicToEdit.name, topicToEdit.subjectName);
+      await expect(topicsPage.editModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user tries to save the edited topic with the duplicate sibling name', async () => {
+      await topicsPage.fillTopicName(duplicateTopic.name);
+      await topicsPage.saveEditModal();
+      await expect(topicsPage.inlineAlert).toBeVisible();
+    });
+
+    await test.step('Then the system should display the duplicate topic message and keep the edit modal open', async () => {
+      await expect(topicsPage.inlineAlert).toBeVisible();
+      await expect(topicsPage.inlineAlert).toContainText(topicsFixture.messages.duplicateTopic);
+      await expect(topicsPage.editModalHeading).toBeVisible();
+      await topicsPage.closeEditModal();
+    });
+  });
+
+  test('TOP-019 - excluir topico existente', async () => {
+    let disposableTopic;
+
+    await test.step('Given that a disposable topic exists for deletion', async () => {
+      await ensurePrimarySubjectCreated();
+      disposableTopic = buildTestTopic({
+        name: `Tópico Delete ${Date.now().toString().slice(-5)}`,
+        subjectName: primarySubject.name,
+      });
+      await createAndAssertTopic(disposableTopic);
+      await topicsPage.openDeletePopupByTopicName(disposableTopic.name, disposableTopic.subjectName);
+      await expect(topicsPage.deleteModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user confirms the deletion', async () => {
+      await topicsPage.confirmDeletePopup();
+      await topicsPage.waitForDeletePopupClosed();
+      await topicsPage.waitForTableData();
+    });
+
+    await test.step('Then the deleted topic should no longer appear in the listing', async () => {
+      unregisterTopicFromCleanup(disposableTopic);
+      await topicsPage.selectSubjectFilter(disposableTopic.subjectName);
+      const row = await findTopicRowAcrossPages(disposableTopic);
+      await expect(row).toHaveCount(0);
+    });
+  });
+
+  test('TOP-020 - cancelar exclusao de topico', async () => {
+    let topicToKeep;
+
+    await test.step('Given that the delete confirmation popup is open for the created topic', async () => {
+      await ensurePrimarySubjectCreated();
+      topicToKeep = buildTestTopic({
+        name: `Tópico Cancelar Exclusao ${Date.now().toString().slice(-5)}`,
+        subjectName: primarySubject.name,
+      });
+      await createAndAssertTopic(topicToKeep);
+      await topicsPage.openDeletePopupByTopicName(topicToKeep.name, topicToKeep.subjectName);
+      await expect(topicsPage.deleteModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user cancels the deletion', async () => {
+      await expect(topicsPage.page.getByText(topicsFixture.messages.deleteConfirmationText, { exact: false })).toBeVisible();
+      await expect(topicsPage.page.getByText(topicsFixture.messages.irreversibleAction, { exact: false })).toBeVisible();
+      await topicsPage.cancelDeletePopup();
+    });
+
+    await test.step('Then the topic should remain visible in the listing without changes', async () => {
+      await expect(topicsPage.deleteModalHeading).toBeHidden();
+      await assertTopicVisibleOnList(topicToKeep);
+    });
+  });
+
+  test('TOP-021 - excluir topico vinculado a conteudos ou respostas', async () => {
+    let dependentTopic;
+    const linkedResponse = buildTestForumResponse();
+    await test.step('Given that a topic exists with a linked forum response', async () => {
+      const dependentSubject = buildTestSubject({
+        code: buildUniqueSubjectCode('TPL'),
+        name: `[AUTO] Disciplina Dependencia ${buildAutoSubjectSuffix()}`,
+        professor: `Professor Topico Vinculado ${buildAutoSubjectSuffix()}`,
+        studentsCount: '50',
+        course: subjectsFixture.courses.software.value,
+        courseLabel: subjectsFixture.courses.software.label,
+      });
+
+      await createSubjectIfMissing(dependentSubject);
+      dependentTopic = buildTestTopic({
+        name: `Topico Vinculado ${Date.now().toString().slice(-5)}`,
+        subjectName: dependentSubject.name,
+      });
+      await createLinkedForumResponseScenario(dependentTopic, linkedResponse.text);
+    });
+
+    await test.step('When the user tries to delete the linked topic', async () => {
+      await attemptDeleteLinkedTopic(dependentTopic);
+    });
+
+    await test.step('Then the system should keep the topic in the listing because of the dependency', async () => {
+      await assertTopicVisibleOnList(dependentTopic);
+    });
+  });
 
 });
 
