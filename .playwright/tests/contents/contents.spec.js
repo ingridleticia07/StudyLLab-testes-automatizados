@@ -583,6 +583,110 @@ test.describe('Testes de Conteúdos', () => {
     });
   });
 
+  test('CONT-012 - cadastrar conteúdo sem selecionar tipo de material', async () => {
+    const topic = await createSupportTopic(primarySubject, 'Conteudo Missing Type');
+    await reloadMaterialsPage();
+    await materialsPage.selectSubjectFilter(primarySubject.name);
+    await materialsPage.page.waitForTimeout(1000);
 
-  
+    await test.step('Given that the content register modal is open', async () => {
+      await materialsPage.openRegisterModal();
+      await expect(materialsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user submits the form without selecting the material type', async () => {
+      await materialsPage.fillRegisterFormExcept('type', {
+        filePaths: [contentsFixture.files.image1],
+        typeValue: contentsFixture.materialTypes.prova.value,
+        topicName: topic.name,
+      });
+      await materialsPage.submitRegisterModal();
+    });
+
+    await test.step('Then the required validation message for material type should be displayed', async () => {
+      await expect(materialsPage.page.getByText(contentsFixture.messages.requiredType, { exact: false })).toBeVisible();
+      await expect(materialsPage.registerModalHeading).toBeVisible();
+      await materialsPage.closeRegisterModal();
+    });
+  });
+
+  test('CONT-013 - cadastrar conteúdo sem selecionar tópico', async () => {
+    await reloadMaterialsPage();
+
+    await test.step('Given that the content register modal is open', async () => {
+      await materialsPage.openRegisterModal();
+      await expect(materialsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user submits the form without selecting the topic', async () => {
+      await materialsPage.fillRegisterFormExcept('topic', {
+        filePaths: [contentsFixture.files.image1],
+        typeValue: contentsFixture.materialTypes.prova.value,
+        topicName: 'placeholder',
+      });
+      await materialsPage.submitRegisterModal();
+    });
+
+    await test.step('Then the required validation message for topic should be displayed', async () => {
+      await expect(materialsPage.page.getByText(contentsFixture.messages.requiredTopic, { exact: false })).toBeVisible();
+      await expect(materialsPage.registerModalHeading).toBeVisible();
+      await materialsPage.closeRegisterModal();
+    });
+  });
+
+  test('CONT-014 - cadastrar conteúdo sem selecionar arquivo', async () => {
+    const topic = await createSupportTopic(primarySubject, 'Conteudo Missing File');
+    await reloadMaterialsPage();
+    await materialsPage.selectSubjectFilter(primarySubject.name);
+    await materialsPage.page.waitForTimeout(1000);
+
+    await test.step('Given that the content register modal is open', async () => {
+      await materialsPage.openRegisterModal();
+      await expect(materialsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user submits the form without selecting any file', async () => {
+      await materialsPage.fillRegisterFormExcept('files', {
+        filePaths: [contentsFixture.files.image1],
+        typeValue: contentsFixture.materialTypes.prova.value,
+        topicName: topic.name,
+      });
+      await materialsPage.submitRegisterModal();
+    });
+
+    await test.step('Then the required validation message for file selection should be displayed', async () => {
+      await expect(materialsPage.page.getByText(contentsFixture.messages.requiredFiles, { exact: false })).toBeVisible();
+      await expect(materialsPage.registerModalHeading).toBeVisible();
+      await materialsPage.closeRegisterModal();
+    });
+  });
+
+test('CONT-021 - cancelar cadastro de conteúdo', async () => {
+    const topic = await createSupportTopic(primarySubject, 'Conteudo Cancel');
+    await reloadMaterialsPage();
+    await materialsPage.selectSubjectFilter(primarySubject.name);
+    await materialsPage.page.waitForTimeout(1000);
+
+    await test.step('Given that the content register modal is open', async () => {
+      await materialsPage.openRegisterModal();
+      await expect(materialsPage.registerModalHeading).toBeVisible();
+      await materialsPage.fillRegisterForm({
+        topicName: topic.name,
+        filePaths: [contentsFixture.files.image1],
+        typeValue: contentsFixture.materialTypes.prova.value,
+      });
+    });
+
+    await test.step('When the user cancels the content registration', async () => {
+      await materialsPage.closeRegisterModal();
+    });
+
+    await test.step('Then the modal should be closed without creating a new content', async () => {
+      await expect(materialsPage.registerModalHeading).toBeHidden();
+      await expect(materialsPage.table).toBeVisible();
+      await expect(materialsPage.page.getByText(contentsFixture.messages.uploadSuccess, { exact: false })).toHaveCount(0);
+    });
+  });
+
+
 });
