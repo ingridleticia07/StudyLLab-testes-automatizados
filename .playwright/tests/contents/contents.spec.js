@@ -494,6 +494,95 @@ test.describe('Testes de Conteúdos', () => {
     });
   });
 
+  test('CONT-004 - listagem paginada de conteúdos', async () => {
+    await test.step('Given that the admin user is on the contents page with listed records', async () => {
+      await reloadMaterialsPage();
+      await expect(materialsPage.table).toBeVisible();
+      expect(await materialsPage.getVisibleRowsCount()).toBeGreaterThan(0);
+    });
+
+    await test.step('When the user navigates through another page if pagination is available', async () => {
+      const pageNumbers = await materialsPage.getPaginationPageNumbers();
+      if (pageNumbers.length > 1) {
+        await materialsPage.goToPage(2);
+      }
+    });
+
+    await test.step('Then the contents list should remain visible and populated', async () => {
+      await expect(materialsPage.table).toBeVisible();
+      expect(await materialsPage.getVisibleRowsCount()).toBeGreaterThan(0);
+    });
+  });
+
+  test('CONT-006 - aluno apenas visualiza conteúdos', async ({ browser }) => {
+    let studentSession;
+
+    await test.step('Given that the student logs into the platform and accesses the contents page', async () => {
+      studentSession = await loginWithFixedStudent(browser);
+    });
+
+    await test.step('When the contents page is displayed in the student area', async () => {
+      await expect(studentSession.studentMaterialsPage.heading).toBeVisible();
+      await expect(studentSession.studentMaterialsPage.table).toBeVisible();
+    });
+
+    await test.step('Then the student area should only expose visualization actions', async () => {
+      await expect(studentSession.studentMaterialsPage.registerContentButton).toHaveCount(0);
+      await expect(studentSession.studentMaterialsPage.page.getByRole('button', { name: /Cadastrar Conte/i })).toHaveCount(0);
+      await expect(studentSession.studentMaterialsPage.page.getByRole('button', { name: 'editar' })).toHaveCount(0);
+
+      const rowCount = await studentSession.studentMaterialsPage.getVisibleRowsCount();
+      if (rowCount > 0) {
+        const firstRow = studentSession.studentMaterialsPage.tableRows.first();
+        await expect(firstRow.getByRole('button', { name: 'visualizar' })).toBeVisible();
+        await expect(firstRow.getByRole('button', { name: 'editar' })).toHaveCount(0);
+        await expect(firstRow.getByRole('button', { name: 'excluir' })).toHaveCount(0);
+      }
+    });
+
+    await studentSession?.page?.close().catch(() => null);
+    await studentSession?.context?.close().catch(() => null);
+  });
+
+  test('CONT-010 - exibir listagem geral ao selecionar "Todas as disciplinas"', async () => {
+    let firstVisibleEntry;
+
+    await test.step('Given that the contents page has records listed before any discipline filter is applied', async () => {
+      await reloadMaterialsPage();
+      firstVisibleEntry = await getFirstVisibleContentRow();
+    });
+
+    await test.step('When the user filters by one visible discipline and then returns to "Todas as disciplinas"', async () => {
+      await materialsPage.selectSubjectFilter(firstVisibleEntry.subjectName);
+      await expect(materialsPage.table).toBeVisible();
+      await materialsPage.selectSubjectFilter(contentsFixture.filters.allSubjects);
+    });
+
+    await test.step('Then the general contents list should be displayed again', async () => {
+      await expect(materialsPage.table).toBeVisible();
+      const row = getContentRowByTitleAndSubject(firstVisibleEntry.title, firstVisibleEntry.subjectName);
+      await expect(row).toBeVisible();
+    });
+  });
+
+  test('CONT-011 - filtrar disciplina sem conteúdos', async () => {
+    await ensureBaseSubjectsCreated();
+    await reloadMaterialsPage();
+
+    await test.step('Given that a discipline exists without registered contents', async () => {
+      await materialsPage.goto(contentsFixture.adminContentsURL);
+      await materialsPage.waitForListReady();
+    });
+
+    await test.step('When the user filters the list by the discipline without contents', async () => {
+      await materialsPage.selectSubjectFilter(emptySubject.name);
+    });
+
+    await test.step('Then the system should display that no records were found', async () => {
+      await expect(materialsPage.emptyListMessage).toBeVisible();
+    });
+  });
+
 
   
 });
