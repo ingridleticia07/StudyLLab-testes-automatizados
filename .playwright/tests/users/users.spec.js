@@ -607,4 +607,333 @@ test('USER-010 - exclusao de usuario', async ({ browser }) => {
     });
   });
 
+  test('USER-019 - cadastro com email em formato inválido', async () => {
+    const invalidUser = buildTestStudentUser();
+
+    await test.step('Given that the register user modal is open', async () => {
+      await usersPage.openRegisterModal();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the admin fills the form with an invalid institutional email format', async () => {
+      await fillRegisterFormExcept(null, {
+        ...invalidUser,
+        email: usersFixture.register.malformedInstitutionalEmail,
+      });
+      invalidUser.email = usersFixture.register.malformedInstitutionalEmail;
+      invalidUser.password = usersFixture.register.defaultPassword;
+      invalidUser.course = usersFixture.register.defaultCourse;
+      invalidUser.role = usersFixture.register.defaultRole;
+      invalidUser.registerResponse = await submitRegisterModalCapturingResponse();
+    });
+
+    await test.step('Then the system should block the registration and display the invalid email message', async () => {
+      expect.soft(
+        invalidUser.registerResponse?.status() ?? 0,
+        'O sistema não deveria aceitar cadastro com email em formato inválido.',
+      ).not.toBe(200);
+      await expect(usersPage.page.getByText(usersFixture.messages.requiredEmailInstitutional, { exact: true })).toBeVisible();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+      await assertUserWasNotCreated(
+        invalidUser,
+        'O sistema não deveria cadastrar usuário com email em formato inválido.',
+        'matricula',
+      );
+    });
+  });
+
+  test('USER-020 - cadastro com senha menor que o mínimo permitido', async () => {
+    const invalidUser = buildTestStudentUser();
+
+    await test.step('Given that the register user modal is open', async () => {
+      await usersPage.openRegisterModal();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the admin fills the form with a password shorter than the minimum allowed', async () => {
+      await fillRegisterFormExcept(null, {
+        ...invalidUser,
+        password: usersFixture.register.shortPassword,
+      });
+      invalidUser.password = usersFixture.register.shortPassword;
+      invalidUser.registerResponse = await submitRegisterModalCapturingResponse();
+    });
+
+    await test.step('Then the system should block the registration and display the password validation message', async () => {
+      expect.soft(
+        invalidUser.registerResponse,
+        'O sistema deveria bloquear o envio antes de chegar à API quando a senha é menor que o mínimo.',
+      ).toBeNull();
+      await expect(usersPage.page.getByText(usersFixture.messages.requiredPassword, { exact: true })).toBeVisible();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+      await assertUserWasNotCreated(
+        invalidUser,
+        'O sistema não deveria cadastrar usuário com senha menor que o mínimo permitido.',
+        'matricula',
+      );
+    });
+  });
+
+  test('USER-021 - cadastro com senha fora dos critérios de composição', async () => {
+    const invalidUser = buildTestStudentUser();
+
+    await test.step('Given that the register user modal is open', async () => {
+      await usersPage.openRegisterModal();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the admin fills the form with a password that does not meet the composition rules', async () => {
+      await fillRegisterFormExcept(null, {
+        ...invalidUser,
+        password: usersFixture.register.weakPassword,
+      });
+      invalidUser.password = usersFixture.register.weakPassword;
+      invalidUser.registerResponse = await submitRegisterModalCapturingResponse();
+    });
+
+    await test.step('Then the system should block the registration and display the password criteria message', async () => {
+      expect.soft(
+        invalidUser.registerResponse,
+        'O sistema deveria bloquear o envio antes de chegar à API quando a senha não atende aos critérios de composição.',
+      ).toBeNull();
+      await expect(usersPage.page.getByText(usersFixture.messages.requiredPassword, { exact: true })).toBeVisible();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+      await assertUserWasNotCreated(
+        invalidUser,
+        'O sistema não deveria cadastrar usuário com senha fora dos critérios de composição.',
+        'matricula',
+      );
+    });
+  });
+
+
+
+  test('USER-023 - cadastro com email duplicado', async () => {
+    const existingUser = buildTestStudentUser();
+    const duplicateEmailUser = {
+      ...buildTestStudentUser(),
+      email: existingUser.email,
+    };
+
+    await test.step('Given that an existing student user already uses the target email', async () => {
+      await createSupportStudentUser(existingUser, 'matricula');
+      await ensureUsersPageReady();
+    });
+
+    await test.step('When the admin tries to register a new user with the duplicated email', async () => {
+      await usersPage.openRegisterModal();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+      await fillRegisterFormExcept(null, duplicateEmailUser);
+      duplicateEmailUser.registerResponse = await submitRegisterModalCapturingResponse();
+    });
+
+    await test.step('Then the system should block the registration and inform that the email is duplicated', async () => {
+      expect(duplicateEmailUser.registerResponse?.status()).toBe(400);
+      await expect(usersPage.inlineAlert).toContainText(usersFixture.messages.duplicateUser);
+      await expect(usersPage.registerModalHeading).toBeVisible();
+      await assertUserWasNotCreated(
+        duplicateEmailUser,
+        'O sistema não deveria cadastrar um segundo usuário com email duplicado.',
+        'matricula',
+      );
+    });
+  });
+
+  test('USER-024 - cadastro com matrícula/siape duplicado', async () => {
+    const existingUser = buildTestStudentUser();
+    const duplicateMatriculaUser = {
+      ...buildTestStudentUser(),
+      matricula: existingUser.matricula,
+    };
+
+    await test.step('Given that an existing student user already uses the target matricula/siape', async () => {
+      await createSupportStudentUser(existingUser, 'matricula');
+      await ensureUsersPageReady();
+    });
+
+    await test.step('When the admin tries to register a new user with the duplicated matricula/siape', async () => {
+      await usersPage.openRegisterModal();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+      await fillRegisterFormExcept(null, duplicateMatriculaUser);
+      duplicateMatriculaUser.registerResponse = await submitRegisterModalCapturingResponse();
+    });
+
+    await test.step('Then the system should block the registration and inform that the matricula/siape is duplicated', async () => {
+      expect(duplicateMatriculaUser.registerResponse?.status()).toBe(400);
+      await expect(usersPage.inlineAlert).toContainText(usersFixture.messages.duplicateUser);
+      await expect(usersPage.registerModalHeading).toBeVisible();
+      await assertUserWasNotCreated(
+        duplicateMatriculaUser,
+        'O sistema não deveria cadastrar um segundo usuário com matrícula/siape duplicado.',
+        'email',
+      );
+    });
+  });
+
+  test('USER-025 - limite máximo de caracteres no nome', async () => {
+    const longName = buildLongName();
+
+    await test.step('Given that the register user modal is open', async () => {
+      await usersPage.openRegisterModal();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the admin fills the name field with more characters than the supported limit', async () => {
+      await usersPage.fillRegisterName(longName);
+    });
+
+    await test.step('Then the system should limit the input according to the defined maximum length', async () => {
+      const storedValue = await usersPage.nameInput.inputValue();
+      expect(storedValue.length).toBe(usersFixture.limits.nameMaxLength);
+      expect(storedValue).toBe(longName.slice(0, usersFixture.limits.nameMaxLength));
+      await expect(usersPage.registerModalHeading).toBeVisible();
+    });
+  });
+
+  test('USER-026 - cadastro com matrícula/siape com apenas letras', async () => {
+    const invalidUser = buildTestStudentUser();
+
+    await test.step('Given that the register user modal is open', async () => {
+      await usersPage.openRegisterModal();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the admin fills the form with a matricula/siape containing only letters', async () => {
+      await fillRegisterFormExcept(null, {
+        ...invalidUser,
+        matricula: usersFixture.register.lettersOnlyMatricula,
+      });
+      invalidUser.matricula = usersFixture.register.lettersOnlyMatricula;
+      invalidUser.registerResponse = await submitRegisterModalCapturingResponse();
+    });
+
+    await test.step('Then the system should block the registration of the invalid matricula/siape', async () => {
+      expect.soft(
+        invalidUser.registerResponse?.status() ?? 0,
+        'O sistema não deveria aceitar cadastro com matrícula/siape contendo apenas letras.',
+      ).not.toBe(200);
+      await expect(usersPage.registerModalHeading).toBeVisible();
+      await assertUserWasNotCreated(
+        invalidUser,
+        'O sistema não deveria cadastrar usuário com matrícula/siape contendo apenas letras.',
+        'email',
+      );
+    });
+  });
+
+  test('USER-027 - atualização de usuário', async ({ browser }) => {
+    test.slow();
+    const originalUser = buildTestStudentUser();
+    const updatedUser = buildUpdatedStudentUser();
+    let persistedOriginalUser = null;
+
+    await test.step('Given that a valid student user exists in the list for edition', async () => {
+      persistedOriginalUser = await createSupportStudentUser(originalUser, 'matricula');
+      await ensureUsersPageReady();
+    });
+
+    await test.step('When the admin updates the user data and saves the changes', async () => {
+      await ensureUsersPageReady();
+      await usersPage.selectStatusOption(usersFixture.filters.status.all);
+      await usersPage.selectTypeOption(usersFixture.filters.type.all);
+      const userFoundInList = await usersPage.openPageContainingUser(originalUser.matricula);
+      expect(userFoundInList, 'O usuário criado para edição deveria ser encontrado na listagem antes da atualização.').toBeTruthy();
+
+      await usersPage.openEditUserByMatricula(originalUser.matricula);
+      await expect(usersPage.editModalHeading).toBeVisible();
+
+      const updateResponsePromise = usersPage.page.waitForResponse(
+        (response) =>
+          response.url().includes(`/user/${persistedOriginalUser.id}`) &&
+          response.request().method() === 'PUT',
+        { timeout: 10000 },
+      ).catch(() => null);
+
+      await usersPage.fillRegisterName(updatedUser.name);
+      await usersPage.selectRegisterCourse(updatedUser.course);
+      await usersPage.selectEditStatus(updatedUser.status);
+      await usersPage.fillEditPassword(updatedUser.password);
+      await usersPage.saveEditModal();
+
+      updatedUser.updateResponse = await updateResponsePromise;
+      if (updatedUser.updateResponse) {
+        expect.soft(updatedUser.updateResponse.ok(), 'A atualização do usuário deveria retornar sucesso.').toBeTruthy();
+      }
+      await usersPage.waitForEditModalClosed();
+    });
+
+    await test.step('Then the saved changes should be persisted and reflected in the list', async () => {
+      const persistedUpdatedUser = await apiGetUserProfileById(persistedOriginalUser.id);
+      trackUserForCleanup({
+        id: persistedOriginalUser.id,
+        email: persistedUpdatedUser.email,
+        matricula: persistedUpdatedUser.matricula,
+      }, 'either');
+
+      expect.soft(persistedUpdatedUser.username).toBe(updatedUser.name);
+      expect.soft((persistedUpdatedUser.curso?.nome ?? '').toLowerCase()).toBe(usersFixture.courses[updatedUser.course].toLowerCase());
+      expect.soft(persistedUpdatedUser.active).toBe(false);
+      expect.soft(persistedUpdatedUser.email).toBe(originalUser.email);
+      expect.soft(persistedUpdatedUser.matricula).toBe(originalUser.matricula);
+
+      const persistedMatchesExpected =
+        persistedUpdatedUser.username === updatedUser.name &&
+        (persistedUpdatedUser.curso?.nome ?? '').toLowerCase() === usersFixture.courses[updatedUser.course].toLowerCase() &&
+        persistedUpdatedUser.active === false &&
+        persistedUpdatedUser.email === originalUser.email &&
+        persistedUpdatedUser.matricula === originalUser.matricula;
+
+      if (!persistedMatchesExpected) {
+        return;
+      }
+
+      await ensureUsersPageReady();
+      await usersPage.selectStatusOption(usersFixture.filters.status.all);
+      await usersPage.selectTypeOption(usersFixture.filters.type.all);
+      const userFoundInList = await usersPage.openPageContainingUser(originalUser.matricula);
+      expect.soft(userFoundInList, 'O usuário atualizado deveria continuar visível na listagem.').toBeTruthy();
+
+      if (userFoundInList) {
+        const updatedRow = usersPage.getRowByMatricula(originalUser.matricula);
+        await expect(updatedRow).toContainText(updatedUser.name);
+        const updatedRowText = ((await updatedRow.textContent()) ?? '').toLowerCase();
+        expect.soft(updatedRowText).toContain(usersFixture.courses[updatedUser.course].toLowerCase());
+        await expect(updatedRow).toContainText(originalUser.email);
+        await expect(updatedRow).toContainText(usersFixture.filters.status.inactive);
+      }
+    });
+  });
+
+    test('USER-022 - cadastro com nome contendo apenas espaços', async () => {
+    const invalidUser = buildTestStudentUser();
+
+    await test.step('Given that the register user modal is open', async () => {
+      await usersPage.openRegisterModal();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the admin fills the form with a name containing only spaces', async () => {
+      await fillRegisterFormExcept(null, {
+        ...invalidUser,
+        name: '     ',
+      });
+      invalidUser.name = '     ';
+      invalidUser.registerResponse = await submitRegisterModalCapturingResponse();
+    });
+
+    await test.step('Then the system should block the registration and display the invalid name message', async () => {
+      expect.soft(
+        invalidUser.registerResponse?.status() ?? 0,
+        'O sistema não deveria aceitar cadastro com nome contendo apenas espaços.',
+      ).not.toBe(200);
+      await expect(usersPage.page.getByText(usersFixture.messages.requiredName, { exact: true })).toBeVisible();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+      await assertUserWasNotCreated(
+        invalidUser,
+        'O sistema não deveria cadastrar usuário com nome contendo apenas espaços.',
+        'matricula',
+      );
+    });
+  });
+
 });
