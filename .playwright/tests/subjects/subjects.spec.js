@@ -558,5 +558,161 @@ test.describe('Testes de Disciplinas', () => {
     });
   });
 
+  test('DISC-013 - cadastro com quantidade de alunos negativa', async () => {
+    let negativeSubject;
+
+    await test.step('Given that the register subject modal is open', async () => {
+      await subjectsPage.openRegisterModal();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user submits a subject with a negative students quantity', async () => {
+      negativeSubject = buildTestSubject({ studentsCount: '-5' });
+      await subjectsPage.fillRegisterForm(negativeSubject);
+      await subjectsPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should reject the registration and keep the form open', async () => {
+      const validationMessage = await subjectsPage.studentsCountInput.evaluate((input) => input.validationMessage);
+      expect.soft(validationMessage).toContain(subjectsFixture.messages.studentsCountMin);
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+  });
+
+  test('DISC-014 - cadastro com quantidade de alunos igual a zero', async () => {
+    let zeroSubject;
+
+    await test.step('Given that the register subject modal is open', async () => {
+      await subjectsPage.openRegisterModal();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user submits a subject with zero students', async () => {
+      zeroSubject = buildTestSubject({ studentsCount: '0' });
+      await subjectsPage.fillRegisterForm(zeroSubject);
+      await subjectsPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should reject the registration and keep the form open', async () => {
+      const validationMessage = await subjectsPage.studentsCountInput.evaluate((input) => input.validationMessage);
+      expect.soft(validationMessage).toContain(subjectsFixture.messages.studentsCountMin);
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+  });
+
+  test('DISC-015 - cadastro com quantidade de alunos decimal', async () => {
+    let decimalSubject;
+
+    await test.step('Given that the register subject modal is open', async () => {
+      await subjectsPage.openRegisterModal();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user submits a subject with a decimal students quantity', async () => {
+      decimalSubject = buildTestSubject({ studentsCount: '10.5' });
+      await subjectsPage.fillRegisterForm(decimalSubject);
+      await subjectsPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should reject the registration and keep the form open', async () => {
+      const validationMessage = await subjectsPage.studentsCountInput.evaluate((input) => input.validationMessage);
+      expect.soft(validationMessage).toContain(subjectsFixture.messages.studentsCountValidValue);
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+  });
+
+  test('DISC-016 - cadastro com codigo em formato invalido', async () => {
+    let invalidCodeSubject;
+
+    await test.step('Given that the register subject modal is open', async () => {
+      await subjectsPage.openRegisterModal();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user submits a subject with an invalid code format', async () => {
+      invalidCodeSubject = buildTestSubject({ code: '@@@###' });
+      await subjectsPage.fillRegisterForm(invalidCodeSubject);
+      await subjectsPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should reject the registration and keep the form open', async () => {
+      const row = await findSubjectRowAcrossPages(invalidCodeSubject.code);
+      const wasCreated = await row.isVisible().catch(() => false);
+      if (wasCreated) {
+        await deleteSubjectByCodeIfExists(invalidCodeSubject.code);
+      }
+
+      expect.soft(wasCreated, 'O sistema nao deveria cadastrar disciplinas com codigo fora do padrao.').toBeFalsy();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+  });
+
+  test('DISC-017 - cadastro com nome contendo apenas espacos', async () => {
+
+    await test.step('Given that the register subject modal is open', async () => {
+      await subjectsPage.openRegisterModal();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user fills the subject name with only spaces and submits the form', async () => {
+      const subject = buildTestSubject({ name: '   ' });
+      await subjectsPage.fillRegisterCode(subject.code);
+      await subjectsPage.fillRegisterName(subject.name);
+      await subjectsPage.fillRegisterProfessor(subject.professor);
+      await subjectsPage.fillRegisterStudentsCount(subject.studentsCount);
+      await subjectsPage.selectRegisterCourse(subject.course);
+      await subjectsPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should keep the form blocked and show the required name message', async () => {
+      await expect(subjectsPage.page.getByText(subjectsFixture.messages.requiredName, { exact: true })).toBeVisible();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+  });
+
+  test('DISC-018 - cadastro com professor contendo apenas espacos', async () => {
+
+    await test.step('Given that the register subject modal is open', async () => {
+      await subjectsPage.openRegisterModal();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user fills the professor field with only spaces and submits the form', async () => {
+      const subject = buildTestSubject({ professor: '   ' });
+      await subjectsPage.fillRegisterCode(subject.code);
+      await subjectsPage.fillRegisterName(subject.name);
+      await subjectsPage.fillRegisterProfessor(subject.professor);
+      await subjectsPage.fillRegisterStudentsCount(subject.studentsCount);
+      await subjectsPage.selectRegisterCourse(subject.course);
+      await subjectsPage.submitRegisterModal();
+    });
+
+    await test.step('Then the system should keep the form blocked and show the required professor message', async () => {
+      await expect(subjectsPage.page.getByText(subjectsFixture.messages.requiredProfessor, { exact: true })).toBeVisible();
+      await expect(subjectsPage.registerModalHeading).toBeVisible();
+    });
+  });
+
+  test('DISC-019 - atualizacao da listagem apos cadastro', async () => {
+    let listedSubject;
+
+    await test.step('Given that a test subject is registered for the listing update scenario', async () => {
+      listedSubject = buildTestSubject({
+        code: buildUniqueSubjectCode('LST'),
+        name: `[AUTO] Disciplina Listagem ${buildAutoSubjectSuffix()}`,
+      });
+      await registerSubject(listedSubject);
+    });
+
+    await test.step('When the refreshed subjects listing is displayed', async () => {
+      await expect(subjectsPage.registerModalHeading).toBeHidden();
+      await subjectsPage.waitForTableData();
+    });
+
+    await test.step('Then the created subject should be listed with the expected data', async () => {
+      await assertSubjectVisibleOnList(listedSubject);
+    });
+  });
+
 
 });
