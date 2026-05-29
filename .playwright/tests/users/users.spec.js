@@ -381,4 +381,117 @@ test.describe('Testes de Usuarios', () => {
     });
   });
 
+  test('USER-007 - filtro por usuarios Aluno', async () => {
+    await test.step('Given that the admin user is on the users page', async () => {
+      await expect(usersPage.heading).toBeVisible();
+    });
+
+    await test.step('When the type filter is changed to Aluno', async () => {
+      await usersPage.selectTypeOption(usersFixture.filters.type.student);
+    });
+
+    await test.step('Then the system should display only student users in the current list', async () => {
+      expect(await usersPage.getTypeFilterLabel()).toContain(usersFixture.filters.type.student);
+      await expectAllColumnValuesToMatch(2, usersFixture.filters.type.student);
+    });
+  });
+
+  test('USER-008 - filtro por usuarios Professor', async () => {
+    await test.step('Given that the admin user is on the users page', async () => {
+      await expect(usersPage.heading).toBeVisible();
+    });
+
+    await test.step('When the type filter is changed to Professor', async () => {
+      await usersPage.selectTypeOption(usersFixture.filters.type.professor);
+    });
+
+    await test.step('Then the system should display only professor users in the current list', async () => {
+      expect(await usersPage.getTypeFilterLabel()).toContain(usersFixture.filters.type.professor);
+      await expectAllColumnValuesToMatch(2, usersFixture.filters.type.professor);
+    });
+  });
+
+test('USER-009 - cadastro com dados validos', async ({ browser }) => {
+  await test.step('Given that the admin user opens the register user modal', async () => {
+    createdStudentUser = buildTestStudentUser();
+  });
+
+  await test.step('When the admin fills the form with valid student data and submits it', async () => {
+    await registerStudentUser(createdStudentUser);
+  });
+
+  await test.step('Then the created user should appear in the users list and should be able to log in', async () => {
+    await assertCreatedUserVisibleInList(createdStudentUser);
+    await assertCreatedUserCanLogIn(browser, createdStudentUser);
+  });
+});
+
+test('USER-010 - exclusao de usuario', async ({ browser }) => {
+    await test.step('Given that a test user was created and the admin is authenticated on the users flow', async () => {
+      createdStudentUser = buildTestStudentUser();
+      await registerStudentUser(createdStudentUser);
+      await assertCreatedUserVisibleInList(createdStudentUser);
+      await ensureUsersPageReady();
+    });
+
+    await test.step('When the admin deletes the created test user', async () => {
+      const userFoundInList = await usersPage.openPageContainingUser(createdStudentUser.matricula);
+      expect(userFoundInList, 'O usuario criado deveria ser encontrado antes da exclusao.').toBeTruthy();
+
+      await usersPage.openDeletePopupByMatricula(createdStudentUser.matricula);
+      await expect(usersPage.deleteModalHeading).toBeVisible();
+      await usersPage.confirmDeletePopup();
+      await usersPage.waitForDeletePopupClosed();
+    });
+
+    await test.step('Then the created user should no longer be able to log in', async () => {
+      await usersPage.page.waitForTimeout(10000);
+
+      const newContext = await browser.newContext();
+      const newPage = await newContext.newPage();
+      const deletedUserLoginPage = new LoginPage(newPage);
+
+      await deletedUserLoginPage.goto(authFixture.baseURL);
+      const loginResponsePromise = newPage.waitForResponse(
+        (response) =>
+          response.url().includes('/auth/login') &&
+          response.request().method() === 'POST',
+      );
+
+      await deletedUserLoginPage.login(
+        createdStudentUser.email,
+        createdStudentUser.password,
+      );
+
+      const loginResponse = await loginResponsePromise;
+      expect(loginResponse.status(), 'O login do usuario excluido deveria ser rejeitado.').toBe(404);
+      await expect(deletedUserLoginPage.heading).toBeVisible();
+      expect(
+        await newPage.evaluate(() => window.sessionStorage.getItem('authToken')),
+        'O usuario excluido nao deveria receber sessao autenticada.',
+      ).toBeNull();
+
+      await newContext.close();
+      createdStudentUser = null;
+    });
+});
+
+  test('USER-011 - cancelar cadastro', async () => {
+    await test.step('Given that the admin user is on the users page', async () => {
+      await expect(usersPage.heading).toBeVisible();
+    });
+
+    await test.step('When the register user modal is opened and then cancelled', async () => {
+      await usersPage.openRegisterModal();
+      await expect(usersPage.registerModalHeading).toBeVisible();
+      await usersPage.closeRegisterModal();
+      await usersPage.page.waitForLoadState('networkidle', { timeout: 5000 }).catch(() => null);
+    });
+
+    await test.step('Then the modal should be closed without creating a new user', async () => {
+      await expect(usersPage.registerModalHeading).toBeHidden();
+      await expect(usersPage.table).toBeVisible();
+    });
+  });
+
 });
