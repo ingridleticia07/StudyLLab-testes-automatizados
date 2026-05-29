@@ -849,5 +849,158 @@ test.describe('Testes de Disciplinas', () => {
     });
   });
 
+  test('DISC-027 - editar disciplina com dados validos', async () => {
+    let editedSubject;
+
+    await test.step('Given that the admin user opens the edit modal for the created test subject', async () => {
+      await ensureEditableSubject({ forceCreate: true });
+      editedSubject = {
+        ...createdSubject,
+        name: `${createdSubject.name} Editada`,
+        professor: `${createdSubject.professor} Editado`,
+        studentsCount: '40',
+        course: subjectsFixture.courses.computing.value,
+        courseLabel: subjectsFixture.courses.computing.label,
+      };
+
+      await assertSubjectVisibleOnList(createdSubject);
+      await subjectsPage.openEditSubjectByCode(createdSubject.code);
+      await expect(subjectsPage.editModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user edits the subject with valid data and saves the modal', async () => {
+      await subjectsPage.fillEditName(editedSubject.name);
+      await subjectsPage.fillEditProfessor(editedSubject.professor);
+      await subjectsPage.fillEditStudentsCount(editedSubject.studentsCount);
+      await subjectsPage.selectEditCourse(editedSubject.course);
+      await subjectsPage.saveEditModal();
+      await subjectsPage.waitForEditModalClosed();
+    });
+
+    await test.step('Then the updated subject should be visible in the listing with the new values', async () => {
+      createdSubject = editedSubject;
+      await expect(subjectsPage.editModalHeading).toBeHidden();
+      await assertSubjectVisibleOnList(createdSubject);
+    });
+  });
+
+  test('DISC-028 - editar disciplina para codigo duplicado', async () => {
+    await test.step('Given that there is another registered subject available to cause a duplicate code conflict', async () => {
+      await ensureDuplicateBaseSubject();
+      await ensureEditableSubject();
+    });
+
+    await test.step('When the admin tries to edit the created subject with the duplicated code', async () => {
+      await subjectsPage.openEditSubjectByCode(createdSubject.code);
+      await expect(subjectsPage.editModalHeading).toBeVisible();
+      await subjectsPage.fillEditCode(duplicateBaseSubject.code);
+      await subjectsPage.saveEditModal();
+      await expect(subjectsPage.inlineAlert).toBeVisible();
+    });
+
+    await test.step('Then the system should display the duplicate subject message and keep the edit modal open', async () => {
+      await expect(subjectsPage.inlineAlert).toBeVisible();
+      await expect(subjectsPage.inlineAlert).toContainText(subjectsFixture.messages.duplicateSubject);
+      await expect(subjectsPage.editModalHeading).toBeVisible();
+      await subjectsPage.closeEditModal();
+    });
+  });
+
+  test('DISC-029 - editar disciplina com campo obrigatorio vazio', async () => {
+    await test.step('Given that the admin user opens the edit modal for the created subject', async () => {
+      await ensureEditableSubject();
+      await assertSubjectVisibleOnList(createdSubject);
+      await subjectsPage.openEditSubjectByCode(createdSubject.code);
+      await expect(subjectsPage.editModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user clears the subject name and tries to save the modal', async () => {
+      await subjectsPage.clearEditName();
+      await subjectsPage.saveEditModal();
+    });
+
+    await test.step('Then the system should display the required edit message and keep the modal open', async () => {
+      await expect(subjectsPage.inlineAlert).toBeVisible();
+      await expect(subjectsPage.inlineAlert).toContainText(subjectsFixture.messages.requiredFieldsEdit);
+      await expect(subjectsPage.page.getByText(subjectsFixture.messages.requiredName, { exact: true })).toBeVisible();
+      await expect(subjectsPage.editModalHeading).toBeVisible();
+      await subjectsPage.closeEditModal();
+    });
+  });
+
+  test('DISC-030 - excluir disciplina existente', async () => {
+    await test.step('Given that there is a disposable subject available for deletion', async () => {
+      duplicateSubject = buildTestSubject({
+        name: `[AUTO] Disciplina Exclusão ${buildAutoSubjectSuffix()}`,
+        course: subjectsFixture.courses.civil.value,
+        courseLabel: subjectsFixture.courses.civil.label,
+      });
+      await createAndAssertSubject(duplicateSubject);
+      await assertSubjectVisibleOnList(duplicateSubject);
+      await subjectsPage.openDeletePopupByCode(duplicateSubject.code);
+      await expect(subjectsPage.deleteModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user confirms the deletion', async () => {
+      await subjectsPage.confirmDeletePopup();
+      await subjectsPage.waitForDeletePopupClosed();
+      await subjectsPage.waitForTableData();
+    });
+
+    await test.step('Then the deleted subject should no longer appear in the listing', async () => {
+      const row = await findSubjectRowAcrossPages(duplicateSubject.code);
+      await expect(row).toHaveCount(0);
+      subjectsToCleanup.delete(duplicateSubject.code);
+    });
+  });
+
+  test('DISC-031 - cancelar exclusao da disciplina criada', async () => {
+    await test.step('Given that the admin user opens the delete confirmation popup for the created subject', async () => {
+      await ensureEditableSubject();
+      await assertSubjectVisibleOnList(createdSubject);
+      await subjectsPage.openDeletePopupByCode(createdSubject.code);
+      await expect(subjectsPage.deleteModalHeading).toBeVisible();
+    });
+
+    await test.step('When the user cancels the deletion', async () => {
+      await expect(subjectsPage.page.getByText(subjectsFixture.messages.deleteConfirmationText, { exact: false })).toBeVisible();
+      await expect(subjectsPage.page.getByText(subjectsFixture.messages.irreversibleAction, { exact: false })).toBeVisible();
+      await subjectsPage.cancelDeletePopup();
+    });
+
+    await test.step('Then the created subject should remain visible on the list', async () => {
+      await expect(subjectsPage.deleteModalHeading).toBeHidden();
+      await assertSubjectVisibleOnList(createdSubject);
+    });
+  });
+
+  test('DISC-032 - excluir disciplina vinculada a registros dependentes', async () => {
+    const dependentSubject = buildTestSubject({
+      name: `[AUTO] Disciplina Dependência ${buildAutoSubjectSuffix()}`,
+      course: subjectsFixture.courses.production.value,
+      courseLabel: subjectsFixture.courses.production.label,
+    });
+    const dependentTopic = buildTestTopic({
+      name: `Topico Dependente ${Date.now().toString().slice(-6)}${Math.floor(Math.random() * 1000)}`,
+      subjectName: dependentSubject.name,
+    });
+
+    await test.step('Given that a new subject and a dependent topic are created for the scenario', async () => {
+      await createDependentTopicForSubject(dependentSubject, dependentTopic);
+    });
+
+    await test.step('When the user tries to delete the subject that now has a dependent topic', async () => {
+      await attemptDeleteSubjectWithDependency(dependentSubject);
+    });
+
+    await test.step('Then the system should keep the subject on the list after blocking the deletion', async () => {
+      await assertSubjectVisibleOnList(dependentSubject);
+    });
+
+    await test.step('And the test data should be cleaned up after validating the dependency behavior', async () => {
+      await cleanupDependentSubjectScenario(dependentSubject, dependentTopic);
+    });
+  });
+
 
 });
