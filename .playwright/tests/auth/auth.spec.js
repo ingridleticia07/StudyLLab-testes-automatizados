@@ -255,5 +255,29 @@ test('AUTH-001 - login com credenciais validas', async () => {
     });
   });
 
+  test('AUTH-013 - login como professor com credenciais validas', async () => {
+    await test.step('Given that the professor is on the login page', async () => {
+      await loginPage.goto(authFixture.baseURL);
+      await expect(loginPage.heading).toBeVisible();
+    });
+
+    await test.step('When the professor enters valid credentials and clicks the login button', async () => {
+      await loginPage.login(authFixture.professor.email, authFixture.professor.password);
+      await loginPage.waitForIdleAfterSubmit(20000);
+    });
+
+    await test.step('Then the professor should be authenticated and redirected away from the login page', async () => {
+      await expect(loginPage.loadingIndicator).toBeHidden({ timeout: 20000 });
+
+      const stillOnLoginScreen = await loginPage.isLoginScreenVisible();
+      const hasInlineError = await loginPage.hasInlineError();
+      const currentUrl = await loginPage.getCurrentUrl();
+
+      expect.soft(stillOnLoginScreen, 'O professor nao deveria permanecer na tela de login apos credenciais validas.').toBeFalsy();
+      expect.soft(hasInlineError, 'O professor nao deveria receber erro inline apos login valido.').toBeFalsy();
+      expect.soft(currentUrl, 'A URL deveria mudar apos login valido do professor.').not.toBe(authFixture.baseURL);
+    });
+  });
+
 
 });

@@ -5,6 +5,10 @@ const authFixture = {
     email: 'study@alu.ufc.br',
     password: 'study2025',
   },
+  professor: {
+    email: 'ingridleticiaprofessora@alu.ufc.br',
+    password: 'Senha123',
+  },
   invalid: {
     emailNotFound: 'naoexiste@alu.ufc.br',
     wrongPassword: 'senhaerrada123',
