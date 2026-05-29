@@ -703,6 +703,164 @@ test.describe('Testes de Topicos', () => {
     });
   });
 
+  test('TOP-011 - atualizacao da listagem apos cadastro', async () => {
+    let listedTopic;
+
+    await test.step('Given that a valid topic was created for this scenario', async () => {
+      await ensurePrimarySubjectCreated();
+      listedTopic = buildTestTopic({
+        name: `Topico Listagem ${Date.now().toString().slice(-5)}`,
+        subjectName: primarySubject.name,
+      });
+      await createAndAssertTopic(listedTopic);
+    });
+
+    await test.step('When the admin opens the listing filtered by the created subject', async () => {
+      await topicsPage.selectSubjectFilter(listedTopic.subjectName);
+      await topicsPage.goToLastPage();
+    });
+
+    await test.step('Then the created topic should appear in the topics listing', async () => {
+      await assertTopicVisibleOnList(listedTopic);
+    });
+  });
+
+  test('TOP-012 - aplicar filtro todas as disciplinas', async () => {
+    await test.step('Given that the topics listing is loaded and a filter can be applied', async () => {
+      await expect(topicsPage.heading).toBeVisible();
+    });
+
+    await test.step('When the user selects the all subjects option in the filter', async () => {
+      await topicsPage.selectSubjectFilter(topicsFixture.filters.all);
+    });
+
+    await test.step('Then the listing should display the general topics list', async () => {
+      expect(await topicsPage.getFilterLabel()).toContain(topicsFixture.filters.all);
+      expect(await topicsPage.getVisibleRowsCount()).toBeGreaterThan(0);
+    });
+  });
+
+  test('TOP-013 - filtrar topicos por disciplina com resultado', async () => {
+    let filteredTopic;
+
+    await test.step('Given that the topics listing contains at least one topic for the primary subject', async () => {
+      await ensurePrimarySubjectCreated();
+      filteredTopic = buildTestTopic({
+        name: `Topico Filtro ${Date.now().toString().slice(-5)}`,
+        subjectName: primarySubject.name,
+      });
+      await createAndAssertTopic(filteredTopic);
+    });
+
+    await test.step('When the user filters the listing by the primary subject', async () => {
+      await topicsPage.selectSubjectFilter(filteredTopic.subjectName);
+    });
+
+    await test.step('Then the system should display only topics linked to the selected subject', async () => {
+      expect(await topicsPage.getFilterLabel()).toContain(filteredTopic.subjectName);
+      expect(await topicsPage.getVisibleRowsCount()).toBeGreaterThan(0);
+      const subjectTexts = await topicsPage.getColumnTexts(1);
+      subjectTexts.forEach((text) => {
+        expect(text).toContain(filteredTopic.subjectName);
+      });
+    });
+  });
+
+  test('TOP-014 - filtrar topicos por disciplina sem resultado', async () => {
+    let emptyFilterSubject;
+
+    await test.step('Given that there is a support subject without registered topics', async () => {
+      emptyFilterSubject = buildTestSubject({
+        code: buildUniqueSubjectCode('TPE'),
+        name: `[AUTO] Disciplina Filtro ${buildAutoSubjectSuffix()}`,
+        professor: `Professor Topic Empty ${buildAutoSubjectSuffix()}`,
+        studentsCount: '50',
+        course: subjectsFixture.courses.software.value,
+        courseLabel: subjectsFixture.courses.software.label,
+      });
+      await createSubjectIfMissing(emptyFilterSubject);
+      await ensureTopicsPageReady();
+    });
+
+    await test.step('When the user filters the listing by the empty subject', async () => {
+      await topicsPage.selectSubjectFilter(emptyFilterSubject.name);
+    });
+
+    await test.step('Then the system should keep the listing empty for that subject', async () => {
+      expect(await topicsPage.getFilterLabel()).toContain(emptyFilterSubject.name);
+      await expect(topicsPage.page.getByText('Nenhum registro encontrado!', { exact: true })).toBeVisible();
+    });
+  });
+
+  test('TOP-015 - trocar de uma disciplina filtrada para outra', async () => {
+    let firstFilterTopics = [];
+    let firstTopic;
+    let secondTopic;
+
+    await test.step('Given that there are topics available in more than one support subject', async () => {
+      await ensureTestSubjectsCreated();
+      firstTopic = buildTestTopic({
+        name: `Topico Primeiro Filtro ${Date.now().toString().slice(-5)}`,
+        subjectName: primarySubject.name,
+      });
+      secondTopic = buildTestTopic({
+        name: `Topico Segundo Filtro ${Date.now().toString().slice(-5)}`,
+        subjectName: alternateSubject.name,
+      });
+      await createAndAssertTopic(firstTopic);
+      await createAndAssertTopic(secondTopic);
+    });
+
+    await test.step('When the user filters first by the primary subject and then by the alternate subject', async () => {
+      await topicsPage.selectSubjectFilter(firstTopic.subjectName);
+      firstFilterTopics = await topicsPage.getColumnTexts(0);
+      await topicsPage.selectSubjectFilter(secondTopic.subjectName);
+    });
+
+    await test.step('Then the listing should update to reflect the last selected subject', async () => {
+      expect(await topicsPage.getFilterLabel()).toContain(secondTopic.subjectName);
+      const secondFilterTopics = await topicsPage.getColumnTexts(0);
+      const subjectTexts = await topicsPage.getColumnTexts(1);
+      subjectTexts.forEach((text) => {
+        expect(text).toContain(secondTopic.subjectName);
+      });
+      expect.soft(JSON.stringify(secondFilterTopics), 'A troca entre disciplinas deveria atualizar a listagem de topicos.').not.toBe(JSON.stringify(firstFilterTopics));
+    });
+  });
+
+  test('TOP-016 - editar topico com dados validos', async () => {
+    let topicToEdit;
+    let editedTopic;
+
+    await test.step('Given that the admin opens the edit modal for the created topic', async () => {
+      await ensurePrimarySubjectCreated();
+      topicToEdit = buildTestTopic({
+        name: `Topico Editar ${Date.now().toString().slice(-5)}`,
+        subjectName: primarySubject.name,
+      });
+      await createAndAssertTopic(topicToEdit);
+      editedTopic = {
+        ...topicToEdit,
+        name: `${topicToEdit.name} Editado`,
+      };
+      await topicsPage.openEditTopicByName(topicToEdit.name, topicToEdit.subjectName);
+      await expect(topicsPage.editModalHeading).toBeVisible();
+    });
+
+    await test.step('When the admin updates the topic name with valid data and saves the modal', async () => {
+      await topicsPage.fillTopicName(editedTopic.name);
+      await topicsPage.saveEditModal();
+      await topicsPage.waitForEditModalClosed();
+    });
+
+    await test.step('Then the updated topic should appear in the listing with the new values', async () => {
+      unregisterTopicFromCleanup(topicToEdit);
+      registerTopicForCleanup(editedTopic);
+      await expect(topicsPage.editModalHeading).toBeHidden();
+      await assertTopicVisibleOnList(editedTopic);
+    });
+  });
+
 
 });
 
