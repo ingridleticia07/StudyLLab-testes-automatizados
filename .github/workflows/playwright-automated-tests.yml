@@ -3,7 +3,7 @@ name: Playwright automated tests
 on:
   pull_request:
     branches:
-      - main-test
+      - main
   workflow_dispatch:
 
 permissions:
