@@ -1,0 +1,83 @@
+name: Playwright automated tests
+
+on:
+  pull_request:
+    branches:
+      - main-test
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  automated-tests:
+    name: Existing E2E cases
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: .playwright
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: .playwright/package-lock.json
+
+      - name: Install test dependencies
+        run: npm ci
+
+      - name: Install Chromium and system dependencies
+        run: npx playwright install --with-deps chromium
+
+      - name: Run automated cases and collect metrics
+        shell: bash
+        run: |
+          mkdir -p ci-metrics test-results
+          start_epoch="$(date +%s)"
+          start_iso="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+
+          set +e
+          npm run test:ci
+          test_exit_code="$?"
+          set -e
+
+          end_epoch="$(date +%s)"
+          end_iso="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+
+          CI_TEST_START_ISO="$start_iso" \
+          CI_TEST_END_ISO="$end_iso" \
+          CI_TEST_DURATION_SECONDS="$((end_epoch - start_epoch))" \
+          CI_TEST_EXIT_CODE="$test_exit_code" \
+          node scripts/generate-ci-metrics.mjs
+
+          exit "$test_exit_code"
+
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: .playwright/playwright-report/
+          retention-days: 30
+
+      - name: Upload Playwright results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: .playwright/test-results/
+          retention-days: 30
+
+      - name: Upload execution metrics
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: automated-test-metrics
+          path: .playwright/ci-metrics/
+          retention-days: 90
