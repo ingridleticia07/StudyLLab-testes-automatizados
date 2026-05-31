@@ -40,8 +40,8 @@ jobs:
           restore-keys: |
             playwright-${{ runner.os }}-
 
-      - name: Install Chromium and system dependencies
-        run: npx playwright install chromium
+      - name: Install Playwright browser
+        run: npx playwright install --only-shell chromium
 
       - name: Run automated cases and collect metrics
         shell: bash
