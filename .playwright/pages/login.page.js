@@ -8,7 +8,7 @@ class LoginPage {
     this.errorAlert = page.locator('.bg-red-500');
     this.loadingIndicator = page.locator('.animate-spin');
     this.registerLink = page.getByRole('link', { name: /cadastre-se/i });
-    this.dashboardRoot = page.locator('text=Total de Usuários').first();
+    this.dashboardRoot = page.getByText(/Total de Usu.rios/i).first();
     this.sidebarLogoutItem = page
       .locator('li')
       .filter({ has: page.locator('img[alt="item sidebar logout"]') })
@@ -51,11 +51,14 @@ class LoginPage {
   }
 
   async waitForIdleAfterSubmit(timeout = 15000) {
-    await Promise.race([
-      this.page.waitForLoadState('networkidle', { timeout }).catch(() => null),
-      this.loadingIndicator.waitFor({ state: 'hidden', timeout }).catch(() => null),
-      this.errorAlert.waitFor({ state: 'visible', timeout }).catch(() => null),
-    ]);
+    await Promise.any([
+      this.page.waitForURL((url) => !url.toString().includes('/login'), { timeout }),
+      this.loadingIndicator.waitFor({ state: 'hidden', timeout }),
+      this.errorAlert.waitFor({ state: 'visible', timeout }),
+      this.page.waitForFunction(() => {
+        return document.cookie.includes('authToken=') || window.sessionStorage.getItem('authToken');
+      }, { timeout }),
+    ]).catch(() => null);
   }
 
   async waitForAuthSession(timeout = 15000) {
@@ -85,7 +88,7 @@ class LoginPage {
   }
 
   async clickSidebarLogout() {
-    await this.sidebarLogoutItem.click({ force: true });
+    await this.sidebarLogoutItem.click();
   }
 
   async getEmailValidationMessage() {

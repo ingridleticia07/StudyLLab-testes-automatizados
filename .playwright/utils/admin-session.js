@@ -1,9 +1,11 @@
 async function waitForPostLoginStability(page, timeout = 15000) {
-  await Promise.race([
-    page.waitForLoadState('networkidle', { timeout }).catch(() => null),
-    page.waitForLoadState('domcontentloaded', { timeout }).catch(() => null),
-    page.waitForFunction(() => document.readyState === 'complete', { timeout }).catch(() => null),
-  ]);
+  await Promise.any([
+    page.waitForURL((url) => !url.toString().includes('/login'), { timeout }),
+    page.waitForFunction(() => {
+      return document.cookie.includes('authToken=') || window.sessionStorage.getItem('authToken');
+    }, { timeout }),
+    page.getByText(/Total de Usu.rios/i).first().waitFor({ state: 'visible', timeout }),
+  ]).catch(() => null);
 }
 
 async function openProtectedPage(protectedPage, protectedUrl, maxAttempts = 3) {
@@ -37,7 +39,8 @@ async function loginThroughPortal(loginPage, authFixture, credentials = authFixt
   await loginPage.login(credentials.email, credentials.password);
   await loginPage.waitForIdleAfterSubmit(20000);
   await loginPage.waitForAuthSession(15000);
-  
+  await waitForPostLoginStability(loginPage.page, 15000);
+
   return await loginPage.isAuthenticatedAreaVisible();
 }
 
