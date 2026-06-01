@@ -39,7 +39,7 @@ const contentsFixture = {
     pdf: path.join(__dirname, 'files', 'contents', 'sample-document.pdf'),
     image1: path.join(__dirname, 'files', 'contents', 'sample-image-1.jpg'),
     image2: path.join(__dirname, 'files', 'contents', 'sample-image-2.jpg'),
-    image3: path.join(__dirname, 'files', 'contents', 'sambple-image-3.webp'),
+    image3: path.join(__dirname, 'files', 'contents', 'sample-image-3.webp'),
     unsupported: path.join(__dirname, 'files', 'contents', 'unsupported.txt'),
     oversizedImage: path.join(__dirname, 'files', 'contents', 'oversized-image.png'),
   },

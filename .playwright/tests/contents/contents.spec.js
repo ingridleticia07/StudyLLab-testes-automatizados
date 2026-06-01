@@ -236,10 +236,8 @@ test.describe('Testes de Conteúdos', () => {
     await page.waitForFunction(() => {
       return document.cookie.includes('authToken=') && document.cookie.includes('id-user=');
     }, { timeout: 15000 }).catch(() => null);
-    await page.waitForTimeout(2500);
-    await page.goto(authFixture.baseURL.replace('/login', '/'), { waitUntil: 'domcontentloaded' }).catch(() => null);
-    await page.waitForTimeout(1500);
-    await studentMaterialsPage.goto(contentsFixture.studentContentsURL);
+        await page.goto(authFixture.baseURL.replace('/login', '/'), { waitUntil: 'domcontentloaded' }).catch(() => null);
+        await studentMaterialsPage.goto(contentsFixture.studentContentsURL);
     await studentMaterialsPage.waitForListReady();
 
     return { context, page, studentMaterialsPage };
@@ -328,8 +326,7 @@ test.describe('Testes de Conteúdos', () => {
     await reloadMaterialsPage();
     await ensureAdminUserCookie();
     await materialsPage.selectSubjectFilter(subjectName);
-    await materialsPage.page.waitForTimeout(1000);
-
+    
     const uploadResponsePromise = materialsPage.page.waitForResponse((response) =>
       response.url().includes('/material/cadastrarDocumento') && response.request().method() === 'POST',
     );
@@ -587,8 +584,7 @@ test.describe('Testes de Conteúdos', () => {
     const topic = await createSupportTopic(primarySubject, 'Conteudo Missing Type');
     await reloadMaterialsPage();
     await materialsPage.selectSubjectFilter(primarySubject.name);
-    await materialsPage.page.waitForTimeout(1000);
-
+    
     await test.step('Given that the content register modal is open', async () => {
       await materialsPage.openRegisterModal();
       await expect(materialsPage.registerModalHeading).toBeVisible();
@@ -638,8 +634,7 @@ test.describe('Testes de Conteúdos', () => {
     const topic = await createSupportTopic(primarySubject, 'Conteudo Missing File');
     await reloadMaterialsPage();
     await materialsPage.selectSubjectFilter(primarySubject.name);
-    await materialsPage.page.waitForTimeout(1000);
-
+    
     await test.step('Given that the content register modal is open', async () => {
       await materialsPage.openRegisterModal();
       await expect(materialsPage.registerModalHeading).toBeVisible();
@@ -665,8 +660,7 @@ test.describe('Testes de Conteúdos', () => {
     const topic = await createSupportTopic(primarySubject, 'Conteudo Too Many Images');
     await reloadMaterialsPage();
     await materialsPage.selectSubjectFilter(primarySubject.name);
-    await materialsPage.page.waitForTimeout(1000);
-    let uploadResponse;
+        let uploadResponse;
     let successToastWasShown = false;
 
     await test.step('Given that the content register modal is open with a valid topic available', async () => {
@@ -708,8 +702,7 @@ test.describe('Testes de Conteúdos', () => {
     const topic = await createSupportTopic(primarySubject, 'Conteudo Mixed Upload');
     await reloadMaterialsPage();
     await materialsPage.selectSubjectFilter(primarySubject.name);
-    await materialsPage.page.waitForTimeout(1000);
-    let uploadResponse;
+        let uploadResponse;
     let successToastWasShown = false;
 
     await test.step('Given that the content register modal is open with a valid topic available', async () => {
@@ -747,8 +740,7 @@ test.describe('Testes de Conteúdos', () => {
     const topic = await createSupportTopic(primarySubject, 'Conteudo Oversized');
     await reloadMaterialsPage();
     await materialsPage.selectSubjectFilter(primarySubject.name);
-    await materialsPage.page.waitForTimeout(1000);
-    let uploadResponse;
+        let uploadResponse;
     let successToastWasShown = false;
 
     await test.step('Given that the content register modal is open with a valid topic available', async () => {
@@ -791,8 +783,7 @@ test.describe('Testes de Conteúdos', () => {
     const topic = await createSupportTopic(primarySubject, 'Conteudo Unsupported');
     await reloadMaterialsPage();
     await materialsPage.selectSubjectFilter(primarySubject.name);
-    await materialsPage.page.waitForTimeout(1000);
-    let uploadResponse;
+        let uploadResponse;
     let successToastWasShown = false;
 
     await test.step('Given that the content register modal is open with a valid topic available', async () => {
@@ -832,8 +823,7 @@ test.describe('Testes de Conteúdos', () => {
       const topic = await createSupportTopic(primarySubject, 'Conteudo Cancel');
       await reloadMaterialsPage();
       await materialsPage.selectSubjectFilter(primarySubject.name);
-      await materialsPage.page.waitForTimeout(1000);
-
+      
       await test.step('Given that the content register modal is open', async () => {
         await materialsPage.openRegisterModal();
         await expect(materialsPage.registerModalHeading).toBeVisible();

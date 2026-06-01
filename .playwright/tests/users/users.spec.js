@@ -78,8 +78,6 @@ test.describe('Testes de Usuarios', () => {
     const newPage = await newContext.newPage();
     const newLoginPage = new LoginPage(newPage);
 
-    await usersPage.page.waitForTimeout(10000);
-
     await loginThroughPortal(newLoginPage, authFixture, {
       email: user.email,
       password: user.password,
@@ -89,7 +87,7 @@ test.describe('Testes de Usuarios', () => {
       (url) => !url.toString().includes('/login'),
       { timeout: 20000 },
     ).catch(() => null);
-    await newPage.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => null);
+    await newPage.waitForLoadState('domcontentloaded', { timeout: 10000 }).catch(() => null);
 
     expect.soft(await newLoginPage.hasInlineError(), 'O usuário criado não deveria receber erro ao tentar fazer login.').toBeFalsy();
     expect.soft(await newLoginPage.isLoginScreenVisible(), 'O usuário criado não deveria permanecer na tela de login.').toBeFalsy();
@@ -445,8 +443,7 @@ test('USER-010 - exclusao de usuario', async ({ browser }) => {
     });
 
     await test.step('Then the created user should no longer be able to log in', async () => {
-      await usersPage.page.waitForTimeout(10000);
-
+      
       const newContext = await browser.newContext();
       const newPage = await newContext.newPage();
       const deletedUserLoginPage = new LoginPage(newPage);
@@ -485,7 +482,7 @@ test('USER-010 - exclusao de usuario', async ({ browser }) => {
       await usersPage.openRegisterModal();
       await expect(usersPage.registerModalHeading).toBeVisible();
       await usersPage.closeRegisterModal();
-      await usersPage.page.waitForLoadState('networkidle', { timeout: 5000 }).catch(() => null);
+      await usersPage.page.waitForLoadState('domcontentloaded', { timeout: 5000 }).catch(() => null);
     });
 
     await test.step('Then the modal should be closed without creating a new user', async () => {
