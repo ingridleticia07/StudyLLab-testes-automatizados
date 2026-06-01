@@ -96,29 +96,29 @@ const csv = [
 fs.writeFileSync(metricsCsvPath, `${csv}\n`);
 
 const summary = [
-  '# Métricas da execução automatizada',
+  '# Metricas da execucao automatizada',
   '',
-  '| Métrica | Valor |',
+  '| Metrica | Valor |',
   '| --- | --- |',
   `| Status | ${metrics.status} |`,
-  `| Duração da suíte | ${metrics.durationSeconds} s |`,
-  `| Casos identificados no relatório | ${metrics.total} |`,
+  `| Duracao da suite | ${metrics.durationSeconds} s |`,
+  `| Casos identificados no relatorio | ${metrics.total} |`,
   `| Casos aprovados | ${metrics.passed} |`,
   `| Casos com falha | ${metrics.failed} |`,
   `| Casos ignorados | ${metrics.skipped} |`,
-  `| Casos instáveis após retry | ${metrics.flaky} |`,
+  `| Casos instaveis apos retry | ${metrics.flaky} |`,
   `| Evento | ${metrics.event || 'local'} |`,
   `| Branch | ${metrics.branch || 'local'} |`,
   `| Commit | ${metrics.commitSha || 'local'} |`,
   '',
-  'Arquivos para coleta: `execution-metrics.csv`, `execution-metrics.json`, relatório HTML e relatórios Playwright JSON/JUnit.',
+  'Arquivos para coleta: `execution-metrics.csv`, `execution-metrics.json`, relatorio HTML e relatorios Playwright JSON/JUnit.',
   '',
 ].join('\n');
 
 fs.writeFileSync(summaryPath, summary);
 
 if (process.env.GITHUB_STEP_SUMMARY) {
-  fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary);
+  fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${summary}\n`);
 }
 
 console.log(summary);

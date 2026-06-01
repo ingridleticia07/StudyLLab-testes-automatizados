@@ -9,11 +9,18 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: playwright-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   automated-tests:
     name: Existing E2E cases
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 60
+    container:
+      image: mcr.microsoft.com/playwright:v1.59.1-jammy
+
     defaults:
       run:
         working-directory: .playwright
@@ -25,23 +32,12 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: '20'
           cache: npm
           cache-dependency-path: .playwright/package-lock.json
 
       - name: Install test dependencies
-        run: npm ci
-
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('.playwright/package-lock.json') }}
-          restore-keys: |
-            playwright-${{ runner.os }}-
-
-      - name: Install Playwright browser
-        run: npx playwright install --only-shell chromium
+        run: npm ci --no-audit --no-fund
 
       - name: Run automated cases and collect metrics
         shell: bash
@@ -67,7 +63,7 @@ jobs:
           exit "$test_exit_code"
 
       - name: Upload Playwright report
-        if: ${{ !cancelled() }}
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
@@ -75,7 +71,7 @@ jobs:
           retention-days: 30
 
       - name: Upload Playwright results
-        if: ${{ !cancelled() }}
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-test-results
@@ -83,7 +79,7 @@ jobs:
           retention-days: 30
 
       - name: Upload execution metrics
-        if: ${{ !cancelled() }}
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: automated-test-metrics
