@@ -1,4 +1,4 @@
-const { test, expect } = require('../../fixtures/admin-auth.fixture');
+﻿const { test, expect } = require('../../fixtures/admin-auth.fixture');
 const { LoginPage } = require('../../pages/login.page');
 const { UsersPage } = require('../../pages/users.page');
 const { authFixture } = require('../../fixtures/auth.fixture');
@@ -66,7 +66,7 @@ test.describe('Testes de Usuarios', () => {
     await usersPage.waitForListReady();
 
     const userFoundInList = await usersPage.openPageContainingUser(user.matricula);
-    expect(userFoundInList, 'O usuário criado deveria ser encontrado em alguma página da listagem.').toBeTruthy();
+    expect(userFoundInList, 'O usuario criado deveria ser encontrado em alguma pagina da listagem.').toBeTruthy();
 
     const row = usersPage.getRowByMatricula(user.matricula);
     await row.waitFor({ state: 'visible', timeout: 5000 });
@@ -89,8 +89,8 @@ test.describe('Testes de Usuarios', () => {
     ).catch(() => null);
     await newPage.waitForLoadState('domcontentloaded', { timeout: 10000 }).catch(() => null);
 
-    expect.soft(await newLoginPage.hasInlineError(), 'O usuário criado não deveria receber erro ao tentar fazer login.').toBeFalsy();
-    expect.soft(await newLoginPage.isLoginScreenVisible(), 'O usuário criado não deveria permanecer na tela de login.').toBeFalsy();
+    expect.soft(await newLoginPage.hasInlineError(), 'O usuario criado nao deveria receber erro ao tentar fazer login.').toBeFalsy();
+    expect.soft(await newLoginPage.isLoginScreenVisible(), 'O usuario criado nao deveria permanecer na tela de login.').toBeFalsy();
 
     await newContext.close();
   }
@@ -163,7 +163,7 @@ test.describe('Testes de Usuarios', () => {
       headers: await getAdminAuthHeaders(pageContext),
     });
 
-    expect(response.ok(), 'A listagem de usuários pela API deveria retornar sucesso.').toBeTruthy();
+    expect(response.ok(), 'A listagem de usuarios pela API deveria retornar sucesso.').toBeTruthy();
     return response.json();
   }
 
@@ -209,7 +209,7 @@ test.describe('Testes de Usuarios', () => {
       headers: await getAdminAuthHeaders(pageContext),
     });
 
-    expect(response.ok(), 'A consulta do perfil do usuário pela API deveria retornar sucesso.').toBeTruthy();
+    expect(response.ok(), 'A consulta do perfil do usuario pela API deveria retornar sucesso.').toBeTruthy();
     return response.json();
   }
 
@@ -245,7 +245,7 @@ test.describe('Testes de Usuarios', () => {
     await assertCreatedUserVisibleInList(user);
 
     const persistedUser = await apiFindUser({ ...user, cleanupBy });
-    expect(persistedUser?.id, 'O usuário de apoio deveria ser localizado pela API após o cadastro.').toBeTruthy();
+    expect(persistedUser?.id, 'O usuario de apoio deveria ser localizado pela API apos o cadastro.').toBeTruthy();
 
     trackUserForCleanup({
       ...user,
@@ -442,8 +442,7 @@ test('USER-010 - exclusao de usuario', async ({ browser }) => {
       await usersPage.waitForDeletePopupClosed();
     });
 
-    await test.step('Then the created user should no longer be able to log in', async () => {
-      
+    await test.step('Then the deleted user should remain blocked from accessing the system', async () => {
       const newContext = await browser.newContext();
       const newPage = await newContext.newPage();
       const deletedUserLoginPage = new LoginPage(newPage);
@@ -461,12 +460,13 @@ test('USER-010 - exclusao de usuario', async ({ browser }) => {
       );
 
       const loginResponse = await loginResponsePromise;
-      expect(loginResponse.status(), 'O login do usuario excluido deveria ser rejeitado.').toBe(404);
       await expect(deletedUserLoginPage.heading).toBeVisible();
+      expect.soft(await deletedUserLoginPage.hasInlineError(), 'O usuario excluido deve permanecer impedido de acessar o sistema.').toBeTruthy();
       expect(
         await newPage.evaluate(() => window.sessionStorage.getItem('authToken')),
-        'O usuario excluido nao deveria receber sessao autenticada.',
+        'O usuario excluido nao deve receber sessao autenticada.',
       ).toBeNull();
+      expect(loginResponse.status(), 'O login do usuario excluido deveria ser rejeitado tecnicamente.').toBe(404);
 
       await newContext.close();
       createdStudentUser = null;
@@ -604,7 +604,7 @@ test('USER-010 - exclusao de usuario', async ({ browser }) => {
     });
   });
 
-  test('USER-019 - cadastro com email em formato inválido', async () => {
+  test('USER-019 - cadastro com email em formato invalido', async () => {
     const invalidUser = buildTestStudentUser();
 
     await test.step('Given that the register user modal is open', async () => {
@@ -627,19 +627,19 @@ test('USER-010 - exclusao de usuario', async ({ browser }) => {
     await test.step('Then the system should block the registration and display the invalid email message', async () => {
       expect.soft(
         invalidUser.registerResponse?.status() ?? 0,
-        'O sistema não deveria aceitar cadastro com email em formato inválido.',
+        'O sistema nao deveria aceitar cadastro com email em formato invalido.',
       ).not.toBe(200);
       await expect(usersPage.page.getByText(usersFixture.messages.requiredEmailInstitutional, { exact: true })).toBeVisible();
       await expect(usersPage.registerModalHeading).toBeVisible();
       await assertUserWasNotCreated(
         invalidUser,
-        'O sistema não deveria cadastrar usuário com email em formato inválido.',
+        'O sistema nao deveria cadastrar usuario com email em formato invalido.',
         'matricula',
       );
     });
   });
 
-  test('USER-020 - cadastro com senha menor que o mínimo permitido', async () => {
+  test('USER-020 - cadastro com senha menor que o minimo permitido', async () => {
     const invalidUser = buildTestStudentUser();
 
     await test.step('Given that the register user modal is open', async () => {
@@ -659,19 +659,19 @@ test('USER-010 - exclusao de usuario', async ({ browser }) => {
     await test.step('Then the system should block the registration and display the password validation message', async () => {
       expect.soft(
         invalidUser.registerResponse,
-        'O sistema deveria bloquear o envio antes de chegar à API quando a senha é menor que o mínimo.',
+        'O sistema deveria bloquear o envio antes de chegar a API quando a senha e menor que o minimo.',
       ).toBeNull();
       await expect(usersPage.page.getByText(usersFixture.messages.requiredPassword, { exact: true })).toBeVisible();
       await expect(usersPage.registerModalHeading).toBeVisible();
       await assertUserWasNotCreated(
         invalidUser,
-        'O sistema não deveria cadastrar usuário com senha menor que o mínimo permitido.',
+        'O sistema nao deveria cadastrar usuario com senha menor que o minimo permitido.',
         'matricula',
       );
     });
   });
 
-  test('USER-021 - cadastro com senha fora dos critérios de composição', async () => {
+  test('USER-021 - cadastro com senha fora dos criterios de composicao', async () => {
     const invalidUser = buildTestStudentUser();
 
     await test.step('Given that the register user modal is open', async () => {
@@ -691,13 +691,13 @@ test('USER-010 - exclusao de usuario', async ({ browser }) => {
     await test.step('Then the system should block the registration and display the password criteria message', async () => {
       expect.soft(
         invalidUser.registerResponse,
-        'O sistema deveria bloquear o envio antes de chegar à API quando a senha não atende aos critérios de composição.',
+        'O sistema deveria bloquear o envio antes de chegar a API quando a senha nao atende aos criterios de composicao.',
       ).toBeNull();
       await expect(usersPage.page.getByText(usersFixture.messages.requiredPassword, { exact: true })).toBeVisible();
       await expect(usersPage.registerModalHeading).toBeVisible();
       await assertUserWasNotCreated(
         invalidUser,
-        'O sistema não deveria cadastrar usuário com senha fora dos critérios de composição.',
+        'O sistema nao deveria cadastrar usuario com senha fora dos criterios de composicao.',
         'matricula',
       );
     });
@@ -730,13 +730,13 @@ test('USER-010 - exclusao de usuario', async ({ browser }) => {
       await expect(usersPage.registerModalHeading).toBeVisible();
       await assertUserWasNotCreated(
         duplicateEmailUser,
-        'O sistema não deveria cadastrar um segundo usuário com email duplicado.',
+        'O sistema nao deveria cadastrar um segundo usuario com email duplicado.',
         'matricula',
       );
     });
   });
 
-  test('USER-024 - cadastro com matrícula/siape duplicado', async () => {
+  test('USER-024 - cadastro com matricula/siape duplicado', async () => {
     const existingUser = buildTestStudentUser();
     const duplicateMatriculaUser = {
       ...buildTestStudentUser(),
@@ -761,13 +761,13 @@ test('USER-010 - exclusao de usuario', async ({ browser }) => {
       await expect(usersPage.registerModalHeading).toBeVisible();
       await assertUserWasNotCreated(
         duplicateMatriculaUser,
-        'O sistema não deveria cadastrar um segundo usuário com matrícula/siape duplicado.',
+        'O sistema nao deveria cadastrar um segundo usuario com matricula/siape duplicado.',
         'email',
       );
     });
   });
 
-  test('USER-025 - limite máximo de caracteres no nome', async () => {
+  test('USER-025 - limite maximo de caracteres no nome', async () => {
     const longName = buildLongName();
 
     await test.step('Given that the register user modal is open', async () => {
@@ -787,7 +787,7 @@ test('USER-010 - exclusao de usuario', async ({ browser }) => {
     });
   });
 
-  test('USER-026 - cadastro com matrícula/siape com apenas letras', async () => {
+  test('USER-026 - cadastro com matricula/siape com apenas letras', async () => {
     const invalidUser = buildTestStudentUser();
 
     await test.step('Given that the register user modal is open', async () => {
@@ -807,18 +807,18 @@ test('USER-010 - exclusao de usuario', async ({ browser }) => {
     await test.step('Then the system should block the registration of the invalid matricula/siape', async () => {
       expect.soft(
         invalidUser.registerResponse?.status() ?? 0,
-        'O sistema não deveria aceitar cadastro com matrícula/siape contendo apenas letras.',
+        'O sistema nao deveria aceitar cadastro com matricula/siape contendo apenas letras.',
       ).not.toBe(200);
       await expect(usersPage.registerModalHeading).toBeVisible();
       await assertUserWasNotCreated(
         invalidUser,
-        'O sistema não deveria cadastrar usuário com matrícula/siape contendo apenas letras.',
+        'O sistema nao deveria cadastrar usuario com matricula/siape contendo apenas letras.',
         'email',
       );
     });
   });
 
-  test('USER-027 - atualização de usuário', async ({ browser }) => {
+  test('USER-027 - atualizacao de usuario', async ({ browser }) => {
     test.slow();
     const originalUser = buildTestStudentUser();
     const updatedUser = buildUpdatedStudentUser();
@@ -834,7 +834,7 @@ test('USER-010 - exclusao de usuario', async ({ browser }) => {
       await usersPage.selectStatusOption(usersFixture.filters.status.all);
       await usersPage.selectTypeOption(usersFixture.filters.type.all);
       const userFoundInList = await usersPage.openPageContainingUser(originalUser.matricula);
-      expect(userFoundInList, 'O usuário criado para edição deveria ser encontrado na listagem antes da atualização.').toBeTruthy();
+      expect(userFoundInList, 'O usuario criado para edicao deveria ser encontrado na listagem antes da atualizacao.').toBeTruthy();
 
       await usersPage.openEditUserByMatricula(originalUser.matricula);
       await expect(usersPage.editModalHeading).toBeVisible();
@@ -854,7 +854,7 @@ test('USER-010 - exclusao de usuario', async ({ browser }) => {
 
       updatedUser.updateResponse = await updateResponsePromise;
       if (updatedUser.updateResponse) {
-        expect.soft(updatedUser.updateResponse.ok(), 'A atualização do usuário deveria retornar sucesso.').toBeTruthy();
+        expect.soft(updatedUser.updateResponse.ok(), 'A atualizacao do usuario deveria retornar sucesso.').toBeTruthy();
       }
       await usersPage.waitForEditModalClosed();
     });
@@ -888,7 +888,7 @@ test('USER-010 - exclusao de usuario', async ({ browser }) => {
       await usersPage.selectStatusOption(usersFixture.filters.status.all);
       await usersPage.selectTypeOption(usersFixture.filters.type.all);
       const userFoundInList = await usersPage.openPageContainingUser(originalUser.matricula);
-      expect.soft(userFoundInList, 'O usuário atualizado deveria continuar visível na listagem.').toBeTruthy();
+      expect.soft(userFoundInList, 'O usuario atualizado deveria continuar visivel na listagem.').toBeTruthy();
 
       if (userFoundInList) {
         const updatedRow = usersPage.getRowByMatricula(originalUser.matricula);
@@ -901,7 +901,7 @@ test('USER-010 - exclusao de usuario', async ({ browser }) => {
     });
   });
 
-    test('USER-022 - cadastro com nome contendo apenas espaços', async () => {
+    test('USER-022 - cadastro com nome contendo apenas espacos', async () => {
     const invalidUser = buildTestStudentUser();
 
     await test.step('Given that the register user modal is open', async () => {
@@ -921,16 +921,22 @@ test('USER-010 - exclusao de usuario', async ({ browser }) => {
     await test.step('Then the system should block the registration and display the invalid name message', async () => {
       expect.soft(
         invalidUser.registerResponse?.status() ?? 0,
-        'O sistema não deveria aceitar cadastro com nome contendo apenas espaços.',
+        'O sistema nao deveria aceitar cadastro com nome contendo apenas espacos.',
       ).not.toBe(200);
       await expect(usersPage.page.getByText(usersFixture.messages.requiredName, { exact: true })).toBeVisible();
       await expect(usersPage.registerModalHeading).toBeVisible();
       await assertUserWasNotCreated(
         invalidUser,
-        'O sistema não deveria cadastrar usuário com nome contendo apenas espaços.',
+        'O sistema nao deveria cadastrar usuario com nome contendo apenas espacos.',
         'matricula',
       );
     });
   });
 
 });
+
+
+
+
+
+

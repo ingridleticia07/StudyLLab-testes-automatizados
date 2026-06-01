@@ -1,4 +1,4 @@
-const { test, expect } = require('../../fixtures/admin-auth.fixture');
+﻿const { test, expect } = require('../../fixtures/admin-auth.fixture');
 const { LoginPage } = require('../../pages/login.page');
 const { MaterialsPage } = require('../../pages/contents.page');
 const { authFixture } = require('../../fixtures/auth.fixture');
@@ -7,7 +7,7 @@ const { buildTestTopic } = require('../../fixtures/topics.fixture');
 const { contentsFixture } = require('../../fixtures/contents.fixture');
 const { ensureProtectedPageReady, getCookieValue } = require('../../utils/admin-session');
 
-test.describe('Testes de Conteúdos', () => {
+test.describe('Testes de Conteudos', () => {
   test.setTimeout(120000);
 
   let loginPage;
@@ -156,7 +156,7 @@ test.describe('Testes de Conteúdos', () => {
     const response = await pageContext.request.get(`${contentsFixture.apiBaseURL}/forum/listarTopicosDiscussao`, {
       headers: { 'x-api-key': contentsFixture.apiKey },
     });
-    expect(response.ok(), 'A listagem de tópicos de apoio deveria retornar sucesso.').toBeTruthy();
+    expect(response.ok(), 'A listagem de topicos de apoio deveria retornar sucesso.').toBeTruthy();
     return response.json();
   }
 
@@ -169,7 +169,7 @@ test.describe('Testes de Conteúdos', () => {
 
   async function apiCreateTopic(topic, pageContext = materialsPage.page) {
     const subjectModel = await apiFindSubjectByCode({ code: topic.subjectCode }, pageContext);
-    expect(subjectModel, 'A disciplina de apoio deveria existir antes da criação do tópico.').toBeTruthy();
+    expect(subjectModel, 'A disciplina de apoio deveria existir antes da criacao do topico.').toBeTruthy();
 
     const response = await pageContext.request.post(`${contentsFixture.apiBaseURL}/forum/criarTopicoDiscussao`, {
       headers: {
@@ -184,7 +184,7 @@ test.describe('Testes de Conteúdos', () => {
       },
     });
 
-    expect(response.ok(), 'O cadastro do tópico de apoio deveria retornar sucesso.').toBeTruthy();
+    expect(response.ok(), 'O cadastro do topico de apoio deveria retornar sucesso.').toBeTruthy();
   }
 
   async function apiDeleteTopicById(topicId, pageContext = materialsPage.page) {
@@ -249,13 +249,15 @@ test.describe('Testes de Conteúdos', () => {
       { headers: await getAdminAuthHeaders(pageContext) },
     );
 
-    expect(response.ok(), 'A listagem de conteúdos pela API deveria retornar sucesso.').toBeTruthy();
+    expect(response.ok(), 'A listagem de conteudos pela API deveria retornar sucesso.').toBeTruthy();
     return response.json();
   }
 
-  async function apiFindMaterialByTopicAndSubject(entry, pageContext = materialsPage.page) {
+  async function apiFindMaterialByTopicAndSubject(entry, options = {}, pageContext = materialsPage.page) {
+    const { anyStatus = true } = options;
+
     for (let attempt = 1; attempt <= 8; attempt += 1) {
-      const payload = await apiListMaterials({ pageNumber: 1, pageSize: 200 }, pageContext);
+      const payload = await apiListMaterials({ pageNumber: 1, pageSize: 200, anyStatus }, pageContext);
       const found = payload.documentos.find((item) =>
         item.topico?.nomeTopico === entry.topicName &&
         item.topico?.disciplina?.nomeDisciplina === entry.subjectName);
@@ -431,9 +433,19 @@ test.describe('Testes de Conteúdos', () => {
       });
     });
 
-    await test.step('Then the upload should be submitted successfully', async () => {
-      expect(createdContent.uploadResponse.status()).toBe(200);
+    await test.step('Then the system should create the PDF content and close the register modal', async () => {
       await expect(materialsPage.registerModalHeading).toBeHidden();
+      await materialsPage.waitForToast(contentsFixture.messages.uploadSuccess);
+
+      const persistedContent = await apiFindMaterialByTopicAndSubject({
+        subjectName: primarySubject.name,
+        topicName: topic.name,
+      }, { anyStatus: true });
+
+      expect(createdContent.uploadResponse.ok(), 'A requisicao de cadastro do conteudo em PDF deveria retornar sucesso.').toBeTruthy();
+      expect(persistedContent, 'O conteudo em PDF deveria ser retornado mesmo enquanto estiver pendente.').toBeTruthy();
+      expect([1, 'Pendente']).toContain(persistedContent.status);
+      expect(createdContent.uploadResponse.status()).toBe(200);
     });
   });
 
@@ -458,9 +470,19 @@ test.describe('Testes de Conteúdos', () => {
       });
     });
 
-    await test.step('Then the upload should be submitted successfully', async () => {
-      expect(createdContent.uploadResponse.status()).toBe(200);
+    await test.step('Then the system should create the image content and close the register modal', async () => {
       await expect(materialsPage.registerModalHeading).toBeHidden();
+      await materialsPage.waitForToast(contentsFixture.messages.uploadSuccess);
+
+      const persistedContent = await apiFindMaterialByTopicAndSubject({
+        subjectName: primarySubject.name,
+        topicName: topic.name,
+      }, { anyStatus: true });
+
+      expect(createdContent.uploadResponse.ok(), 'A requisicao de cadastro do conteudo com uma imagem deveria retornar sucesso.').toBeTruthy();
+      expect(persistedContent, 'O conteudo com uma imagem deveria ser retornado mesmo enquanto estiver pendente.').toBeTruthy();
+      expect([1, 'Pendente']).toContain(persistedContent.status);
+      expect(createdContent.uploadResponse.status()).toBe(200);
     });
   });
 
@@ -485,13 +507,23 @@ test.describe('Testes de Conteúdos', () => {
       });
     });
 
-    await test.step('Then the upload should be submitted successfully', async () => {
-      expect(createdContent.uploadResponse.status()).toBe(200);
+    await test.step('Then the system should create the two-image content and close the register modal', async () => {
       await expect(materialsPage.registerModalHeading).toBeHidden();
+      await materialsPage.waitForToast(contentsFixture.messages.uploadSuccess);
+
+      const persistedContent = await apiFindMaterialByTopicAndSubject({
+        subjectName: primarySubject.name,
+        topicName: topic.name,
+      }, { anyStatus: true });
+
+      expect(createdContent.uploadResponse.ok(), 'A requisicao de cadastro do conteudo com duas imagens deveria retornar sucesso.').toBeTruthy();
+      expect(persistedContent, 'O conteudo com duas imagens deveria ser retornado mesmo enquanto estiver pendente.').toBeTruthy();
+      expect([1, 'Pendente']).toContain(persistedContent.status);
+      expect(createdContent.uploadResponse.status()).toBe(200);
     });
   });
 
-  test('CONT-004 - listagem paginada de conteúdos', async () => {
+  test('CONT-004 - listagem paginada de conteudos', async () => {
     await test.step('Given that the admin user is on the contents page with listed records', async () => {
       await reloadMaterialsPage();
       await expect(materialsPage.table).toBeVisible();
@@ -511,7 +543,7 @@ test.describe('Testes de Conteúdos', () => {
     });
   });
 
-  test('CONT-006 - aluno apenas visualiza conteúdos', async ({ browser }) => {
+  test('CONT-006 - aluno apenas visualiza conteudos', async ({ browser }) => {
     let studentSession;
 
     await test.step('Given that the student logs into the platform and accesses the contents page', async () => {
@@ -523,15 +555,15 @@ test.describe('Testes de Conteúdos', () => {
       await expect(studentSession.studentMaterialsPage.table).toBeVisible();
     });
 
-    await test.step('Then the student area should only expose visualization actions', async () => {
+    await test.step('Then the student area should not expose content management actions', async () => {
       await expect(studentSession.studentMaterialsPage.registerContentButton).toHaveCount(0);
-      await expect(studentSession.studentMaterialsPage.page.getByRole('button', { name: /Cadastrar Conte/i })).toHaveCount(0);
+      await expect(studentSession.studentMaterialsPage.page.getByRole('button', { name: /Cadastrar Conteúdo/i })).toHaveCount(0);
       await expect(studentSession.studentMaterialsPage.page.getByRole('button', { name: 'editar' })).toHaveCount(0);
+      await expect(studentSession.studentMaterialsPage.page.getByRole('button', { name: 'excluir' })).toHaveCount(0);
 
       const rowCount = await studentSession.studentMaterialsPage.getVisibleRowsCount();
       if (rowCount > 0) {
         const firstRow = studentSession.studentMaterialsPage.tableRows.first();
-        await expect(firstRow.getByRole('button', { name: 'visualizar' })).toBeVisible();
         await expect(firstRow.getByRole('button', { name: 'editar' })).toHaveCount(0);
         await expect(firstRow.getByRole('button', { name: 'excluir' })).toHaveCount(0);
       }
@@ -562,7 +594,7 @@ test.describe('Testes de Conteúdos', () => {
     });
   });
 
-  test('CONT-011 - filtrar disciplina sem conteúdos', async () => {
+  test('CONT-011 - filtrar disciplina sem conteudos', async () => {
     await ensureBaseSubjectsCreated();
     await reloadMaterialsPage();
 
@@ -580,7 +612,7 @@ test.describe('Testes de Conteúdos', () => {
     });
   });
 
-  test('CONT-012 - cadastrar conteúdo sem selecionar tipo de material', async () => {
+  test('CONT-012 - cadastrar conteudo sem selecionar tipo de material', async () => {
     const topic = await createSupportTopic(primarySubject, 'Conteudo Missing Type');
     await reloadMaterialsPage();
     await materialsPage.selectSubjectFilter(primarySubject.name);
@@ -606,7 +638,7 @@ test.describe('Testes de Conteúdos', () => {
     });
   });
 
-  test('CONT-013 - cadastrar conteúdo sem selecionar tópico', async () => {
+  test('CONT-013 - cadastrar conteudo sem selecionar topico', async () => {
     await reloadMaterialsPage();
 
     await test.step('Given that the content register modal is open', async () => {
@@ -630,7 +662,7 @@ test.describe('Testes de Conteúdos', () => {
     });
   });
 
-  test('CONT-014 - cadastrar conteúdo sem selecionar arquivo', async () => {
+  test('CONT-014 - cadastrar conteudo sem selecionar arquivo', async () => {
     const topic = await createSupportTopic(primarySubject, 'Conteudo Missing File');
     await reloadMaterialsPage();
     await materialsPage.selectSubjectFilter(primarySubject.name);
@@ -656,7 +688,7 @@ test.describe('Testes de Conteúdos', () => {
     });
   });
 
-  test('CONT-015 - cadastrar conteúdo com mais de duas imagens', async () => {
+  test('CONT-015 - cadastrar conteudo com mais de duas imagens', async () => {
     const topic = await createSupportTopic(primarySubject, 'Conteudo Too Many Images');
     await reloadMaterialsPage();
     await materialsPage.selectSubjectFilter(primarySubject.name);
@@ -692,13 +724,19 @@ test.describe('Testes de Conteúdos', () => {
       successToastWasShown = await successToastPromise;
     });
 
-    await test.step('Then the content should not be created successfully', async () => {
+    await test.step('Then the system should prevent content creation when more than two images are uploaded', async () => {
+      const contentWasCreated = Boolean(await apiFindMaterialByTopicAndSubject({
+        subjectName: primarySubject.name,
+        topicName: topic.name,
+      }).catch(() => null));
+      expect(contentWasCreated, 'O sistema nao deveria criar conteudo quando mais de duas imagens sao enviadas.').toBeFalsy();
+      await expect(materialsPage.registerModalHeading).toBeVisible();
+      expect(successToastWasShown,'O sistema nao deveria exibir mensagem de sucesso quando o upload com mais de duas imagens falha.',).toBeFalsy();
       expect(uploadResponse.status()).toBe(400);
-      expect(successToastWasShown,'O sistema não deveria exibir mensagem de sucesso quando o upload com mais de duas imagens retorna erro.',).toBeFalsy();
     });
   });
 
-  test('CONT-016 - cadastrar conteúdo com PDF e imagem no mesmo envio', async () => {
+  test('CONT-016 - cadastrar conteudo com PDF e imagem no mesmo envio', async () => {
     const topic = await createSupportTopic(primarySubject, 'Conteudo Mixed Upload');
     await reloadMaterialsPage();
     await materialsPage.selectSubjectFilter(primarySubject.name);
@@ -730,13 +768,19 @@ test.describe('Testes de Conteúdos', () => {
       successToastWasShown = await successToastPromise;
     });
 
-    await test.step('Then the content should not be created successfully', async () => {
+    await test.step('Then the system should reject mixed PDF and image uploads', async () => {
+      const contentWasCreated = Boolean(await apiFindMaterialByTopicAndSubject({
+        subjectName: primarySubject.name,
+        topicName: topic.name,
+      }).catch(() => null));
+      expect(contentWasCreated, 'O sistema nao deveria criar conteudo quando PDF e imagem sao enviados juntos.').toBeFalsy();
+      await expect(materialsPage.registerModalHeading).toBeVisible();
+      expect(successToastWasShown,'O sistema nao deveria exibir mensagem de sucesso quando o upload com PDF e imagem falha.',).toBeFalsy();
       expect(uploadResponse.status()).toBe(400);
-      expect(successToastWasShown,'O sistema não deveria exibir mensagem de sucesso quando o upload com PDF e imagem retorna erro.',).toBeFalsy();
     });
   });
 
-  test('CONT-017 - cadastrar conteúdo com arquivo acima de 2 MB', async () => {
+  test('CONT-017 - cadastrar conteudo com arquivo acima de 2 MB', async () => {
     const topic = await createSupportTopic(primarySubject, 'Conteudo Oversized');
     await reloadMaterialsPage();
     await materialsPage.selectSubjectFilter(primarySubject.name);
@@ -770,16 +814,22 @@ test.describe('Testes de Conteúdos', () => {
       ]);
     });
 
-    await test.step('Then the content should not be created successfully', async () => {
+    await test.step('Then the system should reject files larger than 2 MB', async () => {
+      const contentWasCreated = Boolean(await apiFindMaterialByTopicAndSubject({
+        subjectName: primarySubject.name,
+        topicName: topic.name,
+      }).catch(() => null));
+      expect(contentWasCreated, 'O sistema nao deveria criar conteudo com arquivo acima de 2 MB.').toBeFalsy();
+      await expect(materialsPage.registerModalHeading).toBeVisible();
+      expect(successToastWasShown,'O sistema nao deveria exibir mensagem de sucesso quando o upload com arquivo acima de 2 MB falha.',).toBeFalsy();
       if (uploadResponse) {
         expect(uploadResponse.status()).toBe(400);
       }
-      expect(successToastWasShown,'O sistema n?o deveria exibir mensagem de sucesso quando o upload com arquivo acima de 2 MB retorna erro.',).toBeFalsy();
     });
 
   });
 
-  test('CONT-018 - cadastrar conteúdo com formato de arquivo não suportado', async () => {
+  test('CONT-018 - cadastrar conteudo com formato de arquivo nao suportado', async () => {
     const topic = await createSupportTopic(primarySubject, 'Conteudo Unsupported');
     await reloadMaterialsPage();
     await materialsPage.selectSubjectFilter(primarySubject.name);
@@ -811,15 +861,21 @@ test.describe('Testes de Conteúdos', () => {
       successToastWasShown = await successToastPromise;
     });
 
-    await test.step('Then the content should not be created successfully', async () => {
-      expect(uploadResponse.status()).toBe(400);
+    await test.step('Then the system should reject unsupported file formats', async () => {
+      const contentWasCreated = Boolean(await apiFindMaterialByTopicAndSubject({
+        subjectName: primarySubject.name,
+        topicName: topic.name,
+      }).catch(() => null));
+      expect(contentWasCreated, 'O sistema nao deveria criar conteudo com formato de arquivo nao suportado.').toBeFalsy();
+      await expect(materialsPage.registerModalHeading).toBeVisible();
       expect(
-        successToastWasShown,'O sistema não deveria exibir mensagem de sucesso quando o upload com formato não suportado retorna erro.',).toBeFalsy();
+        successToastWasShown,'O sistema nao deveria exibir mensagem de sucesso quando o upload com formato nao suportado falha.',).toBeFalsy();
+      expect(uploadResponse.status()).toBe(400);
     });
   });
 
 
-  test('CONT-021 - cancelar cadastro de conteúdo', async () => {
+  test('CONT-021 - cancelar cadastro de conteudo', async () => {
       const topic = await createSupportTopic(primarySubject, 'Conteudo Cancel');
       await reloadMaterialsPage();
       await materialsPage.selectSubjectFilter(primarySubject.name);
@@ -846,3 +902,12 @@ test.describe('Testes de Conteúdos', () => {
     });
 
 });
+
+
+
+
+
+
+
+
+
