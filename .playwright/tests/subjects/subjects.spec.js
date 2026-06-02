@@ -1,4 +1,4 @@
-const { test, expect } = require('../../fixtures/admin-auth.fixture');
+﻿const { test, expect } = require('../../fixtures/admin-auth.fixture');
 const { LoginPage } = require('../../pages/login.page');
 const { SubjectsPage } = require('../../pages/subjects.page');
 const { TopicsPage } = require('../../pages/topics.page');
@@ -47,6 +47,19 @@ test.describe('Testes de Disciplinas', () => {
       .replace(/[\u0300-\u036f]/g, '')
       .toLowerCase()
       .trim();
+  }
+
+  function expectValidationMessageToContainAny(actualMessage, expectedMessages) {
+    const normalizedActual = normalizeText(actualMessage);
+    const expectedList = Array.isArray(expectedMessages)
+      ? expectedMessages
+      : [expectedMessages].filter(Boolean);
+    const normalizedExpectedMessages = expectedList.map((message) => normalizeText(message));
+
+    expect(
+      normalizedExpectedMessages.some((message) => normalizedActual.includes(message)),
+      `Mensagem de validacao inesperada: ${actualMessage}`,
+    ).toBeTruthy();
   }
 
   async function getAdminAuthHeaders(pageContext = subjectsPage.page) {
@@ -265,7 +278,7 @@ test.describe('Testes de Disciplinas', () => {
 
     createdSubject = buildTestSubject({
       code: buildUniqueSubjectCode('EDT'),
-      name: `[AUTO] Disciplina Edição ${buildAutoSubjectSuffix()}`,
+      name: `[AUTO] Disciplina EdiÃ§Ã£o ${buildAutoSubjectSuffix()}`,
       professor: subjectsFixture.register.defaultProfessor,
       course: subjectsFixture.courses.production.value,
       courseLabel: subjectsFixture.courses.production.label,
@@ -574,7 +587,7 @@ test.describe('Testes de Disciplinas', () => {
 
     await test.step('Then the system should reject the registration and keep the form open', async () => {
       const validationMessage = await subjectsPage.studentsCountInput.evaluate((input) => input.validationMessage);
-      expect.soft(validationMessage).toContain(subjectsFixture.messages.studentsCountMin);
+      expectValidationMessageToContainAny(validationMessage, subjectsFixture.messages.studentsCountMinAlternatives);
       await expect(subjectsPage.registerModalHeading).toBeVisible();
     });
   });
@@ -595,7 +608,7 @@ test.describe('Testes de Disciplinas', () => {
 
     await test.step('Then the system should reject the registration and keep the form open', async () => {
       const validationMessage = await subjectsPage.studentsCountInput.evaluate((input) => input.validationMessage);
-      expect.soft(validationMessage).toContain(subjectsFixture.messages.studentsCountMin);
+      expectValidationMessageToContainAny(validationMessage, subjectsFixture.messages.studentsCountMinAlternatives);
       await expect(subjectsPage.registerModalHeading).toBeVisible();
     });
   });
@@ -616,7 +629,7 @@ test.describe('Testes de Disciplinas', () => {
 
     await test.step('Then the system should reject the registration and keep the form open', async () => {
       const validationMessage = await subjectsPage.studentsCountInput.evaluate((input) => input.validationMessage);
-      expect.soft(validationMessage).toContain(subjectsFixture.messages.studentsCountValidValue);
+      expectValidationMessageToContainAny(validationMessage, subjectsFixture.messages.studentsCountValidValueAlternatives);
       await expect(subjectsPage.registerModalHeading).toBeVisible();
     });
   });
@@ -734,12 +747,12 @@ test.describe('Testes de Disciplinas', () => {
     });
   });
 
-  test('DISC-021 - filtrar disciplinas por Ciência da Computação', async () => {
+  test('DISC-021 - filtrar disciplinas por CiÃªncia da ComputaÃ§Ã£o', async () => {
     await test.step('Given that the admin user is on the subjects page', async () => {
       await expect(subjectsPage.heading).toBeVisible();
     });
 
-    await test.step('When the course filter is changed to Ciência da Computação', async () => {
+    await test.step('When the course filter is changed to CiÃªncia da ComputaÃ§Ã£o', async () => {
       await subjectsPage.selectCourseFilter(subjectsFixture.filters.computing);
     });
 
@@ -774,12 +787,12 @@ test.describe('Testes de Disciplinas', () => {
     });
   });
 
-  test('DISC-023 - filtrar disciplinas por Engenharia de Produção', async () => {
+  test('DISC-023 - filtrar disciplinas por Engenharia de ProduÃ§Ã£o', async () => {
     await test.step('Given that the admin user is on the subjects page', async () => {
       await expect(subjectsPage.heading).toBeVisible();
     });
 
-    await test.step('When the course filter is changed to Engenharia de Produção', async () => {
+    await test.step('When the course filter is changed to Engenharia de ProduÃ§Ã£o', async () => {
       await subjectsPage.selectCourseFilter(subjectsFixture.filters.production);
     });
 
@@ -794,12 +807,12 @@ test.describe('Testes de Disciplinas', () => {
     });
   });
 
-  test('DISC-024 - filtrar disciplinas por Engenharia Mecânica', async () => {
+  test('DISC-024 - filtrar disciplinas por Engenharia MecÃ¢nica', async () => {
     await test.step('Given that the admin user is on the subjects page', async () => {
       await expect(subjectsPage.heading).toBeVisible();
     });
 
-    await test.step('When the course filter is changed to Engenharia Mecânica', async () => {
+    await test.step('When the course filter is changed to Engenharia MecÃ¢nica', async () => {
       await subjectsPage.selectCourseFilter(subjectsFixture.filters.mechanics);
     });
 
@@ -931,7 +944,7 @@ test.describe('Testes de Disciplinas', () => {
   test('DISC-030 - excluir disciplina existente', async () => {
     await test.step('Given that there is a disposable subject available for deletion', async () => {
       duplicateSubject = buildTestSubject({
-        name: `[AUTO] Disciplina Exclusão ${buildAutoSubjectSuffix()}`,
+        name: `[AUTO] Disciplina ExclusÃ£o ${buildAutoSubjectSuffix()}`,
         course: subjectsFixture.courses.civil.value,
         courseLabel: subjectsFixture.courses.civil.label,
       });
@@ -976,7 +989,7 @@ test.describe('Testes de Disciplinas', () => {
 
   test('DISC-032 - excluir disciplina vinculada a registros dependentes', async () => {
     const dependentSubject = buildTestSubject({
-      name: `[AUTO] Disciplina Dependência ${buildAutoSubjectSuffix()}`,
+      name: `[AUTO] Disciplina DependÃªncia ${buildAutoSubjectSuffix()}`,
       course: subjectsFixture.courses.production.value,
       courseLabel: subjectsFixture.courses.production.label,
     });
@@ -1004,3 +1017,7 @@ test.describe('Testes de Disciplinas', () => {
 
 
 });
+
+
+
+

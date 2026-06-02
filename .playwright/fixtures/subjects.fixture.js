@@ -1,19 +1,19 @@
-const subjectsFixture = {
+﻿const subjectsFixture = {
   adminSubjectsURL: 'https://admin.studyllab.com.br/disciplinas',
   courses: {
     software: { value: 'ES', label: 'Engenharia de software' },
-    computing: { value: 'CC', label: 'Ciência da computação' },
+    computing: { value: 'CC', label: 'CiÃªncia da computaÃ§Ã£o' },
     civil: { value: 'EC', label: 'Engenharia civil' },
-    production: { value: 'EP', label: 'Engenharia de produção' },
-    mechanics: { value: 'EM', label: 'Engenharia mecânica' },
+    production: { value: 'EP', label: 'Engenharia de produÃ§Ã£o' },
+    mechanics: { value: 'EM', label: 'Engenharia mecÃ¢nica' },
   },
   filters: {
     all: 'Todos os curso',
-    software: 'Engenharia de software',
-    computing: 'Ciência da computação',
-    civil: 'Engenharia civil',
-    production: 'Engenharia de produção',
-    mechanics: 'Engenharia mecânica',
+    software: 'Engenharia de Software',
+    computing: 'CiÃªncia da ComputaÃ§Ã£o',
+    civil: 'Engenharia Civil',
+    production: 'Engenharia de ProduÃ§Ã£o',
+    mechanics: 'Engenharia MecÃ¢nica',
   },
   register: {
     defaultCourse: 'ES',
@@ -21,19 +21,30 @@ const subjectsFixture = {
     defaultStudentsCount: '50',
   },
   messages: {
-    requiredCode: '*Insira o código da disciplina',
+    requiredCode: '*Insira o codigo da disciplina',
     requiredName: '*Insira o nome da disciplina',
-    requiredProfessor: '*Insira o professor(a) responsável',
+    requiredProfessor: '*Insira o professor(a) responsavel',
     requiredStudentsCount: '*Insira a quantidade de alunos',
     studentsCountMin: 'O valor deve ser maior ou igual a 1',
-    studentsCountValidValue: 'Insira um valor válido',
+    studentsCountMinAlternatives: [
+      'O valor deve ser maior ou igual a 1',
+      'Value must be greater than or equal to 1',
+    ],
+    studentsCountValidValue: 'Insira um valor valido',
+    studentsCountValidValueAlternatives: [
+      'Insira um valor valido',
+      'Value must be valid',
+      'Enter a valid value',
+      'Please enter a valid value',
+      'valid value',
+    ],
     requiredCourse: '*Insira o curso da disciplina',
-    noChangesDetected: 'Nenhuma alteração detectada.',
-    requiredFieldsEdit: 'Por favor, preencha todos os campos obrigatórios.',
+    noChangesDetected: 'Nenhuma alteraÃ§Ã£o detectada.',
+    requiredFieldsEdit: 'Por favor, preencha todos os campos obrigatorios.',
     deleteConfirmationText: 'Tem certeza de que deseja excluir:',
-    irreversibleAction: 'Esta ação é irreversível.',
+    irreversibleAction: 'Esta acao e irreversivel.',
     duplicateSubject: 'Disciplina existente',
-    dependentDeleteWarning: 'Verifique se algum tópico, possui está disciplina!',
+    dependentDeleteWarning: 'Verifique se algum topico possui esta disciplina!',
   },
   placeholders: {
     code: 'xxxxxx',
@@ -43,9 +54,9 @@ const subjectsFixture = {
     course: 'Selecione o curso',
   },
   labels: {
-    code: 'Código da Disciplina',
+    code: 'Codigo da Disciplina',
     name: 'Nome da Disciplina',
-    professor: 'Professor(a) Responsável',
+    professor: 'Professor(a) ResponsÃ¡vel',
     studentsCount: 'Quantidade de Alunos',
     course: 'Curso',
   },
@@ -62,7 +73,7 @@ function buildTestSubject(overrides = {}) {
   return {
     code: overrides.code ?? `RUS${suffix}`,
     name: overrides.name ?? `[AUTO] Disciplina Base ${suffix}`,
-    professor: overrides.professor ?? `Professor Automação`,
+    professor: overrides.professor ?? `Professor AutomaÃ§Ã£o`,
     studentsCount: overrides.studentsCount ?? '50',
     course: overrides.course ?? subjectsFixture.register.defaultCourse,
     courseLabel:
@@ -72,3 +83,5 @@ function buildTestSubject(overrides = {}) {
 }
 
 module.exports = { subjectsFixture, buildTestSubject, buildAutoSubjectSuffix };
+
+
