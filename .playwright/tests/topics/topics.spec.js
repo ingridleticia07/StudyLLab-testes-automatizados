@@ -274,7 +274,7 @@ test.describe('Testes de Topicos', () => {
     }
 
     primarySubject = buildTestSubject({
-      code: buildUniqueSubjectCode('TPA'),
+      code: buildUniqueSubjectCode('RUS'),
       name: `[AUTO] Disciplina Topico ${buildAutoSubjectSuffix()}`,
       professor: `Professor Topic A ${buildAutoSubjectSuffix()}`,
       studentsCount: '50',
@@ -283,7 +283,7 @@ test.describe('Testes de Topicos', () => {
     });
 
     alternateSubject = buildTestSubject({
-      code: buildUniqueSubjectCode('TPB'),
+      code: buildUniqueSubjectCode('RUS'),
       name: `[AUTO] Disciplina Topico ${buildAutoSubjectSuffix()}`,
       professor: `Professor Topic B ${buildAutoSubjectSuffix()}`,
       studentsCount: '45',
@@ -292,7 +292,7 @@ test.describe('Testes de Topicos', () => {
     });
 
     emptySubject = buildTestSubject({
-      code: buildUniqueSubjectCode('TPC'),
+      code: buildUniqueSubjectCode('RUS'),
       name: `[AUTO] Disciplina Filtro ${buildAutoSubjectSuffix()}`,
       professor: `Professor Topic Empty ${buildAutoSubjectSuffix()}`,
       studentsCount: '50',
@@ -311,7 +311,7 @@ test.describe('Testes de Topicos', () => {
       return;
     }
     primarySubject = buildTestSubject({
-      code: buildUniqueSubjectCode('TPA'),
+      code: buildUniqueSubjectCode('RUS'),
       name: `[AUTO] Disciplina Topico ${buildAutoSubjectSuffix()}`,
       professor: `Professor Topic A ${buildAutoSubjectSuffix()}`,
       studentsCount: '50',
@@ -771,7 +771,7 @@ test.describe('Testes de Topicos', () => {
 
     await test.step('Given that there is a support subject without registered topics', async () => {
       emptyFilterSubject = buildTestSubject({
-        code: buildUniqueSubjectCode('TPE'),
+        code: buildUniqueSubjectCode('RUS'),
         name: `[AUTO] Disciplina Filtro ${buildAutoSubjectSuffix()}`,
         professor: `Professor Topic Empty ${buildAutoSubjectSuffix()}`,
         studentsCount: '50',
@@ -980,7 +980,7 @@ test.describe('Testes de Topicos', () => {
     const linkedResponse = buildTestForumResponse();
     await test.step('Given that a topic exists with a linked forum response', async () => {
       const dependentSubject = buildTestSubject({
-        code: buildUniqueSubjectCode('TPL'),
+        code: buildUniqueSubjectCode('RUS'),
         name: `[AUTO] Disciplina Dependencia ${buildAutoSubjectSuffix()}`,
         professor: `Professor Topico Vinculado ${buildAutoSubjectSuffix()}`,
         studentsCount: '50',
