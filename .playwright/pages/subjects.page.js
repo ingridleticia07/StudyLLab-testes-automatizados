@@ -18,6 +18,11 @@ class SubjectsPage extends PaginatedPage {
     this.professorInput = page.locator('#professor');
     this.studentsCountInput = page.locator('#quantidade');
     this.courseSelect = page.locator('#curso');
+    this.codeValidationMessage = this.codeInput.locator('xpath=ancestor::div[contains(@class,"flex-col")][2]//h5[contains(@class,"text-red-500")]').first();
+    this.nameValidationMessage = this.nameInput.locator('xpath=ancestor::div[contains(@class,"flex-col")][2]//h5[contains(@class,"text-red-500")]').first();
+    this.professorValidationMessage = this.professorInput.locator('xpath=ancestor::div[contains(@class,"flex-col")][2]//h5[contains(@class,"text-red-500")]').first();
+    this.studentsCountValidationMessage = this.studentsCountInput.locator('xpath=ancestor::div[contains(@class,"flex-col")][2]//h5[contains(@class,"text-red-500")]').first();
+    this.courseValidationMessage = this.courseSelect.locator('xpath=ancestor::div[contains(@class,"flex-col")][2]//h5[contains(@class,"text-red-500")]').first();
     this.registerSubmitButton = page.getByRole('button', { name: /Cadastrar nova disciplina/i });
     this.registerCancelButton = page.getByRole('button', { name: /Cancelar cadastro da disciplina/i });
     this.editSubmitButton = page.getByRole('button', { name: /Salvar edi/i });
@@ -87,7 +92,25 @@ class SubjectsPage extends PaginatedPage {
       this.isSubjectsListResponse(response) &&
       response.url().includes(`idCurso=${this.getCourseQueryValue(optionName)}`),
     );
-    await this.page.getByRole('menuitem', { name: optionName, exact: false }).click();
+
+    const menuItems = this.page.getByRole('menuitem');
+    const menuItemsCount = await menuItems.count();
+    let clicked = false;
+
+    for (let index = 0; index < menuItemsCount; index += 1) {
+      const menuItem = menuItems.nth(index);
+      const menuText = await menuItem.innerText().catch(() => '');
+      if (this.normalizeText(menuText).includes(this.normalizeText(optionName))) {
+        await menuItem.click();
+        clicked = true;
+        break;
+      }
+    }
+
+    if (!clicked) {
+      throw new Error(`Nao foi possivel localizar a opcao de filtro: ${optionName}`);
+    }
+
     await responsePromise.catch(() => null);
     await this.waitForTableData();
   }
@@ -96,8 +119,20 @@ class SubjectsPage extends PaginatedPage {
     return (await this.courseFilterButton.innerText()).trim();
   }
 
+  repairEncoding(value = '') {
+    if (!/[??]/.test(value)) {
+      return value;
+    }
+
+    try {
+      return Buffer.from(value, 'latin1').toString('utf8');
+    } catch {
+      return value;
+    }
+  }
+
   normalizeText(value) {
-    return value
+    return this.repairEncoding(value)
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .toLowerCase()
@@ -317,12 +352,16 @@ class SubjectsPage extends PaginatedPage {
   }
 
   async openEditSubjectByCode(code) {
+    await this.openPageContainingSubject(code);
     const row = this.getRowByCode(code);
+    await row.waitFor({ state: 'visible', timeout: 10000 });
     await row.getByRole('button', { name: /editar disciplina/i }).click();
   }
 
   async openDeletePopupByCode(code) {
+    await this.openPageContainingSubject(code);
     const row = this.getRowByCode(code);
+    await row.waitFor({ state: 'visible', timeout: 10000 });
     await row.getByRole('button', { name: /deletar disciplina/i }).click();
   }
 

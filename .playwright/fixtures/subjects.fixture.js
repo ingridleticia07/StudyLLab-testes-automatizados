@@ -1,19 +1,19 @@
-﻿const subjectsFixture = {
+const subjectsFixture = {
   adminSubjectsURL: 'https://admin.studyllab.com.br/disciplinas',
   courses: {
     software: { value: 'ES', label: 'Engenharia de software' },
-    computing: { value: 'CC', label: 'CiÃªncia da computaÃ§Ã£o' },
+    computing: { value: 'CC', label: 'Ciencia da computacao' },
     civil: { value: 'EC', label: 'Engenharia civil' },
-    production: { value: 'EP', label: 'Engenharia de produÃ§Ã£o' },
-    mechanics: { value: 'EM', label: 'Engenharia mecÃ¢nica' },
+    production: { value: 'EP', label: 'Engenharia de producao' },
+    mechanics: { value: 'EM', label: 'Engenharia mecanica' },
   },
   filters: {
     all: 'Todos os curso',
-    software: 'Engenharia de Software',
-    computing: 'CiÃªncia da ComputaÃ§Ã£o',
+    software: 'Engenharia de software',
+    computing: 'Ciência da computação',
     civil: 'Engenharia Civil',
-    production: 'Engenharia de ProduÃ§Ã£o',
-    mechanics: 'Engenharia MecÃ¢nica',
+    production: 'Engenharia de produção',
+    mechanics: 'Engenharia mecânica',
   },
   register: {
     defaultCourse: 'ES',
@@ -39,7 +39,7 @@
       'valid value',
     ],
     requiredCourse: '*Insira o curso da disciplina',
-    noChangesDetected: 'Nenhuma alteraÃ§Ã£o detectada.',
+    noChangesDetected: 'Nenhuma alteracao detectada.',
     requiredFieldsEdit: 'Por favor, preencha todos os campos obrigatorios.',
     deleteConfirmationText: 'Tem certeza de que deseja excluir:',
     irreversibleAction: 'Esta acao e irreversivel.',
@@ -56,7 +56,7 @@
   labels: {
     code: 'Codigo da Disciplina',
     name: 'Nome da Disciplina',
-    professor: 'Professor(a) ResponsÃ¡vel',
+    professor: 'Professor(a) Responsavel',
     studentsCount: 'Quantidade de Alunos',
     course: 'Curso',
   },
@@ -73,15 +73,11 @@ function buildTestSubject(overrides = {}) {
   return {
     code: overrides.code ?? `RUS${suffix}`,
     name: overrides.name ?? `[AUTO] Disciplina Base ${suffix}`,
-    professor: overrides.professor ?? `Professor AutomaÃ§Ã£o`,
+    professor: overrides.professor ?? 'Professor Automacao',
     studentsCount: overrides.studentsCount ?? '50',
     course: overrides.course ?? subjectsFixture.register.defaultCourse,
-    courseLabel:
-      overrides.courseLabel ??
-      subjectsFixture.courses.software.label,
+    courseLabel: overrides.courseLabel ?? subjectsFixture.courses.software.label,
   };
 }
 
 module.exports = { subjectsFixture, buildTestSubject, buildAutoSubjectSuffix };
-
-
