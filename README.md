@@ -32,4 +32,77 @@ Os testes automatizados do projeto foram estruturados com base no **Playwright**
 - **`tests/`**  
   Armazena os cenários de teste automatizado, organizados por módulo da aplicação. Cada subpasta agrupa os testes de uma funcionalidade específica, como autenticação, conteúdos, usuários, disciplinas e tópicos.
 
+## Como executar a suíte de testes automatizados
 
+Para reproduzir a execução dos testes automatizados utilizados neste estudo, siga os passos abaixo.
+
+### Pré-requisitos
+
+Antes de executar a suíte, é necessário possuir:
+
+- Node.js instalado
+- npm instalado
+- Google Chrome disponível no ambiente
+- Aplicação StudyLab acessível no ambiente configurado para os testes
+- Credenciais válidas de acesso ao sistema, especialmente para os cenários administrativos
+
+### 1. Acessar a branch dos testes automatizados
+
+```bash
+git checkout testes-automatizados
+````
+
+### 2. Instalar as dependências do projeto
+
+Na raiz do repositório, execute:
+
+```bash
+npm install
+````
+
+Caso necessário, instale também os navegadores utilizados pelo Playwright:
+````bash
+npx playwright install
+````
+
+### 3. Configurar o ambiente de execução
+
+Antes da execução da suíte, certifique-se de que:
+
+- o Playwright e suas dependências estejam instalados;
+- o sistema esteja acessível no link configurado na automação;
+- as credenciais utilizadas nos testes estejam válidas.
+
+### 4. Executar a suíte completa
+
+Para executar todos os testes automatizados:
+````bash
+npx playwright test
+````
+
+### 5. Executar testes por módulo
+
+Caso seja necessário executar apenas um conjunto específico de testes, podem ser utilizados os scripts por módulo:
+````bash
+npm run test:auth
+npm run test:users
+npm run test:subjects
+npm run test:topics
+npm run test:contents
+````
+
+
+### 6. Visualizar o relatório
+
+Após a execução, o relatório do Playwright pode ser aberto com:
+````bash
+npx playwright show-report
+````
+
+## Execução na Integração Contínua
+
+Os testes automatizados foram executados em pipeline por meio do **GitHub Actions** configurado no repositório original do StudyLab.
+
+A reprodução dessa execução em integração contínua depende das configurações e credenciais disponíveis nesse repositório, razão pela qual a pipeline não pode ser executada de forma isolada apenas a partir desta branch.
+
+Para fins de replicação, recomenda-se a execução local da suíte, conforme descrito nas etapas anteriores deste README.
