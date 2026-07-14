@@ -1,1 +1,1 @@
-# StudyLLab-TCC-testes-automatizados
+# StudyLLab-testes-automatizados
